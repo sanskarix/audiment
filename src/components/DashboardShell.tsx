@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { logoutUser } from '@/lib/auth';
 import {
   Sidebar,
@@ -40,24 +41,24 @@ interface DashboardShellProps {
 
 const NAV_ITEMS = {
   Admin: [
-    { title: 'Overview', icon: LayoutDashboard },
-    { title: 'Users', icon: Users },
-    { title: 'Locations', icon: MapPin },
-    { title: 'Templates', icon: FileText },
-    { title: 'Audits', icon: CheckSquare },
-    { title: 'Reports', icon: BarChart },
+    { title: 'Overview', icon: LayoutDashboard, href: '/dashboard/admin' },
+    { title: 'Users', icon: Users, href: '/dashboard/admin/users' },
+    { title: 'Locations', icon: MapPin, href: '/dashboard/admin/locations' },
+    { title: 'Templates', icon: FileText, href: '/dashboard/admin/templates' },
+    { title: 'Audits', icon: CheckSquare, href: '/dashboard/admin/audits' },
+    { title: 'Reports', icon: BarChart, href: '/dashboard/admin/reports' },
   ],
   Manager: [
-    { title: 'Overview', icon: LayoutDashboard },
-    { title: 'Audits', icon: CheckSquare },
-    { title: 'Auditors', icon: Users },
-    { title: 'Corrective Actions', icon: ClipboardList },
-    { title: 'Reports', icon: BarChart },
+    { title: 'Overview', icon: LayoutDashboard, href: '/dashboard/manager' },
+    { title: 'Audits', icon: CheckSquare, href: '/dashboard/manager/audits' },
+    { title: 'Auditors', icon: Users, href: '/dashboard/manager/auditors' },
+    { title: 'Corrective Actions', icon: ClipboardList, href: '/dashboard/manager/corrective-actions' },
+    { title: 'Reports', icon: BarChart, href: '/dashboard/manager/reports' },
   ],
   Auditor: [
-    { title: 'My Audits', icon: CheckSquare },
-    { title: 'History', icon: History },
-    { title: 'Flashmob', icon: Video },
+    { title: 'My Audits', icon: CheckSquare, href: '/dashboard/auditor' },
+    { title: 'History', icon: History, href: '/dashboard/auditor/history' },
+    { title: 'Flashmob', icon: Video, href: '/dashboard/auditor/flashmob' },
   ],
 };
 
@@ -69,6 +70,7 @@ const ROLE_COLOURS: Record<string, string> = {
 
 export default function DashboardShell({ role, children }: DashboardShellProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [userState, setUserState] = useState<{ name: string; email: string } | null>(null);
 
   useEffect(() => {
@@ -108,9 +110,16 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
           <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton tooltip={item.title} className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-                  <item.icon className="h-4 w-4 shrink-0" />
-                  <span>{item.title}</span>
+                <SidebarMenuButton 
+                  asChild 
+                  tooltip={item.title} 
+                  isActive={pathname === item.href}
+                  className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent"
+                >
+                  <Link href={item.href}>
+                    <item.icon className="h-4 w-4 shrink-0" />
+                    <span>{item.title}</span>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}

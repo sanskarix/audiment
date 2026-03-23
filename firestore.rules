@@ -1,0 +1,97 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ---- HELPER FUNCTIONS ----
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'ADMIN';
+    }
+    
+    function isManager() {
+      return isAuthenticated() && getUserData().role == 'MANAGER';
+    }
+    
+    function isAuditor() {
+      return isAuthenticated() && getUserData().role == 'AUDITOR';
+    }
+    
+    function getUserOrg() {
+      return getUserData().organizationId;
+    }
+    
+    function isSameOrg(orgId) {
+      return getUserOrg() == orgId;
+    }
+
+    // ---- RULES PER COLLECTION ----
+
+    match /users/{userId} {
+      // Admins can read all users in their org. A user can read their own data.
+      allow read: if isAuthenticated() && (request.auth.uid == userId || (isAdmin() && resource.data.organizationId == getUserOrg()));
+      
+      // Admins can create/modify users in their org
+      allow write: if isAdmin() && request.resource.data.organizationId == getUserOrg();
+    }
+
+    match /organizations/{orgId} {
+      // Users can read their own organization
+      allow read: if isAuthenticated() && isSameOrg(orgId);
+      allow write: if false; // Created via backend scripts or superadmin
+    }
+
+    match /locations/{locationId} {
+      // Admins can read all in org. Managers can read all in org (to be refined later to assigned only).
+      allow read: if isAuthenticated() && isSameOrg(resource.data.organizationId);
+      // Only admins can write
+      allow write: if isAdmin() && isSameOrg(request.resource.data.organizationId);
+    }
+
+    match /auditTemplates/{templateId} {
+      allow read: if isAuthenticated() && isSameOrg(resource.data.organizationId);
+      allow write: if isAdmin() && isSameOrg(request.resource.data.organizationId);
+    }
+
+    match /auditTemplates/{templateId}/questions/{questionId} {
+      allow read: if isAuthenticated() && isSameOrg(get(/databases/$(database)/documents/auditTemplates/$(templateId)).data.organizationId);
+      allow write: if isAdmin() && isSameOrg(get(/databases/$(database)/documents/auditTemplates/$(templateId)).data.organizationId);
+    }
+
+    match /audits/{auditId} {
+      // Admins and Managers read all in org. Auditors read if assigned.
+      allow read: if isAuthenticated() && isSameOrg(resource.data.organizationId) && 
+                  (!isAuditor() || resource.data.assignedAuditorId == request.auth.uid);
+      
+      // Admins can modify any. Managers can assign auditors. Auditors can mark complete/in-progress.
+      // (Simplified for now: anyone in org can update, but we'll refine based on spec)
+      allow write: if isAuthenticated() && isSameOrg(request.resource.data.organizationId);
+    }
+
+    match /auditResponses/{responseId} {
+      allow read: if isAuthenticated() && isSameOrg(get(/databases/$(database)/documents/audits/$(resource.data.auditId)).data.organizationId);
+      allow write: if isAuthenticated(); // Usually auditor writes this
+    }
+
+    match /correctiveActions/{actionId} {
+      allow read, write: if isAuthenticated() && isSameOrg(resource.data.organizationId);
+    }
+
+    match /flashmobAudits/{flashmobId} {
+      allow read: if isAuthenticated() && isSameOrg(resource.data.organizationId) && (isAdmin() || request.auth.uid in resource.data.visibleTo);
+      allow write: if isAuditor() && isSameOrg(request.resource.data.organizationId);
+    }
+
+    match /notifications/{notifId} {
+      allow read: if isAuthenticated() && resource.data.recipientId == request.auth.uid;
+      allow write: if isAuthenticated() && isSameOrg(request.resource.data.organizationId);
+    }
+    
+  }
+}

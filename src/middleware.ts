@@ -12,7 +12,9 @@ function getSessionFromCookie(cookieString: string): { uid: string; role: string
   if (!match) return null;
   try {
     const data = JSON.parse(decodeURIComponent(match[1]));
-    if (data.uid && data.role) return { uid: data.uid, role: data.role };
+    if (data.uid && data.role && data.organizationId) {
+      return { uid: data.uid, role: data.role };
+    }
     return null;
   } catch {
     return null;

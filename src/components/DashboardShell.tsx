@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { logoutUser } from '@/lib/auth';
+import NotificationBell from '@/components/NotificationBell';
 import {
   Sidebar,
   SidebarContent,
@@ -163,6 +164,9 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
             <h1 className="text-sm font-semibold">{role} Dashboard</h1>
+          </div>
+          <div className="flex items-center gap-4">
+            <NotificationBell />
           </div>
         </header>
         <main className="flex-1 overflow-auto bg-muted/20 p-6 md:p-8">

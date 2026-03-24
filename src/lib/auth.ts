@@ -24,9 +24,13 @@ export async function loginUser(email: string, password: string): Promise<AuthUs
   const data = userDoc.data();
   const role = (data.role || '').toLowerCase() as UserRole;
 
-  // Validate that the role is one we expect
+  // Validate that the role and organizationId are present
   if (!['admin', 'manager', 'auditor'].includes(role)) {
     throw new Error(`User has invalid role: ${data.role}`);
+  }
+
+  if (!data.organizationId) {
+    throw new Error('User record is missing an organizationId. Please contact support.');
   }
 
   // Store session info in a cookie (readable by middleware)
@@ -48,12 +52,19 @@ export async function logoutUser(): Promise<void> {
   document.cookie = 'audiment_session=; path=/; max-age=0';
 }
 
-export function getSessionFromCookie(cookieString: string): { uid: string; role: UserRole; name: string; email: string; } | null {
+export function getSessionFromCookie(cookieString: string): { uid: string; role: UserRole; name: string; email: string; organizationId: string; } | null {
   const match = cookieString.match(/audiment_session=([^;]+)/);
   if (!match) return null;
   try {
     const data = JSON.parse(decodeURIComponent(match[1]));
-    return { uid: data.uid, role: data.role, name: data.name, email: data.email };
+    if (!data.organizationId) return null;
+    return { 
+      uid: data.uid, 
+      role: data.role, 
+      name: data.name, 
+      email: data.email,
+      organizationId: data.organizationId 
+    };
   } catch {
     return null;
   }

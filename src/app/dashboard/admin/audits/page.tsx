@@ -47,6 +47,8 @@ export default function AdminAuditsPage() {
   const [scheduledDate, setScheduledDate] = useState<Date>();
   const [deadline, setDeadline] = useState<Date>();
   const [isSurprise, setIsSurprise] = useState(false);
+  const [recurring, setRecurring] = useState<'none' | 'daily' | 'weekly' | 'monthly'>('none');
+  const [recurringDay, setRecurringDay] = useState<number>(1);
   const [open, setOpen] = useState(false);
   const [editingAuditId, setEditingAuditId] = useState<string | null>(null);
 
@@ -110,6 +112,8 @@ export default function AdminAuditsPage() {
         locationName: location.name,
         assignedManagerId: selectedManager,
         isSurprise,
+        recurring,
+        recurringDay: recurring !== 'none' ? recurringDay : null,
         scheduledDate: Timestamp.fromDate(scheduledDate),
         deadline: Timestamp.fromDate(deadline),
       };
@@ -125,20 +129,42 @@ export default function AdminAuditsPage() {
         auditData.maxPossibleScore = 0;
         auditData.scorePercentage = 0;
         
-        const docRef = await addDoc(collection(db, 'audits'), auditData);
+        const occurrences = recurring === 'none' ? 1 : 5;
+        let currentDate = new Date(scheduledDate);
+        let currentDeadline = new Date(deadline);
+        const durationMs = currentDeadline.getTime() - currentDate.getTime();
 
-        // Create notification for Manager
-        await addDoc(collection(db, 'notifications'), {
-          organizationId: session.orgId,
-          recipientId: selectedManager,
-          recipientRole: 'manager',
-          type: isSurprise ? 'surprise_audit' : 'audit_assigned',
-          title: `New Audit Published: ${template.title}`,
-          message: `A new audit has been published for ${location.name}. Please assign an auditor.`,
-          relatedId: docRef.id,
-          isRead: false,
-          createdAt: serverTimestamp()
-        });
+        for (let i = 0; i < occurrences; i++) {
+          const instanceData = { ...auditData };
+          instanceData.scheduledDate = Timestamp.fromDate(new Date(currentDate));
+          instanceData.deadline = Timestamp.fromDate(new Date(currentDate.getTime() + durationMs));
+          
+          const docRef = await addDoc(collection(db, 'audits'), instanceData);
+
+          if (i === 0) {
+            // Create notification for Manager only for the first occurrence
+            await addDoc(collection(db, 'notifications'), {
+              organizationId: session.orgId,
+              recipientId: selectedManager,
+              recipientRole: 'manager',
+              type: isSurprise ? 'surprise_audit' : 'audit_assigned',
+              title: `New Audit Published: ${template.title}`,
+              message: `A new audit has been published for ${location.name}. Please assign an auditor.`,
+              relatedId: docRef.id,
+              isRead: false,
+              createdAt: serverTimestamp()
+            });
+          }
+
+          // Advance date for next iteration
+          if (recurring === 'daily') {
+            currentDate.setDate(currentDate.getDate() + 1);
+          } else if (recurring === 'weekly') {
+            currentDate.setDate(currentDate.getDate() + 7);
+          } else if (recurring === 'monthly') {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+          }
+        }
       }
 
       setOpen(false);
@@ -150,6 +176,8 @@ export default function AdminAuditsPage() {
       setScheduledDate(undefined);
       setDeadline(undefined);
       setIsSurprise(false);
+      setRecurring('none');
+      setRecurringDay(1);
     } catch (e) {
       console.error(e);
       alert('Failed to save audit');
@@ -192,6 +220,8 @@ export default function AdminAuditsPage() {
               setScheduledDate(undefined);
               setDeadline(undefined);
               setIsSurprise(false);
+              setRecurring('none');
+              setRecurringDay(1);
             }
           }}>
             <DialogTrigger asChild>
@@ -314,6 +344,60 @@ export default function AdminAuditsPage() {
                   </div>
                   <Switch checked={isSurprise} onCheckedChange={setIsSurprise} />
                 </div>
+
+                <div className="space-y-4 p-4 rounded-lg bg-muted/40 border">
+                  <div className="space-y-0.5">
+                    <Label className="text-sm font-semibold">Recurring Schedule</Label>
+                    <p className="text-[11px] text-muted-foreground">Automatically generate the next audit instance.</p>
+                  </div>
+                  <Select value={recurring} onValueChange={(val: any) => setRecurring(val)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select frequency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Does not repeat</SelectItem>
+                      <SelectItem value="daily">Daily</SelectItem>
+                      <SelectItem value="weekly">Weekly</SelectItem>
+                      <SelectItem value="monthly">Monthly</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {recurring === 'weekly' && (
+                    <div className="space-y-2">
+                      <Label className="text-xs">Repeat on Day of Week</Label>
+                      <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select day" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="0">Sunday</SelectItem>
+                          <SelectItem value="1">Monday</SelectItem>
+                          <SelectItem value="2">Tuesday</SelectItem>
+                          <SelectItem value="3">Wednesday</SelectItem>
+                          <SelectItem value="4">Thursday</SelectItem>
+                          <SelectItem value="5">Friday</SelectItem>
+                          <SelectItem value="6">Saturday</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+
+                  {recurring === 'monthly' && (
+                    <div className="space-y-2">
+                      <Label className="text-xs">Repeat on Date of Month</Label>
+                      <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select date" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                            <SelectItem key={day} value={day.toString()}>Day {day}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </div>
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
@@ -379,6 +463,11 @@ export default function AdminAuditsPage() {
                       <div className="flex flex-col text-xs">
                         <span className="text-muted-foreground">Due: {a.deadline?.toDate().toLocaleDateString()}</span>
                         <span className="font-medium">Scheduled: {a.scheduledDate?.toDate().toLocaleDateString()}</span>
+                        {a.recurring && a.recurring !== 'none' && (
+                          <span className="text-blue-600 font-semibold mt-1 flex items-center gap-1">
+                            <Clock className="w-3 h-3" /> {a.recurring.charAt(0).toUpperCase() + a.recurring.slice(1)}
+                          </span>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>
@@ -415,6 +504,8 @@ export default function AdminAuditsPage() {
                               setScheduledDate(a.scheduledDate?.toDate());
                               setDeadline(a.deadline?.toDate());
                               setIsSurprise(a.isSurprise || false);
+                              setRecurring(a.recurring || 'none');
+                              setRecurringDay(a.recurringDay || 1);
                               setOpen(true);
                             }}>
                               <Pencil className="mr-2 h-4 w-4" /> Edit Audit

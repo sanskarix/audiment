@@ -34,7 +34,8 @@ import {
   History,
   LogOut,
   ChevronUp,
-  User2
+  User2,
+  Calendar
 } from 'lucide-react';
 
 interface DashboardShellProps {
@@ -55,6 +56,7 @@ const NAV_ITEMS = {
   Manager: [
     { title: 'Overview', icon: LayoutDashboard, href: '/dashboard/manager' },
     { title: 'Audits', icon: CheckSquare, href: '/dashboard/manager/audits' },
+    { title: 'Calendar', icon: Calendar, href: '/dashboard/manager/calendar' },
     { title: 'Auditors', icon: Users, href: '/dashboard/manager/auditors' },
     { title: 'Corrective Actions', icon: ClipboardList, href: '/dashboard/manager/corrective-actions' },
     { title: 'Reports', icon: BarChart, href: '/dashboard/manager/reports' },

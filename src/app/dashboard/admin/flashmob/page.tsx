@@ -19,7 +19,7 @@ import {
   ImageIcon
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import Link from 'next/link';
 
 export default function AdminFlashmobPage() {
   const [flashmobs, setFlashmobs] = useState<any[]>([]);
@@ -65,35 +65,29 @@ export default function AdminFlashmobPage() {
 
   return (
     <DashboardShell role="Admin">
-      <div className="space-y-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Badge className="bg-amber-100 text-amber-900 border-none font-black text-[10px]">COVERT INTELLIGENCE</Badge>
-              <div className="h-1 w-1 rounded-full bg-zinc-300" />
-              <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">{flashmobs.length} TOTAL SCANS</span>
-            </div>
-            <h1 className="text-3xl font-black tracking-tighter">FLASHMOB LOGS</h1>
-            <p className="text-muted-foreground text-sm">Real-time video evidence and compliance verification from the field.</p>
-          </div>
+      <div className="space-y-6">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-bold tracking-tight">Flashmob Logs</h1>
+          <p className="text-muted-foreground">
+            Review video evidence and compliance verification from the field. Total audits: {flashmobs.length}
+          </p>
         </div>
 
         {flashmobs.length === 0 ? (
-          <div className="bg-zinc-50 border border-dashed rounded-3xl p-24 text-center">
-            <Video className="h-12 w-12 text-zinc-300 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-zinc-900">Zero covert audits reported</h3>
-            <p className="text-zinc-500 text-sm max-w-xs mx-auto pt-1">
-              When auditors with covert access submit flashmob evidence, they will appear here.
-            </p>
-          </div>
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground">
+              <Video className="h-12 w-12 mb-4 text-muted" />
+              <p>No flashmob audits reported yet.</p>
+            </CardContent>
+          </Card>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {flashmobs.map((audit) => (
-              <Card key={audit.id} className="shadow-smooth border-zinc-200 overflow-hidden group hover:shadow-xl transition-all duration-300">
-                <div className="relative aspect-video bg-zinc-100 overflow-hidden">
+              <Card key={audit.id} className="overflow-hidden flex flex-col">
+                <div className="relative aspect-video bg-zinc-100">
                    <video 
                      src={audit.videoUrl} 
-                     className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                     className="h-full w-full object-cover"
                      muted
                      loop
                      onMouseOver={e => e.currentTarget.play()}
@@ -102,82 +96,34 @@ export default function AdminFlashmobPage() {
                         e.currentTarget.currentTime = 0;
                      }}
                    />
-                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors pointer-events-none flex items-center justify-center">
-                      <div className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
-                        <Play className="h-6 w-6 text-white fill-current" />
-                      </div>
-                   </div>
-                   <div className="absolute top-3 left-3 flex gap-2">
-                     <Badge className="bg-black/60 backdrop-blur-md text-white border-none py-1 px-2 text-[10px] font-black uppercase">
+                   <div className="absolute top-2 left-2 flex gap-2">
+                     <Badge variant="secondary" className="shadow-sm">
                         {audit.locationName}
                      </Badge>
                    </div>
+                   <div className="absolute top-2 right-2 flex gap-2">
+                      <div className="h-8 w-8 rounded-full border-2 border-white overflow-hidden bg-zinc-200">
+                         <img src={audit.selfieUrl} alt="Selfie" className="h-full w-full object-cover" />
+                      </div>
+                   </div>
                 </div>
                 
-                <CardHeader className="pb-3 px-5">
-                   <div className="flex items-center gap-3 text-xs font-bold text-zinc-500 mb-2">
-                     <span className="flex items-center gap-1"><CalendarIcon className="h-3 w-3" /> {audit.submittedAt?.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
-                     <div className="h-1 w-1 rounded-full bg-zinc-300" />
-                     <span className="flex items-center gap-1"><User className="h-3 w-3" /> {audit.auditorName || 'Unknown'}</span>
-                   </div>
-                   <CardTitle className="text-lg font-black tracking-tight leading-none group-hover:text-indigo-600 transition-colors">
-                     {audit.locationName} Verification
+                <CardHeader className="py-4">
+                   <CardTitle className="text-lg">
+                     {audit.locationName} Audit
                    </CardTitle>
+                   <CardDescription className="flex flex-col gap-1 mt-1">
+                     <span className="flex items-center gap-1.5"><User className="h-3.5 w-3.5" /> Auditor: {audit.auditorName || 'Unknown'}</span>
+                     <span className="flex items-center gap-1.5"><CalendarIcon className="h-3.5 w-3.5" /> {audit.submittedAt?.toDate().toLocaleString()}</span>
+                   </CardDescription>
                 </CardHeader>
 
-                <CardContent className="px-5 pb-5">
-                  <div className="flex gap-2">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" className="flex-1 font-black text-[10px] h-9 tracking-widest border-zinc-200">
-                          VIEW FULL SCAN
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-4xl p-0 overflow-hidden border-none rounded-3xl">
-                        <div className="grid md:grid-cols-3 bg-black">
-                          <div className="md:col-span-2 relative aspect-video md:aspect-auto bg-black">
-                            <video src={audit.videoUrl} controls autoPlay className="h-full w-full object-contain" />
-                          </div>
-                          <div className="p-8 bg-zinc-900 text-white space-y-8 flex flex-col justify-between">
-                            <div className="space-y-6">
-                              <DialogHeader>
-                                <DialogTitle className="text-2xl font-black">{audit.locationName}</DialogTitle>
-                                <DialogDescription className="text-zinc-500">
-                                  Covert audit captured by {audit.auditorName}
-                                </DialogDescription>
-                              </DialogHeader>
-                              
-                              <div className="space-y-4">
-                                <div className="space-y-1">
-                                  <span className="text-[10px] font-black text-zinc-600 uppercase">Selfie Verification</span>
-                                  <div className="aspect-square relative rounded-2xl overflow-hidden border border-zinc-800">
-                                    <img src={audit.selfieUrl} alt="Auditor Selfie" className="h-full w-full object-cover" />
-                                  </div>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-4">
-                                  <div className="space-y-1">
-                                    <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Time (PST)</span>
-                                    <p className="text-xs font-bold">{audit.submittedAt?.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                                  </div>
-                                  <div className="space-y-1">
-                                    <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Location Verify</span>
-                                    <p className="text-xs font-bold flex items-center gap-1">
-                                      <MapPin className="h-3 w-3 text-emerald-500" /> VALID
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <Button className="w-full h-12 bg-white text-black hover:bg-zinc-200 font-black" onClick={() => window.open(`https://www.google.com/maps?q=${audit.latitude},${audit.longitude}`, '_blank')}>
-                              TRACK ON MAP
-                            </Button>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
+                <CardContent className="mt-auto pt-0 pb-4">
+                   <Link href={`/dashboard/admin/flashmob/${audit.id}`} passHref>
+                     <Button variant="outline" className="w-full">
+                       View Full Details
+                     </Button>
+                   </Link>
                 </CardContent>
               </Card>
             ))}

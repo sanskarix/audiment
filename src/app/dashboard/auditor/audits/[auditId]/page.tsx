@@ -3,13 +3,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
-import { 
-  doc, 
-  getDoc, 
-  collection, 
-  getDocs, 
-  query, 
-  orderBy, 
+import {
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  orderBy,
   serverTimestamp,
   where,
   writeBatch,
@@ -21,18 +21,18 @@ import { Progress } from '@/components/ui/progress';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
+import {
+  Card,
+  CardContent,
+  CardHeader,
   CardTitle,
   CardDescription
 } from '@/components/ui/card';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Camera, 
-  Loader2, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  Camera,
+  Loader2,
   X,
   Image as ImageIcon,
   CheckCircle2,
@@ -59,13 +59,13 @@ interface Response {
 export default function AuditExecutionPage() {
   const { auditId } = useParams() as { auditId: string };
   const router = useRouter();
-  
+
   const [audit, setAudit] = useState<any>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [responses, setResponses] = useState<Record<string, Response>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
-  
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
@@ -77,7 +77,7 @@ export default function AuditExecutionPage() {
       try {
         const data = JSON.parse(decodeURIComponent(match[1]));
         setSession({ orgId: data.organizationId, uid: data.uid });
-      } catch (e) {}
+      } catch (e) { }
     }
   }, []);
 
@@ -114,7 +114,7 @@ export default function AuditExecutionPage() {
           };
         });
         setResponses(existingResponses);
-        
+
       } catch (err) {
         console.error('Fetch error:', err);
       } finally {
@@ -126,11 +126,11 @@ export default function AuditExecutionPage() {
   }, [session, auditId, router]);
 
   const currentQuestion = questions[currentIndex];
-  const currentResponse = currentQuestion ? (responses[currentQuestion.id] || { 
-    answer: '', 
-    score: 0, 
-    notes: '', 
-    photoUrls: [] 
+  const currentResponse = currentQuestion ? (responses[currentQuestion.id] || {
+    answer: '',
+    score: 0,
+    notes: '',
+    photoUrls: []
   }) : null;
 
   const handleAnswer = (answer: string, score: number) => {
@@ -164,16 +164,16 @@ export default function AuditExecutionPage() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      
+
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
-      
+
       if (!response.ok) {
         throw new Error('Cloudinary upload failed');
       }
-      
+
       const data = await response.json();
       const downloadURL = data.url;
 
@@ -209,11 +209,11 @@ export default function AuditExecutionPage() {
       return;
     }
     setSaving(true);
-    
+
     try {
       const batch = writeBatch(db);
       console.log('[AuditSubmission] Preparing batch for responses:', Object.keys(responses).length);
-      
+
       Object.entries(responses).forEach(([qId, r]) => {
         const q = questions.find(question => question.id === qId);
         if (!q) return;
@@ -287,7 +287,7 @@ export default function AuditExecutionPage() {
           try {
             const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
               // Reduced timeout to 5s for better UX, fallback to 0,0
-              navigator.geolocation.getCurrentPosition(resolve, reject, { 
+              navigator.geolocation.getCurrentPosition(resolve, reject, {
                 timeout: 5000,
                 enableHighAccuracy: false // Faster response
               });
@@ -295,7 +295,7 @@ export default function AuditExecutionPage() {
             updateData.latitude = pos.coords.latitude;
             updateData.longitude = pos.coords.longitude;
             console.log('[AuditSubmission] Geolocation captured');
-          } catch (e) { 
+          } catch (e) {
             console.warn('[AuditSubmission] Geo location failed or timed out, using fallback (0,0)', e);
             updateData.latitude = 0;
             updateData.longitude = 0;
@@ -313,13 +313,13 @@ export default function AuditExecutionPage() {
         console.log('[AuditSubmission] Low score detected, processing alerts');
         // 1. Notify Manager & Admin about low score
         const adminQuery = query(
-          collection(db, 'users'), 
-          where('organizationId', '==', session.orgId), 
+          collection(db, 'users'),
+          where('organizationId', '==', session.orgId),
           where('role', '==', 'ADMIN')
         );
         const adminSnap = await getDocs(adminQuery);
         const recipientIds = [audit.assignedManagerId, ...adminSnap.docs.map(d => d.id)];
-        
+
         recipientIds.forEach(recipientId => {
           if (!recipientId) return;
           const notifRef = doc(collection(db, 'notifications'));
@@ -346,9 +346,9 @@ export default function AuditExecutionPage() {
         );
         const recentAuditsSnap = await getDocs(recentAuditsQuery);
         const recentAudits = recentAuditsSnap.docs.map(d => d.data());
-        
+
         const allRecentScores = [updateData.scorePercentage, ...recentAudits.map(a => a.scorePercentage)];
-        
+
         if (allRecentScores.length >= 3 && allRecentScores.slice(0, 3).every(s => s < 60)) {
           console.log('[AuditSubmission] Trend alert triggered');
           adminSnap.docs.forEach(adminDoc => {
@@ -406,7 +406,7 @@ export default function AuditExecutionPage() {
               </p>
             </div>
             <Button variant="outline" size="sm" onClick={() => saveProgress(false)} disabled={saving} className="h-8 gap-1 px-2">
-              {saving ? <Loader2 className="h-3 w-3 animate-spin"/> : <CheckCircle2 className="h-3 w-3" />} Save
+              {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCircle2 className="h-3 w-3" />} Save
             </Button>
           </div>
           <Progress value={progressValue} className="h-2" />
@@ -483,14 +483,14 @@ export default function AuditExecutionPage() {
                   <Label className="text-xs font-bold uppercase text-muted-foreground flex items-center gap-2">
                     <ImageIcon className="h-4 w-4" /> Visual Evidence
                   </Label>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={!!uploading}
                     className="h-8 gap-1 text-xs"
                   >
-                    {uploading ? <Loader2 className="h-4 w-4 animate-spin"/> : <Camera className="h-4 w-4" />}
+                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
                     Upload Photo
                   </Button>
                   <input type="file" accept="image/*" ref={fileInputRef} className="hidden" onChange={handleFileUpload} />
@@ -506,8 +506,8 @@ export default function AuditExecutionPage() {
                   {currentResponse?.photoUrls.map((url, i) => (
                     <div key={i} className="group relative aspect-square rounded-md overflow-hidden border">
                       <img src={url} alt="Evidence" className="h-full w-full object-cover" />
-                      <button 
-                        onClick={() => removePhoto(url)} 
+                      <button
+                        onClick={() => removePhoto(url)}
                         className="absolute right-1 top-1 rounded-full bg-destructive p-1 text-destructive-foreground opacity-0 group-hover:opacity-100 transition-opacity"
                       >
                         <X className="h-3 w-3" />
@@ -522,7 +522,7 @@ export default function AuditExecutionPage() {
                 <Label className="text-xs font-bold uppercase text-muted-foreground">
                   Notes / Observations
                 </Label>
-                <Textarea 
+                <Textarea
                   placeholder="Describe your findings here..."
                   value={currentResponse?.notes || ''}
                   onChange={(e) => handleNoteChange(e.target.value)}

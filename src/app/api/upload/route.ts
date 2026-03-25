@@ -28,6 +28,7 @@ export async function POST(request: Request) {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           folder: 'audits',
+          resource_type: 'auto',
         },
         (error, result) => {
           if (error) return reject(error);

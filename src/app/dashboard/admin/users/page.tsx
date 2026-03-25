@@ -174,6 +174,16 @@ export default function AdminUsersPage() {
     }
   };
 
+  const handleToggleFlashmob = async (userId: string, currentStatus: boolean) => {
+    try {
+      await updateDoc(doc(db, 'users', userId), {
+        hasFlashmobAccess: !currentStatus,
+      });
+    } catch (err) {
+      console.error('Failed to toggle flashmob access', err);
+    }
+  };
+
   // Logic: Manager must be active to appear in listener
   const activeManagers = users.filter((u) => u.role.toUpperCase() === 'MANAGER' && u.isActive !== false);
 
@@ -252,6 +262,7 @@ export default function AdminUsersPage() {
                 <TableHead>Email</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Flashmob</TableHead>
                 <TableHead className="w-[100px] text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -266,6 +277,17 @@ export default function AdminUsersPage() {
                       <Switch checked={user.isActive !== false} onCheckedChange={() => handleToggleActive(user.id, user.isActive !== false)} disabled={user.role === 'ADMIN'} />
                       <span className="text-xs">{user.isActive !== false ? 'Active' : 'Inactive'}</span>
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    {user.role === 'AUDITOR' && (
+                      <div className="flex items-center space-x-2">
+                        <Switch 
+                          checked={user.hasFlashmobAccess === true} 
+                          onCheckedChange={() => handleToggleFlashmob(user.id, user.hasFlashmobAccess === true)} 
+                        />
+                        <span className="text-xs">{user.hasFlashmobAccess ? 'Enabled' : 'Disabled'}</span>
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>

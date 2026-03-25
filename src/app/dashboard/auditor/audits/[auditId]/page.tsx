@@ -12,7 +12,9 @@ import {
   orderBy, 
   serverTimestamp,
   where,
-  writeBatch
+  writeBatch,
+  Timestamp,
+  limit
 } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -121,7 +123,7 @@ export default function AuditExecutionPage() {
     }
 
     fetchData();
-  }, [session, auditId]);
+  }, [session, auditId, router]);
 
   const currentQuestion = questions[currentIndex];
   const currentResponse = currentQuestion ? (responses[currentQuestion.id] || { 
@@ -201,11 +203,16 @@ export default function AuditExecutionPage() {
   };
 
   const saveProgress = async (isFinal = false) => {
-    if (!session || !audit) return;
+    console.log(`[AuditSubmission] Starting saveProgress. isFinal: ${isFinal}`);
+    if (!session || !audit) {
+      console.warn('[AuditSubmission] Missing session or audit data', { session, audit });
+      return;
+    }
     setSaving(true);
     
     try {
       const batch = writeBatch(db);
+      console.log('[AuditSubmission] Preparing batch for responses:', Object.keys(responses).length);
       
       Object.entries(responses).forEach(([qId, r]) => {
         const q = questions.find(question => question.id === qId);
@@ -226,14 +233,43 @@ export default function AuditExecutionPage() {
           notes: r.notes,
           submittedAt: serverTimestamp()
         });
+
+        // Block 9: Auto-create corrective action for failed critical questions
+        if (isFinal) {
+          const isFailed = (q.severity === 'critical') && (
+            (q.questionType === 'yes_no' && r.answer === 'no') ||
+            (q.questionType === 'rating' && r.score <= 3)
+          );
+
+          if (isFailed) {
+            console.log(`[AuditSubmission] Creating corrective action for question: ${qId}`);
+            const caRef = doc(collection(db, 'correctiveActions'));
+            batch.set(caRef, {
+              auditId,
+              questionId: qId,
+              questionText: q.questionText,
+              locationId: audit.locationId,
+              locationName: audit.locationName,
+              organizationId: session.orgId,
+              assignedManagerId: audit.assignedManagerId,
+              description: r.notes || `Failed critical question: ${q.questionText}`,
+              severity: q.severity,
+              status: 'open',
+              deadline: Timestamp.fromDate(new Date(Date.now() + 48 * 60 * 60 * 1000)),
+              createdAt: serverTimestamp()
+            });
+          }
+        }
       });
 
       const auditRef = doc(db, 'audits', auditId);
       const updateData: any = {
-        status: isFinal ? 'completed' : 'in_progress'
+        status: isFinal ? 'completed' : 'in_progress',
+        updatedAt: serverTimestamp()
       };
 
       if (isFinal) {
+        console.log('[AuditSubmission] Calculating final scores');
         let totalScore = 0;
         let maxPossibleScore = 0;
         questions.forEach(q => {
@@ -245,23 +281,101 @@ export default function AuditExecutionPage() {
         updateData.scorePercentage = Math.round((totalScore / maxPossibleScore) * 100);
         updateData.completedAt = serverTimestamp();
 
+        // 4. Check if geo-location request is hanging with timeout fallback
         if (navigator.geolocation) {
+          console.log('[AuditSubmission] Requesting geolocation...');
           try {
             const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
-              navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 });
+              // Reduced timeout to 5s for better UX, fallback to 0,0
+              navigator.geolocation.getCurrentPosition(resolve, reject, { 
+                timeout: 5000,
+                enableHighAccuracy: false // Faster response
+              });
             });
             updateData.latitude = pos.coords.latitude;
             updateData.longitude = pos.coords.longitude;
-          } catch (e) { console.warn('Geo location failed'); }
+            console.log('[AuditSubmission] Geolocation captured');
+          } catch (e) { 
+            console.warn('[AuditSubmission] Geo location failed or timed out, using fallback (0,0)', e);
+            updateData.latitude = 0;
+            updateData.longitude = 0;
+          }
+        } else {
+          updateData.latitude = 0;
+          updateData.longitude = 0;
         }
       }
 
       batch.update(auditRef, updateData);
+
+      // Block 10: Low score and Trend alerts
+      if (isFinal && updateData.scorePercentage < 60) {
+        console.log('[AuditSubmission] Low score detected, processing alerts');
+        // 1. Notify Manager & Admin about low score
+        const adminQuery = query(
+          collection(db, 'users'), 
+          where('organizationId', '==', session.orgId), 
+          where('role', '==', 'ADMIN')
+        );
+        const adminSnap = await getDocs(adminQuery);
+        const recipientIds = [audit.assignedManagerId, ...adminSnap.docs.map(d => d.id)];
+        
+        recipientIds.forEach(recipientId => {
+          if (!recipientId) return;
+          const notifRef = doc(collection(db, 'notifications'));
+          batch.set(notifRef, {
+            organizationId: session.orgId,
+            recipientId,
+            recipientRole: recipientId === audit.assignedManagerId ? 'manager' : 'admin',
+            type: 'low_score',
+            title: `Low Audit Score: ${updateData.scorePercentage}%`,
+            message: `Audit for ${audit.locationName} completed with a low score of ${updateData.scorePercentage}%.`,
+            relatedId: auditId,
+            isRead: false,
+            createdAt: serverTimestamp()
+          });
+        });
+
+        // 2. Check for Trend alert (3 consecutive low scores)
+        const recentAuditsQuery = query(
+          collection(db, 'audits'),
+          where('locationId', '==', audit.locationId),
+          where('status', '==', 'completed'),
+          orderBy('completedAt', 'desc'),
+          limit(3)
+        );
+        const recentAuditsSnap = await getDocs(recentAuditsQuery);
+        const recentAudits = recentAuditsSnap.docs.map(d => d.data());
+        
+        const allRecentScores = [updateData.scorePercentage, ...recentAudits.map(a => a.scorePercentage)];
+        
+        if (allRecentScores.length >= 3 && allRecentScores.slice(0, 3).every(s => s < 60)) {
+          console.log('[AuditSubmission] Trend alert triggered');
+          adminSnap.docs.forEach(adminDoc => {
+            const trendNotifRef = doc(collection(db, 'notifications'));
+            batch.set(trendNotifRef, {
+              organizationId: session.orgId,
+              recipientId: adminDoc.id,
+              recipientRole: 'admin',
+              type: 'trend_alert',
+              title: `Performance Trend Alert: ${audit.locationName}`,
+              message: `${audit.locationName} has scored below 60% on 3 consecutive audits. Priority review required.`,
+              relatedId: auditId,
+              isRead: false,
+              createdAt: serverTimestamp()
+            });
+          });
+        }
+      }
+
+      console.log('[AuditSubmission] Committing batch...');
       await batch.commit();
+      console.log('[AuditSubmission] Batch committed successfully');
 
       if (isFinal) router.push('/dashboard/auditor');
-    } catch (err) {
-      console.error('Save failed:', err);
+    } catch (err: any) {
+      console.error('[AuditSubmission] CRITICAL ERROR during submission:', err);
+      alert(`Failed to submit audit: ${err.message || 'Unknown error'}. Please check your connection or console for details.`);
     } finally {
       setSaving(false);
     }
@@ -313,7 +427,7 @@ export default function AuditExecutionPage() {
                   </Badge>
                 )}
               </div>
-              <CardTitle className="text-xl md:text-2xl font-semibold leading-tight leading-snug">
+              <CardTitle className="text-xl md:text-2xl font-semibold leading-snug">
                 {currentQuestion.questionText}
               </CardTitle>
             </CardHeader>

@@ -40,6 +40,7 @@ export default function AdminReportsPage() {
   const [loading, setLoading] = useState(true);
   
   // Filters
+  const [session, setSession] = useState<{ organizationId: string } | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
   const [dateRange, setDateRange] = useState<{ start: Date | null, end: Date | null }>({
     start: null,
@@ -47,9 +48,25 @@ export default function AdminReportsPage() {
   });
 
   useEffect(() => {
+    const match = document.cookie.match(/audiment_session=([^;]+)/);
+    if (match) {
+      try {
+        setSession(JSON.parse(decodeURIComponent(match[1])));
+      } catch (e) {}
+    }
+  }, []);
+
+  useEffect(() => {
     async function fetchInitialData() {
       try {
-        const locationsSnap = await getDocs(collection(db, 'locations'));
+        if (!session?.organizationId) return;
+        
+        console.log('Admin Reports - Fetching locations for org:', session.organizationId);
+        const locationsSnap = await getDocs(query(
+          collection(db, 'locations'),
+          where('organizationId', '==', session.organizationId)
+        ));
+        console.log('Admin Reports - Locations found:', locationsSnap.size);
         setLocations(locationsSnap.docs.map(d => ({ id: d.id, name: d.data().name })));
         
         await fetchReports();
@@ -59,19 +76,26 @@ export default function AdminReportsPage() {
         setLoading(false);
       }
     }
-    fetchInitialData();
-  }, []);
+    if (session?.organizationId) {
+      fetchInitialData();
+    }
+  }, [session]);
 
   async function fetchReports() {
     setLoading(true);
     try {
+      if (!session?.organizationId) return;
+
+      console.log('Admin Reports - Fetching completed audits for org:', session.organizationId);
       let q = query(
         collection(db, 'audits'),
+        where('organizationId', '==', session.organizationId),
         where('status', '==', 'completed'),
         orderBy('completedAt', 'desc')
       );
 
       const snap = await getDocs(q);
+      console.log('Admin Reports - Audit reports found:', snap.size);
       let fetched = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
 
       if (selectedLocation !== 'all') {

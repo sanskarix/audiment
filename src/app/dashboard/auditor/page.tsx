@@ -8,7 +8,8 @@ import {
   where, 
   onSnapshot,
   Timestamp,
-  orderBy
+  orderBy,
+  doc
 } from 'firebase/firestore';
 import DashboardShell from '@/components/DashboardShell';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -32,6 +33,7 @@ import Link from 'next/link';
 
 export default function AuditorDashboardPage() {
   const [audits, setAudits] = useState<any[]>([]);
+  const [userData, setUserData] = useState<any>(null);
   const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -47,14 +49,25 @@ export default function AuditorDashboardPage() {
 
   useEffect(() => {
     if (!session?.uid) return;
+    const unsub = onSnapshot(doc(db, 'users', session.uid), (d) => {
+      setUserData(d.data());
+    });
+    return () => unsub();
+  }, [session]);
 
+  useEffect(() => {
+    if (!session?.uid) return;
+
+    console.log('Auditor Dashboard - Session:', session);
     const q = query(
       collection(db, 'audits'),
-      where('assignedAuditorId', '==', session.uid),
-      where('organizationId', '==', session.orgId)
+      where('organizationId', '==', session.orgId),
+      where('assignedAuditorId', '==', session.uid)
     );
+    console.log('Auditor Dashboard - Fetching audits for auditor:', session.uid, 'in org:', session.orgId);
 
     const unsubscribe = onSnapshot(q, (snap) => {
+      console.log('Auditor Dashboard - Docs found in snapshot:', snap.size);
       const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
       fetched.sort((a, b) => {
         const dateA = a.scheduledDate?.toMillis() || 0;
@@ -134,6 +147,32 @@ export default function AuditorDashboardPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Flashmob Section (Conditional) */}
+        {userData?.hasFlashmobAccess && (
+          <Card className="bg-zinc-900 text-white border-none shadow-xl overflow-hidden relative">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Play className="h-24 w-24" />
+            </div>
+            <CardHeader>
+              <div className="flex items-center gap-2 mb-2">
+                <Badge className="bg-amber-500 hover:bg-amber-500 text-black font-black border-none text-[10px]">ULTRA-PRIORITY</Badge>
+                <Badge variant="outline" className="text-white border-white/20 text-[10px]">COVERT MISSION</Badge>
+              </div>
+              <CardTitle className="text-2xl font-black">START FLASHMOB AUDIT</CardTitle>
+              <CardDescription className="text-zinc-400">
+                Record a quick 20-second video of any branch for an immediate compliance check.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full sm:w-auto h-12 px-8 font-black bg-white text-black hover:bg-zinc-200" asChild>
+                <Link href="/dashboard/auditor/flashmob">
+                  GO TO MISSION CONTROL
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Active Assignments List */}
         <div className="space-y-4 pt-4">

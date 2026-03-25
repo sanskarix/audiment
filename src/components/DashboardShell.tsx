@@ -5,6 +5,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { logoutUser } from '@/lib/auth';
 import NotificationBell from '@/components/NotificationBell';
+import { db } from '@/lib/firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 import {
   Sidebar,
   SidebarContent,
@@ -48,6 +50,7 @@ const NAV_ITEMS = {
     { title: 'Templates', icon: FileText, href: '/dashboard/admin/templates' },
     { title: 'Audits', icon: CheckSquare, href: '/dashboard/admin/audits' },
     { title: 'Reports', icon: BarChart, href: '/dashboard/admin/reports' },
+    { title: 'Flashmob', icon: Video, href: '/dashboard/admin/flashmob' },
   ],
   Manager: [
     { title: 'Overview', icon: LayoutDashboard, href: '/dashboard/manager' },
@@ -74,6 +77,8 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
   const pathname = usePathname();
   const [userState, setUserState] = useState<{ name: string; email: string } | null>(null);
 
+  const [hasFlashmobAccess, setHasFlashmobAccess] = useState(false);
+
   useEffect(() => {
     // Read the session details from cookie on client mount
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -81,18 +86,30 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
       try {
         const data = JSON.parse(decodeURIComponent(match[1]));
         setUserState({ name: data.name, email: data.email });
+
+        // For auditors, subscribe to their user doc to check flashmob access
+        if (role === 'Auditor' && data.uid) {
+          const unsub = onSnapshot(doc(db, 'users', data.uid), (snap) => {
+            setHasFlashmobAccess(snap.data()?.hasFlashmobAccess === true);
+          });
+          return unsub;
+        }
       } catch (e) {
         // ignore
       }
     }
-  }, []);
+  }, [role]);
 
   async function handleLogout() {
     await logoutUser();
     router.push('/login');
   }
 
-  const navItems = NAV_ITEMS[role] ?? [];
+  // Filter flashmob from auditor nav if they don't have access
+  const baseNav = NAV_ITEMS[role] ?? [];
+  const navItems = role === 'Auditor'
+    ? baseNav.filter(item => item.href !== '/dashboard/auditor/flashmob' || hasFlashmobAccess)
+    : baseNav;
   const roleColour = ROLE_COLOURS[role] ?? 'bg-zinc-600';
 
   return (
@@ -111,9 +128,9 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
           <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton 
-                  asChild 
-                  tooltip={item.title} 
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.title}
                   isActive={pathname === item.href}
                   className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent"
                 >

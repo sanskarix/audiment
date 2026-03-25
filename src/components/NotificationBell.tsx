@@ -94,8 +94,10 @@ export default function NotificationBell() {
   const getIcon = (type: string) => {
     switch (type) {
       case 'audit_assigned': return <CheckSquare className="h-4 w-4 text-blue-500" />;
+      case 'audit_missed': return <Clock className="h-4 w-4 text-rose-500" />;
       case 'surprise_audit': return <Zap className="h-4 w-4 text-amber-500" />;
       case 'low_score': return <AlertTriangle className="h-4 w-4 text-destructive" />;
+      case 'trend_alert': return <AlertTriangle className="h-4 w-4 text-orange-600" />;
       case 'corrective_action': return <FileText className="h-4 w-4 text-indigo-500" />;
       default: return <Bell className="h-4 w-4 text-muted-foreground" />;
     }
@@ -142,7 +144,8 @@ export default function NotificationBell() {
                   key={n.id} 
                   className={cn(
                     "relative flex gap-4 p-4 transition-all border-b last:border-0 hover:bg-muted/30 cursor-pointer",
-                    !n.isRead && "bg-primary/5 border-l-2 border-l-primary"
+                    !n.isRead && "bg-primary/5 border-l-2 border-l-primary",
+                    n.type === 'surprise_audit' && "bg-amber-50/50 hover:bg-amber-50"
                   )}
                   onClick={() => markAsRead(n.id)}
                 >
@@ -154,7 +157,10 @@ export default function NotificationBell() {
                   </div>
                   <div className="flex-1 space-y-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
-                      <p className={cn("text-sm font-semibold leading-none truncate", !n.isRead ? "text-foreground" : "text-muted-foreground font-medium")}>
+                      <p className={cn("text-sm font-semibold leading-none truncate flex items-center gap-1.5", !n.isRead ? "text-foreground" : "text-muted-foreground font-medium")}>
+                        {n.type === 'surprise_audit' && (
+                          <Badge className="bg-amber-500 hover:bg-amber-600 h-3.5 px-1 py-0 text-[8px] font-black uppercase text-white animate-pulse">URGENT</Badge>
+                        )}
                         {n.title}
                       </p>
                       <span className="text-[10px] text-muted-foreground shrink-0 whitespace-nowrap mt-0.5">

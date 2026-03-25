@@ -10,8 +10,10 @@ import {
   getDocs, 
   orderBy, 
   limit,
-  Timestamp
+  Timestamp,
+  onSnapshot
 } from 'firebase/firestore';
+import Link from 'next/link';
 import { 
   Card, 
   CardContent, 
@@ -56,15 +58,30 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     async function fetchDashboardData() {
       try {
+        const match = document.cookie.match(/audiment_session=([^;]+)/);
+        const session = match ? JSON.parse(decodeURIComponent(match[1])) : null;
+        console.log('Admin Dashboard - Session:', session);
+
+        if (!session?.organizationId) {
+          console.warn('Admin Dashboard - No organizationId in session');
+          setLoading(false);
+          return;
+        }
+
         const now = new Date();
         const monthStart = startOfMonth(now);
         
         // 1. Fetch Audits for this month
         const auditsRef = collection(db, 'audits');
-        const auditsSnap = await getDocs(query(
+        const auditsQuery = query(
           auditsRef,
-          where('createdAt', '>=', Timestamp.fromDate(startOfMonth(now)))
-        ));
+          where('organizationId', '==', session.organizationId),
+          where('createdAt', '>=', Timestamp.fromDate(monthStart))
+        );
+        console.log('Admin Dashboard - Fetching audits for org:', session.organizationId);
+        
+        const auditsSnap = await getDocs(auditsQuery);
+        console.log('Admin Dashboard - Audits count:', auditsSnap.size);
 
         const audits = auditsSnap.docs.map(d => d.data() as any);
         const total = audits.length;
@@ -73,16 +90,26 @@ export default function AdminDashboardPage() {
 
         // 2. Fetch Open Corrective Actions
         const caRef = collection(db, 'correctiveActions');
-        const caSnap = await getDocs(query(caRef, where('status', '==', 'open')));
+        const caSnap = await getDocs(query(
+          caRef, 
+          where('organizationId', '==', session.organizationId),
+          where('status', '==', 'open')
+        ));
+        console.log('Admin Dashboard - Open corrective actions:', caSnap.size);
         const openCA = caSnap.size;
 
-        // 3. Fetch Location Scores (using all completed audits to get recent averages)
-        const completedAuditsSnap = await getDocs(query(
+        // 3. Fetch Location Scores
+        const completedAuditsQuery = query(
           auditsRef, 
+          where('organizationId', '==', session.organizationId),
           where('status', '==', 'completed'),
           orderBy('completedAt', 'desc'),
           limit(100)
-        ));
+        );
+        
+        console.log('Admin Dashboard - Fetching completed audits for scores');
+        const completedAuditsSnap = await getDocs(completedAuditsQuery);
+        console.log('Admin Dashboard - Completed audits for scores:', completedAuditsSnap.size);
 
         const locationData: Record<string, { total: number; count: number }> = {};
         completedAuditsSnap.docs.forEach(doc => {
@@ -113,6 +140,21 @@ export default function AdminDashboardPage() {
     }
 
     fetchDashboardData();
+
+    // Block 9: Real-time corrective context
+    const match = document.cookie.match(/audiment_session=([^;]+)/);
+    const session = match ? JSON.parse(decodeURIComponent(match[1])) : null;
+    if (session?.organizationId) {
+      const q = query(
+        collection(db, 'correctiveActions'),
+        where('organizationId', '==', session.organizationId),
+        where('status', 'in', ['open', 'in_progress'])
+      );
+      const unsubscribe = onSnapshot(q, (snap) => {
+        setStats(prev => prev ? { ...prev, openCorrectiveActions: snap.size } : prev);
+      });
+      return () => unsubscribe();
+    }
   }, []);
 
   if (loading) {
@@ -162,16 +204,21 @@ export default function AdminDashboardPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-l-4 border-l-red-500">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium">Open Corrective Actions</CardTitle>
-              <AlertCircle className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats?.openCorrectiveActions}</div>
-              <p className="text-xs text-muted-foreground">Critical issues pending resolution</p>
-            </CardContent>
-          </Card>
+          <Link href="/dashboard/admin/corrective-actions" className="block transition-transform hover:scale-[1.02]">
+            <Card className="border-l-4 border-l-red-500 h-full">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-sm font-medium">Open Corrective Actions</CardTitle>
+                <AlertCircle className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats?.openCorrectiveActions}</div>
+                <p className="text-xs text-muted-foreground">Critical issues pending resolution</p>
+                <div className="mt-4 flex items-center text-[10px] font-bold text-rose-600 uppercase tracking-wider">
+                  View Queue <TrendingUp className="ml-1 h-3 w-3" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
 
         {/* Charts Section */}

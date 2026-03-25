@@ -7,9 +7,13 @@ import {
   collection, 
   query, 
   where, 
-  getDocs, 
+  getDocs,
   orderBy, 
-  limit 
+  limit,
+  onSnapshot,
+  updateDoc,
+  doc,
+  serverTimestamp
 } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
 import { 
@@ -26,7 +30,13 @@ import {
   TrendingUp, 
   CheckCircle2, 
   Clock,
-  Loader2
+  Loader2,
+  AlertTriangle,
+  Camera,
+  MessageSquare,
+  CheckCircle,
+  X,
+  Plus
 } from 'lucide-react';
 import { 
   LineChart, 
@@ -38,7 +48,20 @@ import {
   ResponsiveContainer 
 } from 'recharts';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription,
+  DialogFooter
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useRef } from 'react';
 
 interface ManagerStats {
   assignedLocations: number;
@@ -50,8 +73,17 @@ interface ManagerStats {
 
 export default function ManagerDashboardPage() {
   const [stats, setStats] = useState<ManagerStats | null>(null);
+  const [correctiveActions, setCorrectiveActions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
+
+  // Resolution state
+  const [selectedCA, setSelectedCA] = useState<any>(null);
+  const [resolutionNote, setResolutionNote] = useState('');
+  const [resolutionPhotos, setResolutionPhotos] = useState<string[]>([]);
+  const [isResolving, setIsResolving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -67,24 +99,34 @@ export default function ManagerDashboardPage() {
 
     async function fetchManagerData() {
       try {
+        console.log('Manager Dashboard - Session:', session);
+        console.log('Manager Dashboard - UID:', session.uid);
+        console.log('Manager Dashboard - OrganizationId:', session.organizationId);
+
         // 1. Fetch assigned locations
-        const locationsSnap = await getDocs(query(
+        const locationsQuery = query(
           collection(db, 'locations'), 
+          where('organizationId', '==', session.organizationId),
           where('assignedManagerId', '==', session.uid)
-        ));
+        );
+        const locationsSnap = await getDocs(locationsQuery);
+        console.log('Manager Dashboard - Locations found:', locationsSnap.size);
         const locationIds = locationsSnap.docs.map(d => d.id);
         const assignedLocationsCount = locationsSnap.size;
 
         // 2. Fetch auditors reporting to this manager
         const auditorsSnap = await getDocs(query(
           collection(db, 'users'), 
+          where('organizationId', '==', session.organizationId),
           where('managerId', '==', session.uid),
-          where('role', '==', 'auditor')
+          where('role', '==', 'AUDITOR')
         ));
+        console.log('Manager Dashboard - Auditors found:', auditorsSnap.size);
         const auditors = auditorsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
         // 3. Fetch recent audits for these locations
         if (locationIds.length === 0) {
+            console.warn('Manager Dashboard - No locations assigned to check for audits');
             setStats({
                 assignedLocations: 0,
                 activeAuditors: auditors.length,
@@ -95,12 +137,16 @@ export default function ManagerDashboardPage() {
             return;
         }
 
-        const auditsSnap = await getDocs(query(
+        const auditsQuery = query(
           collection(db, 'audits'),
+          where('organizationId', '==', session.organizationId),
           where('locationId', 'in', locationIds),
           orderBy('createdAt', 'desc'),
           limit(20)
-        ));
+        );
+        console.log('Manager Dashboard - Fetching audits for locations:', locationIds);
+        const auditsSnap = await getDocs(auditsQuery);
+        console.log('Manager Dashboard - Audits found:', auditsSnap.size);
         const audits = auditsSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
 
         // Process recent scores for chart
@@ -138,7 +184,62 @@ export default function ManagerDashboardPage() {
     }
 
     fetchManagerData();
+
+    // Fetch corrective actions (real-time)
+    const caQuery = query(
+      collection(db, 'correctiveActions'),
+      where('organizationId', '==', session.organizationId),
+      where('assignedManagerId', '==', session.uid),
+      where('status', 'in', ['open', 'in_progress']),
+      orderBy('createdAt', 'desc')
+    );
+
+    const unsubscribeCA = onSnapshot(caQuery, (snap) => {
+      setCorrectiveActions(snap.docs.map(d => ({ id: d.id, ...d.data() } as any)));
+    });
+
+    return () => unsubscribeCA();
   }, [session]);
+
+  const handleResolve = async () => {
+    if (!selectedCA || !resolutionNote) return;
+    setIsResolving(true);
+    try {
+      const caRef = doc(db, 'correctiveActions', selectedCA.id);
+      await updateDoc(caRef, {
+        status: 'resolved',
+        resolutionNote,
+        resolutionPhotoUrls: resolutionPhotos,
+        resolvedAt: serverTimestamp()
+      });
+      setSelectedCA(null);
+      setResolutionNote('');
+      setResolutionPhotos([]);
+    } catch (error) {
+      console.error('Error resolving CA:', error);
+    } finally {
+      setIsResolving(false);
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      if (!res.ok) throw new Error('Upload failed');
+      const data = await res.json();
+      setResolutionPhotos(prev => [...prev, data.url]);
+    } catch (err) {
+      console.error('Upload failed', err);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -182,6 +283,48 @@ export default function ManagerDashboardPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Corrective Actions Section */}
+        {correctiveActions.length > 0 && (
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold text-rose-600 flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5" />
+              Open Corrective Actions ({correctiveActions.length})
+            </h3>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 text-left">
+              {correctiveActions.map((ca) => (
+                <Card key={ca.id} className="border-rose-100 shadow-sm hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-2">
+                    <div className="flex justify-between items-start">
+                      <Badge variant="destructive" className="text-[10px] font-bold uppercase">
+                        {ca.severity}
+                      </Badge>
+                      <Badge variant="outline" className="text-[10px] font-bold text-rose-700 bg-rose-50 border-rose-100 italic">
+                        Due {format(ca.deadline.toDate(), 'MMM d')}
+                      </Badge>
+                    </div>
+                    <CardTitle className="text-sm font-bold pt-2">{ca.questionText}</CardTitle>
+                    <CardDescription className="text-xs line-clamp-2">{ca.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="pb-3 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1.5 font-medium">
+                      <MapPin className="h-3 w-3" /> {ca.locationName}
+                    </div>
+                  </CardContent>
+                  <CardContent className="pt-0 flex gap-2">
+                    <Button 
+                      size="sm" 
+                      className="flex-1 h-8 text-[11px] font-bold"
+                      onClick={() => setSelectedCA(ca)}
+                    >
+                       Mark as Resolved
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="grid gap-4 md:grid-cols-7 lg:grid-cols-7">
           {/* Trend Chart */}
@@ -272,7 +415,7 @@ export default function ManagerDashboardPage() {
                   <div className="text-right">
                     {audit.status === 'completed' ? (
                       <div className={cn(
-                        "text-sm font-black text-white px-3 py-1 rounded-full px-2 py-0.5 text-[12px]",
+                        "text-[10px] font-black text-white px-2 py-1 rounded-full",
                         audit.scorePercentage >= 90 ? "bg-emerald-500" : audit.scorePercentage >= 70 ? "bg-indigo-500" : "bg-rose-500"
                       )}>
                         {audit.scorePercentage}%
@@ -289,6 +432,77 @@ export default function ManagerDashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Resolution Dialog */}
+      <Dialog open={!!selectedCA} onOpenChange={(open) => !open && setSelectedCA(null)}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-rose-600">
+              <CheckCircle className="h-5 w-5" /> Resolve Issue
+            </DialogTitle>
+            <DialogDescription>
+              {selectedCA?.questionText} at {selectedCA?.locationName}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="note" className="text-xs font-bold uppercase text-muted-foreground">Resolution Note</Label>
+              <Textarea 
+                id="note"
+                placeholder="Describe how the issue was fixed..."
+                value={resolutionNote}
+                onChange={(e) => setResolutionNote(e.target.value)}
+                className="min-h-[100px] text-sm"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label className="text-xs font-bold uppercase text-muted-foreground">Evidence Photo (Optional)</Label>
+              <div className="flex items-center gap-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm" 
+                  className="h-20 w-full border-dashed flex-col gap-2"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                >
+                  {isUploading ? <Loader2 className="h-4 w-4 animate-spin"/> : <Camera className="h-5 w-5 text-muted-foreground" />}
+                  <span className="text-[10px] font-bold">CLICK TO UPLOAD</span>
+                </Button>
+                <input type="file" className="hidden" ref={fileInputRef} accept="image/*" onChange={handleFileUpload} />
+              </div>
+              
+              <div className="flex gap-2 overflow-x-auto py-2">
+                {resolutionPhotos.map((url, i) => (
+                  <div key={i} className="relative h-16 w-16 rounded-md overflow-hidden border">
+                    <img src={url} alt="Evidence" className="h-full w-full object-cover" />
+                    <button 
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-bl-md p-1"
+                      onClick={() => setResolutionPhotos(prev => prev.filter(p => p !== url))}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setSelectedCA(null)} className="font-bold text-xs uppercase h-9">Cancel</Button>
+            <Button 
+              onClick={handleResolve} 
+              disabled={isResolving || !resolutionNote}
+              className="bg-emerald-600 hover:bg-emerald-700 font-bold text-xs uppercase tracking-wider h-9 px-6"
+            >
+              {isResolving ? <Loader2 className="h-4 w-4 animate-spin mr-2"/> : <CheckCircle className="h-4 w-4 mr-2" />}
+              Complete Resolution
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardShell>
   );
 }

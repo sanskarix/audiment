@@ -33,7 +33,7 @@ export async function loginUser(email: string, password: string): Promise<AuthUs
     throw new Error('User record is missing an organizationId. Please contact support.');
   }
 
-  // Store session info in a cookie (readable by middleware)
+  // Store session info in a cookie (readable by proxy)
   const sessionData = JSON.stringify({ uid, role, email: data.email, name: data.name, organizationId: data.organizationId });
   document.cookie = `audiment_session=${encodeURIComponent(sessionData)}; path=/; max-age=${60 * 60 * 24 * 7}`;
 

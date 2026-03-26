@@ -21,7 +21,7 @@ function getSessionFromCookie(cookieString: string): { uid: string; role: string
   }
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const cookieHeader = request.headers.get('cookie') || '';
   const session = getSessionFromCookie(cookieHeader);

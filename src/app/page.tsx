@@ -1,70 +1,35 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
-  CheckCircle2, 
-  AlertCircle, 
-  Zap, 
   Calendar, 
-  ShieldCheck, 
+  Zap, 
+  Video, 
+  CheckCircle, 
   BarChart3, 
-  Smartphone, 
-  Clock, 
+  Bell, 
   ArrowRight,
   Menu,
   X,
-  Play,
-  ArrowUpRight,
-  ClipboardCheck,
-  ZapOff,
-  Users,
-  Building2,
   ChevronRight,
-  TrendingUp,
-  FileText,
-  ShieldAlert
+  LayoutDashboard,
+  Building2,
+  Users,
+  ShieldCheck,
+  CheckCircle2,
+  Clock
 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { BackgroundBeams } from "@/components/ui/background-beams";
+import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
+import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
+import { Timeline } from "@/components/ui/timeline";
+import { Spotlight } from "@/components/ui/spotlight";
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 
 // --- Components ---
-
-const FadeInSection = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
-  const [isVisible, setVisible] = useState(false);
-  const domRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.unobserve(entry.target);
-        }
-      });
-    });
-    
-    if (domRef.current) {
-      observer.observe(domRef.current);
-    }
-    
-    return () => {
-      if (domRef.current) {
-        observer.unobserve(domRef.current);
-      }
-    };
-  }, []);
-
-  return (
-    <div
-      ref={domRef}
-      className={`transition-all duration-1000 ease-out transform ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-      } ${className}`}
-    >
-      {children}
-    </div>
-  );
-};
-
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -80,43 +45,31 @@ const Navbar = () => {
 
   return (
     <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4 ${
-        isScrolled ? "bg-white/80 backdrop-blur-md shadow-sm" : "bg-transparent"
-      }`}
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
+        isScrolled 
+          ? "bg-[#0a0a0a]/80 backdrop-blur-md border-white/10 py-4" 
+          : "bg-transparent py-6"
+      )}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center transition-transform group-hover:scale-110">
-            <ShieldCheck className="text-white w-5 h-5" />
-          </div>
-          <span className="font-bold text-xl tracking-tight text-black">Audiment</span>
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <Link href="/" className="text-2xl font-black text-white tracking-tighter">
+          AUDIMENT
         </Link>
-
-        {/* Desktop Nav */}
+        
         <div className="hidden md:flex items-center gap-8">
-          <Link href="#features" className="text-sm font-medium text-neutral-600 hover:text-black transition-colors">Features</Link>
-          <Link href="#how-it-works" className="text-sm font-medium text-neutral-600 hover:text-black transition-colors">How it Works</Link>
-          <Link href="#who-it-is-for" className="text-sm font-medium text-neutral-600 hover:text-black transition-colors">Who it's for</Link>
-        </div>
-
-        <div className="hidden md:flex items-center gap-4">
+          <Link href="#features" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">Features</Link>
+          <Link href="#how-it-works" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">How it works</Link>
           <Link 
-            href="/auth/signin" 
-            className="text-sm font-medium text-neutral-600 hover:text-black transition-colors px-4 py-2"
+            href="/login" 
+            className="px-6 py-2 rounded-full bg-white text-black text-sm font-bold border border-white hover:bg-transparent hover:text-white transition-all duration-300"
           >
-            Sign In
-          </Link>
-          <Link 
-            href="/auth/signup" 
-            className="bg-black text-white text-sm font-medium px-5 py-2.5 rounded-full hover:bg-neutral-800 transition-all hover:scale-105 active:scale-95"
-          >
-            Get Started
+            Login
           </Link>
         </div>
 
-        {/* Mobile Toggle */}
         <button 
-          className="md:hidden p-2 text-black"
+          className="md:hidden text-white p-2"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X /> : <Menu />}
@@ -124,525 +77,366 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="absolute top-full left-0 right-0 bg-white border-b border-neutral-100 p-6 flex flex-col gap-4 animate-in slide-in-from-top duration-300 md:hidden shadow-xl">
-          <Link href="#features" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium py-2">Features</Link>
-          <Link href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium py-2">How it Works</Link>
-          <Link href="#who-it-is-for" onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-medium py-2">Who it's for</Link>
-          <div className="h-px bg-neutral-100 my-2" />
-          <Link href="/auth/signin" className="text-lg font-medium py-2">Sign In</Link>
-          <Link href="/auth/signup" className="bg-black text-white text-center rounded-xl py-4 font-bold">Get Started</Link>
-        </div>
-      )}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full left-0 right-0 bg-[#0a0a0a] border-b border-white/10 flex flex-col p-6 gap-6 md:hidden"
+          >
+            <Link href="#features" onClick={() => setIsMobileMenuOpen(false)} className="text-white text-lg font-medium">Features</Link>
+            <Link href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className="text-white text-lg font-medium">How it works</Link>
+            <Link href="/login" className="bg-white text-black py-4 rounded-xl text-center font-bold">Login</Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
 
-const Marquee = () => {
-  return (
-    <div className="py-20 overflow-hidden bg-white">
-      <div className="max-w-7xl mx-auto px-6 mb-10 text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-neutral-400 mb-2">Trusted by fast-moving teams</p>
+const SectionHeader = ({ badge, title, subline }: { badge?: string; title: string; subline?: string }) => (
+  <motion.div 
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.8 }}
+    viewport={{ once: true }}
+    className="flex flex-col items-center text-center gap-4 mb-16"
+  >
+    {badge && (
+      <span className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/50 text-[10px] font-bold uppercase tracking-[0.2em]">
+        {badge}
+      </span>
+    )}
+    <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter max-w-3xl leading-[0.95]">
+      {title}
+    </h2>
+    {subline && (
+      <p className="text-neutral-400 max-w-2xl text-lg leading-relaxed mt-4">
+        {subline}
+      </p>
+    )}
+  </motion.div>
+);
+
+// --- Content Data ---
+
+const marqueeItems = [
+  "Scheduled Audits",
+  "Surprise Audits",
+  "Flashmob Audit",
+  "Corrective Actions",
+  "Trend Alerts",
+  "PDF Reports",
+  "Geo-Tagged Evidence",
+  "Real-Time Dashboards"
+];
+
+const bentoFeatures = [
+  {
+    title: "Scheduled Audits",
+    description: "Publish recurring audits for any branch on any cadence — automated and consistent.",
+    header: <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-800 to-neutral-900 group-hover:scale-[1.02] transition-transform duration-500 overflow-hidden border border-white/5 flex flex-col gap-2 p-4">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="h-8 w-full bg-white/5 rounded-lg flex items-center justify-between px-3">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+            <div className="h-2 w-16 bg-white/10 rounded" />
+          </div>
+          <div className="h-2 w-8 bg-white/5 rounded" />
+        </div>
+      ))}
+    </div>,
+    icon: <Calendar className="h-4 w-4 text-white/50" />,
+    className: "md:col-span-2",
+  },
+  {
+    title: "Surprise Audits",
+    description: "Send unannounced audits with same-day deadlines.",
+    header: <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-[#0a0a0a] border border-white/5 group-hover:scale-[1.02] transition-transform duration-500 items-center justify-center">
+      <div className="relative">
+        <div className="w-16 h-16 bg-emerald-500/20 rounded-full animate-ping absolute" />
+        <Zap className="w-8 h-8 text-emerald-500 relative z-10" />
       </div>
-      <div className="relative flex whitespace-nowrap overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent)]">
-        <div className="flex animate-infinite-slider gap-20 items-center [--slide-offset:-50%] shrink-0 py-4">
-          {[1,2,3].map((set) => (
-            <React.Fragment key={set}>
-              <span className="text-2xl font-bold text-neutral-300 grayscale hover:grayscale-0 transition-all cursor-default flex items-center gap-2">
-                <Building2 className="w-6 h-6" /> QSR GROUP
-              </span>
-              <span className="text-2xl font-bold text-neutral-300 grayscale hover:grayscale-0 transition-all cursor-default flex items-center gap-2">
-                <CheckCircle2 className="w-6 h-6" /> RELIANCE
-              </span>
-              <span className="text-2xl font-bold text-neutral-300 grayscale hover:grayscale-0 transition-all cursor-default flex items-center gap-2">
-                <Zap className="w-6 h-6" /> FASTPACE
-              </span>
-              <span className="text-2xl font-bold text-neutral-300 grayscale hover:grayscale-0 transition-all cursor-default flex items-center gap-2">
-                <Users className="w-6 h-6" /> PEOPLEWARE
-              </span>
-              <span className="text-2xl font-bold text-neutral-300 grayscale hover:grayscale-0 transition-all cursor-default flex items-center gap-2">
-                <ShieldCheck className="w-6 h-6" /> SAFEGUARD
-              </span>
-            </React.Fragment>
-          ))}
+    </div>,
+    icon: <Zap className="h-4 w-4 text-white/50" />,
+    className: "md:col-span-1",
+  },
+  {
+    title: "Flashmob Audit",
+    description: "Deploy covert auditors who capture 20-second live videos from the field.",
+    header: <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-zinc-900 border border-white/5 group-hover:scale-[1.02] transition-transform duration-500 overflow-hidden relative">
+      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop')] bg-cover opacity-20" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+          <Video className="w-6 h-6 text-white" />
         </div>
       </div>
-    </div>
-  );
-};
+      <div className="absolute bottom-2 left-2 bg-red-500 text-[8px] font-bold px-1.5 py-0.5 rounded text-white italic tracking-tighter">LIVE • COVERT</div>
+    </div>,
+    icon: <Video className="h-4 w-4 text-white/50" />,
+    className: "md:col-span-1",
+  },
+  {
+    title: "Corrective Actions",
+    description: "Failed checkpoints automatically become assigned tasks — they get fixed.",
+    header: <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-indigo-900/20 to-purple-900/20 border border-indigo-500/10 group-hover:scale-[1.02] transition-transform duration-500 flex flex-col p-4 gap-2">
+      <div className="flex items-center gap-2 text-[10px] font-bold text-indigo-400">ASSIGNED TO: BRANCH 04</div>
+      <div className="h-8 w-full bg-white/5 rounded-lg flex items-center gap-3 px-3">
+        <div className="w-4 h-4 rounded-md border-2 border-indigo-500/50" />
+        <div className="h-2 w-32 bg-white/10 rounded" />
+      </div>
+      <div className="h-8 w-full bg-indigo-500/10 rounded-lg flex items-center gap-3 px-3">
+        <CheckCircle className="w-4 h-4 text-indigo-500" />
+        <div className="h-2 w-24 bg-white/20 rounded" />
+      </div>
+    </div>,
+    icon: <CheckCircle className="h-4 w-4 text-white/50" />,
+    className: "md:col-span-2",
+  },
+  {
+    title: "Scoring and Reports",
+    description: "Track trends and compare performance instantly with automated PDF reports.",
+    header: <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-zinc-900/90 border border-white/5 group-hover:scale-[1.02] transition-transform duration-500 p-4 relative">
+      <div className="flex items-end gap-1 h-20">
+        {[40, 70, 45, 90, 65, 85].map((h, i) => (
+          <div key={i} style={{ height: `${h}%` }} className="flex-1 bg-white/10 rounded-t-md hover:bg-white/20 transition-all cursor-pointer" />
+        ))}
+      </div>
+      <div className="absolute top-4 right-4 bg-white text-black text-[10px] font-black px-2 py-1 rounded">SCORE: 88%</div>
+    </div>,
+    icon: <BarChart3 className="h-4 w-4 text-white/50" />,
+    className: "md:col-span-1",
+  },
+  {
+    title: "Escalation Alerts",
+    description: "Get notified automatically when a branch scores low or misses an audit.",
+    header: <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-orange-500/5 border border-orange-500/10 group-hover:scale-[1.02] transition-transform duration-500 flex items-center justify-center">
+       <div className="relative">
+          <Bell className="w-10 h-10 text-orange-500" />
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full border-4 border-[#0a0a0a] flex items-center justify-center">
+            <div className="w-1 h-1 bg-white rounded-full animate-ping" />
+          </div>
+       </div>
+    </div>,
+    icon: <Bell className="h-4 w-4 text-white/50" />,
+    className: "md:col-span-1",
+  },
+];
 
-const FeatureCard = ({ title, description, icon: Icon, className = "", children }: any) => (
-  <FadeInSection className={`bg-neutral-50 rounded-[32px] overflow-hidden border border-neutral-100 flex flex-col p-8 ${className}`}>
-    <div className="flex flex-col gap-4 mb-8">
-      <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-neutral-100">
-        <Icon className="w-6 h-6 text-black" />
-      </div>
+const timelineData = [
+  {
+    title: "Step 1",
+    content: (
       <div>
-        <h3 className="text-xl font-bold text-black mb-2">{title}</h3>
-        <p className="text-neutral-500 leading-relaxed text-sm">{description}</p>
+        <p className="text-white text-xl md:text-2xl font-black mb-4 tracking-tight uppercase">Admin publishes an audit</p>
+        <p className="text-neutral-400 text-sm md:text-base leading-relaxed">
+          Choose a template, pick a branch, set a deadline. Done in 30 seconds. One central control, unlimited locations.
+        </p>
       </div>
-    </div>
-    <div className="mt-auto relative w-full aspect-video rounded-2xl overflow-hidden bg-white border border-neutral-100 shadow-sm flex items-center justify-center group-hover:scale-[1.02] transition-transform duration-500">
-      {children}
-    </div>
-  </FadeInSection>
-);
+    ),
+  },
+  {
+    title: "Step 2",
+    content: (
+      <div>
+        <p className="text-white text-xl md:text-2xl font-black mb-4 tracking-tight uppercase">Manager assigns it</p>
+        <p className="text-neutral-400 text-sm md:text-base leading-relaxed">
+          The right auditor gets notified instantly on their mobile and knows exactly what needs to be checked. No fumbling with paper.
+        </p>
+      </div>
+    ),
+  },
+  {
+    title: "Step 3",
+    content: (
+      <div>
+        <p className="text-white text-xl md:text-2xl font-black mb-4 tracking-tight uppercase">Owner sees everything</p>
+        <p className="text-neutral-400 text-sm md:text-base leading-relaxed">
+          Photo-backed results, scores, and alerts land on your dashboard in real time. Replace gut feel with verified ground truth.
+        </p>
+      </div>
+    ),
+  },
+];
 
 // --- Main Page ---
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-white selection:bg-black selection:text-white">
+    <main className="min-h-screen bg-[#0a0a0a] selection:bg-white selection:text-black">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        {/* Background Gradients */}
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-neutral-100 rounded-full blur-[120px] opacity-50 pointer-events-none" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-neutral-100 rounded-full blur-[120px] opacity-50 pointer-events-none" />
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20 px-6">
+        <Spotlight 
+          className="-top-40 left-0 md:left-60 md:-top-20" 
+          fill="white"
+        />
+        <div className="relative z-10 flex flex-col items-center text-center gap-6 max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/70 text-[10px] font-bold uppercase tracking-[0.2em]"
+          >
+            Audit Management for Multi-Outlet Businesses
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-5xl md:text-9xl font-black text-white tracking-tighter leading-[0.85] uppercase"
+          >
+            Every Branch.<br />
+            Every Audit.<br />
+            Total Control.
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-neutral-400 max-w-2xl text-lg md:text-xl font-medium leading-relaxed"
+          >
+            Audiment replaces guesswork with verified, photo-backed audit data from every outlet — so you always know what's really happening on the ground.
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-col sm:flex-row gap-4 mt-8"
+          >
+            <Link 
+              href="/login" 
+              className="px-10 py-5 rounded-full bg-white text-black text-lg font-black uppercase hover:bg-neutral-200 transition-all duration-300"
+            >
+              Get Started
+            </Link>
+            <Link 
+              href="/login" 
+              className="px-10 py-5 rounded-full bg-transparent text-white text-lg font-black uppercase border border-white/20 hover:bg-white/5 transition-all duration-300"
+            >
+              See How It Works
+            </Link>
+          </motion.div>
+        </div>
+        <BackgroundBeams />
+      </section>
 
-        <div className="max-w-7xl mx-auto px-6 relative">
-          <FadeInSection className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 border border-neutral-200 text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              Trusted by 500+ managers
-            </div>
-            <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-black mb-8 leading-[0.9]">
-              Operations <br/>
-              <span className="text-neutral-300">Simplified.</span>
-            </h1>
-            <p className="text-lg md:text-xl text-neutral-500 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Ditch the spreadsheets. Audiment is the all-in-one platform for recurring, surprise, and flashmob audits that actually drive results.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link 
-                href="/auth/signup" 
-                className="w-full sm:w-auto bg-black text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-neutral-800 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 group"
-              >
-                Get Started for Free
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link 
-                href="#how-it-works" 
-                className="w-full sm:w-auto px-8 py-4 rounded-full font-bold text-lg border border-neutral-200 hover:bg-neutral-50 transition-all flex items-center justify-center gap-2"
-              >
-                Learn More
-              </Link>
-            </div>
-          </FadeInSection>
+      {/* Marquee Strip */}
+      <section className="py-20 bg-[#0a0a0a] border-y border-white/5 relative overflow-hidden">
+        <InfiniteMovingCards
+          items={marqueeItems.map(item => ({ quote: item, name: "Feature", title: "" }))}
+          direction="right"
+          speed="slow"
+          className="font-black text-3xl md:text-5xl text-white/10"
+        />
+      </section>
 
-          {/* Hero Visual */}
-          <FadeInSection className="mt-24 relative max-w-6xl mx-auto" >
-            <div className="relative rounded-[40px] overflow-hidden border border-neutral-200 shadow-2xl skew-x-[-1deg] rotate-x-[5deg] transition-transform duration-700 hover:rotate-0 hover:skew-0">
-               {/* Mockup Content */}
-               <div className="bg-neutral-50 aspect-[16/9] w-full p-8 flex flex-col gap-6">
-                 {/* Mockup Header */}
-                 <div className="flex items-center justify-between">
-                    <div className="flex gap-2">
-                       <div className="w-3 h-3 rounded-full bg-neutral-200" />
-                       <div className="w-3 h-3 rounded-full bg-neutral-200" />
-                       <div className="w-3 h-3 rounded-full bg-neutral-200" />
-                    </div>
-                    <div className="h-6 w-32 bg-neutral-200 rounded-md" />
-                 </div>
-                 {/* Mockup Body */}
-                 <div className="flex-1 grid grid-cols-12 gap-6">
-                    <div className="col-span-3 flex flex-col gap-3">
-                       <div className="h-4 w-full bg-neutral-200 rounded" />
-                       <div className="h-4 w-4/5 bg-neutral-100 rounded" />
-                       <div className="mt-4 h-32 w-full bg-neutral-200/50 rounded-xl" />
-                    </div>
-                    <div className="col-span-9 bg-white rounded-2xl border border-neutral-100 p-6 shadow-sm flex flex-col gap-6">
-                       <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-full bg-neutral-100 animate-pulse" />
-                          <div className="flex flex-col gap-2">
-                             <div className="h-4 w-48 bg-neutral-200 rounded" />
-                             <div className="h-3 w-32 bg-neutral-100 rounded" />
-                          </div>
-                       </div>
-                       <div className="grid grid-cols-3 gap-4">
-                          {[1,2,3].map(i => (
-                            <div key={i} className="h-24 rounded-xl bg-neutral-50 border border-neutral-100" />
-                          ))}
-                       </div>
-                       <div className="h-32 w-full bg-neutral-50 rounded-xl border border-neutral-100 p-4">
-                          <div className="flex flex-col gap-3">
-                             <div className="h-2 w-full bg-neutral-200 rounded" />
-                             <div className="h-2 w-full bg-neutral-200 rounded" />
-                             <div className="h-2 w-2/3 bg-neutral-100 rounded" />
-                          </div>
-                       </div>
-                    </div>
-                 </div>
-               </div>
-               {/* Decorative floating elements */}
-               <div className="absolute top-20 -right-10 bg-white p-4 rounded-2xl shadow-xl border border-neutral-100 animate-bounce transition-all duration-3000">
-                  <div className="flex items-center gap-3">
-                     <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                        <CheckCircle2 className="w-6 h-6 text-green-600" />
-                     </div>
-                     <div>
-                        <p className="text-[10px] font-bold text-neutral-400 uppercase">Audit Completed</p>
-                        <p className="text-sm font-bold">98.5% Score</p>
-                     </div>
-                  </div>
-               </div>
-            </div>
-          </FadeInSection>
+      {/* Bento Grid Features */}
+      <section id="features" className="py-32 px-6 bg-[#0a0a0a]">
+        <div className="max-w-7xl mx-auto">
+          <SectionHeader 
+            badge="Features" 
+            title="Everything you need to audit smarter." 
+            subline="One platform. Complete visibility across every branch, every day."
+          />
+          <BentoGrid className="max-w-6xl mx-auto">
+            {bentoFeatures.map((item, i) => (
+              <BentoGridItem
+                key={i}
+                title={item.title}
+                description={item.description}
+                header={item.header}
+                icon={item.icon}
+                className={cn("bg-[#0a0a0a] border border-white/5", item.className)}
+              />
+            ))}
+          </BentoGrid>
         </div>
       </section>
 
-      <Marquee />
-
-      {/* Problem Section */}
-      <section className="py-32 bg-neutral-50 relative overflow-hidden">
+      {/* Timeline Section */}
+      <section id="how-it-works" className="py-20 bg-[#0a0a0a]">
         <div className="max-w-7xl mx-auto px-6">
-          <FadeInSection className="max-w-3xl mb-24">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-black mb-8 leading-tight">
-              Standard auditing is fixed, fake, and expensive.
-            </h2>
-            <p className="text-xl text-neutral-500 leading-relaxed">
-              Relying on quarterly manual audits or "friend checks" doesn't give you the truth. You need a system that captures the reality of your operations.
-            </p>
-          </FadeInSection>
-
-          <div className="grid md:grid-cols-2 gap-16">
-            <FadeInSection className="flex gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center">
-                <Clock className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-3">Slow Feedback Loops</h3>
-                <p className="text-neutral-500 leading-relaxed">It takes weeks to compile reports from paper forms or basic spreadsheets, by then the data is old.</p>
-              </div>
-            </FadeInSection>
-            <FadeInSection className="flex gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center">
-                <ShieldAlert className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-3">Predictable Checks</h3>
-                <p className="text-neutral-500 leading-relaxed">Auditors show up at the same time every month. Staff prepare, then lapse as soon as they leave.</p>
-              </div>
-            </FadeInSection>
-            <FadeInSection className="flex gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center">
-                <TrendingUp className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-3">Zero Accountability</h3>
-                <p className="text-neutral-500 leading-relaxed">Issues are flagged but never fixed. There's no automated follow-up or escalation for critical failures.</p>
-              </div>
-            </FadeInSection>
-            <FadeInSection className="flex gap-6">
-              <div className="flex-shrink-0 w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center">
-                <BarChart3 className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-3">Fragmented Data</h3>
-                <p className="text-neutral-500 leading-relaxed">Manual audits make it impossible to compare branches or track improvement over time at scale.</p>
-              </div>
-            </FadeInSection>
-          </div>
+           <Timeline 
+             data={timelineData} 
+             title="Simple for everyone. Powerful for owners."
+             description="Audiment works across every branch, every day — providing absolute ground-level honesty."
+           />
         </div>
       </section>
 
-      {/* Solution Section */}
-      <section id="features" className="py-32 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <FadeInSection className="text-center mb-24 max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-black mb-6">Built for scale.</h2>
-            <p className="text-xl text-neutral-500">Every tool you need to maintain 100% compliance across all locations.</p>
-          </FadeInSection>
-
-          {/* Bento Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <FeatureCard 
-              title="Scheduled Audits" 
-              description="Standardize compliance with recurring checks on daily, weekly, or monthly cycles."
-              icon={Calendar}
-              className="md:col-span-2 group"
-            >
-              <div className="flex flex-col gap-4 p-6 w-full h-full bg-neutral-50/50 group-hover:bg-white transition-colors">
-                 <div className="flex items-center justify-between px-4 py-3 bg-white border border-neutral-100 rounded-xl shadow-sm transition-all transform group-hover:translate-x-2">
-                    <div className="flex items-center gap-3">
-                       <CheckCircle2 className="w-5 h-5 text-green-500" />
-                       <span className="text-sm font-medium">Daily Hygiene Check</span>
-                    </div>
-                    <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full uppercase">Completed</span>
-                 </div>
-                 <div className="flex items-center justify-between px-4 py-3 bg-white border border-neutral-100 rounded-xl shadow-sm transition-all transform group-hover:translate-x-4">
-                    <div className="flex items-center gap-3">
-                       <Clock className="w-5 h-5 text-blue-500" />
-                       <span className="text-sm font-medium">Weekly Safety Audit</span>
-                    </div>
-                    <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-full uppercase">In Progress</span>
-                 </div>
-                 <div className="flex items-center justify-between px-4 py-3 bg-white border border-neutral-100 rounded-xl shadow-sm opacity-50 transition-all transform group-hover:translate-x-6">
-                    <div className="flex items-center gap-3">
-                       <Calendar className="w-5 h-5 text-neutral-400" />
-                       <span className="text-sm font-medium">Monthly Quality Review</span>
-                    </div>
-                    <span className="text-[10px] font-bold text-neutral-400 bg-neutral-50 px-2 py-1 rounded-full uppercase">Scheduled</span>
-                 </div>
-              </div>
-            </FeatureCard>
-
-            <FeatureCard 
-              title="Surprise Audits" 
-              description="Keep teams on their toes with unscheduled, instant random checks."
-              icon={Zap}
-              className="group"
-            >
-              <div className="relative flex items-center justify-center h-full">
-                 <div className="w-20 h-20 bg-yellow-50 rounded-full flex items-center justify-center animate-pulse transition-transform group-hover:scale-125">
-                    <Zap className="w-10 h-10 text-yellow-500 fill-yellow-500" />
-                 </div>
-                 <div className="absolute top-4 right-4 bg-white px-2 py-1 rounded-md text-[8px] font-bold border border-yellow-100 text-yellow-600 shadow-sm">INSTANT AI SELECTION</div>
-                 <div className="absolute bottom-4 left-4 flex gap-1">
-                    <div className="w-2 h-2 rounded-full bg-yellow-500 animate-bounce" />
-                    <div className="w-2 h-2 rounded-full bg-yellow-500 animate-bounce delay-100" />
-                    <div className="w-2 h-2 rounded-full bg-yellow-500 animate-bounce delay-200" />
-                 </div>
-              </div>
-            </FeatureCard>
-
-            <FeatureCard 
-              title="Flashmob Audit" 
-              description="Immediate video evidence from the field. Real-time visual compliance."
-              icon={Smartphone}
-            >
-               <div className="p-4 w-full h-full flex flex-col gap-3">
-                  <div className="aspect-[9/16] w-24 mx-auto bg-neutral-900 rounded-2xl overflow-hidden border-4 border-white shadow-xl flex flex-col items-center justify-center text-white p-2">
-                     <Play className="w-6 h-6 fill-white opacity-50 mb-2" />
-                     <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden">
-                        <div className="h-full bg-red-500 w-1/3 animate-[progress_3s_infinite]" />
-                     </div>
-                  </div>
-                  <div className="text-[10px] text-center font-bold text-neutral-400">REC 00:04</div>
-               </div>
-            </FeatureCard>
-
-            <FeatureCard 
-              title="Corrective Actions" 
-              description="Auto-generate tasks for failed audits and track them to completion."
-              icon={ClipboardCheck}
-              className="md:col-span-2"
-            >
-               <div className="flex flex-col gap-4 p-6 w-full h-full">
-                  <div className="flex gap-4">
-                     <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <AlertCircle className="w-6 h-6 text-red-500" />
-                     </div>
-                     <div className="flex flex-col gap-1 w-full">
-                        <div className="h-3 w-1/3 bg-neutral-200 rounded" />
-                        <div className="h-2 w-full bg-neutral-100 rounded" />
-                     </div>
-                  </div>
-                  <div className="ml-14 flex flex-col gap-2">
-                     <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border border-blue-500 bg-blue-50 rounded flex items-center justify-center">
-                           <CheckCircle2 className="w-3 h-3 text-blue-500" />
-                        </div>
-                        <span className="text-[10px] text-neutral-600">Re-upload photo proof</span>
-                     </div>
-                     <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border border-neutral-200 rounded" />
-                        <span className="text-[10px] text-neutral-400">Review branch manager</span>
-                     </div>
-                  </div>
-               </div>
-            </FeatureCard>
-
-            <FeatureCard 
-              title="Reports & Scoring" 
-              description="Compare performance across locations with detailed analytics."
-              icon={BarChart3}
-            >
-               <div className="p-6 w-full h-full flex flex-col gap-4">
-                  <div className="flex items-end gap-1 h-32 justify-around">
-                     <div className="w-4 bg-black rounded-t-sm h-[40%]" />
-                     <div className="w-4 bg-black rounded-t-sm h-[70%]" />
-                     <div className="w-4 bg-neutral-200 rounded-t-sm h-[30%]" />
-                     <div className="w-4 bg-black rounded-t-sm h-[90%]" />
-                     <div className="w-4 bg-black rounded-t-sm h-[60%]" />
-                  </div>
-                  <div className="h-px bg-neutral-100" />
-                  <div className="flex justify-between text-[8px] font-bold text-neutral-400">
-                     <span>MON</span><span>WED</span><span>FRI</span>
-                  </div>
-               </div>
-            </FeatureCard>
-
-            <FeatureCard 
-              title="Escalation Alerts" 
-              description="Real-time notifications for critical failures and missed audits."
-              icon={ShieldAlert}
-              className="md:col-span-2"
-            >
-               <div className="flex items-center justify-center h-full p-8">
-                  <div className="bg-white border border-neutral-100 p-4 rounded-2xl shadow-xl flex items-center gap-4 animate-in zoom-in duration-500">
-                     <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                        <AlertCircle className="w-7 h-7 text-red-600" />
-                     </div>
-                     <div>
-                        <p className="text-xs font-bold text-red-600 uppercase">Critical Alert</p>
-                        <p className="text-sm font-bold">Hygiene failure at Location B</p>
-                     </div>
-                     <ArrowUpRight className="text-neutral-300 w-5 h-5 ml-4" />
-                  </div>
-               </div>
-            </FeatureCard>
-          </div>
+      {/* Spotlight CTA */}
+      <section className="relative py-40 flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
+        <div className="absolute inset-0 z-0 opacity-40">
+           <Spotlight className="-bottom-80 left-0" fill="white" />
         </div>
-      </section>
-
-      {/* Role Section */}
-      <section id="who-it-is-for" className="py-32 bg-neutral-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <FadeInSection className="text-center mb-24 max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-black mb-6">Built for everyone.</h2>
-            <p className="text-xl text-neutral-500">A unified platform for every level of your organization.</p>
-          </FadeInSection>
-
-          <div className="grid md:grid-cols-3 gap-8">
-             <FadeInSection className="bg-white p-10 rounded-[40px] border border-neutral-100 flex flex-col gap-6 hover:shadow-xl transition-all duration-500">
-                <Users className="w-12 h-12 text-black" />
-                <h3 className="text-2xl font-bold">Managers</h3>
-                <p className="text-neutral-500 leading-relaxed">Centralize oversight. View all branches, track compliance trends, and manage corrective actions from one dashboard.</p>
-                <div className="mt-auto flex items-center gap-2 text-sm font-bold text-black group cursor-pointer">
-                   View Features <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </div>
-             </FadeInSection>
-             <FadeInSection className="bg-white p-10 rounded-[40px] border border-neutral-100 flex flex-col gap-6 hover:shadow-xl transition-all duration-500">
-                <Building2 className="w-12 h-12 text-black" />
-                <h3 className="text-2xl font-bold">Branch In-charge</h3>
-                <p className="text-neutral-500 leading-relaxed">Stay on top of daily operations. Receive clear task lists, proof requirements, and instant feedback on site safety.</p>
-                <div className="mt-auto flex items-center gap-2 text-sm font-bold text-black group cursor-pointer">
-                   View Features <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </div>
-             </FadeInSection>
-             <FadeInSection className="bg-white p-10 rounded-[40px] border border-neutral-100 flex flex-col gap-6 hover:shadow-xl transition-all duration-500">
-                <ShieldCheck className="w-12 h-12 text-black" />
-                <h3 className="text-2xl font-bold">Auditors</h3>
-                <p className="text-neutral-500 leading-relaxed">Efficiency first. Powerful mobile tools for rapid audit submission, video evidence capture, and scoring.</p>
-                <div className="mt-auto flex items-center gap-2 text-sm font-bold text-black group cursor-pointer">
-                   View Features <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </div>
-             </FadeInSection>
-          </div>
-        </div>
-      </section>
-
-      {/* How it Works Section */}
-      <section id="how-it-works" className="py-32 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <FadeInSection className="text-center mb-24 max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-black mb-6">Three steps away.</h2>
-            <p className="text-xl text-neutral-500">Get your organization up and running in minutes, not days.</p>
-          </FadeInSection>
-
-          <div className="grid md:grid-cols-3 gap-16 relative">
-             {/* Connector Line (Desktop) */}
-             <div className="hidden md:block absolute top-[60px] left-[15%] right-[15%] h-[2px] bg-neutral-100 z-0" />
-             
-             {[
-               {
-                 step: "01",
-                 title: "Define your audits",
-                 desc: "Create audit types (Standard, Surprise, Flashmob) and assign them to your locations and staff."
-               },
-               {
-                 step: "02",
-                 title: "Staff submits proof",
-                 desc: "Branch staff or auditors complete checks via the mobile app, providing photos, video, and notes."
-               },
-               {
-                 step: "03",
-                 title: "Analyze & Act",
-                 desc: "Review scores instantly. If a critical check fails, corrective tasks are auto-generated for follow-up."
-               }
-             ].map((item, idx) => (
-                <FadeInSection key={idx} className="relative z-10 flex flex-col items-center text-center gap-6">
-                   <div className="w-14 h-14 bg-black rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg border-4 border-white">
-                      {item.step}
-                   </div>
-                   <h3 className="text-2xl font-bold">{item.title}</h3>
-                   <p className="text-neutral-500 leading-relaxed">{item.desc}</p>
-                </FadeInSection>
-             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-32 bg-black overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0,transparent_70%)] opacity-50" />
-        <div className="max-w-7xl mx-auto px-6 relative">
-          <FadeInSection className="text-center max-w-4xl mx-auto">
-            <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-10 leading-tight">
-              Ready to take control <br/>of your operations?
-            </h2>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-               <Link 
-                href="/auth/signup" 
-                className="w-full sm:w-auto bg-white text-black px-10 py-5 rounded-full font-bold text-xl hover:bg-neutral-100 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 group"
-              >
-                Get Started Now
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link 
-                href="/auth/signin" 
-                className="w-full sm:w-auto px-10 py-5 rounded-full font-bold text-xl text-white border border-neutral-800 hover:bg-neutral-900 transition-all flex items-center justify-center gap-2"
-              >
-                Sign In
-              </Link>
-            </div>
-            <p className="mt-10 text-neutral-500 font-medium">No credit card required • Unlimited free trial • Setup in 5 minutes</p>
-          </FadeInSection>
+        <div className="relative z-10 max-w-4xl px-6 text-center">
+          <motion.h2 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-6xl md:text-9xl font-black text-white tracking-tighter mb-8 leading-[0.9] uppercase"
+          >
+            Stop hoping.<br />Start knowing.
+          </motion.h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+             <Link 
+              href="/login" 
+              className="px-16 py-8 rounded-full bg-white text-black text-2xl font-black uppercase hover:scale-105 transition-transform duration-300 flex items-center gap-4 mx-auto w-fit"
+            >
+              Get Started Today <ArrowRight className="w-8 h-8" />
+            </Link>
+          </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-20 bg-white border-t border-neutral-100">
+      <footer className="bg-[#0a0a0a] border-t border-white/5 pt-32 pb-10">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-            <div className="flex flex-col gap-4">
-               <Link href="/" className="flex items-center gap-2 group">
-                <div className="w-7 h-7 bg-black rounded-lg flex items-center justify-center">
-                  <ShieldCheck className="text-white w-4 h-4" />
-                </div>
-                <span className="font-bold text-lg tracking-tight text-black">Audiment</span>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+            <div className="md:col-span-2">
+              <Link href="/" className="text-3xl font-black text-white tracking-tighter mb-4 block">
+                AUDIMENT
               </Link>
-              <p className="text-neutral-400 text-sm max-w-xs">The modern standard for operational excellence and automated compliance.</p>
+              <p className="text-neutral-500 max-w-xs text-sm leading-relaxed">
+                Audit smarter. Manage better. The transparency layer for multi-outlet businesses.
+              </p>
             </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-16 md:gap-32">
-               <div className="flex flex-col gap-4">
-                  <h4 className="font-bold text-sm text-black">Product</h4>
-                  <nav className="flex flex-col gap-2">
-                     <Link href="#features" className="text-sm text-neutral-500 hover:text-black transition-colors">Features</Link>
-                     <Link href="#how-it-works" className="text-sm text-neutral-500 hover:text-black transition-colors">How it works</Link>
-                     <Link href="/auth/signup" className="text-sm text-neutral-500 hover:text-black transition-colors">Pricing</Link>
-                  </nav>
-               </div>
-               <div className="flex flex-col gap-4">
-                  <h4 className="font-bold text-sm text-black">Company</h4>
-                  <nav className="flex flex-col gap-2">
-                     <a href="#" className="text-sm text-neutral-500 hover:text-black transition-colors">About Us</a>
-                     <a href="#" className="text-sm text-neutral-500 hover:text-black transition-colors">Careers</a>
-                     <a href="#" className="text-sm text-neutral-500 hover:text-black transition-colors">Contact</a>
-                  </nav>
-               </div>
+            <div>
+              <h4 className="text-white font-bold mb-6 tracking-tight">PLATFORM</h4>
+              <ul className="flex flex-col gap-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
+                <li><Link href="#features" className="hover:text-white transition-colors">Features</Link></li>
+                <li><Link href="#how-it-works" className="hover:text-white transition-colors">How it works</Link></li>
+                <li><Link href="/login" className="hover:text-white transition-colors">Login</Link></li>
+              </ul>
+            </div>
+            <div>
+               <h4 className="text-white font-bold mb-6 tracking-tight">LEGAL</h4>
+              <ul className="flex flex-col gap-4 text-xs font-bold uppercase tracking-widest text-neutral-500">
+                <li><Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                <li><Link href="#" className="hover:text-white transition-colors">Terms of Service</Link></li>
+              </ul>
             </div>
           </div>
-          <div className="mt-20 pt-10 border-t border-neutral-100 flex flex-col md:flex-row justify-between items-center gap-6">
-             <p className="text-xs text-neutral-400">© 2026 Audiment Inc. All rights reserved.</p>
-             <div className="flex gap-8">
-                <a href="#" className="text-xs text-neutral-400 hover:text-black transition-colors">Privacy Policy</a>
-                <a href="#" className="text-xs text-neutral-400 hover:text-black transition-colors">Terms of Service</a>
-                <a href="#" className="text-xs text-neutral-400 hover:text-black transition-colors">Cookie Policy</a>
-             </div>
+
+          {/* Watermark Section */}
+          <div className="relative w-full overflow-hidden mb-10 h-40 md:h-80 select-none">
+             <TextHoverEffect text="AUDIMENT" />
+          </div>
+
+          <div className="pt-10 border-t border-white/5 flex flex-col md:row items-center justify-between gap-4">
+            <p className="text-neutral-600 text-[10px] font-bold uppercase tracking-widest">
+               © 2026 Audiment. All rights reserved.
+            </p>
+            <div className="flex gap-6">
+               {/* Social placeholders if needed */}
+            </div>
           </div>
         </div>
       </footer>

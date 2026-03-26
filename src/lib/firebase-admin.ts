@@ -2,21 +2,31 @@ import * as admin from 'firebase-admin';
 
 if (!admin.apps.length) {
   try {
-    // If FIREBASE_SERVICE_ACCOUNT is provided as a JSON string, parse it.
-    // Otherwise rely on individual env vars.
     let credential;
-    if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-      credential = admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT));
-    } else {
-      credential = admin.credential.cert({
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-      });
+
+    // Safely parse the service account JSON as requested
+    const serviceAccount = JSON.parse(
+      process.env.FIREBASE_SERVICE_ACCOUNT || '{}'
+    );
+
+    if (serviceAccount && serviceAccount.project_id) {
+      credential = admin.credential.cert(serviceAccount);
     }
 
-    admin.initializeApp({ credential });
+    // Fallback to individual env vars if FIREBASE_SERVICE_ACCOUNT was missing or invalid
+    if (!credential && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
+      credential = admin.credential.cert({
+        project_id: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        client_email: process.env.FIREBASE_CLIENT_EMAIL,
+        private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      } as admin.ServiceAccount);
+    }
+
+    if (credential) {
+      admin.initializeApp({ credential });
+    }
   } catch (error) {
+    // Wrap entire initialization so a bad parse doesn't crash the entire server
     console.error('Firebase admin initialization error:', error);
   }
 }

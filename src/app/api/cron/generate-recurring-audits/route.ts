@@ -100,3 +100,4 @@ export async function GET(req: Request) {
 }
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';

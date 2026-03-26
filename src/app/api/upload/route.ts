@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 // Configure Cloudinary
 cloudinary.config({

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebase-admin';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 // POST: Create a new user
 export async function POST(req: Request) {

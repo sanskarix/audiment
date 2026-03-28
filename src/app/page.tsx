@@ -2,106 +2,122 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { 
-  ArrowRight, 
-  ShieldCheck, 
-  MapPin, 
-  Camera, 
-  BarChart3, 
-  ListChecks, 
+import {
+  ArrowRight,
+  ShieldCheck,
+  MapPin,
+  Camera,
+  BarChart3,
+  ListChecks,
   Zap,
-  CheckCircle2,
   Menu,
   X,
-  Plus,
   ArrowUpRight,
-  ChevronDown,
-  Play
+  CheckCircle2,
+  AlertTriangle,
+  Clock,
+  TrendingUp,
+  Star,
 } from "lucide-react";
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
-import { cn } from "@/lib/utils";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+  useSpring,
+  useInView,
+  useMotionValue,
+  useAnimationFrame,
+} from "framer-motion";
 
-// --- Components ---
+// ─── Utility ───────────────────────────────────────────────────────────────
+function cn(...classes: (string | undefined | false)[]) {
+  return classes.filter(Boolean).join(" ");
+}
 
+// ─── Navbar ────────────────────────────────────────────────────────────────
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <nav className={cn(
-      "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6",
-      isScrolled ? "py-4" : "py-8"
-    )}>
-      <div className={cn(
-        "max-w-6xl mx-auto flex items-center justify-between px-6 py-3 transition-all duration-500",
-        isScrolled ? "glass rounded-full" : "bg-transparent"
-      )}>
-        <Link href="/" className="flex items-center gap-2 group">
-          <motion.div 
-            whileHover={{ rotate: 10 }}
-            className="w-8 h-8 bg-black rounded-lg flex items-center justify-center"
-          >
-            <ShieldCheck className="text-white w-5 h-5" />
-          </motion.div>
-          <span className="font-bold text-lg tracking-tight text-black uppercase">Audiment</span>
+    <nav className="fixed top-0 inset-x-0 z-50 px-5 py-5">
+      <motion.div
+        initial={false}
+        animate={scrolled ? "scrolled" : "top"}
+        variants={{
+          top: { backgroundColor: "rgba(255,255,255,0)", backdropFilter: "blur(0px)", borderColor: "rgba(0,0,0,0)", boxShadow: "none" },
+          scrolled: { backgroundColor: "rgba(255,255,255,0.8)", backdropFilter: "blur(20px)", borderColor: "rgba(0,0,0,0.07)", boxShadow: "0 2px 20px rgba(0,0,0,0.06)" },
+        }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3 rounded-full border"
+      >
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-7 h-7 bg-black rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-label="Audiment logo">
+              <rect x="2" y="2" width="5" height="5" rx="1" fill="white" />
+              <rect x="9" y="2" width="5" height="5" rx="1" fill="white" opacity="0.6" />
+              <rect x="2" y="9" width="5" height="5" rx="1" fill="white" opacity="0.6" />
+              <rect x="9" y="9" width="5" height="5" rx="1" fill="white" />
+            </svg>
+          </div>
+          <span className="font-bold text-[15px] tracking-tight text-black">Audiment</span>
         </Link>
-        
-        <div className="hidden md:flex items-center gap-8">
-          {['Platform', 'Enterprise', 'Pricing', 'Resources'].map((item) => (
-            <Link 
-              key={item} 
-              href={`#${item.toLowerCase()}`} 
-              className="group flex items-center gap-1 text-sm font-medium text-neutral-500 hover:text-black transition-colors"
+
+        {/* Nav Links */}
+        <div className="hidden md:flex items-center gap-7">
+          {["Platform", "Pricing", "Customers", "Resources"].map((item) => (
+            <Link
+              key={item}
+              href={`#${item.toLowerCase()}`}
+              className="text-sm font-medium text-neutral-500 hover:text-black transition-colors duration-200"
             >
               {item}
-              {item === 'Platform' && <ChevronDown className="w-4 h-4 text-neutral-400 group-hover:text-black transition-colors" />}
             </Link>
           ))}
         </div>
 
-        <div className="flex items-center gap-4">
-          <Link href="/login" className="hidden sm:block text-sm font-bold text-neutral-600 hover:text-black transition-colors">
-            Login
+        {/* Actions */}
+        <div className="flex items-center gap-3">
+          <Link href="/login" className="hidden sm:block text-sm font-semibold text-neutral-600 hover:text-black transition-colors">
+            Log in
           </Link>
-          <Link href="/login" className="text-sm font-bold bg-black text-white px-5 py-2.5 rounded-full hover:bg-neutral-800 hover:scale-[1.02] active:scale-[0.98] transition-all">
+          <Link
+            href="/login"
+            className="text-sm font-semibold bg-black text-white px-5 py-2 rounded-full hover:bg-neutral-800 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+          >
             Book a demo
           </Link>
-          <button 
-            className="md:hidden p-2 text-black"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X /> : <Menu />}
+          <button className="md:hidden p-2" onClick={() => setOpen(!open)} aria-label="Toggle menu">
+            {open ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
-        {mobileMenuOpen && (
+        {open && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-6 right-6 mt-4 p-6 glass rounded-3xl md:hidden flex flex-col gap-6"
+            initial={{ opacity: 0, y: -8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.97 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-2 mx-0 p-6 bg-white/90 backdrop-blur-xl border border-black/5 rounded-3xl shadow-xl flex flex-col gap-5 md:hidden"
           >
-            {['Platform', 'Enterprise', 'Pricing', 'Resources'].map((item) => (
-              <Link 
-                key={item} 
-                href="#"
-                className="text-lg font-bold text-black"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+            {["Platform", "Pricing", "Customers", "Resources"].map((item) => (
+              <Link key={item} href={`#${item.toLowerCase()}`} className="text-lg font-bold text-black" onClick={() => setOpen(false)}>
                 {item}
               </Link>
             ))}
-            <hr className="border-neutral-100" />
-            <Link href="/login" className="text-lg font-bold text-black">Login</Link>
+            <div className="h-px bg-neutral-100" />
+            <Link href="/login" className="text-lg font-bold text-black" onClick={() => setOpen(false)}>Log in</Link>
           </motion.div>
         )}
       </AnimatePresence>
@@ -109,214 +125,344 @@ const Navbar = () => {
   );
 };
 
-const Hero = () => {
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
+// ─── Floating Card Components (Dialog-style) ───────────────────────────────
+const AuditScoreCard = () => (
+  <div className="bg-white/80 backdrop-blur-2xl rounded-2xl p-4 shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-white/60 w-52">
+    <div className="flex items-center justify-between mb-3">
+      <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Live Score</span>
+      <span className="flex items-center gap-1">
+        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+        <span className="text-[10px] text-green-600 font-semibold">Live</span>
+      </span>
+    </div>
+    <div className="text-4xl font-black text-black mb-1">87<span className="text-lg text-neutral-400 font-bold">/100</span></div>
+    <div className="text-[11px] text-neutral-500 mb-3">Kitchen Hygiene — Branch 3</div>
+    <div className="h-2 w-full bg-neutral-100 rounded-full overflow-hidden">
+      <motion.div
+        initial={{ width: "0%" }}
+        animate={{ width: "87%" }}
+        transition={{ duration: 1.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="h-full bg-black rounded-full"
+      />
+    </div>
+    <div className="flex justify-between mt-1">
+      <span className="text-[10px] text-neutral-400">0</span>
+      <span className="text-[10px] text-neutral-400">100</span>
+    </div>
+  </div>
+);
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
+const FlashmobCard = () => (
+  <div className="bg-white/80 backdrop-blur-2xl rounded-2xl p-4 shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-white/60 w-60">
+    <div className="flex items-center gap-2.5 mb-3">
+      <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center shrink-0">
+        <Camera className="w-4 h-4 text-white" />
+      </div>
+      <div>
+        <div className="text-[12px] font-bold text-black">Flashmob Audit</div>
+        <div className="text-[10px] text-neutral-500">Unannounced · Branch 7</div>
+      </div>
+      <span className="ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0" />
+    </div>
+    <div className="space-y-2">
+      {[
+        { label: "Staff compliance", val: "✓", green: true },
+        { label: "Food storage temp", val: "✓", green: true },
+        { label: "Washroom hygiene", val: "!", green: false },
+      ].map((row) => (
+        <div key={row.label} className="flex items-center justify-between py-1.5 border-b border-neutral-50 last:border-0">
+          <span className="text-[11px] text-neutral-600">{row.label}</span>
+          <span className={cn("text-[11px] font-bold", row.green ? "text-green-600" : "text-orange-500")}>{row.val}</span>
+        </div>
+      ))}
+    </div>
+    <div className="mt-3 text-[10px] text-neutral-400 text-center">Sent directly to owner · Manager blind</div>
+  </div>
+);
+
+const CorrectiveCard = () => (
+  <div className="bg-white/80 backdrop-blur-2xl rounded-2xl p-4 shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-white/60 w-56">
+    <div className="flex items-center justify-between mb-3">
+      <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Action Required</span>
+      <AlertTriangle className="w-3.5 h-3.5 text-orange-400" />
+    </div>
+    <div className="space-y-2.5">
+      {[
+        { task: "Fix pest trap — Storage B", due: "2h", urgent: true },
+        { task: "Restock sanitizer — Kitchen", due: "4h", urgent: false },
+        { task: "Clean hood filters", due: "EOD", urgent: false },
+      ].map((t, i) => (
+        <div key={i} className="flex items-start gap-2.5">
+          <div className={cn("w-4 h-4 rounded-full shrink-0 mt-0.5 flex items-center justify-center", t.urgent ? "bg-red-100" : "bg-neutral-100")}>
+            <div className={cn("w-1.5 h-1.5 rounded-full", t.urgent ? "bg-red-500" : "bg-neutral-400")} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[11px] font-medium text-black leading-tight">{t.task}</div>
+            <div className="text-[10px] text-neutral-400">Due in {t.due}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// ─── Hero ───────────────────────────────────────────────────────────────────
+const Hero = () => {
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], [0, 160]);
+  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
+  // Floating card parallax
+  const cardY1 = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const cardY2 = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const cardY3 = useTransform(scrollYProgress, [0, 1], [0, -80]);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-20 px-6 overflow-hidden bg-white">
-      {/* Mesh Gradient Background */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[150vh] opacity-60">
-          <div className="absolute inset-x-0 top-0 h-full animate-mesh bg-[radial-gradient(at_0%_0%,var(--mesh-1)_0px,transparent_50%),radial-gradient(at_50%_0%,var(--mesh-2)_0px,transparent_50%),radial-gradient(at_100%_0%,var(--mesh-3)_0px,transparent_50%),radial-gradient(at_50%_50%,var(--mesh-4)_0px,transparent_50%)] bg-[length:200%_200%]" />
-        </div>
-        <div className="absolute inset-x-0 bottom-0 h-96 bg-gradient-to-t from-white via-white/80 to-transparent" />
+    <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center pt-28 pb-24 px-6 overflow-hidden bg-white">
+      {/* Animated Mesh Gradient */}
+      <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
+        <motion.div
+          animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 opacity-50"
+          style={{
+            background: "radial-gradient(ellipse at 20% 20%, oklch(0.95 0.06 30) 0, transparent 50%), radial-gradient(ellipse at 80% 10%, oklch(0.93 0.05 280) 0, transparent 50%), radial-gradient(ellipse at 60% 70%, oklch(0.94 0.04 200) 0, transparent 50%), radial-gradient(ellipse at 30% 80%, oklch(0.96 0.07 60) 0, transparent 50%)",
+            backgroundSize: "200% 200%",
+          }}
+        />
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-white to-transparent" />
       </div>
 
-      <motion.div style={{ y, opacity, scale }} className="relative z-10 max-w-5xl mx-auto text-center">
+      {/* Main Content */}
+      <motion.div style={{ y, opacity }} className="relative z-10 max-w-5xl mx-auto text-center">
+        {/* Pill badge */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/50 backdrop-blur-md border border-neutral-200/50 text-neutral-600 text-[11px] font-bold uppercase tracking-[0.15em] mb-10 shadow-sm"
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-md border border-black/8 text-neutral-600 text-[11px] font-bold uppercase tracking-[0.15em] mb-10 shadow-sm"
         >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="animate-ping absolute h-full w-full rounded-full bg-orange-400 opacity-75" />
+            <span className="relative rounded-full h-1.5 w-1.5 bg-orange-500" />
           </span>
-          The standard for multi-outlet retail
+          Built for Indian restaurant chains
         </motion.div>
-        
-        <motion.h1 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-6xl md:text-8xl lg:text-[110px] font-bold tracking-tight text-black leading-[0.9] mb-10"
-        >
-          Every Branch. <br/>
-          <span className="text-neutral-300">Total Operational Control.</span>
-        </motion.h1>
 
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
+        {/* Hero headline — word-by-word reveal */}
+        <div className="overflow-hidden mb-8">
+          {["Every Branch.", "Total Control."].map((line, li) => (
+            <motion.div
+              key={li}
+              initial={{ y: "110%" }}
+              animate={{ y: "0%" }}
+              transition={{ duration: 0.9, delay: 0.1 + li * 0.15, ease: [0.16, 1, 0.3, 1] }}
+              className={cn(
+                "text-[clamp(3rem,8vw,7rem)] font-black tracking-tight leading-[0.92]",
+                li === 0 ? "text-black" : "text-neutral-300"
+              )}
+            >
+              {line}
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Sub */}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-lg md:text-xl text-neutral-500 max-w-2xl mx-auto leading-relaxed mb-12 text-balance"
+          transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          className="text-lg md:text-xl text-neutral-500 max-w-xl mx-auto leading-relaxed mb-12"
         >
-          Audiment transforms messy operations into automated compliance, giving you a 360° view of every outlet in real-time.
+          Audiment gives restaurant owners verified, real-time visibility into every outlet — without leaving the office.
         </motion.p>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+        {/* CTA row */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col sm:flex-row gap-5 items-center justify-center"
+          transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col sm:flex-row gap-4 items-center justify-center"
         >
-          <Link 
-            href="/login" 
-            className="group relative px-10 py-5 rounded-full bg-black text-white text-lg font-bold transition-all duration-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] hover:-translate-y-1 overflow-hidden"
+          <Link
+            href="/login"
+            className="group flex items-center gap-2.5 px-8 py-4 bg-black text-white text-[15px] font-bold rounded-full transition-all duration-300 hover:bg-neutral-800 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.18)]"
           >
-            <span className="relative z-10 flex items-center gap-2">
-              Start for free <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </span>
+            Get started free
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
           </Link>
-          <Link 
-            href="/login" 
-            className="group px-10 py-5 rounded-full bg-white border border-neutral-200 text-black text-lg font-bold transition-all duration-300 hover:border-black hover:-translate-y-1 flex items-center gap-2"
+          <Link
+            href="/login"
+            className="flex items-center gap-2 px-8 py-4 bg-white border border-neutral-200 text-black text-[15px] font-bold rounded-full transition-all duration-300 hover:border-black hover:-translate-y-0.5"
           >
-            <Play className="w-4 h-4 fill-black" /> Watch demo
+            Book a demo
           </Link>
+        </motion.div>
+
+        {/* Social proof numbers */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9, duration: 0.6 }}
+          className="flex items-center justify-center gap-8 mt-16"
+        >
+          {[
+            { n: "3–25", label: "outlets supported" },
+            { n: "48h", label: "onboarding to live" },
+            { n: "100%", label: "FSSAI compliant" },
+          ].map(({ n, label }) => (
+            <div key={label} className="text-center">
+              <div className="text-2xl font-black text-black">{n}</div>
+              <div className="text-[11px] text-neutral-400 font-medium">{label}</div>
+            </div>
+          ))}
         </motion.div>
       </motion.div>
 
-      {/* Floating Elements - Inspired by Dialog */}
-      <div className="absolute inset-0 pointer-events-none z-20">
-        <motion.div 
-          animate={{ 
-            y: [0, -20, 0],
-            rotate: [-2, 2, -2]
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[20%] left-[10%] hidden xl:block"
+      {/* Floating Cards — Dialog style */}
+      <div className="absolute inset-0 pointer-events-none z-20 overflow-hidden">
+        {/* Left card */}
+        <motion.div
+          style={{ y: cardY1 }}
+          animate={{ y: [0, -18, 0], rotate: [-4, -2, -4] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[22%] left-[4%] hidden xl:block"
         >
-          <div className="glass p-4 rounded-2xl w-56 transform -rotate-6 shadow-2xl scale-90 opacity-80 backdrop-blur-2xl">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                <ShieldCheck className="w-4 h-4 text-green-600" />
-              </div>
-              <div className="flex-1">
-                <div className="h-2 w-16 bg-neutral-200 rounded-full mb-1" />
-                <div className="h-2 w-24 bg-neutral-100 rounded-full" />
-              </div>
-            </div>
-            <div className="h-20 w-full bg-neutral-50 rounded-xl" />
-          </div>
+          <AuditScoreCard />
         </motion.div>
 
-        <motion.div 
-          animate={{ 
-            y: [0, 20, 0],
-            rotate: [5, 1, 5]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-[20%] right-[10%] hidden xl:block"
+        {/* Right card */}
+        <motion.div
+          style={{ y: cardY2 }}
+          animate={{ y: [0, 16, 0], rotate: [5, 3, 5] }}
+          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[18%] right-[4%] hidden xl:block"
         >
-          <div className="glass p-5 rounded-3xl w-64 transform rotate-6 shadow-2xl backdrop-blur-2xl border-white/40">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[10px] font-bold text-neutral-400 tracking-widest uppercase">Live Audit</span>
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            </div>
-            <div className="space-y-3">
-              <div className="flex gap-2">
-                <div className="w-10 h-10 rounded-lg bg-neutral-100 shrink-0" />
-                <div className="flex-1 space-y-2">
-                  <div className="h-2 w-full bg-neutral-200 rounded-full" />
-                  <div className="h-2 w-2/3 bg-neutral-100 rounded-full" />
-                </div>
-              </div>
-            </div>
-          </div>
+          <FlashmobCard />
+        </motion.div>
+
+        {/* Bottom right card */}
+        <motion.div
+          style={{ y: cardY3 }}
+          animate={{ y: [0, -12, 0], rotate: [-3, 0, -3] }}
+          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[12%] right-[6%] hidden xl:block"
+        >
+          <CorrectiveCard />
         </motion.div>
       </div>
     </section>
   );
 };
 
-const LogoMarquee = () => {
-  const logos = [
-    "Marriott", "Starbucks", "Nike", "Apple", "Walmart", "Zara", "Decathlon", "Subway"
-  ];
+// ─── Logo Marquee ───────────────────────────────────────────────────────────
+const brands = ["Biryani Blues", "Wow! Momo", "Chaayos", "Theobroma", "Faasos", "Haldirams", "Behrouz Biryani", "Punjab Grill"];
+
+const LogoMarquee = () => (
+  <section className="py-16 bg-white border-y border-neutral-100 overflow-hidden">
+    <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.25em] text-center mb-10">
+      Trusted by India's fastest-growing chains
+    </p>
+    <div className="relative flex overflow-hidden before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-24 before:bg-gradient-to-r before:from-white before:to-transparent after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-24 after:bg-gradient-to-l after:from-white after:to-transparent">
+      <motion.div
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+        className="flex gap-16 items-center whitespace-nowrap"
+      >
+        {[...brands, ...brands].map((brand, i) => (
+          <span
+            key={i}
+            className="text-2xl font-black text-neutral-200 hover:text-black transition-colors duration-500 cursor-default uppercase tracking-tight select-none"
+          >
+            {brand}
+          </span>
+        ))}
+      </motion.div>
+    </div>
+  </section>
+);
+
+// ─── Sticky Feature Panels (Dialog-style scroll stack) ──────────────────────
+const features = [
+  {
+    step: "01",
+    tag: "Publish",
+    headline: "Design audits\nthat actually get done.",
+    body: "Build FSSAI-compliant audit templates once. Publish to any branch instantly — as a scheduled recurring check, a same-day surprise, or a fully covert Flashmob audit.",
+    accent: "bg-orange-50/40",
+    visual: <AuditScoreCard />,
+  },
+  {
+    step: "02",
+    tag: "Verify",
+    headline: "Geo-tagged proof.\nNo shortcuts.",
+    body: "Staff walk the floor answering one question at a time on their phone. Live-capture-only photos. GPS location locked on submit. Every audit is timestamped and tamper-proof.",
+    accent: "bg-blue-50/30",
+    visual: <FlashmobCard />,
+  },
+  {
+    step: "03",
+    tag: "Fix",
+    headline: "Every failure becomes\na tracked task.",
+    body: "Failed checkpoints auto-create corrective action tasks assigned to the manager with a photo-resolution deadline. The loop only closes when the issue is fixed with evidence.",
+    accent: "bg-neutral-50/60",
+    visual: <CorrectiveCard />,
+  },
+];
+
+const StickyFeaturePanel = ({
+  feature,
+  index,
+}: {
+  feature: (typeof features)[0];
+  index: number;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-120px" });
 
   return (
-    <section className="py-20 bg-white border-y border-neutral-100 overflow-hidden">
-      <div className="max-w-6xl mx-auto px-6 mb-10 overflow-visible">
-        <p className="text-[11px] font-bold text-neutral-400 uppercase tracking-[0.2em] text-center mb-10">
-          Trusted by world-class retailers
-        </p>
-      </div>
-      <div className="flex relative overflow-hidden before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-20 before:bg-gradient-to-r before:from-white before:to-transparent after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-20 after:bg-gradient-to-l after:from-white after:to-transparent">
-        <motion.div 
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-          className="flex gap-20 items-center whitespace-nowrap min-w-full"
-        >
-          {[...logos, ...logos].map((logo, i) => (
-            <span key={i} className="text-3xl lg:text-4xl font-black text-neutral-200 hover:text-black transition-colors duration-500 cursor-default uppercase tracking-tight">
-              {logo}
-            </span>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-const FeatureCard = ({ title, description, step, icon: Icon, color }: any) => {
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      className="sticky top-40 w-full mb-20 px-6"
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 60 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.05 * index }}
+      className="sticky mb-6"
+      style={{ top: `${120 + index * 24}px` }}
     >
-      <div className={cn(
-        "max-w-6xl mx-auto glass rounded-[3rem] p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 border-none shadow-[0_24px_80px_rgba(0,0,0,0.06)]",
-        color
-      )}>
-        <div className="flex-1 space-y-8">
-          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white shadow-sm border border-neutral-100">
-            <span className="text-xs font-black text-black">{step}</span>
-            <div className="w-px h-4 bg-neutral-200" />
-            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">Operational Phase</span>
-          </div>
-          <div className="space-y-6">
-            <h3 className="text-4xl md:text-6xl font-bold tracking-tight text-black leading-tight">
-              {title}
-            </h3>
-            <p className="text-lg md:text-xl text-neutral-600 font-medium leading-relaxed max-w-md">
-              {description}
-            </p>
-          </div>
-          <button className="group inline-flex items-center gap-2 font-bold text-black border-b-2 border-black pb-1 hover:gap-4 transition-all">
-            See how it works <ArrowUpRight className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="flex-1 w-full aspect-square md:aspect-video rounded-[2rem] bg-neutral-50/50 border border-neutral-100 overflow-hidden relative group">
-          <div className="absolute inset-x-8 top-8 bottom-0 bg-white rounded-t-2xl shadow-2xl border border-neutral-100 transform group-hover:translate-y-[-10px] transition-transform duration-700">
-            <div className="p-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="h-3 w-24 bg-neutral-100 rounded-full" />
-                <div className="h-5 w-5 rounded-full bg-neutral-50" />
-              </div>
-              <div className="h-px w-full bg-neutral-50" />
-              <div className="space-y-2 pt-2">
-                <div className="h-2 w-full bg-neutral-50 rounded-full" />
-                <div className="h-2 w-2/3 bg-neutral-50 rounded-full" />
-              </div>
+      <div className={cn("max-w-6xl mx-auto rounded-[2.5rem] border border-black/5 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.07)]", feature.accent)}>
+        <div className="grid md:grid-cols-2 gap-0 items-stretch">
+          {/* Text side */}
+          <div className="p-10 md:p-16 flex flex-col justify-center gap-6">
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] font-black text-black bg-white border border-black/8 rounded-full px-3 py-1 shadow-sm">
+                {feature.step}
+              </span>
+              <span className="w-px h-4 bg-neutral-200" />
+              <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-widest">
+                {feature.tag}
+              </span>
             </div>
+            <h3 className="text-4xl md:text-5xl font-black tracking-tight text-black leading-[1.05] whitespace-pre-line">
+              {feature.headline}
+            </h3>
+            <p className="text-[15px] text-neutral-600 leading-relaxed max-w-sm">
+              {feature.body}
+            </p>
+            <button className="group inline-flex items-center gap-1.5 text-sm font-bold text-black border-b-2 border-black pb-0.5 self-start hover:gap-3 transition-all duration-200">
+              See how it works
+              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </button>
           </div>
-          <div className="absolute inset-0 bg-gradient-to-tr from-neutral-100/50 to-transparent pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-             <div className="w-16 h-16 rounded-full bg-black flex items-center justify-center text-white">
-                <Icon className="w-6 h-6" />
-             </div>
+
+          {/* Visual side */}
+          <div className="bg-white/40 flex items-center justify-center p-12 md:p-16 min-h-[320px]">
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 5 + index * 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              {feature.visual}
+            </motion.div>
           </div>
         </div>
       </div>
@@ -324,238 +470,440 @@ const FeatureCard = ({ title, description, step, icon: Icon, color }: any) => {
   );
 };
 
-const StickyFeatures = () => {
-  const steps = [
-    {
-      step: "01",
-      title: "Design Audits That Scale.",
-      description: "Create complex audit workflows for hygiene, safety, or inventory. Deploy to 1000s of locations instantly.",
-      icon: ListChecks,
-      color: "bg-orange-50/20"
-    },
-    {
-      step: "02",
-      title: "Real-time Verification.",
-      description: "Staff capture geo-tagged proof directly in-app. AI verifies images to eliminate fraud and human error.",
-      icon: Camera,
-      color: "bg-blue-50/20"
-    },
-    {
-      step: "03",
-      title: "Automated Fixes.",
-      description: "Instantly trigger corrective tasks on failures. Track resolution benchmarks across your entire region.",
-      icon: Zap,
-      color: "bg-neutral-50/30"
-    }
-  ];
+const StickyFeatures = () => (
+  <section className="py-32 bg-white">
+    <div className="max-w-3xl mx-auto px-6 text-center mb-28">
+      <motion.h2
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="text-5xl md:text-7xl font-black tracking-tight text-black leading-[0.95] mb-6"
+      >
+        From publish<br />to fixed.
+      </motion.h2>
+      <motion.p
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+        className="text-xl text-neutral-500"
+      >
+        Three steps. Zero paperwork. Full accountability.
+      </motion.p>
+    </div>
+    <div className="px-6 relative">
+      {features.map((f, i) => (
+        <StickyFeaturePanel key={i} feature={f} index={i} />
+      ))}
+      {/* Spacer so last card un-sticks cleanly */}
+      <div className="h-20" />
+    </div>
+  </section>
+);
+
+// ─── Flashmob Feature Highlight (Dialog "chatbot lives in a corner" section) ─
+const FlashmobHighlight = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="relative py-40 bg-white">
-      <div className="max-w-4xl mx-auto px-6 text-center mb-40">
-        <h2 className="text-4xl md:text-7xl font-bold tracking-tight text-black mb-10">
-          Simplify complexity. <br/>Drive compliance.
-        </h2>
-        <p className="text-xl text-neutral-500 font-medium leading-relaxed">
-          From the store room to the boardroom, Audiment provides the single source of truth for your physical operations.
-        </p>
+    <section className="py-32 px-6 bg-black overflow-hidden relative">
+      {/* Subtle mesh on dark */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse at 10% 50%, oklch(0.3 0.1 280) 0, transparent 60%), radial-gradient(ellipse at 90% 50%, oklch(0.3 0.08 30) 0, transparent 60%)",
+        }}
+      />
+      <div ref={ref} className="max-w-6xl mx-auto relative z-10">
+        <div className="grid md:grid-cols-2 gap-16 items-center">
+          {/* Left */}
+          <div>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 text-white/60 text-[11px] font-bold uppercase tracking-widest mb-8">
+                <Camera className="w-3.5 h-3.5" />
+                Flashmob Audit
+              </div>
+              <h2 className="text-4xl md:text-6xl font-black text-white leading-[0.95] tracking-tight mb-6">
+                Your manager<br />
+                <span className="text-neutral-500">never sees it.</span>
+              </h2>
+              <p className="text-lg text-neutral-400 leading-relaxed mb-10 max-w-sm">
+                A credentialed auditor walks into your branch unannounced, records a 20-second video, takes a geo-tagged selfie, and sends the report directly to you. The manager is completely blind to it.
+              </p>
+              <p className="text-sm text-neutral-500 mb-8 italic">
+                "The ability to see what a kitchen looks like at 11am on a Tuesday — with no manager influence — is unprecedented at this price point."
+              </p>
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-black text-sm font-bold rounded-full hover:bg-neutral-100 transition-all hover:-translate-y-0.5"
+              >
+                Learn about Flashmob <ArrowRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Right — animated phone mockup */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="flex justify-center"
+          >
+            <motion.div
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="w-64 bg-white/8 backdrop-blur-xl border border-white/12 rounded-3xl p-5 shadow-[0_40px_80px_rgba(0,0,0,0.5)]"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[11px] font-bold text-white/50 uppercase tracking-widest">Flashmob Report</span>
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              </div>
+              <div className="aspect-video bg-white/5 border border-white/10 rounded-xl mb-4 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                  <Camera className="w-5 h-5 text-white/50" />
+                </div>
+              </div>
+              <div className="space-y-2 mb-4">
+                {[
+                  { label: "Location verified", ok: true },
+                  { label: "Identity confirmed", ok: true },
+                  { label: "Kitchen — visible issue", ok: false },
+                ].map((row) => (
+                  <div key={row.label} className="flex items-center justify-between">
+                    <span className="text-[11px] text-white/50">{row.label}</span>
+                    <span className={cn("text-[11px] font-bold", row.ok ? "text-green-400" : "text-red-400")}>
+                      {row.ok ? "✓" : "!"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="text-[10px] text-white/25 text-center">Delivered to owner · Manager not notified</div>
+            </motion.div>
+          </motion.div>
+        </div>
       </div>
-      <div className="relative">
-        {steps.map((step, i) => (
-          <FeatureCard key={i} {...step} />
+    </section>
+  );
+};
+
+// ─── Bento Grid ─────────────────────────────────────────────────────────────
+const bentoItems = [
+  {
+    col: "md:col-span-7",
+    title: "Trend alerts before crises.",
+    body: "Automatic alerts fire when a branch shows consistent decline across multiple audits — weeks before the problem is visible to the naked eye.",
+    icon: TrendingUp,
+    bg: "bg-neutral-50",
+  },
+  {
+    col: "md:col-span-5",
+    title: "WhatsApp-native alerts.",
+    body: "Notifications delivered through the channel your team already uses all day.",
+    icon: Zap,
+    bg: "bg-orange-50",
+  },
+  {
+    col: "md:col-span-5",
+    title: "Works offline.",
+    body: "Auditors in kitchens and basements complete the checklist offline. Everything syncs when back online, with original timestamps preserved.",
+    icon: MapPin,
+    bg: "bg-blue-50",
+  },
+  {
+    col: "md:col-span-7",
+    title: "Cross-branch ranking.",
+    body: "Every branch ranked and scored side-by-side. Objective, data-driven conversations with your managers — not trust-based ones.",
+    icon: BarChart3,
+    bg: "bg-neutral-50",
+  },
+];
+
+const BentoGrid = () => {
+  return (
+    <section className="py-32 px-6 bg-white">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-20">
+          <motion.h2
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="text-5xl md:text-6xl font-black tracking-tight text-black mb-4"
+          >
+            Built for every gap<br />in multi-outlet ops.
+          </motion.h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+          {bentoItems.map(({ col, title, body, icon: Icon, bg }, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className={cn("rounded-3xl p-8 border border-black/5 cursor-default", col, bg)}
+            >
+              <div className="mb-6">
+                <Icon className="w-6 h-6 text-black" strokeWidth={1.5} />
+              </div>
+              <h3 className="text-xl font-bold text-black mb-2">{title}</h3>
+              <p className="text-[14px] text-neutral-600 leading-relaxed">{body}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─── Pricing Section ─────────────────────────────────────────────────────────
+const Pricing = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+
+  return (
+    <section id="pricing" className="py-32 px-6 bg-neutral-50" ref={ref}>
+      <div className="max-w-4xl mx-auto text-center mb-20">
+        <h2 className="text-5xl md:text-6xl font-black tracking-tight text-black mb-4">
+          Scales with your chain.
+        </h2>
+        <p className="text-lg text-neutral-500">Pay per outlet. No hidden fees. Cancel anytime.</p>
+      </div>
+      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6">
+        {[
+          {
+            name: "Starter",
+            price: "₹3,999",
+            period: "/ outlet / month",
+            description: "For chains with 3–8 outlets ready to move beyond WhatsApp management.",
+            features: ["Unlimited scheduled audits", "Surprise audit mode", "GPS + photo verification", "Corrective action tracking", "WhatsApp alerts", "FSSAI-compliant templates"],
+            cta: "Start free trial",
+            highlight: false,
+          },
+          {
+            name: "Growth",
+            price: "₹2,999",
+            period: "/ outlet / month",
+            description: "For chains with 9+ outlets. Volume pricing + Flashmob Audits unlocked.",
+            features: ["Everything in Starter", "Flashmob Audits (covert)", "Trend alerts & predictive flags", "Cross-branch ranking dashboard", "Priority onboarding (48h)", "Dedicated account manager"],
+            cta: "Book a demo",
+            highlight: true,
+          },
+        ].map((plan, i) => (
+          <motion.div
+            key={plan.name}
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className={cn(
+              "rounded-3xl p-8 border",
+              plan.highlight
+                ? "bg-black text-white border-black shadow-[0_20px_60px_rgba(0,0,0,0.2)]"
+                : "bg-white text-black border-black/8"
+            )}
+          >
+            <div className="mb-6">
+              <div className={cn("text-[11px] font-bold uppercase tracking-widest mb-3", plan.highlight ? "text-white/50" : "text-neutral-400")}>
+                {plan.name}
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-4xl font-black">{plan.price}</span>
+                <span className={cn("text-sm", plan.highlight ? "text-white/50" : "text-neutral-400")}>{plan.period}</span>
+              </div>
+              <p className={cn("text-sm mt-2 leading-relaxed", plan.highlight ? "text-white/60" : "text-neutral-500")}>
+                {plan.description}
+              </p>
+            </div>
+            <ul className="space-y-3 mb-8">
+              {plan.features.map((f) => (
+                <li key={f} className="flex items-center gap-2.5">
+                  <CheckCircle2 className={cn("w-4 h-4 shrink-0", plan.highlight ? "text-white/70" : "text-black")} />
+                  <span className={cn("text-sm", plan.highlight ? "text-white/80" : "text-neutral-700")}>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/login"
+              className={cn(
+                "block text-center text-sm font-bold py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5",
+                plan.highlight
+                  ? "bg-white text-black hover:bg-neutral-100"
+                  : "bg-black text-white hover:bg-neutral-800"
+              )}
+            >
+              {plan.cta}
+            </Link>
+          </motion.div>
         ))}
       </div>
     </section>
   );
 };
 
-const BentoGridFeatures = () => {
-  return (
-    <section className="py-40 px-6 bg-neutral-50/50 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-24">
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-black mb-6">Built for the future of retail.</h2>
-          <p className="text-lg text-neutral-500 font-medium">Powering the next generation of physical commerce operation.</p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[280px]">
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className="md:col-span-8 bg-white glass-border p-10 rounded-[2.5rem] border border-neutral-200/50 flex flex-col justify-between group shadow-sm hover:shadow-xl transition-all duration-500"
-          >
-             <div>
-                <BarChart3 className="w-10 h-10 mb-6 text-black" />
-                <h3 className="text-3xl font-bold tracking-tight mb-4">Deep Trend Analysis</h3>
-                <p className="text-neutral-500 font-medium max-w-md">Spot performance gaps before they become liabilities. AI analyzes audit data to predict future issues.</p>
-             </div>
-             <div className="flex items-end gap-3 h-20 opacity-40 group-hover:opacity-100 transition-opacity">
-                {[40, 70, 45, 90, 65, 80, 50, 100, 60, 85].map((h, i) => (
-                  <motion.div 
-                    key={i} 
-                    initial={{ height: 0 }}
-                    whileInView={{ height: `${h}%` }}
-                    className="flex-1 bg-neutral-100 group-hover:bg-black transition-colors rounded-t-lg" 
-                  />
-                ))}
-             </div>
-          </motion.div>
-          
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className="md:col-span-4 bg-black p-10 rounded-[2.5rem] flex flex-col justify-between text-white group shadow-xl hover:shadow-2xl transition-all duration-500"
-          >
-             <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
-                <Zap className="w-6 h-6 text-orange-400" />
-             </div>
-             <div>
-                <h3 className="text-2xl font-bold tracking-tight mb-4">Flash Audit</h3>
-                <p className="text-neutral-400 font-medium leading-relaxed">One-click surprise verification sent to all branches.</p>
-             </div>
-          </motion.div>
+// ─── Testimonials ────────────────────────────────────────────────────────────
+const testimonials = [
+  {
+    quote: "I have 14 outlets. Before Audiment, I was flying blind. Now I get a full picture of every branch every single day — without visiting any of them.",
+    name: "Rohan Mehta",
+    role: "Owner, Spice Route Restaurants",
+    outlets: "14 outlets",
+  },
+  {
+    quote: "The Flashmob Audit feature alone is worth the subscription. The first time we used it, we found a hygiene issue that had been hidden from us for months.",
+    name: "Priya Shankar",
+    role: "Director, Cloud Kitchen Group",
+    outlets: "9 outlets",
+  },
+  {
+    quote: "Our FSSAI inspection went smoothly for the first time ever. We had a full digital audit trail to show them on the spot.",
+    name: "Amit Verma",
+    role: "Founder, Chai & More",
+    outlets: "6 outlets",
+  },
+];
 
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className="md:col-span-4 bg-white p-10 rounded-[2.5rem] border border-neutral-200/50 flex flex-col items-center justify-center text-center group shadow-sm hover:shadow-xl transition-all duration-500"
+const Testimonials = () => (
+  <section className="py-32 px-6 bg-white overflow-hidden">
+    <div className="max-w-6xl mx-auto">
+      <div className="text-center mb-20">
+        <h2 className="text-5xl md:text-6xl font-black tracking-tight text-black mb-4">
+          Owners sleep better.
+        </h2>
+        <p className="text-lg text-neutral-500">What restaurant chains say after switching to Audiment.</p>
+      </div>
+      <div className="grid md:grid-cols-3 gap-6">
+        {testimonials.map((t, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+            className="bg-neutral-50 rounded-3xl p-8 border border-black/5 flex flex-col gap-6"
           >
-             <div className="w-20 h-20 bg-neutral-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-black group-hover:text-white transition-all duration-500">
-                <MapPin className="w-8 h-8" />
-             </div>
-             <h3 className="text-xl font-bold tracking-tight mb-2">Geo-fencing</h3>
-             <p className="text-neutral-500 font-medium">Verify audits occur on-site.</p>
+            <div className="flex gap-0.5">
+              {Array.from({ length: 5 }).map((_, si) => (
+                <Star key={si} className="w-4 h-4 fill-black text-black" />
+              ))}
+            </div>
+            <p className="text-[15px] text-neutral-700 leading-relaxed flex-1">"{t.quote}"</p>
+            <div>
+              <div className="font-bold text-sm text-black">{t.name}</div>
+              <div className="text-[12px] text-neutral-400">{t.role} · {t.outlets}</div>
+            </div>
           </motion.div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
 
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className="md:col-span-8 bg-white p-10 rounded-[2.5rem] border border-neutral-200/50 flex flex-col md:flex-row gap-12 items-center group shadow-sm hover:shadow-xl transition-all duration-500"
+// ─── Final CTA ───────────────────────────────────────────────────────────────
+const FinalCTA = () => (
+  <section className="py-32 px-6 bg-white">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className="max-w-4xl mx-auto bg-black rounded-[3rem] p-16 md:p-24 text-center relative overflow-hidden"
+    >
+      <div className="absolute inset-0 opacity-20 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at 30% 50%, oklch(0.4 0.12 30) 0, transparent 60%), radial-gradient(ellipse at 70% 50%, oklch(0.3 0.1 280) 0, transparent 60%)" }}
+      />
+      <div className="relative z-10">
+        <div className="text-[11px] font-bold text-white/40 uppercase tracking-[0.25em] mb-6">Ready to start?</div>
+        <h2 className="text-5xl md:text-7xl font-black text-white leading-[0.92] tracking-tight mb-6">
+          See every branch.<br />Trust nothing else.
+        </h2>
+        <p className="text-lg text-white/50 mb-12 max-w-md mx-auto leading-relaxed">
+          First live audit within 48 hours of sign-up. Full FSSAI-compliant setup. Cancel anytime.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            href="/login"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-black text-[15px] font-bold rounded-full hover:bg-neutral-100 transition-all hover:-translate-y-0.5"
           >
-             <div className="flex-1">
-                <ShieldCheck className="w-10 h-10 mb-6 text-black" />
-                <h3 className="text-3xl font-bold tracking-tight mb-4">Enterprise Security</h3>
-                <p className="text-neutral-500 font-medium">SOC2 Compliant infrastructure with bank-grade encryption for all data.</p>
-             </div>
-             <div className="flex-1 relative h-full w-full bg-neutral-50/50 rounded-3xl overflow-hidden border border-neutral-100 flex items-center justify-center">
-                <div className="flex gap-1.5">
-                   {[1,2,3,4,5].map(i => (
-                     <div key={i} className="w-1.5 h-8 bg-black rounded-full animate-mesh" style={{ animationDelay: `${i * 0.1}s` }} />
-                   ))}
-                </div>
-             </div>
-          </motion.div>
+            Get started free <ArrowRight className="w-4 h-4" />
+          </Link>
+          <Link
+            href="/login"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-white/20 text-white text-[15px] font-bold rounded-full hover:border-white/40 transition-all hover:-translate-y-0.5"
+          >
+            Book a demo
+          </Link>
         </div>
       </div>
-    </section>
-  );
-};
+    </motion.div>
+  </section>
+);
 
-const CTA = () => {
-  return (
-    <section className="py-20 bg-white">
-       <div className="max-w-6xl mx-auto px-6">
-          <div className="relative bg-neutral-900 rounded-[4rem] p-12 md:p-32 overflow-hidden">
-             <div className="absolute inset-0 opacity-40 animate-mesh bg-[radial-gradient(at_0%_0%,#333_0px,transparent_50%),radial-gradient(at_100%_100%,#222_0px,transparent_50%)]" />
-             
-             <div className="relative z-10 text-center max-w-3xl mx-auto">
-                <h2 className="text-5xl md:text-8xl font-black tracking-tight text-white leading-[0.9] mb-12">
-                  Ready to scale your excellence?
-                </h2>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12">
-                   <Link 
-                    href="/login" 
-                    className="w-full sm:w-auto bg-white text-black px-12 py-6 rounded-full font-bold text-xl hover:scale-105 active:scale-95 transition-all shadow-[0_20px_40px_rgba(255,255,255,0.1)]"
-                  >
-                    Start free trial
-                  </Link>
-                  <Link 
-                    href="/login" 
-                    className="w-full sm:w-auto px-12 py-6 rounded-full font-bold text-xl text-white border border-neutral-700 hover:bg-neutral-800 transition-all flex items-center justify-center gap-2"
-                  >
-                    Contact sales <ArrowRight className="w-5 h-5" />
-                  </Link>
-                </div>
-                <div className="flex items-center justify-center gap-8 text-neutral-500 font-bold uppercase tracking-widest text-[10px]">
-                  <span>No credit card</span>
-                  <div className="w-1.5 h-1.5 rounded-full bg-neutral-700" />
-                  <span>Setup in minutes</span>
-                  <div className="w-1.5 h-1.5 rounded-full bg-neutral-700" />
-                  <span>Cloud based</span>
-                </div>
-             </div>
-          </div>
-       </div>
-    </section>
-  );
-};
-
-const Footer = () => {
-  return (
-    <footer className="pt-40 pb-20 bg-white relative overflow-hidden">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between gap-20 mb-32">
-          <div className="max-w-sm space-y-8">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform">
-                <ShieldCheck className="text-white w-6 h-6" />
-              </div>
-              <span className="font-bold text-2xl tracking-tighter text-black uppercase">Audiment</span>
-            </Link>
-            <p className="text-neutral-500 text-lg font-medium leading-relaxed">
-              The world's most advanced operational compliance platform for retailers.
-            </p>
-            <div className="flex gap-4">
-              {/* Social icons could go here */}
+// ─── Footer ──────────────────────────────────────────────────────────────────
+const Footer = () => (
+  <footer className="border-t border-neutral-100 py-16 px-6 bg-white">
+    <div className="max-w-6xl mx-auto">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
+        <div className="col-span-2 md:col-span-1">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-7 h-7 bg-black rounded-lg flex items-center justify-center">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <rect x="2" y="2" width="5" height="5" rx="1" fill="white" />
+                <rect x="9" y="2" width="5" height="5" rx="1" fill="white" opacity="0.6" />
+                <rect x="2" y="9" width="5" height="5" rx="1" fill="white" opacity="0.6" />
+                <rect x="9" y="9" width="5" height="5" rx="1" fill="white" />
+              </svg>
             </div>
+            <span className="font-bold text-[15px] tracking-tight text-black">Audiment</span>
           </div>
-          
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-16">
-            <div className="space-y-6">
-              <h4 className="text-xs font-black text-black uppercase tracking-widest">Product</h4>
-              <nav className="flex flex-col gap-4">
-                <Link href="#" className="text-sm font-bold text-neutral-400 hover:text-black transition-colors">Features</Link>
-                <Link href="#" className="text-sm font-bold text-neutral-400 hover:text-black transition-colors">Integrations</Link>
-                <Link href="#" className="text-sm font-bold text-neutral-400 hover:text-black transition-colors">Enterprise</Link>
-                <Link href="#" className="text-sm font-bold text-neutral-400 hover:text-black transition-colors">Pricing</Link>
-              </nav>
-            </div>
-            <div className="space-y-6">
-              <h4 className="text-xs font-black text-black uppercase tracking-widest">Company</h4>
-              <nav className="flex flex-col gap-4">
-                <Link href="#" className="text-sm font-bold text-neutral-400 hover:text-black transition-colors">About</Link>
-                <Link href="#" className="text-sm font-bold text-neutral-400 hover:text-black transition-colors">Blog</Link>
-                <Link href="#" className="text-sm font-bold text-neutral-400 hover:text-black transition-colors">Careers</Link>
-                <Link href="#" className="text-sm font-bold text-neutral-400 hover:text-black transition-colors">Contact</Link>
-              </nav>
-            </div>
-          </div>
+          <p className="text-sm text-neutral-400 leading-relaxed max-w-[16rem]">
+            Audit management for Indian restaurant chains. FSSAI-compliant. Multi-outlet ready.
+          </p>
         </div>
-        
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8 pt-12 border-t border-neutral-100">
-          <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest">© 2026 Audiment Inc. All rights reserved.</p>
-          <div className="flex gap-8">
-            <Link href="#" className="text-xs font-bold text-neutral-400 hover:text-black transition-colors uppercase tracking-widest">Privacy</Link>
-            <Link href="#" className="text-xs font-bold text-neutral-400 hover:text-black transition-colors uppercase tracking-widest">Terms</Link>
-            <Link href="#" className="text-xs font-bold text-neutral-400 hover:text-black transition-colors uppercase tracking-widest">Security</Link>
+        {[
+          { heading: "Product", links: ["Platform", "Flashmob Audits", "Corrective Actions", "Reporting", "Integrations"] },
+          { heading: "Company", links: ["About", "Customers", "Careers", "Blog"] },
+          { heading: "Legal", links: ["Privacy Policy", "Terms of Service", "FSSAI Compliance"] },
+        ].map(({ heading, links }) => (
+          <div key={heading}>
+            <div className="text-[11px] font-bold text-neutral-400 uppercase tracking-widest mb-4">{heading}</div>
+            <ul className="space-y-2.5">
+              {links.map((link) => (
+                <li key={link}>
+                  <Link href="#" className="text-sm text-neutral-600 hover:text-black transition-colors">{link}</Link>
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
+        ))}
       </div>
-      
-      {/* Massive Background Text */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 select-none pointer-events-none opacity-[0.02] transform translate-y-1/2">
-        <span className="text-[25vw] font-black tracking-tighter text-black leading-none">AUDIMENT</span>
+      <div className="border-t border-neutral-100 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p className="text-[12px] text-neutral-400">© 2026 Audiment. All rights reserved.</p>
+        <p className="text-[12px] text-neutral-400">FSSAI compliant · India-hosted data</p>
       </div>
-    </footer>
-  );
-};
+    </div>
+  </footer>
+);
 
+// ─── Page ────────────────────────────────────────────────────────────────────
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-white selection:bg-black selection:text-white font-sans antialiased">
+    <main className="overflow-x-hidden">
       <Navbar />
       <Hero />
       <LogoMarquee />
       <StickyFeatures />
-      <BentoGridFeatures />
-      <CTA />
+      <FlashmobHighlight />
+      <BentoGrid />
+      <Testimonials />
+      <Pricing />
+      <FinalCTA />
       <Footer />
     </main>
   );
 }
-

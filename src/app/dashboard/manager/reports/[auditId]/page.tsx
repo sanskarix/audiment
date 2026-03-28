@@ -119,141 +119,137 @@ export default function ManagerReportDetailPage() {
 
   return (
     <DashboardShell role="Manager">
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Button variant="ghost" asChild className="-ml-3 gap-2 text-zinc-500 font-bold uppercase tracking-widest text-[10px]">
-            <Link href="/dashboard/manager/reports">
-              <ArrowLeft className="h-4 w-4" /> Go Back
-            </Link>
-          </Button>
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
+          <div>
+            <Button variant="ghost" asChild className="-ml-4 gap-2 text-muted-foreground font-black uppercase tracking-[0.2em] text-[10px] hover:bg-transparent hover:text-primary transition-colors">
+              <Link href="/dashboard/manager/reports">
+                <ArrowLeft className="h-4 w-4" /> Performance Archive
+              </Link>
+            </Button>
+            <h1 className="page-heading mt-2">Analytical Intelligence</h1>
+            <p className="body-text">Comprehensive verification of location quality standards</p>
+          </div>
           <Button 
             onClick={exportToPDF} 
             disabled={isExporting}
-            className="font-bold gap-2 bg-zinc-950 hover:bg-zinc-800 text-white shadow-xl hover:-translate-y-0.5 transition-all text-xs h-10 px-6"
+            className="font-black gap-3 h-12 px-8 uppercase tracking-[0.2em] text-[10px] shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95"
           >
             {isExporting ? <Clock className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-            {isExporting ? 'Preparing PDF...' : 'GENERATE PDF'}
+            {isExporting ? 'Compiling PDF...' : 'Export Intelligence'}
           </Button>
         </div>
 
-        <div ref={reportRef} className="bg-white p-8 sm:p-12 rounded-[2rem] shadow-sm border border-zinc-100 mb-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-zinc-50 pb-10 mb-10 gap-8">
+        <div ref={reportRef} className="standard-card p-10 bg-background">
+          {/* Report Header */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-muted/20 pb-10 mb-10 gap-8">
             <div className="space-y-6 flex-1">
               <div className="flex items-center gap-3">
-                 <Badge variant="outline" className="text-[10px] font-black tracking-[0.1em] uppercase px-3 py-1 border-blue-100 text-blue-600 bg-blue-50/50 rounded-full">QUALITY AUDIT VERIFIED</Badge>
-                 <div className="h-1.5 w-1.5 rounded-full bg-zinc-200" />
-                 <p className="text-xs font-bold text-zinc-400">ID: {audit.id.toUpperCase()}</p>
+                 <Badge variant="outline" className="text-[10px] font-black tracking-[0.2em] uppercase px-3 py-1 border-muted/50 text-muted-foreground">STRATEGIC DOSSIER</Badge>
+                 <Badge variant="outline" className="text-[10px] font-black tracking-[0.2em] uppercase px-3 py-1 bg-success/10 text-success border-success/20 italic">VERIFIED</Badge>
               </div>
-              <div>
-                <h1 className="text-5xl font-black text-zinc-950 tracking-tight leading-[1] uppercase max-w-2xl">{audit.templateTitle}</h1>
-                <p className="text-zinc-400 mt-2 font-medium tracking-tight">Professional inspection outcome for official documentation.</p>
-              </div>
+              <h1 className="text-5xl font-black italic tracking-tighter leading-none uppercase text-foreground">{audit.templateTitle}</h1>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-4">
-                <div className="space-y-1.5">
-                  <p className="text-[9px] font-black text-zinc-400 uppercase tracking-[0.15em]">Location</p>
-                  <p className="text-md font-bold text-zinc-950 flex items-center gap-2 pr-4">{audit.locationName}</p>
+                <div className="space-y-2">
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Inspected Location</p>
+                  <p className="text-sm font-bold text-foreground flex items-center gap-2.5 whitespace-nowrap"><MapPin className="h-4 w-4 text-primary opacity-50" /> {audit.locationName}</p>
                 </div>
-                <div className="space-y-1.5">
-                  <p className="text-[9px] font-black text-zinc-400 uppercase tracking-[0.15em]">Submitted</p>
-                  <p className="text-md font-bold text-zinc-950 flex items-center gap-2">{audit.completedAt ? format(audit.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</p>
+                <div className="space-y-2">
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Submission Date</p>
+                  <p className="text-sm font-bold text-foreground flex items-center gap-2.5 whitespace-nowrap"><Calendar className="h-4 w-4 text-primary opacity-50" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMMM d, yyyy') : 'N/A'}</p>
                 </div>
-                <div className="space-y-1.5 col-span-2 md:col-span-1 border-l border-zinc-50 pl-0 md:pl-8">
-                   <p className="text-[9px] font-black text-zinc-400 uppercase tracking-[0.15em]">Auditor</p>
-                   <p className="text-md font-bold text-zinc-800">{audit.assignedAuditorName || 'Field Team'}</p>
+                <div className="space-y-2 col-span-2 md:col-span-1">
+                   <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Field Auditor</p>
+                   <p className="text-sm font-bold text-foreground flex items-center gap-2.5 whitespace-nowrap"><User className="h-4 w-4 text-primary opacity-50" /> {audit.assignedAuditorName || 'System Generated'}</p>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col items-center justify-center bg-zinc-50 p-8 rounded-[2rem] min-w-[200px] border border-zinc-100">
-               <p className="text-[10px] font-black tracking-[.25em] text-zinc-400 uppercase mb-4">Total Score</p>
-               <div className={cn(
-                  "text-7xl font-black tabular-nums tracking-tighter",
-                  audit.scorePercentage >= 90 ? "text-emerald-500" : audit.scorePercentage >= 70 ? "text-indigo-500" : "text-rose-500"
-               )}>{audit.scorePercentage}<span className="text-2xl text-zinc-300">%</span></div>
-               <div className="flex gap-1 mt-4">
-                  {[...Array(5)].map((_, i) => (
-                    <div key={i} className={cn(
-                      "h-1 w-6 rounded-full",
-                      (i * 20) < audit.scorePercentage 
-                        ? (audit.scorePercentage >= 90 ? "bg-emerald-500" : audit.scorePercentage >= 70 ? "bg-indigo-500" : "bg-rose-500")
-                        : "bg-zinc-200"
-                    )} />
-                  ))}
+            <div className="flex flex-col items-center justify-center bg-foreground text-background p-8 rounded-3xl min-w-[200px] shadow-2xl relative overflow-hidden group">
+               <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-transparent opacity-50" />
+               <p className="text-[10px] font-black tracking-[0.3em] relative z-10 opacity-60">SCORE INDEX</p>
+               <div className="text-7xl font-black italic tabular-nums tracking-tighter relative z-10 py-1 text-white">{audit.scorePercentage}%</div>
+               <div className="h-1.5 shadow-sm w-full bg-muted/20 rounded-full mt-4 relative z-10 overflow-hidden">
+                  <div 
+                    className={cn(
+                        "h-full rounded-full transition-all duration-1000",
+                        audit.scorePercentage >= 90 ? "bg-success" : audit.scorePercentage >= 70 ? "bg-primary" : "bg-destructive"
+                    )} 
+                    style={{ width: `${audit.scorePercentage}%` }} 
+                  />
                </div>
             </div>
           </div>
 
-          <div className="space-y-10">
-            <h3 className="text-[11px] font-black text-zinc-900 uppercase tracking-[0.2em] flex items-center gap-4">
-              Detailed Findings
-              <div className="h-px bg-zinc-100 flex-1" />
-            </h3>
-            <div className="space-y-12">
+          {/* Response Details */}
+          <div className="space-y-8">
+            <h3 className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.3em] mb-6 opacity-60">Verification Insights</h3>
+            <div className="grid gap-6">
                {responses.sort((a,b) => (a.order || 0) - (b.order || 0)).map((resp, i) => (
-                 <div key={resp.id} className="group">
-                   <div className="flex flex-col md:flex-row gap-8 items-start">
-                      <div className="flex-1 space-y-5">
+                 <div key={resp.id} className="border-b border-muted/10 pb-10 last:border-0 hover:bg-muted/5 transition-all p-4 rounded-2xl group/row">
+                   <div className="flex flex-col md:flex-row gap-6">
+                      <div className="flex-1 space-y-6">
                          <div className="flex items-start justify-between gap-6">
-                            <div className="space-y-2">
-                               <div className="flex items-center gap-3">
-                                  <div className="h-6 w-6 rounded-full bg-zinc-950 text-white flex items-center justify-center text-[10px] font-black">{i + 1}</div>
-                                  <h4 className="text-lg font-bold text-zinc-900 leading-tight tracking-tight">{resp.questionText}</h4>
-                               </div>
-                               <div className="flex items-center gap-3 pl-9">
-                                  <Badge variant="outline" className={cn(
-                                    "text-[9px] font-black uppercase tracking-widest border-0 p-0",
-                                    resp.severity === 'critical' ? "text-rose-500" : "text-zinc-400"
-                                  )}>
-                                     {resp.severity} SEVERITY
+                            <div className="space-y-3">
+                               <p className="text-lg font-bold text-foreground leading-tight tracking-tight uppercase italic">{resp.questionText}</p>
+                               <div className="flex flex-wrap items-center gap-4">
+                                  <Badge variant="outline" className="text-[9px] font-black uppercase py-1 px-3 rounded-lg border-muted-foreground/20 text-muted-foreground tracking-widest">
+                                     {resp.severity} CRITICALITY
                                   </Badge>
                                   {resp.notes && (
-                                    <>
-                                      <div className="h-1 w-1 rounded-full bg-zinc-200" />
-                                      <p className="text-xs text-zinc-500 font-medium italic">
-                                        "{resp.notes}"
-                                      </p>
-                                    </>
+                                    <div className="flex items-center gap-2.5 bg-muted/10 px-3 py-1.5 rounded-xl border border-muted/20">
+                                       <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                                       <span className="text-[11px] font-bold text-muted-foreground tracking-tight">
+                                         OBSERVATION: "{resp.notes}"
+                                       </span>
+                                    </div>
                                   )}
                                </div>
                             </div>
-                            <div className="text-right min-w-[120px]">
-                               <p className="text-2xl font-black text-zinc-900 leading-none tabular-nums tracking-tighter">{resp.score}<span className="text-zinc-300 text-xs ml-1">/ {resp.maxScore || 10}</span></p>
+                            <div className="flex flex-col items-end gap-2 min-w-[120px]">
                                <div className={cn(
-                                 "mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest",
-                                 resp.answer === 'yes' ? "bg-emerald-500 text-white" : 
-                                 resp.answer === 'no' ? "bg-rose-500 text-white" : 
-                                 "bg-zinc-900 text-white"
+                                 "flex items-center gap-2.5 px-4 py-2 rounded-xl text-[13px] font-black uppercase tracking-tighter italic",
+                                 resp.answer === 'yes' ? "bg-success/10 text-success border border-success/20" : 
+                                 resp.answer === 'no' ? "bg-destructive/10 text-destructive border border-destructive/20 shadow-lg shadow-destructive/5" : 
+                                 "bg-muted/10 text-muted-foreground border border-muted/20"
                                )}>
+                                 {resp.answer === 'yes' ? <CheckCircle2 className="h-4 w-4" /> : resp.answer === 'no' ? <XCircle className="h-4 w-4" /> : <HelpCircle className="h-4 w-4" />}
                                  {resp.answer}
                                </div>
+                               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] pt-1 opacity-50 tabular-nums">{resp.score} / {resp.maxScore || 10} PTS</p>
                             </div>
                          </div>
 
+                         {/* Response Photos */}
                          {resp.photoUrls && resp.photoUrls.length > 0 && (
-                            <div className="flex flex-wrap gap-4 pl-9">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 mt-6">
                                {resp.photoUrls.map((url: string, pi: number) => (
-                                 <div key={pi} className="relative h-24 w-24 rounded-2xl overflow-hidden border border-zinc-100 shadow-sm bg-zinc-50 ring-4 ring-white">
-                                    <img src={url} alt={`Evidence ${pi+1}`} className="h-full w-full object-cover" />
+                                 <div key={pi} className="group relative aspect-square rounded-2xl overflow-hidden border border-muted/20 shadow-xl bg-muted/5 transition-all hover:scale-105">
+                                    <img src={url} alt={`Evidence ${pi+1}`} className="h-full w-full object-cover transition-transform grayscale hover:grayscale-0 duration-500" />
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                       <ImageIcon className="h-8 w-8 text-white" />
+                                    </div>
+                                    <div className="absolute bottom-2 right-2 bg-background/90 backdrop-blur-md px-2 py-1 rounded-lg text-[9px] font-black text-muted-foreground uppercase tracking-widest border border-border">IMG_{pi+1}</div>
                                  </div>
                                ))}
                             </div>
                          )}
                       </div>
                    </div>
-                   {i < responses.length - 1 && <div className="h-px bg-zinc-50 w-full mt-10" />}
                  </div>
                ))}
             </div>
           </div>
 
-          <div className="mt-20 pt-10 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-between text-[11px] text-zinc-400 font-black uppercase tracking-[0.2em] gap-6">
-             <div className="space-y-1">
-                <p>Audiment Intelligence v1.0 &copy; 2024</p>
-                <p className="text-zinc-300">Confidential Audit Documentation</p>
+          {/* Footer Signature */}
+          <div className="mt-20 pt-16 border-t border-muted/20 flex flex-col md:flex-row items-center justify-between text-[10px] text-muted-foreground font-black uppercase tracking-[0.3em] gap-8 opacity-40">
+             <div className="space-y-2 text-center md:text-left">
+                <p>Intelligence Generated On {format(new Date(), 'MMMM d, yyyy h:mm a')}</p>
+                <p>Audiment Strategic Platform &trade;</p>
              </div>
-             <div className="text-center sm:text-right border border-zinc-100 px-6 py-4 rounded-2xl bg-zinc-50/30">
-                <p>Digital Stamp</p>
-                <p className="text-zinc-600 mt-1">{audit.id.toUpperCase()}</p>
+             <div className="text-center md:text-right space-y-2">
+                <p>Dossier Reference ID: {audit.id}</p>
+                <p>Mission Grid Node: {audit.locationId}</p>
              </div>
           </div>
         </div>

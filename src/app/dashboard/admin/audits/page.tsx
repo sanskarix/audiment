@@ -27,8 +27,9 @@ import { Switch } from '@/components/ui/switch';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
-import { CalendarIcon, Plus, CheckSquare, Clock, MapPin, AlertCircle, Search, MoreHorizontal, Pencil } from 'lucide-react';
+import { CalendarIcon, Plus, CheckSquare, Clock, MapPin, AlertCircle, Search, MoreHorizontal, Pencil, Loader2 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 export default function AdminAuditsPage() {
@@ -204,11 +205,11 @@ export default function AdminAuditsPage() {
 
   return (
     <DashboardShell role="Admin">
-      <div className="flex flex-col space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Audits</h1>
-            <p className="text-muted-foreground text-sm">Monitor and publish audit instances for your locations.</p>
+            <h1 className="page-heading">Audits</h1>
+            <p className="body-text">Monitor and publish audit instances for your locations.</p>
           </div>
           <Dialog open={open} onOpenChange={(val) => {
             setOpen(val);
@@ -225,15 +226,20 @@ export default function AdminAuditsPage() {
             }
           }}>
             <DialogTrigger asChild>
-              <Button className="shadow-sm">
+              <Button className="font-black uppercase tracking-widest text-[11px] h-11 px-8 shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]">
                 <Plus className="mr-2 h-4 w-4" /> Publish Audit
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
-              <DialogHeader>
-                <DialogTitle>{editingAuditId ? 'Edit Published Audit' : 'Publish New Audit'}</DialogTitle>
-                <DialogDescription>
-                  {editingAuditId ? 'Update parameters for this audit instance.' : 'Assign a template to a location and set the schedule.'}
+            <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden border-none shadow-2xl">
+              <DialogHeader className="p-8 bg-muted/5 border-b border-muted/20">
+                <DialogTitle className="text-2xl font-black italic tracking-tighter uppercase whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-3">
+                  <div className="bg-primary p-2 rounded-lg">
+                    <CheckSquare className="h-5 w-5 text-white" />
+                  </div>
+                  {editingAuditId ? 'Edit Audit Instance' : 'Publish NEW Audit'}
+                </DialogTitle>
+                <DialogDescription className="text-xs font-bold uppercase text-muted-foreground tracking-widest mt-2">
+                  {editingAuditId ? 'Update parameters for this existing audit instance.' : 'Assign a template to a location and set the schedule.'}
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-6 py-4">
@@ -399,10 +405,14 @@ export default function AdminAuditsPage() {
                   )}
                 </div>
               </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-                <Button onClick={handlePublish} disabled={loading || !selectedTemplate || !selectedLocation || !selectedManager || !scheduledDate || !deadline}>
-                  {loading && <Clock className="mr-2 h-4 w-4 animate-spin" />}
+              <DialogFooter className="p-8 bg-muted/5 border-t border-muted/20">
+                <Button variant="ghost" onClick={() => setOpen(false)} className="font-black text-[11px] uppercase tracking-widest h-12 px-6">Cancel</Button>
+                <Button 
+                  onClick={handlePublish} 
+                  disabled={loading || !selectedTemplate || !selectedLocation || !selectedManager || !scheduledDate || !deadline}
+                  className="font-black text-[11px] uppercase tracking-widest h-12 px-10 shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {editingAuditId ? 'Save Changes' : 'Publish Instance'}
                 </Button>
               </DialogFooter>
@@ -410,105 +420,120 @@ export default function AdminAuditsPage() {
           </Dialog>
         </div>
 
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <div className="relative w-full max-w-md">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
           <Input 
             placeholder="Search by template or location..." 
-            className="pl-10 max-w-md"
+            className="pl-10 h-11 bg-muted/20 border-muted text-sm rounded-xl focus:ring-primary/10 transition-all"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
 
-        <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+        <Card className="standard-card">
           <Table>
-            <TableHeader className="bg-muted/50">
-              <TableRow>
-                <TableHead className="font-semibold">Audit Instance</TableHead>
-                <TableHead className="font-semibold">Location</TableHead>
-                <TableHead className="font-semibold">Status</TableHead>
-                <TableHead className="font-semibold">Schedule</TableHead>
-                <TableHead className="font-semibold">Surprise</TableHead>
-                <TableHead className="font-semibold text-right">Score</TableHead>
-                <TableHead className="w-[50px]"></TableHead>
+            <TableHeader className="bg-muted/30 border-b border-muted/20">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Audit Instance</TableHead>
+                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Location</TableHead>
+                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Status</TableHead>
+                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Schedule</TableHead>
+                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Surprise</TableHead>
+                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50 text-right">Score</TableHead>
+                <TableHead className="py-5 px-6 w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredAudits.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
-                    <div className="flex flex-col items-center justify-center space-y-2">
-                      <CheckSquare className="h-8 w-8 opacity-20" />
-                      <p>No audits published yet.</p>
+                  <TableCell colSpan={7} className="text-center py-24 text-muted-foreground">
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                      <div className="bg-muted/10 p-4 rounded-full">
+                        <CheckSquare className="h-8 w-8 opacity-20" />
+                      </div>
+                      <p className="page-heading text-lg opacity-40 uppercase tracking-[0.2em]">No audits published yet.</p>
                     </div>
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredAudits.map((a) => (
-                  <TableRow key={a.id} className="hover:bg-muted/30 transition-colors">
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span className="font-medium">{a.templateTitle}</span>
-                        <span className="text-[10px] text-muted-foreground uppercase font-bold tabular-nums">{a.id.slice(0, 8)}</span>
+                  <TableRow key={a.id} className="hover:bg-muted/10 transition-all border-b border-muted/10 group">
+                    <TableCell className="px-6 py-5">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-bold text-foreground text-sm leading-none group-hover:text-primary transition-colors">{a.templateTitle}</span>
+                        <span className="text-[10px] text-muted-foreground font-black tabular-nums tracking-widest opacity-40">{a.id.slice(0, 8).toUpperCase()}</span>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-3 w-3 text-muted-foreground" />
-                        <span>{a.locationName}</span>
+                    <TableCell className="px-6 py-5">
+                      <div className="flex items-center gap-2.5">
+                        <MapPin className="h-3.5 w-3.5 text-primary opacity-50" />
+                        <span className="text-[11px] font-black uppercase tracking-tight text-foreground/80">{a.locationName}</span>
                       </div>
                     </TableCell>
-                    <TableCell>{getStatusBadge(a.status)}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-col text-xs">
-                        <span className="text-muted-foreground">Due: {a.deadline?.toDate().toLocaleDateString()}</span>
-                        <span className="font-medium">Scheduled: {a.scheduledDate?.toDate().toLocaleDateString()}</span>
+                    <TableCell className="px-6 py-5">{getStatusBadge(a.status)}</TableCell>
+                    <TableCell className="px-6 py-5">
+                      <div className="flex flex-col gap-1.5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-50 w-8">Due</span>
+                          <span className="text-[10px] font-bold text-destructive">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-50 w-8">Sched</span>
+                          <span className="text-[11px] font-black italic">{a.scheduledDate?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                        </div>
                         {a.recurring && a.recurring !== 'none' && (
-                          <span className="text-blue-600 font-semibold mt-1 flex items-center gap-1">
-                            <Clock className="w-3 h-3" /> {a.recurring.charAt(0).toUpperCase() + a.recurring.slice(1)}
-                          </span>
+                          <div className="bg-primary/5 text-primary border border-primary/10 rounded-full px-2 py-0.5 mt-1 inline-flex items-center gap-1.5 w-fit">
+                            <Clock className="w-3 h-3" />
+                            <span className="text-[8px] font-black uppercase tracking-widest">{a.recurring}</span>
+                          </div>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="px-6 py-5">
                       {a.isSurprise ? (
-                        <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 text-[10px]">YES</Badge>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">No</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {a.status === 'completed' ? (
-                        <div className="flex flex-col items-end">
-                          <span className={cn("font-bold text-lg", a.scorePercentage < 70 ? "text-destructive" : "text-emerald-600")}>
-                            {a.scorePercentage}%
-                          </span>
-                          <span className="text-[10px] text-muted-foreground">{a.totalScore}/{a.maxPossibleScore}</span>
+                        <div className="flex items-center gap-2">
+                           <div className="h-2 w-2 rounded-full bg-warning animate-pulse" />
+                           <span className="text-[10px] font-black text-warning uppercase tracking-widest">Surprise</span>
                         </div>
                       ) : (
-                        <span className="text-muted-foreground text-sm italic">—</span>
+                        <span className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-widest italic">Routine</span>
                       )}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="px-6 py-5 text-right">
+                      {a.status === 'completed' ? (
+                        <div className="flex flex-col items-end">
+                          <span className={cn("text-xl font-black italic tracking-tighter tabular-nums leading-none", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
+                            {a.scorePercentage}%
+                          </span>
+                          <span className="text-[10px] font-bold text-muted-foreground opacity-50 mt-1">{a.totalScore} / {a.maxPossibleScore}</span>
+                        </div>
+                      ) : (
+                        <span className="text-[10px] text-muted-foreground/30 font-black italic uppercase tracking-widest">Pending</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="px-6 py-5">
                       {(a.status === 'published' || a.status === 'assigned') && (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
+                            <Button variant="ghost" className="h-9 w-9 p-0 hover:bg-muted/80 rounded-xl"><MoreHorizontal className="h-4 w-4 opacity-50" /></Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => {
-                              setEditingAuditId(a.id);
-                              setSelectedTemplate(a.templateId);
-                              setSelectedLocation(a.locationId);
-                              setSelectedManager(a.assignedManagerId || '');
-                              setScheduledDate(a.scheduledDate?.toDate());
-                              setDeadline(a.deadline?.toDate());
-                              setIsSurprise(a.isSurprise || false);
-                              setRecurring(a.recurring || 'none');
-                              setRecurringDay(a.recurringDay || 1);
-                              setOpen(true);
-                            }}>
-                              <Pencil className="mr-2 h-4 w-4" /> Edit Audit
+                          <DropdownMenuContent align="end" className="w-48 p-1.5 rounded-xl border-muted/20 shadow-xl">
+                            <DropdownMenuItem 
+                              className="rounded-lg h-10 font-bold text-xs cursor-pointer focus:bg-primary/5 focus:text-primary transition-all"
+                              onClick={() => {
+                                setEditingAuditId(a.id);
+                                setSelectedTemplate(a.templateId);
+                                setSelectedLocation(a.locationId);
+                                setSelectedManager(a.assignedManagerId || '');
+                                setScheduledDate(a.scheduledDate?.toDate());
+                                setDeadline(a.deadline?.toDate());
+                                setIsSurprise(a.isSurprise || false);
+                                setRecurring(a.recurring || 'none');
+                                setRecurringDay(a.recurringDay || 1);
+                                setOpen(true);
+                              }}
+                            >
+                              <Pencil className="mr-2 h-4 w-4" /> Edit Audit Instance
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -519,7 +544,7 @@ export default function AdminAuditsPage() {
               )}
             </TableBody>
           </Table>
-        </div>
+        </Card>
       </div>
     </DashboardShell>
   );

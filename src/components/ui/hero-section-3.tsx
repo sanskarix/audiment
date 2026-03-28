@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Mail, SendHorizonal, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { cn } from '@/lib/utils'
@@ -52,40 +52,23 @@ export function HeroSection() {
                             >
                                 <h1
                                     className="text-balance text-5xl font-semibold sm:text-6xl md:text-7xl tracking-tight leading-[1.1]">
-                                    Every branch.<br />
-                                    <span className="text-neutral-400">Total control.</span>
+                                    Know what&apos;s really happening<br />
+                                    <span className="text-neutral-400">at every branch.</span>
                                 </h1>
 
                                 <p className="mx-auto mt-6 max-w-2xl text-pretty text-xl text-neutral-600">
-                                    Audiment gives restaurant owners verified, real-time visibility into every outlet — without leaving the office.
+                                    Audiment is a digital audit platform for multi-outlet businesses. It replaces paper checklists with tamper-proof inspections — verified with photos, videos, GPS, and timestamps.
                                 </p>
 
-                                <form
-                                    action=""
-                                    className="mt-12 mx-auto max-w-sm">
-                                    <div className="bg-background has-[input:focus]:ring-muted relative grid grid-cols-[1fr_auto] pr-1.5 items-center rounded-[1rem] border shadow shadow-zinc-950/5 has-[input:focus]:ring-2 lg:pr-0">
-                                        <Mail className="pointer-events-none absolute inset-y-0 left-4 my-auto size-4" />
-
-                                        <input
-                                            placeholder="Your mail address"
-                                            className="h-12 w-full bg-transparent pl-12 focus:outline-none"
-                                            type="email"
-                                        />
-
-                                        <div className="md:pr-1.5 lg:pr-0">
-                                            <Button
-                                                aria-label="submit"
-                                                size="sm"
-                                                className="rounded-[0.5rem]">
-                                                <span className="hidden md:block">Get Started</span>
-                                                <SendHorizonal
-                                                    className="relative mx-auto size-5 md:hidden"
-                                                    strokeWidth={2}
-                                                />
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </form>
+                                <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+                                    <Button asChild size="lg" className="rounded-full px-8 h-12 text-base">
+                                        <Link href="/login">Start Free Trial</Link>
+                                    </Button>
+                                    <Button asChild size="lg" variant="outline" className="rounded-full px-8 h-12 text-base">
+                                        <Link href="#demo">Watch Demo</Link>
+                                    </Button>
+                                </div>
+                                <p className="mt-6 text-sm text-neutral-500">Built for restaurant chains, retail brands, hotels, and any business running multiple locations.</p>
 
                                 <div
                                     aria-hidden
@@ -158,10 +141,10 @@ const AppComponent = () => {
 }
 
 const menuItems = [
-    { name: 'Features', href: '#link' },
-    { name: 'Solution', href: '#link' },
-    { name: 'Pricing', href: '#link' },
-    { name: 'About', href: '#link' },
+    { name: 'Features', href: '#features' },
+    { name: 'How It Works', href: '#how-it-works' },
+    { name: 'Use Cases', href: '#use-cases' },
+    { name: 'Pricing', href: '#pricing' },
 ]
 
 const HeroHeader = () => {
@@ -234,7 +217,7 @@ const HeroHeader = () => {
                                     variant="outline"
                                     size="sm"
                                     className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="#">
+                                    <Link href="/login">
                                         <span>Login</span>
                                     </Link>
                                 </Button>
@@ -242,16 +225,16 @@ const HeroHeader = () => {
                                     asChild
                                     size="sm"
                                     className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="#">
-                                        <span>Sign Up</span>
+                                    <Link href="/login">
+                                        <span>Start Free Trial</span>
                                     </Link>
                                 </Button>
                                 <Button
                                     asChild
                                     size="sm"
                                     className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                    <Link href="#">
-                                        <span>Get Started</span>
+                                    <Link href="/login">
+                                        <span>Start Free Trial</span>
                                     </Link>
                                 </Button>
                             </div>

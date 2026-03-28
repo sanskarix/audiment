@@ -3,24 +3,24 @@
 import { useEffect, useState } from 'react';
 import DashboardShell from '@/components/DashboardShell';
 import { db } from '@/lib/firebase';
-import { 
-  collection, 
-  query, 
-  where, 
+import {
+  collection,
+  query,
+  where,
   onSnapshot,
   orderBy,
   limit
 } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
+import {
+  Card,
+  CardContent,
+  CardHeader,
   CardTitle,
   CardDescription
 } from '@/components/ui/card';
-import { 
-  History, 
+import {
+  History,
   Search,
   Filter,
   MapPin,
@@ -35,13 +35,13 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from '@/components/ui/table';
 import { format } from 'date-fns';
 import Link from 'next/link';
@@ -66,7 +66,7 @@ export default function AuditorHistoryPage() {
     if (match) {
       try {
         setSession(JSON.parse(decodeURIComponent(match[1])));
-      } catch (e) {}
+      } catch (e) { }
     }
   }, []);
 
@@ -97,7 +97,7 @@ export default function AuditorHistoryPage() {
     return () => unsubscribe();
   }, [session]);
 
-  const filteredHistory = history.filter(item => 
+  const filteredHistory = history.filter(item =>
     item.templateTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.locationName.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -122,59 +122,65 @@ export default function AuditorHistoryPage() {
 
   return (
     <DashboardShell role="Auditor">
-      <div className="space-y-8">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-900">Audit History</h2>
-          <p className="text-muted-foreground">Review your past performance and completed audit reports.</p>
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
+          <div>
+            <h1 className="page-heading">Audit History</h1>
+            <p className="body-text">Review your past performance and completed audit reports.</p>
+          </div>
         </div>
 
         {/* Performance Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card className="shadow-sm border-muted">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium">Total Completed</CardTitle>
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="standard-card bg-foreground text-background overflow-hidden relative group">
+            <div className="absolute inset-0 bg-gradient-to-br from-success/30 to-transparent opacity-50" />
+            <CardHeader className="pb-2 relative z-10">
+              <CardDescription className="text-muted-foreground/60 text-xs font-medium text-muted-foreground">Total Completed</CardDescription>
+              <CardTitle className="text-3xl font-bold tabular-nums text-white">
+                {history.length}
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{history.length}</div>
-              <p className="text-xs text-muted-foreground pt-1">Audits successfully submitted</p>
+            <CardContent className="relative z-10 pt-2">
+              <p className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-tight">SUCCESSFUL DEPLOYMENTS</p>
             </CardContent>
           </Card>
-          <Card className="shadow-sm border-muted">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium">Avg. Performance</CardTitle>
-              <TrendingUp className="h-4 w-4 text-blue-600" />
+
+          <Card className="standard-card overflow-hidden relative border-primary/20 bg-primary/5">
+            <CardHeader className="pb-2">
+              <CardDescription className="text-primary text-xs font-medium text-muted-foreground opacity-70">Avg. Performance</CardDescription>
+              <CardTitle className="text-3xl font-bold tabular-nums text-primary">
+                {avgScore}%
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{avgScore}%</div>
-              <p className="text-xs text-muted-foreground pt-1">Across all completed assignments</p>
+            <CardContent className="pt-2">
+              <p className="text-[10px] text-primary/60 font-bold uppercase tracking-tight">STRATEGIC ACCURACY</p>
             </CardContent>
           </Card>
-          <Card className="shadow-sm border-muted">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium">Personal Best</CardTitle>
-              <Award className="h-4 w-4 text-amber-600" />
+
+          <Card className="standard-card overflow-hidden relative border-warning/20 bg-warning/5">
+            <CardHeader className="pb-2">
+              <CardDescription className="text-warning text-xs font-medium text-muted-foreground opacity-70">Personal Best</CardDescription>
+              <CardTitle className="text-3xl font-bold tabular-nums text-warning">{highestScore}%</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{highestScore}%</div>
-              <p className="text-xs text-muted-foreground pt-1">Highest individual audit score</p>
+            <CardContent className="pt-2">
+              <p className="text-[10px] text-warning/60 font-bold uppercase tracking-tight">PEAK MISSION SCORE</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* History Table */}
-        <Card className="shadow-sm border-muted overflow-hidden">
-          <CardHeader>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* History Table Section */}
+        <Card className="standard-card">
+          <CardHeader className="border-b border-muted/20 bg-muted/5 p-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
-                <CardTitle>Completed Assignments</CardTitle>
-                <CardDescription>Archive of all successfully performed audits.</CardDescription>
+                <CardTitle className="text-xl font-sans">Mission Archive</CardTitle>
+                <CardDescription className="text-[10px] font-bold uppercase tracking-tight text-muted-foreground mt-1">Repository of your analytical deployments</CardDescription>
               </div>
-              <div className="relative w-full md:w-80">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <div className="relative w-full md:w-96 group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 <Input
-                  placeholder="Search by blueprint or branch..."
-                  className="pl-8 bg-zinc-50 border-zinc-200"
+                  placeholder="Filter by blueprint or sector..."
+                  className="pl-9 h-9 bg-background"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -183,58 +189,63 @@ export default function AuditorHistoryPage() {
           </CardHeader>
           <CardContent className="p-0">
             <Table>
-              <TableHeader className="bg-zinc-50/50">
-                <TableRow>
-                  <TableHead className="w-[300px] font-semibold">Audit Blueprint</TableHead>
-                  <TableHead className="font-semibold">Branch Location</TableHead>
-                  <TableHead className="font-semibold">Completed On</TableHead>
-                  <TableHead className="font-semibold">Score</TableHead>
-                  <TableHead className="text-right font-semibold">Report</TableHead>
+              <TableHeader >
+                <TableRow >
+                  <TableHead className="h-11 text-xs font-medium text-muted-foreground">Blueprint</TableHead>
+                  <TableHead className="h-11 text-xs font-medium text-muted-foreground">Sector</TableHead>
+                  <TableHead className="h-11 text-xs font-medium text-muted-foreground">Timeline</TableHead>
+                  <TableHead className="h-11 text-xs font-medium text-muted-foreground text-center">Score</TableHead>
+                  <TableHead className="py-5 px-8 text-right"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredHistory.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
-                      <div className="flex flex-col items-center justify-center space-y-2">
-                        <History className="h-8 w-8 opacity-20" />
-                        <p>{searchQuery ? "No history matching your search." : "No completed audits yet."}</p>
+                    <TableCell colSpan={5} className="py-24 text-center text-muted-foreground bg-muted/5">
+                      <div className="flex flex-col items-center justify-center gap-4">
+                        <div className="bg-muted/10 p-4 rounded-full">
+                          <History className="h-8 w-8 opacity-20" />
+                        </div>
+                        <p className="page-heading text-lg opacity-40 uppercase tracking-tight">{searchQuery ? "No matching data points." : "Archive empty."}</p>
                       </div>
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredHistory.map((item) => (
-                    <TableRow key={item.id} className="hover:bg-zinc-50 transition-colors group">
-                      <TableCell>
-                        <div className="flex flex-col gap-0.5">
-                          <span className="font-bold text-zinc-900 group-hover:text-blue-700 transition-colors">{item.templateTitle}</span>
-                          <span className="text-[10px] text-zinc-400 font-mono">ID: {item.id.substring(0, 8)}</span>
+                    <TableRow key={item.id} className="border-b last:border-0 transition-colors hover:bg-muted/40 cursor-pointer">
+                      <TableCell className="px-8 py-5">
+                        <div className="flex flex-col gap-1.5">
+                          <span className="font-bold text-foreground group-hover:text-primary transition-colors uppercase tracking-tight">{item.templateTitle}</span>
+                          <span className="text-[10px] text-muted-foreground font-bold tracking-tight opacity-40 uppercase tabular-nums">{item.id.substring(0, 8)}</span>
                         </div>
                       </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1.5 text-zinc-600 text-sm font-medium uppercase tracking-tight">
-                          <MapPin className="h-3 w-3" /> {item.locationName}
+                      <TableCell className="px-4 py-3">
+                        <div className="flex items-center gap-2.5">
+                          <MapPin className="h-3.5 w-3.5 text-primary opacity-50" />
+                          <span className="text-[11px] font-bold uppercase tracking-tight text-foreground/80">{item.locationName}</span>
                         </div>
                       </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1.5 text-zinc-500 text-xs">
-                          <Calendar className="h-3.5 w-3.5" />
-                          {item.completedAt ? format(item.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}
+                      <TableCell className="px-4 py-3">
+                        <div className="flex flex-col gap-1">
+                          <p className="text-[10px] font-bold text-foreground uppercase tracking-tight">
+                            {item.completedAt ? format(item.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}
+                          </p>
+                          <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight opacity-50">FINALIZED</p>
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="px-4 py-3">
                         <div className={cn(
-                          "px-2 py-0.5 rounded-full text-[10px] font-black w-fit text-white uppercase",
-                          item.scorePercentage >= 90 ? "bg-emerald-500" : item.scorePercentage >= 70 ? "bg-indigo-500" : "bg-rose-500"
+                          "inline-flex items-center justify-center h-10 w-14 rounded-md font-bold text-[13px] tracking-tight tabular-nums shadow-lg shadow-black/5 mx-auto flex",
+                          item.scorePercentage >= 90 ? "bg-success text-success-foreground" : item.scorePercentage >= 70 ? "bg-primary text-primary-foreground" : "bg-destructive text-destructive-foreground"
                         )}>
                           {item.scorePercentage}%
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">
-                        <Button variant="ghost" size="sm" asChild className="h-8 gap-2 font-bold text-xs uppercase text-zinc-400 hover:text-blue-600 hover:bg-blue-50">
-                           <Link href={`/dashboard/auditor/audits/${item.id}`}>
-                             <FileText className="h-3 w-3" /> View Report
-                           </Link>
+                      <TableCell className="px-8 py-5 text-right">
+                        <Button variant="ghost" size="sm" asChild className="h-9 px-4 gap-2 font-bold text-[10px] uppercase tracking-tight text-muted-foreground/40 group-hover:text-primary group-hover:bg-primary/5 transition-all">
+                          <Link href={`/dashboard/auditor/audits/${item.id}`}>
+                            <FileText className="h-4 w-4" /> Inspect Report <ChevronRight className="h-3 w-3" />
+                          </Link>
                         </Button>
                       </TableCell>
                     </TableRow>

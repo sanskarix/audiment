@@ -253,53 +253,55 @@ export default function ManagerDashboardPage() {
 
   return (
     <DashboardShell role="Manager">
-      <div className="space-y-8">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-900">Branch Performance</h2>
-          <p className="text-muted-foreground">Monitoring quality and compliance across your assigned locations</p>
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
+          <div>
+            <h1 className="page-heading">Branch Performance</h1>
+            <p className="body-text">Monitoring quality and compliance across your assigned locations</p>
+          </div>
         </div>
 
         {/* Top Summary Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
-          <Card className="shadow-sm">
+        <div className="grid card-gap md:grid-cols-2 lg:grid-cols-2">
+          <Card className="standard-card border-l-4 border-l-primary">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-sm font-medium">Managed Branches</CardTitle>
-              <MapPin className="h-4 w-4 text-blue-600" />
+              <MapPin className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-zinc-900">{stats?.assignedLocations}</div>
-              <p className="text-xs text-muted-foreground pt-1">Total active locations under your oversight</p>
+              <div className="text-3xl font-bold">{stats?.assignedLocations}</div>
+              <p className="muted-label pt-1 text-muted-foreground/60">Total active locations under your oversight</p>
             </CardContent>
           </Card>
 
-          <Card className="shadow-sm">
+          <Card className="standard-card border-l-4 border-l-success">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-sm font-medium">Reporting Auditors</CardTitle>
-              <Users className="h-4 w-4 text-emerald-600" />
+              <Users className="h-4 w-4 text-success" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-zinc-900">{stats?.activeAuditors}</div>
-              <p className="text-xs text-muted-foreground pt-1">Auditors currently reporting to you</p>
+              <div className="text-3xl font-bold">{stats?.activeAuditors}</div>
+              <p className="muted-label pt-1 text-muted-foreground/60">Auditors currently reporting to you</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Corrective Actions Section */}
         {correctiveActions.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-rose-600 flex items-center gap-2">
+          <div className="card-gap flex flex-col">
+            <h3 className="section-heading text-destructive flex items-center gap-2">
               <AlertTriangle className="h-5 w-5" />
-              Open Corrective Actions ({correctiveActions.length})
+              Critical Issues ({correctiveActions.length})
             </h3>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 text-left">
+            <div className="grid card-gap md:grid-cols-2 lg:grid-cols-3">
               {correctiveActions.map((ca) => (
                 <Card key={ca.id} className="border-rose-100 shadow-sm hover:shadow-md transition-shadow">
                   <CardHeader className="pb-2">
                     <div className="flex justify-between items-start">
-                      <Badge variant="destructive" className="text-[10px] font-bold uppercase">
+                      <Badge variant="destructive" className="muted-label">
                         {ca.severity}
                       </Badge>
-                      <Badge variant="outline" className="text-[10px] font-bold text-rose-700 bg-rose-50 border-rose-100 italic">
+                      <Badge variant="outline" className="muted-label text-destructive bg-destructive/5 font-bold italic tracking-tighter">
                         Due {format(ca.deadline.toDate(), 'MMM d')}
                       </Badge>
                     </div>
@@ -358,7 +360,7 @@ export default function ManagerDashboardPage() {
           </Card>
 
           {/* Activity Feed */}
-          <Card className="md:col-span-3 shadow-sm border-muted">
+          <Card className="md:col-span-3 standard-card">
             <CardHeader>
               <CardTitle>Auditor Activity</CardTitle>
               <CardDescription>Current workload distribution</CardDescription>
@@ -368,17 +370,17 @@ export default function ManagerDashboardPage() {
                 {stats?.auditorActivity.map((aud, i) => (
                   <div key={i} className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <p className="text-sm font-bold text-zinc-900">{aud.name}</p>
+                      <p className="text-sm font-bold text-foreground">{aud.name}</p>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-[10px] text-emerald-700 bg-emerald-50 h-5 px-1.5 font-bold border-emerald-100">
+                        <Badge variant="outline" className="text-[10px] text-success bg-success/10 h-5 px-1.5 font-bold border-success/10">
                           {aud.completed} Done
                         </Badge>
-                        <Badge variant="outline" className="text-[10px] text-zinc-500 h-5 px-1.5 font-bold">
+                        <Badge variant="outline" className="text-[10px] text-muted-foreground h-5 px-1.5 font-bold">
                           {aud.pending} In Progress
                         </Badge>
                       </div>
                     </div>
-                    <CheckCircle2 className={aud.pending === 0 ? "text-emerald-500 h-4 w-4" : "text-zinc-200 h-4 w-4"} />
+                    <CheckCircle2 className={aud.pending === 0 ? "text-success h-4 w-4" : "text-muted/30 h-4 w-4"} />
                   </div>
                 ))}
               </div>
@@ -386,28 +388,28 @@ export default function ManagerDashboardPage() {
           </Card>
         </div>
 
-        {/* Recent Audits Table */}
-        <Card className="shadow-sm border-muted">
+        {/* Recent Audits Table Section */}
+        <Card className="standard-card">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>A live look at submissions across your branches</CardDescription>
               </div>
-              <TrendingUp className="h-5 w-5 text-zinc-300" />
+              <TrendingUp className="h-5 w-5 text-muted/30" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {stats?.recentAudits.map((audit, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-transparent hover:border-zinc-100 hover:bg-zinc-50 transition-colors">
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-transparent hover:border-muted/50 hover:bg-muted/10 transition-colors">
                   <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                       <ClipboardList className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-zinc-900">{audit.templateTitle}</p>
-                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                      <p className="text-sm font-bold text-foreground">{audit.templateTitle}</p>
+                      <p className="text-[11px] text-muted-foreground flex items-center gap-1 font-medium italic">
                         <MapPin className="h-3 w-3" /> {audit.locationName} &bull; <Clock className="h-3 w-3" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMM d, h:mm a') : 'Scheduled'}
                       </p>
                     </div>
@@ -415,13 +417,13 @@ export default function ManagerDashboardPage() {
                   <div className="text-right">
                     {audit.status === 'completed' ? (
                       <div className={cn(
-                        "text-[10px] font-black text-white px-2 py-1 rounded-full",
-                        audit.scorePercentage >= 90 ? "bg-emerald-500" : audit.scorePercentage >= 70 ? "bg-indigo-500" : "bg-rose-500"
+                        "text-[10px] font-black text-white px-2 py-1 rounded-full shadow-sm",
+                        audit.scorePercentage >= 90 ? "bg-success" : audit.scorePercentage >= 70 ? "bg-primary" : "bg-destructive"
                       )}>
                         {audit.scorePercentage}%
                       </div>
                     ) : (
-                      <Badge variant="outline" className="uppercase text-[10px] font-bold text-zinc-400">
+                      <Badge variant="outline" className="uppercase text-[10px] font-bold text-muted-foreground">
                         {audit.status}
                       </Badge>
                     )}
@@ -495,7 +497,7 @@ export default function ManagerDashboardPage() {
             <Button 
               onClick={handleResolve} 
               disabled={isResolving || !resolutionNote}
-              className="bg-emerald-600 hover:bg-emerald-700 font-bold text-xs uppercase tracking-wider h-9 px-6"
+              className="bg-success hover:bg-success/90 text-success-foreground font-bold text-xs uppercase tracking-wider h-9 px-6"
             >
               {isResolving ? <Loader2 className="h-4 w-4 animate-spin mr-2"/> : <CheckCircle className="h-4 w-4 mr-2" />}
               Complete Resolution

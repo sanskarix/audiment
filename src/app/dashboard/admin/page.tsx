@@ -173,47 +173,49 @@ export default function AdminDashboardPage() {
 
   return (
     <DashboardShell role="Admin">
-      <div className="space-y-8">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Executive Overview</h2>
-          <p className="text-muted-foreground">Organization-wide performance and compliance metrics</p>
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
+          <div>
+            <h1 className="page-heading">Executive Overview</h1>
+            <p className="body-text">Organization-wide performance and compliance metrics</p>
+          </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <Card className="border-l-4 border-l-violet-500">
+        <div className="grid card-gap md:grid-cols-2 lg:grid-cols-3">
+          <Card className="standard-card border-l-4 border-l-primary">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-sm font-medium">Monthly Audits</CardTitle>
               <ClipboardList className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats?.totalAuditsThisMonth}</div>
-              <p className="text-xs text-muted-foreground">Total audits published this month</p>
+              <div className="text-3xl font-bold">{stats?.totalAuditsThisMonth}</div>
+              <p className="muted-label pt-1 text-muted-foreground/60">Total audits published this month</p>
             </CardContent>
           </Card>
 
-          <Card className="border-l-4 border-l-emerald-500">
+          <Card className="standard-card border-l-4 border-l-success">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
               <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats?.completionRate}%</div>
-              <p className="text-xs text-muted-foreground">Percentage of audits completed</p>
-              <Progress value={stats?.completionRate} className="mt-3 h-1" />
+              <div className="text-3xl font-bold text-success">{stats?.completionRate}%</div>
+              <p className="muted-label pt-1 text-muted-foreground/60">Percentage of audits completed</p>
+              <Progress value={stats?.completionRate} className="mt-3 h-1 bg-success/10" />
             </CardContent>
           </Card>
 
-          <Link href="/dashboard/admin/corrective-actions" className="block transition-transform hover:scale-[1.02]">
-            <Card className="border-l-4 border-l-red-500 h-full">
+          <Link href="/dashboard/admin/corrective-actions" className="block">
+            <Card className="standard-card border-l-4 border-l-destructive h-full">
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle className="text-sm font-medium">Open Corrective Actions</CardTitle>
                 <AlertCircle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stats?.openCorrectiveActions}</div>
-                <p className="text-xs text-muted-foreground">Critical issues pending resolution</p>
-                <div className="mt-4 flex items-center text-[10px] font-bold text-rose-600 uppercase tracking-wider">
+                <div className="text-3xl font-bold text-destructive">{stats?.openCorrectiveActions}</div>
+                <p className="muted-label pt-1 text-destructive uppercase font-bold tracking-widest">Immediate Attention Required</p>
+                <div className="mt-4 flex items-center text-[10px] font-bold text-destructive uppercase tracking-wider">
                   View Queue <TrendingUp className="ml-1 h-3 w-3" />
                 </div>
               </CardContent>

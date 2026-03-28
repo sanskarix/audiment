@@ -116,57 +116,61 @@ export default function AuditReportDetailPage() {
 
   return (
     <DashboardShell role="Admin">
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <Button variant="ghost" asChild className="-ml-4 gap-2 text-zinc-500 font-bold uppercase tracking-widest text-[10px]">
-            <Link href="/dashboard/admin/reports">
-              <ArrowLeft className="h-4 w-4" /> Back to archive
-            </Link>
-          </Button>
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
+          <div>
+            <Button variant="ghost" asChild className="-ml-4 gap-2 text-muted-foreground text-xs font-medium text-muted-foreground hover:bg-transparent hover:text-primary transition-colors">
+              <Link href="/dashboard/admin/reports">
+                <ArrowLeft className="h-4 w-4" /> System Archive
+              </Link>
+            </Button>
+            <h1 className="page-heading mt-2">Analytical Intelligence</h1>
+            <p className="body-text">Deep-drill verification of branch quality performance</p>
+          </div>
           <Button 
             onClick={exportToPDF} 
             disabled={isExporting}
-            className="font-bold gap-2 bg-indigo-600 hover:bg-indigo-700 shadow-md"
+            className="font-bold gap-3 h-12 px-8 uppercase tracking-tight text-[10px] shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95"
           >
             {isExporting ? <Clock className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-            {isExporting ? 'GENERATING PDF...' : 'EXPORT PDF'}
+            {isExporting ? 'Compiling PDF...' : 'Export Intelligence'}
           </Button>
         </div>
 
-        <div ref={reportRef} className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200">
+        <div ref={reportRef} className="standard-card p-10 bg-background">
           {/* Report Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-zinc-100 pb-8 mb-8 gap-6">
-            <div className="space-y-4 flex-1">
-              <div className="flex items-center gap-2">
-                 <Badge variant="outline" className="text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 border-zinc-200 text-zinc-400">OFFICIAL AUDIT REPORT</Badge>
-                 <Badge variant="outline" className="text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 bg-emerald-50 text-emerald-700 border-emerald-100 italic">VERIFIED</Badge>
+          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-muted/20 pb-10 mb-10 gap-8">
+            <div className="space-y-6 flex-1">
+              <div className="flex items-center gap-3">
+                 <Badge variant="outline" className="text-xs font-bold tracking-tight uppercase px-3 py-1 border-muted/50 text-muted-foreground">STRATEGIC DOSSIER</Badge>
+                 <Badge variant="outline" className="text-xs font-bold tracking-tight uppercase px-3 py-1 bg-success/10 text-success border-success/20 italic">VERIFIED</Badge>
               </div>
-              <h1 className="text-4xl font-black text-zinc-950 tracking-tight leading-none uppercase">{audit.templateTitle}</h1>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 pt-2">
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Target Location</p>
-                  <p className="text-md font-bold text-zinc-950 flex items-center gap-1.5 whitespace-nowrap"><MapPin className="h-4 w-4 text-rose-500" /> {audit.locationName}</p>
+              <h1 className="text-3xl font-bold leading-none uppercase text-foreground">{audit.templateTitle}</h1>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-4">
+                <div className="space-y-2">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-tight">Target Location</p>
+                  <p className="text-sm font-bold text-foreground flex items-center gap-2.5 whitespace-nowrap"><MapPin className="h-4 w-4 text-primary opacity-50" /> {audit.locationName}</p>
                 </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Submission Date</p>
-                  <p className="text-md font-bold text-zinc-950 flex items-center gap-1.5 whitespace-nowrap"><Calendar className="h-4 w-4 text-blue-500" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMMM d, yyyy') : 'N/A'}</p>
+                <div className="space-y-2">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-tight">Submission Date</p>
+                  <p className="text-sm font-bold text-foreground flex items-center gap-2.5 whitespace-nowrap"><Calendar className="h-4 w-4 text-primary opacity-50" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMMM d, yyyy') : 'N/A'}</p>
                 </div>
-                <div className="space-y-1 col-span-2 md:col-span-1">
-                   <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Assigned Auditor</p>
-                   <p className="text-md font-bold text-zinc-950 flex items-center gap-1.5 whitespace-nowrap"><User className="h-4 w-4 text-violet-500" /> {audit.assignedAuditorName || 'System Generated'}</p>
+                <div className="space-y-2 col-span-2 md:col-span-1">
+                   <p className="text-xs font-bold text-muted-foreground uppercase tracking-tight">Assigned Personnel</p>
+                   <p className="text-sm font-bold text-foreground flex items-center gap-2.5 whitespace-nowrap"><User className="h-4 w-4 text-primary opacity-50" /> {audit.assignedAuditorName || 'System Generated'}</p>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col items-center justify-center bg-zinc-950 text-white p-6 rounded-2xl min-w-[180px] shadow-2xl relative overflow-hidden group">
-               <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-transparent opacity-50" />
-               <p className="text-[10px] font-black tracking-[0.2em] relative z-10 opacity-70">FINAL GRADE</p>
-               <div className="text-6xl font-black tabular-nums tracking-tighter relative z-10 py-1">{audit.scorePercentage}%</div>
-               <div className="h-1 shadow-sm w-full bg-zinc-800 rounded-full mt-2 relative z-10 overflow-hidden">
+            <div className="flex flex-col items-center justify-center bg-foreground text-background p-8 rounded-md min-w-[200px] shadow-2xl relative overflow-hidden group">
+               <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-transparent opacity-50" />
+               <p className="text-xs font-bold tracking-[0.3em] relative z-10 opacity-60">SCORE INDEX</p>
+               <div className="text-5xl font-bold tabular-nums tracking-tighter relative z-10 py-1 text-white">{audit.scorePercentage}%</div>
+               <div className="h-1.5 shadow-sm w-full bg-muted/20 rounded-full mt-4 relative z-10 overflow-hidden">
                   <div 
                     className={cn(
                         "h-full rounded-full transition-all duration-1000",
-                        audit.scorePercentage >= 90 ? "bg-emerald-400" : audit.scorePercentage >= 70 ? "bg-indigo-400" : "bg-rose-400"
+                        audit.scorePercentage >= 90 ? "bg-success" : audit.scorePercentage >= 70 ? "bg-primary" : "bg-destructive"
                     )} 
                     style={{ width: `${audit.scorePercentage}%` }} 
                   />
@@ -175,71 +179,74 @@ export default function AuditReportDetailPage() {
           </div>
 
           {/* Response Details */}
-          <div className="space-y-6">
-            <h3 className="text-sm font-black text-zinc-400 uppercase tracking-[0.1em] mb-4">Detailed Question Analysis</h3>
-            <div className="grid gap-4">
+          <div className="space-y-8">
+            <h3 className="text-[11px] font-bold text-muted-foreground uppercase tracking-[0.3em] mb-6 opacity-60">Verification Insights</h3>
+            <div className="grid gap-6">
                {responses.sort((a,b) => (a.order || 0) - (b.order || 0)).map((resp, i) => (
-                 <Card key={resp.id} className="border-0 shadow-none border-b border-zinc-100 rounded-none pb-6 last:border-0 hover:bg-zinc-50/50 transition-colors">
-                   <CardContent className="p-0 pt-4 flex gap-6">
-                      <div className="flex-1 space-y-4">
-                         <div className="flex items-start justify-between gap-4">
-                            <div className="space-y-1">
-                               <p className="text-md font-bold text-zinc-950 leading-snug">{resp.questionText}</p>
-                               <div className="flex items-center gap-3">
-                                  <Badge variant="outline" className="text-[9px] font-bold uppercase py-0 px-2 h-5 rounded-md border-zinc-200 text-zinc-500 tracking-wider">
+                 <div key={resp.id} className="border-b border-muted/10 pb-10 last:border-0 hover:bg-muted/5 transition-all p-4 rounded-md group/row">
+                   <div className="flex flex-col md:flex-row gap-6">
+                      <div className="flex-1 space-y-6">
+                         <div className="flex items-start justify-between gap-6">
+                            <div className="space-y-3">
+                               <p className="text-lg font-bold text-foreground leading-tight tracking-tight uppercase italic">{resp.questionText}</p>
+                               <div className="flex flex-wrap items-center gap-4">
+                                  <Badge variant="outline" className="text-[9px] font-bold uppercase py-1 px-3 rounded-lg border-muted-foreground/20 text-muted-foreground tracking-tight">
                                      {resp.severity} CRITICALITY
                                   </Badge>
                                   {resp.notes && (
-                                    <p className="text-[11px] text-zinc-400 italic flex items-center gap-1">
-                                      Observed: "{resp.notes}"
-                                    </p>
+                                    <div className="flex items-center gap-2.5 bg-muted/10 px-3 py-1.5 rounded-md border border-muted/20">
+                                       <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                                       <span className="text-[11px] font-bold text-muted-foreground tracking-tight">
+                                         OBSERVATION: "{resp.notes}"
+                                       </span>
+                                    </div>
                                   )}
                                </div>
                             </div>
-                            <div className="flex flex-col items-end gap-1 min-w-[80px]">
+                            <div className="flex flex-col items-end gap-2 min-w-[120px]">
                                <div className={cn(
-                                 "flex items-center gap-1.5 px-3 py-1 rounded-full text-[12px] font-black uppercase tracking-widest",
-                                 resp.answer === 'yes' ? "bg-emerald-100 text-emerald-700" : 
-                                 resp.answer === 'no' ? "bg-rose-100 text-rose-700 font-black ring-2 ring-rose-500/20" : 
-                                 "bg-zinc-100 text-zinc-700"
+                                 "flex items-center gap-2.5 px-4 py-2 rounded-md text-[13px] font-bold uppercase tracking-tighter italic",
+                                 resp.answer === 'yes' ? "bg-success/10 text-success border border-success/20" : 
+                                 resp.answer === 'no' ? "bg-destructive/10 text-destructive border border-destructive/20 shadow-lg shadow-destructive/5" : 
+                                 "bg-muted/10 text-muted-foreground border border-muted/20"
                                )}>
                                  {resp.answer === 'yes' ? <CheckCircle2 className="h-4 w-4" /> : resp.answer === 'no' ? <XCircle className="h-4 w-4" /> : <HelpCircle className="h-4 w-4" />}
                                  {resp.answer}
                                </div>
-                               <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest pt-1">{resp.score} / {resp.maxScore || 10} pts</p>
+                               <p className="text-xs font-bold text-muted-foreground uppercase tracking-tight pt-1 opacity-50 tabular-nums">{resp.score} / {resp.maxScore || 10} PTS</p>
                             </div>
                          </div>
 
                          {/* Response Photos */}
                          {resp.photoUrls && resp.photoUrls.length > 0 && (
-                            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 mt-6">
                                {resp.photoUrls.map((url: string, pi: number) => (
-                                 <div key={pi} className="group relative aspect-square rounded-lg overflow-hidden border border-zinc-200 shadow-sm bg-zinc-50">
-                                    <img src={url} alt={`Evidence ${pi+1}`} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                                 <div key={pi} className="group relative aspect-square rounded-md overflow-hidden border border-muted/20 shadow-xl bg-muted/5 transition-all hover:scale-105">
+                                    <img src={url} alt={`Evidence ${pi+1}`} className="h-full w-full object-cover transition-transform grayscale hover:grayscale-0 duration-500" />
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                       <ImageIcon className="h-6 w-6 text-white" />
+                                       <ImageIcon className="h-8 w-8 text-white" />
                                     </div>
-                                    <div className="absolute bottom-1 right-1 bg-white/90 px-1 py-0.5 rounded text-[8px] font-bold text-zinc-500">IMG_{pi+1}</div>
+                                    <div className="absolute bottom-2 right-2 bg-background/90 backdrop-blur-md px-2 py-1 rounded-lg text-[9px] font-bold text-muted-foreground uppercase tracking-tight border border-border">IMG_{pi+1}</div>
                                  </div>
                                ))}
                             </div>
                          )}
                       </div>
-                   </CardContent>
-                 </Card>
+                   </div>
+                 </div>
                ))}
             </div>
           </div>
 
           {/* Footer Signature */}
-          <div className="mt-16 pt-12 border-t border-zinc-100 flex items-center justify-between text-[10px] text-zinc-400 font-bold uppercase tracking-widest">
-             <div className="space-y-1">
-                <p>Report Generated On {format(new Date(), 'MMMM d, yyyy h:mm a')}</p>
-                <p>Audiment Compliance Platform &copy; 2024</p>
+          <div className="mt-20 pt-16 border-t border-muted/20 flex flex-col md:flex-row items-center justify-between text-[10px] text-muted-foreground font-bold uppercase tracking-[0.3em] gap-8 opacity-40">
+             <div className="space-y-2 text-center md:text-left">
+                <p>Intelligence Generated On {format(new Date(), 'MMMM d, yyyy h:mm a')}</p>
+                <p>Audiment Strategic Platform &trade;</p>
              </div>
-             <div className="text-right space-y-1 opacity-40">
-                <p>Document Security ID: {audit.id}</p>
-                <p>Branch Coordinates: {audit.locationId}</p>
+             <div className="text-center md:text-right space-y-2">
+                <p>Dossier Reference ID: {audit.id}</p>
+                <p>Mission Grid Node: {audit.locationId}</p>
              </div>
           </div>
         </div>

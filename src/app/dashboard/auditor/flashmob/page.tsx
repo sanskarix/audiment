@@ -36,6 +36,20 @@ import {
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
+const StepIndicator = ({ current, total }: { current: number; total: number }) => (
+  <div className="flex gap-1.5 mb-10">
+    {Array.from({ length: total }).map((_, i) => (
+      <div 
+        key={i} 
+        className={cn(
+          "h-1 rounded-full transition-all duration-500",
+          i < current ? "w-8 bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]" : "w-2 bg-muted-foreground/20"
+        )} 
+      />
+    ))}
+  </div>
+);
+
 export default function FlashmobAuditPage() {
   const router = useRouter();
   const [userData, setUserData] = useState<any>(null);
@@ -304,85 +318,130 @@ export default function FlashmobAuditPage() {
 
   return (
     <DashboardShell role="Auditor">
-      <div className="max-w-2xl mx-auto space-y-6 pb-12">
-        <div className="flex items-center gap-4 mb-6">
-          <Button variant="outline" size="icon" onClick={() => router.back()}>
-            <ChevronLeft className="h-4 w-4" />
+      <div className="dashboard-page-container max-w-2xl mx-auto pb-32">
+        <div className="page-header-section flex items-center gap-6 mb-12">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => router.back()}
+            className="h-12 w-12 rounded-2xl hover:bg-primary/10 hover:text-primary transition-all active:scale-90"
+          >
+            <ChevronLeft className="h-6 w-6" />
           </Button>
-          <h1 className="text-2xl font-bold tracking-tight">New Flashmob Audit</h1>
+          <div>
+            <div className="flex items-center gap-3">
+              <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+              <h1 className="page-heading uppercase text-2xl">Field Intel Capture</h1>
+            </div>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1.5 opacity-60">High-speed verification protocol</p>
+          </div>
         </div>
 
+        <StepIndicator current={['location', 'video', 'review', 'selfie', 'submitting'].indexOf(step) + 1} total={5} />
+
         {step === 'location' && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Location</CardTitle>
-              <CardDescription>Select the location you are currently auditing.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label>Location</Label>
+          <Card className="standard-card p-1 overflow-hidden shadow-2xl border-primary/5">
+            <div className="bg-muted/5 p-8 border-b border-muted-foreground/10">
+               <h3 className="text-sm font-black italic tracking-tighter uppercase flex items-center gap-3">
+                 <MapPin className="h-4 w-4 text-primary" />
+                 Target Identification
+               </h3>
+               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1 opacity-50">Operational Environment</p>
+            </div>
+            <CardContent className="p-10 space-y-8 bg-card">
+              <div className="space-y-3">
+                <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Deployment Zone</Label>
                 <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select location..." />
+                  <SelectTrigger className="h-16 bg-muted/20 border-muted rounded-2xl font-black uppercase tracking-widest text-[10px] px-8 focus:ring-primary/10 transition-all">
+                    <SelectValue placeholder="Identify your location..." />
                   </SelectTrigger>
                   <SelectContent>
                     {locations.length === 0 ? (
-                      <SelectItem value="none" disabled>No locations found</SelectItem>
+                      <SelectItem value="none" disabled className="font-bold uppercase tracking-widest text-[10px]">No Zones Configured</SelectItem>
                     ) : (
-                      locations.map(l => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)
+                      locations.map(l => <SelectItem key={l.id} value={l.id} className="font-bold uppercase tracking-widest text-[10px] py-4">{l.name}</SelectItem>)
                     )}
                   </SelectContent>
                 </Select>
               </div>
               <Button
-                className="w-full"
+                className="w-full h-16 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 bg-primary hover:bg-primary/90"
                 disabled={!selectedLocation || selectedLocation === 'none'}
                 onClick={() => {
                   setStep('video');
                   startCamera('environment');
                 }}
               >
-                Continue to Video <ChevronRight className="ml-2 h-4 w-4" />
+                Establish Visual Link <ChevronRight className="ml-3 h-4 w-4" />
               </Button>
             </CardContent>
           </Card>
         )}
 
         {step === 'video' && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Record Activity</CardTitle>
-              <CardDescription>Capture 20 seconds of the location activity.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="relative aspect-video bg-zinc-100 rounded-lg overflow-hidden flex items-center justify-center">
+          <Card className="standard-card p-1 overflow-hidden shadow-2xl border-primary/5">
+            <div className="bg-muted/5 p-8 border-b border-muted-foreground/10 flex items-center justify-between">
+               <div>
+                  <h3 className="text-sm font-black italic tracking-tighter uppercase flex items-center gap-3">
+                    <Video className="h-4 w-4 text-primary" />
+                    Live Transmission
+                  </h3>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1 opacity-50">Stream verification in progress</p>
+               </div>
+               {recording && (
+                 <div className="flex items-center gap-2 bg-destructive/10 text-destructive px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest animate-pulse border border-destructive/20">
+                    <div className="h-1.5 w-1.5 rounded-full bg-destructive" /> RECORDING
+                 </div>
+               )}
+            </div>
+            <CardContent className="p-10 space-y-10 bg-card">
+              <div className="relative aspect-video bg-black rounded-[2rem] overflow-hidden flex items-center justify-center shadow-inner border-4 border-muted/20">
                 <video
                   ref={videoRef}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover grayscale md:grayscale-0 contrast-125"
                   autoPlay
                   muted
                   playsInline
                 />
                 
-                {recording && (
-                  <div className="absolute top-4 left-4 flex items-center gap-2 bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-medium">
-                    <div className="h-2 w-2 rounded-full bg-red-600 animate-pulse" /> Recording
+                {/* HUD Overlay */}
+                <div className="absolute inset-0 pointer-events-none p-6 flex flex-col justify-between">
+                  <div className="flex justify-between items-start">
+                    <div className="w-10 h-10 border-t-2 border-l-2 border-primary/50" />
+                    <div className="w-10 h-10 border-t-2 border-r-2 border-primary/50" />
                   </div>
-                )}
-                
-                <div className="absolute top-4 right-4 bg-background/90 text-foreground px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2 shadow-sm">
-                  <Clock className="h-4 w-4" /> 00:{countdown.toString().padStart(2, '0')}
+                  
+                  <div className="flex justify-center">
+                    <div className="bg-black/60 backdrop-blur-md px-6 py-2 rounded-2xl border border-white/10 flex items-center gap-4 shadow-2xl">
+                       <Clock className="h-4 w-4 text-primary animate-pulse" />
+                       <span className="text-xl font-black italic text-white tabular-nums tracking-tighter">00:{countdown.toString().padStart(2, '0')}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-end">
+                    <div className="w-10 h-10 border-b-2 border-l-2 border-primary/50" />
+                    <div className="w-10 h-10 border-b-2 border-r-2 border-primary/50" />
+                  </div>
                 </div>
               </div>
               
               <div className="flex justify-center">
                 {!recording ? (
-                  <Button size="lg" className="w-full sm:w-auto" onClick={startRecording}>
-                    <Video className="h-4 w-4 mr-2" /> Start Recording
+                  <Button 
+                    size="lg" 
+                    className="h-20 w-20 rounded-full bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/30 flex items-center justify-center p-0 transition-all hover:scale-110 active:scale-90" 
+                    onClick={startRecording}
+                  >
+                    <Video className="h-8 w-8 text-primary-foreground" />
                   </Button>
                 ) : (
-                  <Button size="lg" variant="destructive" className="w-full sm:w-auto" onClick={stopRecording}>
-                    <StopCircle className="h-4 w-4 mr-2" /> Stop Recording
+                  <Button 
+                    size="lg" 
+                    variant="destructive" 
+                    className="h-20 w-20 rounded-full shadow-2xl shadow-destructive/30 flex items-center justify-center p-0 animate-pulse transition-all hover:scale-110 active:scale-95" 
+                    onClick={stopRecording}
+                  >
+                    <StopCircle className="h-8 w-8 text-white" />
                   </Button>
                 )}
               </div>
@@ -391,13 +450,16 @@ export default function FlashmobAuditPage() {
         )}
 
         {step === 'review' && videoUrl && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Review Video</CardTitle>
-              <CardDescription>Check the recorded video before continuing.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="relative aspect-video bg-zinc-100 rounded-lg overflow-hidden">
+          <Card className="standard-card p-1 overflow-hidden shadow-2xl border-primary/5">
+            <div className="bg-muted/5 p-8 border-b border-muted-foreground/10">
+               <h3 className="text-sm font-black italic tracking-tighter uppercase flex items-center gap-3">
+                 <RefreshCw className="h-4 w-4 text-primary" />
+                 Transmission Review
+               </h3>
+               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1 opacity-50">Validate capture quality before uplink</p>
+            </div>
+            <CardContent className="p-10 space-y-10 bg-card">
+              <div className="relative aspect-video bg-black rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-muted/20">
                 <video
                   src={videoUrl}
                   className="h-full w-full object-cover"
@@ -406,9 +468,10 @@ export default function FlashmobAuditPage() {
                   loop
                 />
               </div>
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <Button
-                  variant="outline"
+                  variant="ghost"
+                  className="h-16 rounded-2xl font-black uppercase tracking-widest text-[10px] text-muted-foreground transition-all hover:bg-destructive/10 hover:text-destructive active:scale-95"
                   onClick={() => {
                     setVideoUrl(null);
                     setVideoBlob(null);
@@ -416,15 +479,16 @@ export default function FlashmobAuditPage() {
                     startCamera('environment');
                   }}
                 >
-                  <RefreshCw className="mr-2 h-4 w-4" /> Retake Video
+                  <RefreshCw className="mr-3 h-4 w-4" /> Discard & Redo
                 </Button>
                 <Button
+                  className="h-16 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 bg-primary hover:bg-primary/90"
                   onClick={() => {
                     setStep('selfie');
                     startCamera('user');
                   }}
                 >
-                  Continue to Selfie <ChevronRight className="ml-2 h-4 w-4" />
+                  Confirm Intel <ChevronRight className="ml-3 h-4 w-4" />
                 </Button>
               </div>
             </CardContent>
@@ -432,25 +496,35 @@ export default function FlashmobAuditPage() {
         )}
 
         {step === 'selfie' && (
-          <Card>
-             <CardHeader>
-              <CardTitle>Take Selfie</CardTitle>
-              <CardDescription>Capture a clear photo of yourself at the location.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="relative aspect-video bg-zinc-100 rounded-lg overflow-hidden flex items-center justify-center">
+          <Card className="standard-card p-1 overflow-hidden shadow-2xl border-primary/5">
+            <div className="bg-muted/5 p-8 border-b border-muted-foreground/10 text-center">
+               <h3 className="text-sm font-black italic tracking-tighter uppercase flex items-center justify-center gap-3">
+                 <Camera className="h-4 w-4 text-primary" />
+                 Identification Hash
+               </h3>
+               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1 opacity-50">Capture biometric proof of presence</p>
+            </div>
+            <CardContent className="p-10 space-y-10 bg-card">
+              <div className="relative aspect-square max-w-[400px] mx-auto bg-black rounded-full overflow-hidden border-8 border-muted/20 shadow-2xl">
                 <video
                   ref={videoRef}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover grayscale"
                   autoPlay
                   muted
                   playsInline
                 />
+                {/* Selfie Grid Ring */}
+                <div className="absolute inset-0 border-[20px] border-primary/5 rounded-full pointer-events-none" />
+                <div className="absolute inset-0 border-2 border-dashed border-primary/20 rounded-full animate-[spin_20s_linear_infinite] pointer-events-none" />
               </div>
               
               <div className="flex justify-center">
-                <Button size="lg" className="w-full sm:w-auto" onClick={takeSelfie}>
-                  <Camera className="h-4 w-4 mr-2" /> Take Photo
+                <Button 
+                  size="lg" 
+                  className="h-20 w-20 rounded-full bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/30 flex items-center justify-center p-0 transition-all hover:scale-110 active:scale-95 group" 
+                  onClick={takeSelfie}
+                >
+                  <Camera className="h-8 w-8 text-primary-foreground group-hover:rotate-12 transition-transform" />
                 </Button>
               </div>
             </CardContent>
@@ -458,30 +532,36 @@ export default function FlashmobAuditPage() {
         )}
 
         {step === 'submitting' && (
-          <Card>
-            <CardHeader className="text-center">
-              <CardTitle>Submit Audit</CardTitle>
-              <CardDescription>You are about to submit the flashmob audit.</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center space-y-6 pb-6">
+          <Card className="standard-card p-1 overflow-hidden shadow-2xl border-primary/5">
+            <div className="bg-muted/5 p-12 text-center">
+               <div className="mx-auto bg-primary/10 h-20 w-20 rounded-3xl flex items-center justify-center mb-8 rotate-12">
+                 <UploadCloud className="h-10 w-10 text-primary" />
+               </div>
+               <h3 className="text-2xl font-black italic tracking-tighter uppercase mb-2">Initialize Uplink</h3>
+               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] opacity-50">Transmitting field intelligence to central command</p>
+            </div>
+            <CardContent className="p-10 flex flex-col items-center justify-center space-y-10 bg-card">
               {selfieUrl && (
-                <div className="h-32 w-32 rounded-full overflow-hidden border-4 border-muted">
-                   <img src={selfieUrl} alt="Selfie preview" className="h-full w-full object-cover" />
+                <div className="h-40 w-40 rounded-full overflow-hidden border-8 border-muted shadow-2xl relative group">
+                   <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <CheckCircle2 className="text-white h-10 w-10" />
+                   </div>
+                   <img src={selfieUrl} alt="Selfie preview" className="h-full w-full object-cover grayscale" />
                 </div>
               )}
               <Button
                 size="lg"
-                className="w-full sm:w-auto min-w-[200px]"
+                className="w-full h-20 rounded-[2rem] font-black uppercase tracking-[0.3em] text-[12px] shadow-2xl shadow-primary/30 transition-all hover:scale-105 active:scale-95 bg-primary hover:bg-primary/90"
                 disabled={saving}
                 onClick={handleSubmit}
               >
                 {saving ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Uploading...
+                    <Loader2 className="mr-4 h-6 w-6 animate-spin" /> ESTABLISHING LINK...
                   </>
                 ) : (
                   <>
-                    <UploadCloud className="mr-2 h-4 w-4" /> Submit Report
+                    <UploadCloud className="mr-4 h-6 w-6" /> COMMENCE UPLINK
                   </>
                 )}
               </Button>

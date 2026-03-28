@@ -92,18 +92,18 @@ export default function AdminCorrectiveActionsPage() {
 
   return (
     <DashboardShell role="Admin">
-      <div className="space-y-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
           <div>
-            <h2 className="text-3xl font-black text-zinc-950 tracking-tight flex items-center gap-3">
-              <AlertCircle className="h-8 w-8 text-rose-500" />
+            <h1 className="page-heading flex items-center gap-3">
+              <AlertCircle className="h-8 w-8 text-destructive animate-pulse" />
               CRITICAL ACTIONS
-            </h2>
-            <p className="text-zinc-500 font-medium pt-1">Unresolved safety and quality failures requiring immediate attention</p>
+            </h1>
+            <p className="body-text">Unresolved safety and quality failures requiring immediate executive attention</p>
           </div>
           
           <div className="flex items-center gap-2">
-             <Badge variant="outline" className="bg-rose-50 text-rose-700 border-rose-100 font-black px-3 py-1 text-xs">
+             <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 font-bold px-4 py-1.5 text-[10px] tracking-tight uppercase">
                {actions.length} OPEN ISSUES
              </Badge>
           </div>
@@ -111,52 +111,52 @@ export default function AdminCorrectiveActionsPage() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-           <Card className="shadow-sm border-zinc-200 bg-zinc-950 text-white overflow-hidden relative group">
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-transparent" />
+           <Card className="standard-card bg-foreground text-background overflow-hidden relative group">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-transparent opacity-50" />
               <CardHeader className="pb-2 relative z-10">
-                <CardDescription className="text-zinc-400 font-bold uppercase tracking-widest text-[10px]">Overdue Tasks</CardDescription>
-                <CardTitle className="text-4xl font-black tabular-nums">
+                <CardDescription className="text-muted-foreground/60 text-xs font-medium text-muted-foreground">Overdue Tasks</CardDescription>
+                <CardTitle className="text-3xl font-bold tabular-nums text-white">
                   {actions.filter(a => a.deadline?.toDate() < new Date()).length}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="relative z-10">
-                <p className="text-xs text-zinc-500 font-medium">Critical issues past their resolution deadline</p>
+              <CardContent className="relative z-10 pt-2">
+                <p className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-tight">CRITICAL MISSION DELAYS</p>
               </CardContent>
            </Card>
 
-           <Card className="shadow-sm border-zinc-200 overflow-hidden relative">
+           <Card className="standard-card overflow-hidden relative border-destructive/20 bg-destructive/5">
               <CardHeader className="pb-2">
-                <CardDescription className="text-zinc-400 font-bold uppercase tracking-widest text-[10px]">High Severity</CardDescription>
-                <CardTitle className="text-4xl font-black tabular-nums">
+                <CardDescription className="text-destructive text-xs font-medium text-muted-foreground opacity-70">High Severity</CardDescription>
+                <CardTitle className="text-3xl font-bold tabular-nums text-destructive">
                   {actions.filter(a => a.severity === 'critical').length}
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-xs text-zinc-500 font-medium">Items that could cause serious business risk</p>
+              <CardContent className="pt-2">
+                <p className="text-[10px] text-destructive/60 font-bold uppercase tracking-tight">IMMEDIATE BUSINESS RISK</p>
               </CardContent>
            </Card>
 
-           <Card className="shadow-sm border-zinc-200 overflow-hidden relative">
+           <Card className="standard-card overflow-hidden relative">
               <CardHeader className="pb-2">
-                <CardDescription className="text-zinc-400 font-bold uppercase tracking-widest text-[10px]">Average TAT</CardDescription>
-                <CardTitle className="text-4xl font-black tabular-nums">48h</CardTitle>
+                <CardDescription className="text-muted-foreground text-xs font-medium text-muted-foreground">Average TAT</CardDescription>
+                <CardTitle className="text-3xl font-bold tabular-nums text-foreground">48h</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-xs text-zinc-500 font-medium">Target turn-around time for resolution</p>
+              <CardContent className="pt-2">
+                <p className="text-[10px] text-muted-foreground/60 font-bold uppercase tracking-tight">TARGET RESOLUTION WINDOW</p>
               </CardContent>
            </Card>
         </div>
 
         {/* Actions Table */}
-        <Card className="shadow-sm border-zinc-200 overflow-hidden">
+        <Card className="standard-card">
           <Table>
-            <TableHeader className="bg-zinc-50 border-b border-zinc-200">
-              <TableRow>
-                <TableHead className="font-bold text-[11px] text-zinc-500 uppercase py-4">Location & Manager</TableHead>
-                <TableHead className="font-bold text-[11px] text-zinc-500 uppercase py-4">Issue Description</TableHead>
-                <TableHead className="font-bold text-[11px] text-zinc-500 uppercase py-4">Severity</TableHead>
-                <TableHead className="font-bold text-[11px] text-zinc-500 uppercase py-4">Deadline</TableHead>
-                <TableHead className="font-bold text-[11px] text-zinc-500 uppercase py-4 text-center">Status</TableHead>
+            <TableHeader >
+              <TableRow >
+                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Location & Responsibility</TableHead>
+                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Issue Blueprint</TableHead>
+                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Severity</TableHead>
+                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Deadline</TableHead>
+                <TableHead className="h-11 text-xs font-medium text-muted-foreground text-center">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -168,53 +168,57 @@ export default function AdminCorrectiveActionsPage() {
                 ))
               ) : actions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-40 text-center text-muted-foreground font-medium bg-zinc-50/30">
-                    <div className="flex flex-col items-center gap-2">
-                        <CheckCircle2 className="h-10 w-10 text-emerald-500 opacity-20" />
-                        <p>No open corrective actions found. All systems are green.</p>
+                  <TableCell colSpan={5} className="py-24 text-center text-muted-foreground bg-muted/5">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="bg-success/10 p-4 rounded-full">
+                          <CheckCircle2 className="h-8 w-8 text-success opacity-40" />
+                        </div>
+                        <p className="page-heading text-lg opacity-40 uppercase tracking-tight">All systems operational. No open actions.</p>
                     </div>
                   </TableCell>
                 </TableRow>
               ) : (
                 actions.map((action) => (
-                  <TableRow key={action.id} className="hover:bg-zinc-50 transition-colors">
-                    <TableCell className="py-4">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-1.5 font-bold text-zinc-950 text-sm">
-                          <MapPin className="h-3.5 w-3.5 text-rose-500" /> {action.locationName}
+                  <TableRow key={action.id} className="border-b last:border-0 transition-colors hover:bg-muted/40">
+                    <TableCell className="px-4 py-3">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 font-bold text-foreground text-sm uppercase tracking-tight group-hover:text-primary transition-colors">
+                          <MapPin className="h-3.5 w-3.5 text-primary opacity-50" /> {action.locationName}
                         </div>
-                        <div className="flex items-center gap-1.5 text-zinc-500 text-[11px] font-medium">
+                        <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-bold uppercase tracking-tight pl-5 opacity-60">
                           <User className="h-3 w-3" /> {action.managerName}
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="py-4">
-                      <p className="text-sm font-bold text-zinc-900 leading-tight">{action.questionText}</p>
-                      <p className="text-[11px] text-zinc-400 italic line-clamp-1 mt-0.5">{action.description}</p>
+                    <TableCell className="px-4 py-3">
+                      <div className="flex flex-col gap-1">
+                        <p className="text-sm font-bold text-foreground leading-tight">{action.questionText}</p>
+                        <p className="text-[10px] text-muted-foreground italic line-clamp-1 opacity-60">{action.description}</p>
+                      </div>
                     </TableCell>
-                    <TableCell className="py-4">
+                    <TableCell className="px-4 py-3">
                       <Badge className={cn(
-                        "font-black text-[10px] tracking-widest px-2 py-0.5",
-                        action.severity === 'critical' ? "bg-rose-500 hover:bg-rose-600" : "bg-amber-500 hover:bg-amber-600"
+                        "font-bold text-[9px] tracking-tight px-3 py-1 uppercase rounded-full border-none shadow-sm",
+                        action.severity === 'critical' ? "bg-destructive text-white" : "bg-warning text-warning-foreground"
                       )}>
-                        {action.severity.toUpperCase()}
+                        {action.severity}
                       </Badge>
                     </TableCell>
-                    <TableCell className="py-4">
+                    <TableCell className="px-4 py-3">
                       <div className={cn(
-                        "flex items-center gap-1.5 font-black text-[11px] uppercase tracking-wider",
-                        action.deadline?.toDate() < new Date() ? "text-rose-600" : "text-zinc-600"
+                        "flex items-center gap-2 font-bold text-[11px] uppercase tracking-tight tabular-nums",
+                        action.deadline?.toDate() < new Date() ? "text-destructive animate-pulse" : "text-muted-foreground"
                       )}>
-                        <Clock className="h-3.5 w-3.5" />
+                        <Clock className="h-3.5 w-3.5 opacity-50" />
                         {format(action.deadline?.toDate(), 'MMM d, ha')}
                       </div>
                     </TableCell>
-                    <TableCell className="py-4 text-center">
+                    <TableCell className="px-6 py-5 text-center">
                        <Badge variant="outline" className={cn(
-                         "bg-white font-bold text-[10px] px-2 py-1 border-zinc-200",
-                         action.status === 'in_progress' ? "text-indigo-600 border-indigo-100 bg-indigo-50" : "text-amber-600"
+                         "font-bold text-[9px] px-3 py-1 uppercase tracking-tight rounded-lg border-muted/20",
+                         action.status === 'in_progress' ? "text-primary border-primary/20 bg-primary/5" : "text-warning border-warning/20 bg-warning/5"
                        )}>
-                         {action.status.replace('_', ' ').toUpperCase()}
+                         {action.status.replace('_', ' ')}
                        </Badge>
                     </TableCell>
                   </TableRow>

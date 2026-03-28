@@ -19,6 +19,7 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
+import { Label } from '@/components/ui/label';
 import { 
   Select, 
   SelectContent, 
@@ -116,36 +117,42 @@ export default function AdminReportsPage() {
 
   return (
     <DashboardShell role="Admin">
-      <div className="space-y-8">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Audit Archive</h2>
-          <p className="text-muted-foreground pt-1">Comprehensive repository of all completed quality submissions</p>
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
+          <div>
+            <h1 className="page-heading">Audit Archive</h1>
+            <p className="body-text">Comprehensive repository of all completed quality submissions</p>
+          </div>
         </div>
 
         {/* Filters Card */}
-        <Card className="shadow-sm border-zinc-200">
+        <Card className="standard-card">
           <CardContent className="pt-6">
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex-1 min-w-[200px]">
-                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest pl-1 pb-1.5 flex items-center gap-1.5">
-                  <MapPin className="h-3 w-3" /> Location Filter
-                </p>
+            <div className="flex flex-wrap items-end gap-6">
+              <div className="flex-1 min-w-[280px] space-y-2">
+                <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">
+                  Location Intelligence Filter
+                </Label>
                 <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                  <SelectTrigger className="bg-zinc-50 border-zinc-200">
+                  <SelectTrigger className="h-11 bg-muted/20 border-muted rounded-xl focus:ring-primary/10 transition-all">
                     <SelectValue placeholder="Select Location" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Locations</SelectItem>
+                  <SelectContent className="rounded-xl border-muted/20 shadow-xl p-1.5">
+                    <SelectItem value="all" className="rounded-lg h-10 font-bold text-xs cursor-pointer">All Global Locations</SelectItem>
                     {locations.map(loc => (
-                      <SelectItem key={loc.id} value={loc.id}>{loc.name}</SelectItem>
+                      <SelectItem key={loc.id} value={loc.id} className="rounded-lg h-10 font-bold text-xs cursor-pointer">{loc.name}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="flex items-end h-full pt-4">
-                <Button variant="outline" onClick={fetchReports} className="font-bold gap-2 text-zinc-600 border-zinc-200">
-                  <Filter className="h-4 w-4" /> REFRESH LIST
+              <div className="pb-0.5">
+                <Button 
+                  variant="outline" 
+                  onClick={fetchReports} 
+                  className="h-11 px-6 font-black uppercase tracking-widest text-[10px] border-muted bg-muted/5 hover:bg-muted/10 transition-all active:scale-95 gap-2.5"
+                >
+                  <Filter className="h-3.5 w-3.5 opacity-50" /> Update Results
                 </Button>
               </div>
             </div>
@@ -153,15 +160,15 @@ export default function AdminReportsPage() {
         </Card>
 
         {/* Reports Table */}
-        <Card className="shadow-sm border-zinc-200 overflow-hidden">
+        <Card className="standard-card">
           <Table>
-            <TableHeader className="bg-zinc-50 border-b border-zinc-200">
-              <TableRow>
-                <TableHead className="font-bold text-[11px] text-zinc-500 uppercase py-4">Audit Details</TableHead>
-                <TableHead className="font-bold text-[11px] text-zinc-500 uppercase py-4">Branch</TableHead>
-                <TableHead className="font-bold text-[11px] text-zinc-500 uppercase py-4">Completion Date</TableHead>
-                <TableHead className="font-bold text-[11px] text-zinc-500 uppercase py-4 text-center">Score</TableHead>
-                <TableHead className="text-right py-4"></TableHead>
+            <TableHeader className="bg-muted/30 border-b border-muted/20">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Audit Blueprint</TableHead>
+                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Branch Intelligence</TableHead>
+                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Completion Timeline</TableHead>
+                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50 text-center">Executive Score</TableHead>
+                <TableHead className="py-5 px-6 text-right"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -173,48 +180,54 @@ export default function AdminReportsPage() {
                  ))
               ) : reports.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-32 text-center text-muted-foreground font-medium">
-                    No results found for current filters
+                  <TableCell colSpan={5} className="py-24 text-center text-muted-foreground bg-muted/5">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="bg-muted/10 p-4 rounded-full">
+                          <FileText className="h-8 w-8 opacity-20" />
+                        </div>
+                        <p className="page-heading text-lg opacity-40 uppercase tracking-[0.2em]">No historical reports found for this criteria.</p>
+                    </div>
                   </TableCell>
                 </TableRow>
               ) : (
                 reports.map((report) => (
                   <TableRow 
                     key={report.id} 
-                    className="hover:bg-zinc-50 transition-colors cursor-pointer group"
+                    className="hover:bg-muted/10 transition-all border-b border-muted/10 group cursor-pointer"
                   >
-                        <TableCell className="py-4 font-medium">
-                          <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
-                            <p className="font-bold text-zinc-950 text-sm">{report.templateTitle}</p>
-                            <p className="text-[10px] text-zinc-400 font-medium">#{report.id.slice(-8).toUpperCase()}</p>
+                        <TableCell className="px-6 py-5">
+                          <Link href={`/dashboard/admin/reports/${report.id}`} className="block space-y-1">
+                            <p className="font-bold text-foreground text-sm group-hover:text-primary transition-colors uppercase tracking-tight">{report.templateTitle}</p>
+                            <p className="text-[10px] text-muted-foreground font-black tracking-widest opacity-40 uppercase tabular-nums">{report.id.slice(-8)}</p>
                           </Link>
                         </TableCell>
-                        <TableCell className="py-4">
+                        <TableCell className="px-6 py-5">
                           <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
-                            <div className="flex items-center gap-1.5 text-zinc-600 font-medium text-sm">
-                              <MapPin className="h-3.5 w-3.5 text-zinc-400" />
-                              {report.locationName}
+                            <div className="flex items-center gap-2.5">
+                              <MapPin className="h-3.5 w-3.5 text-primary opacity-50" />
+                              <span className="text-[11px] font-black uppercase tracking-tight text-foreground/80">{report.locationName}</span>
                             </div>
                           </Link>
                         </TableCell>
-                        <TableCell className="py-4 text-zinc-600 text-sm font-medium">
-                          <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
-                            {report.completedAt ? format(report.completedAt.toDate(), 'MMMM d, yyyy') : 'N/A'}
+                        <TableCell className="px-6 py-5">
+                          <Link href={`/dashboard/admin/reports/${report.id}`} className="block space-y-1">
+                            <p className="text-[10px] font-bold text-foreground uppercase tracking-widest">{report.completedAt ? format(report.completedAt.toDate(), 'MMMM d, yyyy') : 'N/A'}</p>
+                            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] opacity-50">FINALIZED SUBMISSION</p>
                           </Link>
                         </TableCell>
-                        <TableCell className="py-4 text-center">
+                        <TableCell className="px-6 py-5">
                           <Link href={`/dashboard/admin/reports/${report.id}`} className="flex justify-center">
                             <div className={cn(
-                              "inline-flex items-center justify-center h-8 w-12 rounded-lg font-black text-[12px] shadow-sm",
-                              report.scorePercentage >= 90 ? "bg-emerald-500 text-white" : report.scorePercentage >= 70 ? "bg-indigo-500 text-white" : "bg-rose-500 text-white"
+                              "inline-flex items-center justify-center h-10 w-14 rounded-xl font-black text-[13px] italic tracking-tighter tabular-nums shadow-lg shadow-black/5",
+                              report.scorePercentage >= 90 ? "bg-success text-success-foreground" : report.scorePercentage >= 70 ? "bg-primary text-primary-foreground" : "bg-destructive text-destructive-foreground"
                             )}>
                               {report.scorePercentage}%
                             </div>
                           </Link>
                         </TableCell>
-                        <TableCell className="py-4 text-right">
-                          <Link href={`/dashboard/admin/reports/${report.id}`} className="flex items-center justify-end gap-2 text-zinc-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all">
-                              <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline">View Full Report</span>
+                        <TableCell className="px-6 py-5 text-right">
+                          <Link href={`/dashboard/admin/reports/${report.id}`} className="flex items-center justify-end gap-3 text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-1 transition-all">
+                              <span className="text-[9px] font-black uppercase tracking-[0.2em] hidden sm:inline">Inspect Intelligence</span>
                               <ArrowRight className="h-4 w-4" />
                           </Link>
                         </TableCell>

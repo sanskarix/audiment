@@ -40,9 +40,9 @@ export default function LoginPage() {
     <main className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm space-y-6">
         {/* Brand */}
-        <div className="text-center space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight">Audiment</h1>
-          <p className="text-sm text-muted-foreground">Audit smarter. Manage better.</p>
+        <div className="text-center space-y-2">
+          <h1 className="page-heading">Audiment</h1>
+          <p className="body-text text-muted-foreground">Audit smarter. Manage better.</p>
         </div>
 
         <Card>

@@ -109,36 +109,49 @@ export default function ManagerCalendarPage() {
 
   return (
     <DashboardShell role="Manager">
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Audit Schedule</h1>
-            <p className="text-muted-foreground text-sm">Monthly overview of upcoming planned audits.</p>
+            <h1 className="page-heading">Audit Schedule</h1>
+            <p className="body-text">Monthly strategic overview of upcoming planned quality missions.</p>
           </div>
-          <div className="flex items-center space-x-4 bg-card px-4 py-2 rounded-lg border shadow-sm">
-            <Button variant="ghost" size="icon" onClick={prevMonth} className="h-8 w-8 hover:bg-muted">
-              <ChevronLeft className="h-4 w-4" />
+          
+          <div className="flex items-center gap-3 bg-muted/20 p-1.5 rounded-xl border border-muted/50 shadow-sm backdrop-blur-sm">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={prevMonth} 
+              className="h-9 w-9 rounded-lg hover:bg-background transition-all active:scale-90"
+            >
+              <ChevronLeft className="h-5 w-5" />
             </Button>
-            <h2 className="text-sm font-bold w-32 text-center uppercase tracking-wider text-muted-foreground">
-              {format(currentMonth, 'MMMM yyyy')}
-            </h2>
-            <Button variant="ghost" size="icon" onClick={nextMonth} className="h-8 w-8 hover:bg-muted">
-              <ChevronRight className="h-4 w-4" />
+            <div className="px-4 min-w-[140px] text-center">
+              <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground italic">
+                {format(currentMonth, 'MMMM yyyy')}
+              </h2>
+            </div>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={nextMonth} 
+              className="h-9 w-9 rounded-lg hover:bg-background transition-all active:scale-90"
+            >
+              <ChevronRight className="h-5 w-5" />
             </Button>
           </div>
         </div>
 
-        <Card className="shadow-sm border-muted overflow-hidden">
-          <CardContent className="p-0">
-            <div className="grid grid-cols-7 border-b bg-muted/30">
+        <Card className="standard-card">
+          <CardContent className="p-0 overflow-hidden">
+            <div className="grid grid-cols-7 border-b border-muted/20 bg-muted/40 backdrop-blur-md">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                <div key={day} className="py-3 text-center text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
+                <div key={day} className="py-4 text-center text-[10px] uppercase font-black tracking-[0.3em] text-muted-foreground opacity-60">
                   {day}
                 </div>
               ))}
             </div>
             
-            <div className="grid grid-cols-7 auto-rows-[140px]">
+            <div className="grid grid-cols-7 auto-rows-[160px] md:auto-rows-[180px]">
               {days.map((day, i) => {
                 const dayEvents = getEventsForDay(day);
                 const isCurrentMonth = isSameMonth(day, monthStart);
@@ -146,47 +159,56 @@ export default function ManagerCalendarPage() {
                   <div
                     key={day.toString()}
                     className={cn(
-                      "border-r border-b p-2 flex flex-col gap-1.5 transition-colors relative group",
-                      !isCurrentMonth ? "bg-muted/10" : "bg-card hover:bg-muted/30",
-                      isToday(day) && "bg-blue-50/30"
+                      "border-r border-b border-muted/10 p-3 flex flex-col gap-2.5 transition-all relative group",
+                      !isCurrentMonth ? "bg-muted/5 opacity-50" : "bg-card hover:bg-muted/10",
+                      isToday(day) && "bg-primary/[0.03]"
                     )}
                   >
                     <div className="flex justify-between items-start">
                       <span className={cn(
-                        "text-xs font-bold h-6 w-6 flex items-center justify-center rounded-full mt-1 ml-1",
-                        isToday(day) ? "bg-blue-600 text-white shadow-sm" : !isCurrentMonth ? "text-muted-foreground/40" : "text-zinc-700 font-semibold"
+                        "text-[11px] font-black h-7 w-7 flex items-center justify-center rounded-lg transition-all",
+                        isToday(day) 
+                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110" 
+                          : !isCurrentMonth 
+                            ? "text-muted-foreground/30" 
+                            : "text-foreground opacity-60 group-hover:opacity-100"
                       )}>
                         {format(day, dateFormat)}
                       </span>
                       {dayEvents.length > 0 && (
-                        <Badge variant="secondary" className="text-[9px] font-bold h-4 px-1.5 bg-blue-100 text-blue-700 hover:bg-blue-100 border-none mt-1 mr-1">
-                          {dayEvents.length}
-                        </Badge>
+                        <div className="h-2 w-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
                       )}
                     </div>
                     
-                    <ScrollArea className="flex-1 -mx-1 px-1">
-                      <div className="flex flex-col gap-1.5">
+                    <ScrollArea className="flex-1 -mx-2 px-2 overflow-hidden">
+                      <div className="flex flex-col gap-2 pb-2">
                         {dayEvents.map((event: any, idx) => (
                           <div 
                             key={event.id || idx} 
                             className={cn(
-                              "text-xs p-2 rounded-md border flex flex-col gap-1 transition-colors group/event cursor-default shadow-sm",
-                              event.status === 'in_progress' ? "bg-indigo-50/80 border-indigo-100" : "bg-white border-muted"
+                              "text-[10px] p-2.5 rounded-xl border flex flex-col gap-1.5 transition-all group/event cursor-default shadow-sm backdrop-blur-sm",
+                              event.status === 'in_progress' 
+                                ? "bg-primary/5 border-primary/20 text-primary" 
+                                : "bg-muted/20 border-muted text-foreground hover:bg-muted/30"
                             )}
                           >
-                            <div className="font-bold truncate text-zinc-900 leading-tight" title={event.templateTitle}>
+                            <div className="font-black uppercase tracking-tight leading-none truncate" title={event.templateTitle}>
                               {event.templateTitle}
                             </div>
-                            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground mt-0.5" title={event.locationName}>
-                              <MapPin className="h-3 w-3 flex-shrink-0 text-zinc-400" />
-                              <span className="truncate">{event.locationName}</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground" title={event.auditorName}>
-                              <User className="h-3 w-3 flex-shrink-0 text-zinc-400" />
-                              <span className={cn("truncate", !event.assignedAuditorId && "italic opacity-80 text-rose-500 font-medium")}>
-                                {event.auditorName}
-                              </span>
+                            <div className="flex flex-col gap-1 pt-1 opacity-70">
+                              <div className="flex items-center gap-2 truncate" title={event.locationName}>
+                                <MapPin className="h-3 w-3 flex-shrink-0" />
+                                <span className="font-bold truncate">{event.locationName}</span>
+                              </div>
+                              <div className="flex items-center gap-2 truncate" title={event.auditorName}>
+                                <User className="h-3 w-3 flex-shrink-0" />
+                                <span className={cn(
+                                  "font-black tracking-widest text-[9px] truncate", 
+                                  !event.assignedAuditorId && "text-destructive animate-pulse"
+                                )}>
+                                  {event.auditorName || 'UNASSIGNED'}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         ))}

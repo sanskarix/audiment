@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { MoreHorizontal, Plus, ClipboardCheck, Settings2, Trash2 } from 'lucide-react';
@@ -136,31 +137,31 @@ export default function AdminTemplatesPage() {
 
   return (
     <DashboardShell role="Admin">
-      <div className="flex flex-col space-y-6 max-w-full px-4 sm:px-0">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Audit Templates</h1>
-            <p className="text-muted-foreground text-sm">
+            <h1 className="page-heading">Audit Templates</h1>
+            <p className="body-text">
               Build and manage the blueprints for audits across your organization.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-3">
             {!hasFssai && (
-              <Button variant="outline" size="sm" onClick={loadFssaiDefaults} disabled={loading}>
+              <Button variant="outline" size="lg" onClick={loadFssaiDefaults} disabled={loading} className="font-semibold text-emerald-600 border-emerald-500/20 hover:bg-emerald-50">
                 <ClipboardCheck className="mr-2 h-4 w-4" /> Load FSSAI Defaults
               </Button>
             )}
             <Link href="/dashboard/admin/templates/new">
-              <Button size="sm" className="shadow-sm">
+              <Button size="lg" className="shadow-black/20 font-bold">
                 <Plus className="mr-2 h-4 w-4" /> Create Template
               </Button>
             </Link>
           </div>
         </div>
 
-        <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+        <Card className="standard-card">
           <Table>
-            <TableHeader className="bg-muted/50">
+            <TableHeader>
               <TableRow>
                 <TableHead className="font-semibold">Template Title</TableHead>
                 <TableHead className="font-semibold">Category</TableHead>
@@ -181,12 +182,12 @@ export default function AdminTemplatesPage() {
                 </TableRow>
               ) : (
                 templates.map((t) => (
-                  <TableRow key={t.id} className="hover:bg-muted/30 transition-colors">
+                  <TableRow key={t.id} className="hover:bg-muted/10 transition-colors">
                     <TableCell className="font-medium min-w-[200px]">
-                      <div className="flex items-center gap-2">
-                        {t.title}
+                      <div className="flex items-center gap-3">
+                        <span className="font-bold text-foreground">{t.title}</span>
                         {t.isFssaiDefault && (
-                          <Badge variant="secondary" className="border-emerald-500/30 text-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-[10px] uppercase font-bold tracking-tight">
+                          <Badge variant="outline" className="border-success/30 text-success bg-success/10 text-[10px] uppercase font-black tracking-tighter shadow-sm px-2 py-0">
                             FSSAI Certified
                           </Badge>
                         )}
@@ -199,7 +200,7 @@ export default function AdminTemplatesPage() {
                     <TableCell>
                       <div className="flex items-center space-x-2">
                         <Switch checked={t.isActive !== false} onCheckedChange={() => handleToggleActive(t.id, t.isActive !== false)} />
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground">{t.isActive !== false ? 'Active' : 'Inactive'}</span>
+                        <span className="text-[10px] font-black uppercase text-muted-foreground/60 tracking-widest">{t.isActive !== false ? 'Active' : 'Inactive'}</span>
                       </div>
                     </TableCell>
                     <TableCell className="text-right">
@@ -222,7 +223,7 @@ export default function AdminTemplatesPage() {
               )}
             </TableBody>
           </Table>
-        </div>
+        </Card>
       </div>
     </DashboardShell>
   );

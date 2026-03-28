@@ -93,11 +93,11 @@ export default function NotificationBell() {
 
   const getIcon = (type: string) => {
     switch (type) {
-      case 'audit_assigned': return <CheckSquare className="h-4 w-4 text-blue-500" />;
-      case 'audit_missed': return <Clock className="h-4 w-4 text-rose-500" />;
-      case 'surprise_audit': return <Zap className="h-4 w-4 text-amber-500" />;
+      case 'audit_assigned': return <CheckSquare className="h-4 w-4 text-primary" />;
+      case 'audit_missed': return <Clock className="h-4 w-4 text-destructive" />;
+      case 'surprise_audit': return <Zap className="h-4 w-4 text-amber-500 dark:text-amber-400" />;
       case 'low_score': return <AlertTriangle className="h-4 w-4 text-destructive" />;
-      case 'trend_alert': return <AlertTriangle className="h-4 w-4 text-orange-600" />;
+      case 'trend_alert': return <AlertTriangle className="h-4 w-4 text-orange-500" />;
       case 'corrective_action': return <FileText className="h-4 w-4 text-indigo-500" />;
       default: return <Bell className="h-4 w-4 text-muted-foreground" />;
     }
@@ -118,8 +118,8 @@ export default function NotificationBell() {
       <DropdownMenuContent align="end" className="w-85 md:w-96 p-0 shadow-2xl border-muted/50">
         <div className="flex items-center justify-between p-4 bg-muted/30">
           <div className="flex flex-col">
-            <span className="font-bold text-sm tracking-tight">Notifications</span>
-            <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">{unreadCount} Unread Alerts</span>
+            <span className="font-semibold text-sm tracking-tight text-foreground">Notifications</span>
+            <span className="muted-label font-bold uppercase tracking-wider">{unreadCount} Unread Alerts</span>
           </div>
           {unreadCount > 0 && (
             <Button variant="ghost" size="sm" onClick={markAllAsRead} className="h-7 text-[10px] uppercase font-bold text-primary hover:text-primary hover:bg-primary/5 transition-colors">
@@ -145,7 +145,7 @@ export default function NotificationBell() {
                   className={cn(
                     "relative flex gap-4 p-4 transition-all border-b last:border-0 hover:bg-muted/30 cursor-pointer",
                     !n.isRead && "bg-primary/5 border-l-2 border-l-primary",
-                    n.type === 'surprise_audit' && "bg-amber-50/50 hover:bg-amber-50"
+                    n.type === 'surprise_audit' && "bg-amber-500/5 hover:bg-amber-500/10"
                   )}
                   onClick={() => markAsRead(n.id)}
                 >

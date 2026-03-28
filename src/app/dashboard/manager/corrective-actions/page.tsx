@@ -188,10 +188,12 @@ export default function CorrectiveActionsPage() {
 
   return (
     <DashboardShell role="Manager">
-      <div className="space-y-8">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-zinc-900">Corrective Actions</h2>
-          <p className="text-muted-foreground">Monitor and resolve issues identified during audits.</p>
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
+          <div>
+            <h1 className="page-heading">Corrective Actions</h1>
+            <p className="body-text">Monitor and resolve issues identified during audits.</p>
+          </div>
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -199,25 +201,25 @@ export default function CorrectiveActionsPage() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search by question or location..."
-              className="pl-8 bg-zinc-50 border-zinc-200"
+              className="pl-8 bg-muted/20 border-muted"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <div className="flex gap-2">
-             <Card className="px-3 py-1.5 flex items-center gap-2 border-muted shadow-none">
-               <span className="text-xs font-bold text-rose-600 uppercase">Attention Required:</span>
-               <span className="text-sm font-black">{actions.filter(a => a.status !== 'resolved').length}</span>
+             <Card className="px-5 py-2.5 flex items-center gap-3 border-destructive/20 bg-destructive/5 shadow-none rounded-xl">
+               <span className="text-[11px] font-black text-destructive uppercase tracking-widest">Attention Required:</span>
+               <span className="text-xl font-black text-destructive leading-none">{actions.filter(a => a.status !== 'resolved').length}</span>
              </Card>
           </div>
         </div>
 
-        <Tabs defaultValue="open" className="space-y-6">
-          <TabsList className="bg-zinc-100/50 p-1 border">
-            <TabsTrigger value="open" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-8 font-bold text-xs uppercase tracking-wider">
+        <Tabs defaultValue="open" className="section-gap">
+          <TabsList className="bg-muted/30 p-1.5 border min-h-[48px] rounded-xl">
+            <TabsTrigger value="open" className="data-[state=active]:bg-background data-[state=active]:shadow-md px-10 font-black text-[10px] uppercase tracking-widest h-full transition-all">
               Open Issues ({openActions.length})
             </TabsTrigger>
-            <TabsTrigger value="resolved" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-8 font-bold text-xs uppercase tracking-wider">
+            <TabsTrigger value="resolved" className="data-[state=active]:bg-background data-[state=active]:shadow-md px-10 font-black text-[10px] uppercase tracking-widest h-full transition-all">
               Resolved ({resolvedActions.length})
             </TabsTrigger>
           </TabsList>
@@ -225,43 +227,48 @@ export default function CorrectiveActionsPage() {
           <TabsContent value="open" className="mt-0">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
               {openActions.length === 0 ? (
-                <Card className="col-span-full py-12 border-dashed border-2 flex flex-col items-center justify-center text-muted-foreground bg-zinc-50/50">
-                  <CheckCircle2 className="h-10 w-10 mb-4 text-emerald-500 opacity-20" />
-                  <p className="font-bold uppercase text-xs tracking-widest">No Open Corrective Actions</p>
-                  <p className="text-xs pt-1">Everything is compliant across your locations.</p>
+                <Card className="col-span-full py-20 border-dashed border-2 flex flex-col items-center justify-center text-muted-foreground bg-muted/5 rounded-2xl">
+                  <div className="bg-success/10 p-5 rounded-full mb-6">
+                    <CheckCircle2 className="h-12 w-12 text-success opacity-40" />
+                  </div>
+                  <p className="page-heading text-lg">No Open Corrective Actions</p>
+                  <p className="muted-label pt-1 max-w-[280px]">Excellent! Everything is compliant across your managed locations.</p>
                 </Card>
               ) : (
                 openActions.map((ca) => (
-                  <Card key={ca.id} className="shadow-sm border-zinc-200 hover:border-zinc-300 transition-all group overflow-hidden">
-                    <CardHeader className="pb-3 bg-zinc-50/50 border-b">
-                      <div className="flex justify-between items-start mb-2">
+                  <Card key={ca.id} className="standard-card flex flex-col h-full group">
+                    <CardHeader className="pb-4 px-6 pt-6 bg-muted/5 border-b border-muted/20">
+                      <div className="flex justify-between items-center mb-3">
                         {getSeverityBadge(ca.severity)}
-                        <Badge variant="outline" className="text-[10px] font-bold text-rose-700 bg-rose-50 border-rose-100 italic">
+                        <Badge variant="outline" className="text-[9px] font-black text-destructive bg-destructive/5 border-destructive/10 uppercase tracking-widest px-2.5 py-1">
                           Due {ca.deadline ? format(ca.deadline.toDate(), 'MMM d, yyyy') : 'No Date'}
                         </Badge>
                       </div>
-                      <CardTitle className="text-base font-bold text-zinc-900 group-hover:text-blue-700 transition-colors">
+                      <CardTitle className="text-base font-bold text-foreground leading-tight group-hover:text-primary transition-colors">
                         {ca.questionText}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="py-4 space-y-3">
-                      <p className="text-sm text-zinc-600 leading-relaxed italic border-l-2 border-zinc-200 pl-3">
-                        "{ca.description}"
-                      </p>
-                      <div className="flex flex-col gap-2 pt-2">
-                        <div className="flex items-center gap-2 text-xs font-bold text-zinc-500">
-                          <MapPin className="h-3.5 w-3.5" /> 
-                          <span className="uppercase tracking-tight">{ca.locationName}</span>
+                    <CardContent className="py-6 px-6 space-y-5 flex-grow">
+                      <div className="relative pl-5">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 rounded-full" />
+                        <p className="body-text italic leading-relaxed text-foreground/80">
+                          "{ca.description}"
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-3 pt-2">
+                        <div className="flex items-center gap-2.5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                          <MapPin className="h-4 w-4 text-primary" /> 
+                          <span>{ca.locationName}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-zinc-400">
-                          <Calendar className="h-3.5 w-3.5" /> 
+                        <div className="flex items-center gap-2.5 text-[10px] font-bold text-muted-foreground/60 uppercase tracking-tighter">
+                          <Calendar className="h-4 w-4 opacity-40" /> 
                           Identified {ca.createdAt ? format(ca.createdAt.toDate(), 'MMM d, h:mm a') : 'N/A'}
                         </div>
                       </div>
                     </CardContent>
-                    <CardFooter className="pt-0 pb-4 flex gap-2">
+                    <CardFooter className="pt-0 pb-6 px-6 mt-auto">
                       <Button 
-                        className="w-full bg-zinc-900 hover:bg-zinc-800 text-xs font-black uppercase tracking-widest h-10"
+                        className="w-full font-black uppercase tracking-widest text-[11px] h-11 shadow-black/10 group-hover:shadow-primary/20 transition-all"
                         onClick={() => setSelectedCA(ca)}
                       >
                          Add Resolution Notes
@@ -274,40 +281,42 @@ export default function CorrectiveActionsPage() {
           </TabsContent>
 
           <TabsContent value="resolved" className="mt-0">
-             <div className="space-y-4">
-               {resolvedActions.length === 0 ? (
-                 <Card className="py-12 border-dashed border-2 flex flex-col items-center justify-center text-muted-foreground bg-zinc-50/50">
-                    <p className="font-bold uppercase text-xs tracking-widest">No Resolved Issues Found</p>
-                 </Card>
-               ) : (
-                 <div className="grid gap-4">
-                  {resolvedActions.map((ca) => (
-                    <Card key={ca.id} className="shadow-sm border-emerald-100 flex flex-col md:flex-row overflow-hidden bg-emerald-50/10">
-                      <div className="p-4 md:w-3/4 border-b md:border-b-0 md:border-r border-zinc-100">
-                        <div className="flex items-center gap-2 mb-2">
-                          <CheckCircle className="h-4 w-4 text-emerald-600" />
-                          <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider">Resolved</span>
-                          <span className="text-[10px] text-zinc-400 font-mono ml-auto">
+             <div className="section-gap">
+                {resolvedActions.length === 0 ? (
+                  <Card className="py-20 border-dashed border-2 flex flex-col items-center justify-center text-muted-foreground bg-muted/5 rounded-2xl">
+                    <p className="page-heading text-lg opacity-40 uppercase tracking-[0.2em]">No Resolved Issues Found</p>
+                  </Card>
+                ) : (
+                  <div className="grid gap-5">
+                   {resolvedActions.map((ca) => (
+                    <Card key={ca.id} className="standard-card flex flex-col md:flex-row overflow-hidden hover:border-success/30 transition-all group">
+                      <div className="p-6 md:w-3/4 border-b md:border-b-0 md:border-r border-muted/20">
+                        <div className="flex items-center gap-2 mb-4">
+                          <div className="bg-success p-1 rounded-full">
+                            <CheckCircle2 className="h-3 w-3 text-white" />
+                          </div>
+                          <span className="text-[10px] font-black text-success uppercase tracking-widest">Resolved</span>
+                          <span className="text-[10px] text-muted-foreground font-mono ml-auto opacity-30">
                             ID: {ca.id.substring(0, 8)}
                           </span>
                         </div>
-                        <h4 className="font-bold text-zinc-900 mb-1">{ca.questionText}</h4>
-                        <p className="text-xs text-zinc-500 mb-3">{ca.locationName}</p>
+                        <h4 className="text-lg font-bold text-foreground mb-1 group-hover:text-success transition-colors">{ca.questionText}</h4>
+                        <p className="text-[11px] font-black text-muted-foreground uppercase tracking-widest mb-4 italic">{ca.locationName}</p>
                         
-                        <div className="bg-zinc-50 p-3 rounded-md border border-zinc-100">
-                          <p className="text-xs font-bold uppercase text-zinc-400 mb-1">Resolution Note</p>
-                          <p className="text-sm text-zinc-700 italic">"{ca.resolutionNote || 'No notes provided.'}"</p>
+                        <div className="bg-muted/10 p-5 rounded-xl border border-muted/10 relative">
+                          <p className="text-[9px] font-black uppercase text-muted-foreground/40 mb-2 tracking-[0.2em]">Resolution Note</p>
+                          <p className="body-text italic text-foreground/70 leading-relaxed">"{ca.resolutionNote || 'No notes provided.'}"</p>
                         </div>
                       </div>
-                      <div className="p-4 md:w-1/4 bg-zinc-50/30 flex flex-col justify-center gap-3">
+                      <div className="p-6 md:w-1/4 bg-muted/5 flex flex-col justify-center gap-5">
                          <div className="text-center">
-                            <p className="text-[10px] font-bold uppercase text-zinc-400">Resolved On</p>
-                            <p className="text-xs font-black text-zinc-900">{ca.resolvedAt ? format(ca.resolvedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</p>
+                            <p className="text-[9px] font-black uppercase text-muted-foreground/40 mb-1 tracking-widest">Resolved On</p>
+                            <p className="text-sm font-black text-foreground">{ca.resolvedAt ? format(ca.resolvedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</p>
                          </div>
                          {ca.resolutionPhotoUrls && ca.resolutionPhotoUrls.length > 0 && (
-                           <div className="flex justify-center gap-1">
+                           <div className="flex justify-center gap-2 flex-wrap">
                              {ca.resolutionPhotoUrls.map((url, i) => (
-                               <div key={i} className="h-10 w-10 rounded border overflow-hidden bg-white">
+                               <div key={i} className="h-12 w-12 rounded-lg border border-muted/30 overflow-hidden bg-white shadow-sm ring-2 ring-white hover:scale-110 transition-transform">
                                  <img src={url} alt="Proof" className="h-full w-full object-cover" />
                                </div>
                              ))}
@@ -315,9 +324,9 @@ export default function CorrectiveActionsPage() {
                          )}
                       </div>
                     </Card>
-                  ))}
-                 </div>
-               )}
+                   ))}
+                  </div>
+                )}
              </div>
           </TabsContent>
         </Tabs>
@@ -326,13 +335,14 @@ export default function CorrectiveActionsPage() {
       {/* Resolution Dialog */}
       <Dialog open={!!selectedCA} onOpenChange={(open) => !open && setSelectedCA(null)}>
         <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-rose-600">
-              <CheckCircle className="h-5 w-5" /> Resolve Issue
+          <DialogHeader className="pb-6 border-b border-muted/20">
+            <DialogTitle className="flex items-center gap-3 text-success text-2xl font-black italic tracking-tighter">
+              <CheckCircle2 className="h-6 w-6" /> RESOLVE ISSUE
             </DialogTitle>
-            <DialogDescription className="font-medium text-zinc-900">
-              {selectedCA?.questionText} 
-              <span className="block text-xs font-normal text-muted-foreground pt-1">at {selectedCA?.locationName}</span>
+            <DialogDescription className="font-bold text-foreground bg-muted/5 p-4 rounded-xl border border-muted/10 mt-4">
+              <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest block mb-1">Identified Issue</span>
+              <span className="text-base italic leading-tight">"{selectedCA?.questionText}"</span>
+              <span className="block text-[10px] font-black text-primary pt-2 uppercase tracking-widest">{selectedCA?.locationName}</span>
             </DialogDescription>
           </DialogHeader>
           
@@ -381,14 +391,14 @@ export default function CorrectiveActionsPage() {
             </div>
           </div>
 
-          <DialogFooter className="bg-zinc-50/50 p-4 -m-6 mt-4">
-            <Button variant="ghost" onClick={() => setSelectedCA(null)} className="font-bold text-xs uppercase h-10">Discard</Button>
+          <DialogFooter className="bg-muted/5 p-6 border-t border-muted/20">
+            <Button variant="ghost" onClick={() => setSelectedCA(null)} className="font-black text-[11px] uppercase tracking-widest h-11 px-6">Discard</Button>
             <Button 
               onClick={handleResolve} 
               disabled={isResolving || !resolutionNote}
-              className="bg-emerald-600 hover:bg-emerald-700 font-bold text-xs uppercase tracking-widest h-10 px-8 shadow-md"
+              className="font-black text-[11px] uppercase tracking-widest h-11 px-10 shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              {isResolving ? <Loader2 className="h-4 w-4 animate-spin mr-2"/> : <CheckCircle className="h-4 w-4 mr-2" />}
+              {isResolving ? <Loader2 className="h-4 w-4 animate-spin mr-2"/> : <CheckCircle2 className="h-4 w-4 mr-2" />}
               Complete Resolution
             </Button>
           </DialogFooter>

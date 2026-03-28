@@ -13,7 +13,8 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Pencil } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { MoreHorizontal, Pencil, MapPin, Plus } from 'lucide-react';
 
 export default function AdminLocationsPage() {
   const [locations, setLocations] = useState<any[]>([]);
@@ -194,18 +195,18 @@ export default function AdminLocationsPage() {
 
   return (
     <DashboardShell role="Admin">
-      <div className="flex flex-col space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Locations Management</h1>
-            <p className="text-muted-foreground text-sm">
-              Manage branches, outlets, and assign managers.
-            </p>
+            <h1 className="page-heading">Locations Management</h1>
+            <p className="body-text">Manage branches, outlets, and assign managers.</p>
           </div>
           
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
-              <Button>Create Location</Button>
+              <Button size="lg" className="shadow-black/20">
+                <Plus className="mr-2 h-4 w-4" /> Create Location
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
@@ -253,7 +254,7 @@ export default function AdminLocationsPage() {
           </Dialog>
         </div>
 
-        <div className="rounded-md border">
+        <Card className="standard-card">
           <Table>
             <TableHeader>
               <TableRow>
@@ -274,17 +275,22 @@ export default function AdminLocationsPage() {
               ) : (
                 locations.map((location) => (
                   <TableRow key={location.id}>
-                    <TableCell className="font-medium">{location.name}</TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-primary" />
+                        {location.name}
+                      </div>
+                    </TableCell>
                     <TableCell>{location.city}</TableCell>
                     <TableCell>
-                      <div className="max-w-[200px] truncate" title={getManagerNames(location.assignedManagerIds, location.assignedManagerId)}>
+                      <div className="max-w-[200px] truncate font-medium text-primary" title={getManagerNames(location.assignedManagerIds, location.assignedManagerId)}>
                         {getManagerNames(location.assignedManagerIds, location.assignedManagerId)}
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
                         <Switch checked={location.isActive !== false} onCheckedChange={() => handleToggleActive(location.id, location.isActive !== false)} />
-                        <span className="text-xs">{location.isActive !== false ? 'Active' : 'Inactive'}</span>
+                        <span className="text-xs font-medium">{location.isActive !== false ? 'Active' : 'Inactive'}</span>
                       </div>
                     </TableCell>
                     <TableCell className="text-right">
@@ -313,7 +319,7 @@ export default function AdminLocationsPage() {
               )}
             </TableBody>
           </Table>
-        </div>
+        </Card>
 
         {/* Edit Dialog */}
         <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>

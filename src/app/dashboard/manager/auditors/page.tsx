@@ -163,15 +163,15 @@ export default function AuditorsPage() {
 
   return (
     <DashboardShell role="Manager">
-      <div className="space-y-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight text-zinc-900">Auditors Management</h2>
-            <p className="text-muted-foreground">Manage and monitor the performance of your audit team.</p>
+            <h1 className="page-heading">Auditors Management</h1>
+            <p className="body-text">Manage and monitor the performance of your audit team.</p>
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-blue-600 hover:bg-blue-700 shadow-sm font-bold">
+              <Button size="lg" className="shadow-black/20">
                 <UserPlus className="mr-2 h-4 w-4" /> Add Auditor
               </Button>
             </DialogTrigger>
@@ -206,7 +206,7 @@ export default function AuditorsPage() {
                 </div>
                 <DialogFooter className="pt-4">
                   <Button type="button" variant="ghost" onClick={() => setIsAddDialogOpen(false)}>Cancel</Button>
-                  <Button type="submit" disabled={isSubmitting} className="bg-blue-600 hover:bg-blue-700">
+                  <Button type="submit" disabled={isSubmitting} className="min-w-[120px]">
                     {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
                     Create Auditor
                   </Button>
@@ -218,40 +218,40 @@ export default function AuditorsPage() {
 
         {/* Auditor Stats Cards */}
         <div className="grid gap-4 md:grid-cols-3">
-          <Card className="shadow-sm border-muted">
+          <Card className="standard-card border-l-4 border-l-primary">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-sm font-medium">Total Team Size</CardTitle>
-              <Users className="h-4 w-4 text-blue-600" />
+              <Users className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{auditors.length}</div>
-              <p className="text-xs text-muted-foreground pt-1">Active auditors reporting to you</p>
+              <div className="text-3xl font-bold">{auditors.length}</div>
+              <p className="muted-label pt-1 text-muted-foreground/60">Active auditors reporting to you</p>
             </CardContent>
           </Card>
-          <Card className="shadow-sm border-muted">
+          <Card className="standard-card border-l-4 border-l-success">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-sm font-medium">Avg. Efficiency</CardTitle>
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+              <CheckCircle2 className="h-4 w-4 text-success" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">94%</div>
-              <p className="text-xs text-muted-foreground pt-1">Completion rate on assignments</p>
+              <div className="text-3xl font-bold">94%</div>
+              <p className="muted-label pt-1 text-muted-foreground/60">Completion rate on assignments</p>
             </CardContent>
           </Card>
-          <Card className="shadow-sm border-muted">
+          <Card className="standard-card border-l-4 border-l-warning">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <CardTitle className="text-sm font-medium">Pending Tasks</CardTitle>
-              <Clock className="h-4 w-4 text-amber-600" />
+              <Clock className="h-4 w-4 text-warning" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">12</div>
-              <p className="text-xs text-muted-foreground pt-1">Across all assigned locations</p>
+              <div className="text-3xl font-bold">12</div>
+              <p className="muted-label pt-1 text-muted-foreground/60">Across all assigned locations</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Auditors Table */}
-        <Card className="shadow-sm border-muted">
+        {/* Auditors Table Section */}
+        <Card className="standard-card">
           <CardHeader>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
@@ -262,7 +262,7 @@ export default function AuditorsPage() {
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search auditors..."
-                  className="pl-8 bg-zinc-50 border-zinc-200"
+                  className="pl-8 bg-muted/20 border-muted"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -289,28 +289,28 @@ export default function AuditorsPage() {
                   </TableRow>
                 ) : (
                   filteredAuditors.map((auditor) => (
-                    <TableRow key={auditor.id} className="hover:bg-zinc-50 transition-colors">
+                    <TableRow key={auditor.id} className="hover:bg-muted/10 transition-colors">
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="h-8 w-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs uppercase">
+                          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs uppercase">
                             {auditor.name.substring(0, 2)}
                           </div>
-                          <span className="font-medium text-zinc-900">{auditor.name}</span>
+                          <span className="font-medium text-foreground">{auditor.name}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-zinc-600 text-sm">
+                      <TableCell className="text-muted-foreground text-sm">
                         <div className="flex items-center gap-1.5 font-medium">
                           <Mail className="h-3 w-3" /> {auditor.email}
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-100 font-bold text-[10px] uppercase tracking-wider">
+                        <Badge variant="outline" className="bg-success/10 text-success border-success/10 font-bold text-[10px] uppercase tracking-wider">
                           Active
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-zinc-600 text-sm">
+                      <TableCell className="text-muted-foreground text-sm">
                          <div className="flex items-center gap-1.5 font-medium">
-                          <MapPin className="h-3 w-3" /> {auditor.assignedLocations?.length || 0} Managed
+                          <MapPin className="h-3 w-3" /> {auditor.assignedLocations?.length || 0} Locations
                         </div>
                       </TableCell>
                       <TableCell className="text-right">

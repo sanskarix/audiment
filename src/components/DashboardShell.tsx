@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { logoutUser } from '@/lib/auth';
 import NotificationBell from '@/components/NotificationBell';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { db } from '@/lib/firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
 import {
@@ -69,9 +70,9 @@ const NAV_ITEMS = {
 };
 
 const ROLE_COLOURS: Record<string, string> = {
-  Admin: 'bg-violet-600',
-  Manager: 'bg-blue-600',
-  Auditor: 'bg-emerald-600',
+  Admin: 'bg-primary shadow-primary/20',
+  Manager: 'bg-indigo-500 shadow-indigo-500/20',
+  Auditor: 'bg-emerald-500 shadow-emerald-500/20',
 };
 
 export default function DashboardShell({ role, children }: DashboardShellProps) {
@@ -134,11 +135,11 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                   asChild
                   tooltip={item.title}
                   isActive={pathname === item.href}
-                  className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent"
+                  className="text-muted-foreground hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:font-medium transition-all duration-200"
                 >
-                  <Link href={item.href}>
+                  <Link href={item.href} className="flex items-center gap-3">
                     <item.icon className="h-4 w-4 shrink-0" />
-                    <span>{item.title}</span>
+                    <span className="text-sm">{item.title}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -177,19 +178,23 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
         </SidebarFooter>
       </Sidebar>
 
-      <SidebarInset className="flex flex-col flex-1 h-screen overflow-hidden">
-        <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b bg-background px-4">
-          <div className="flex items-center gap-2">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            <h1 className="text-sm font-semibold">{role} Dashboard</h1>
+      <SidebarInset className="flex flex-col flex-1 h-screen overflow-hidden bg-background">
+        <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-card/50 backdrop-blur-md px-6 sticky top-0 z-10">
+          <div className="flex items-center gap-3">
+            <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground transition-colors" />
+            <Separator orientation="vertical" className="h-4" />
+            <h1 className="text-sm font-medium tracking-tight text-muted-foreground">
+              <span className="text-foreground font-semibold">{role}</span> Dashboard
+            </h1>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Separator orientation="vertical" className="h-4 mx-1" />
             <NotificationBell />
           </div>
         </header>
-        <main className="flex-1 overflow-auto bg-muted/20 p-6 md:p-8">
-          <div className="mx-auto w-full max-w-6xl">
+        <main className="flex-1 overflow-auto bg-muted/30">
+          <div className="mx-auto w-full max-w-7xl">
             {children}
           </div>
         </main>

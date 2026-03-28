@@ -15,7 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { MoreHorizontal, Pencil, Trash2, Mail } from 'lucide-react';
+import { MoreHorizontal, Pencil, Trash2, Mail, UserPlus } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -189,18 +190,18 @@ export default function AdminUsersPage() {
 
   return (
     <DashboardShell role="Admin">
-      <div className="flex flex-col space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="dashboard-page-container">
+        <div className="page-header-section">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Users Management</h1>
-            <p className="text-muted-foreground text-sm">
-              Manage permissions, roles, and status for all organization users.
-            </p>
+            <h1 className="page-heading">Users Management</h1>
+            <p className="body-text">Manage permissions, roles, and status for all organization users.</p>
           </div>
 
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
-              <Button>Create User</Button>
+              <Button size="lg" className="shadow-black/20">
+                <UserPlus className="mr-2 h-4 w-4" /> Create User
+              </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
@@ -252,9 +253,9 @@ export default function AdminUsersPage() {
           </Dialog>
         </div>
 
-        {success && <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-500/50 text-emerald-600 dark:text-emerald-400 p-3 rounded-md text-sm">{success}</div>}
+        {success && <div className="bg-success/10 border border-success/50 text-success p-3 rounded-md text-sm font-medium animate-in fade-in slide-in-from-top-1">{success}</div>}
 
-        <div className="rounded-md border">
+        <Card className="standard-card">
           <Table>
             <TableHeader>
               <TableRow>
@@ -318,7 +319,7 @@ export default function AdminUsersPage() {
               ))}
             </TableBody>
           </Table>
-        </div>
+        </Card>
 
         {/* Edit Dialog */}
         <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>

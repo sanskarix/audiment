@@ -55,6 +55,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { LoaderOne } from '@/components/ui/loader';
 import { Button } from '@/components/ui/button';
 
 export default function AdminCorrectiveActionsPage() {
@@ -64,6 +65,7 @@ export default function AdminCorrectiveActionsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [managers, setManagers] = useState<any[]>([]);
   const [editingCA, setEditingCA] = useState<any>(null);
+  const [resolvingCA, setResolvingCA] = useState<any>(null);
   const [selectedManager, setSelectedManager] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [isUpdating, setIsUpdating] = useState(false);
@@ -142,14 +144,28 @@ export default function AdminCorrectiveActionsPage() {
     }
   };
 
-  const handleResolve = async (caId: string) => {
+  const handleResolve = async () => {
+    if (!resolvingCA) return;
     try {
-      await updateDoc(doc(db, 'correctiveActions', caId), {
+      await updateDoc(doc(db, 'correctiveActions', resolvingCA.id), {
         status: 'resolved',
         resolvedAt: serverTimestamp()
       });
+      setResolvingCA(null);
     } catch (error) {
       console.error("Error resolving CA", error);
+    }
+  };
+
+  const handleReject = async () => {
+    if (!resolvingCA) return;
+    try {
+      await updateDoc(doc(db, 'correctiveActions', resolvingCA.id), {
+        status: 'in_progress'
+      });
+      setResolvingCA(null);
+    } catch (error) {
+      console.error("Error rejecting CA", error);
     }
   };
 
@@ -158,6 +174,16 @@ export default function AdminCorrectiveActionsPage() {
     action.issueDescription?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     action.managerName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <DashboardShell role="Admin">
+        <div className="flex h-[400px] items-center justify-center">
+          <LoaderOne size={48} className="text-primary" />
+        </div>
+      </DashboardShell>
+    );
+  }
 
   return (
     <DashboardShell role="Admin">
@@ -300,7 +326,7 @@ export default function AdminCorrectiveActionsPage() {
                             setSelectedDate(action.deadline?.toDate() ? format(action.deadline.toDate(), 'yyyy-MM-dd') : '');
                         }}>Edit</Button>
                         {action.status === 'completed' && (
-                          <Button size="sm" className="h-8 text-xs font-medium tracking-widest bg-success text-success-foreground hover:bg-success/90" onClick={() => handleResolve(action.id)}>Resolve</Button>
+                          <Button size="sm" className="h-8 text-xs font-medium tracking-widest bg-success text-success-foreground hover:bg-success/90" onClick={() => setResolvingCA(action)}>Review</Button>
                         )}
                       </div>
                     </TableCell>
@@ -338,6 +364,47 @@ export default function AdminCorrectiveActionsPage() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingCA(null)}>Cancel</Button>
             <Button onClick={handleAssign} disabled={isUpdating || !selectedManager || !selectedDate}>{isUpdating ? "Saving..." : "Save Changes"}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!resolvingCA} onOpenChange={(open) => !open && setResolvingCA(null)}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Review Completion</DialogTitle>
+            <DialogDescription>Review the manager's justification and evidence before closing this issue.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="text-xs text-muted-text bg-muted/10 p-4 rounded-lg flex flex-col gap-2 border border-border/50">
+              <span className="font-medium text-heading text-sm">{resolvingCA?.questionText}</span>
+              <div className="flex items-center gap-1.5 opacity-80">
+                <MapPin className="h-3 w-3" />
+                <span>{resolvingCA?.locationName}</span>
+              </div>
+            </div>
+            <div className="space-y-2 bg-muted/20 p-4 rounded-lg border border-border/50">
+              <Label className="text-[10px] font-semibold text-muted-text uppercase tracking-wider">Manager's Note</Label>
+              <p className="text-sm text-body italic mt-1">"{resolvingCA?.resolutionNote || 'No note provided.'}"</p>
+            </div>
+            {resolvingCA?.resolutionPhotoUrls && resolvingCA.resolutionPhotoUrls.length > 0 && (
+              <div className="space-y-2 mt-2">
+                 <Label className="text-[10px] font-semibold text-muted-text uppercase tracking-wider">Evidence Photos</Label>
+                 <div className="flex gap-2 overflow-x-auto pb-2">
+                   {resolvingCA.resolutionPhotoUrls.map((url: string, i: number) => (
+                     <div key={i} className="h-24 w-24 rounded-md border border-border/50 overflow-hidden flex-shrink-0">
+                       <img src={url} alt="Proof" className="h-full w-full object-cover" />
+                     </div>
+                   ))}
+                 </div>
+              </div>
+            )}
+          </div>
+          <DialogFooter className="flex flex-row justify-between w-full items-center gap-4 sm:justify-between">
+            <Button variant="outline" size="sm" className="border-destructive/30 text-destructive hover:bg-destructive/10" onClick={handleReject}>Reject</Button>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => setResolvingCA(null)}>Cancel</Button>
+              <Button size="sm" className="bg-success text-success-foreground hover:bg-success/90" onClick={handleResolve}>Approve & Resolve</Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>

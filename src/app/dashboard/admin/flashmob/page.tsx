@@ -25,6 +25,7 @@ import {
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { LoaderOne } from '@/components/ui/loader';
 
 export default function AdminFlashmobPage() {
   const [flashmobs, setFlashmobs] = useState<any[]>([]);
@@ -87,7 +88,15 @@ export default function AdminFlashmobPage() {
     }
   };
 
-  if (loading) return <div className="flex h-screen items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+  if (loading) {
+    return (
+      <DashboardShell role="Admin">
+        <div className="flex h-[400px] items-center justify-center">
+          <LoaderOne size={48} className="text-primary" />
+        </div>
+      </DashboardShell>
+    );
+  }
 
   const filteredFlashmobs = flashmobs.filter((audit) =>
     audit.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||

@@ -43,6 +43,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { format, subMonths, startOfToday, startOfMonth } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { LoaderOne } from '@/components/ui/loader';
 
 interface DashboardStats {
   totalAuditsThisMonth: number;
@@ -160,12 +161,8 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <DashboardShell role="Admin">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <CardHeader className="h-24 bg-muted/50" />
-            </Card>
-          ))}
+        <div className="flex h-[400px] items-center justify-center">
+          <LoaderOne size={48} className="text-primary" />
         </div>
       </DashboardShell>
     );

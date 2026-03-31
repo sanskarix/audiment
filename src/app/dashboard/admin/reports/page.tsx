@@ -29,9 +29,25 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { CalendarIcon, FileText, Filter, MapPin, Eye, ArrowRight, Search } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { 
+  CalendarIcon, 
+  Plus, 
+  Search, 
+  Filter, 
+  ArrowRight,
+  Loader2,
+  FileText
+} from 'lucide-react';
 import { format, startOfDay, endOfDay } from 'date-fns';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -126,7 +142,7 @@ export default function AdminReportsPage() {
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-xs">
+          <div className="flex flex-col gap-2">
             <h1 className="page-heading">Audit Archive</h1>
             <p className="body-text">Comprehensive repository of all completed quality submissions</p>
           </div>
@@ -136,58 +152,54 @@ export default function AdminReportsPage() {
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
-              placeholder="Search reports by templates or location..."
-              className="pl-9 bg-background text-body font-normal"
+              placeholder="Search reports by template or location..."
+              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="border-border/50 text-[#6b7280]">
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
+
+          <div className="flex items-center gap-3">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className={cn(
+                  "h-11 px-4 gap-2 font-medium text-xs border-border/50",
+                  selectedLocation !== 'all' ? "text-primary border-primary/20 bg-primary/5" : "text-[#6b7280]"
+                )}>
+                  <Filter className="h-4 w-4" />
+                  {selectedLocation === 'all' ? 'Filters' : locations.find(l => l.id === selectedLocation)?.name}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">Filter by Location</DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={selectedLocation} onValueChange={setSelectedLocation}>
+                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">
+                    All Locations
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuSeparator />
+                  {locations.map(loc => (
+                    <DropdownMenuRadioItem key={loc.id} value={loc.id} className="text-body cursor-pointer">
+                      {loc.name}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
-        {/* Filters Card */}
-        <Card className="standard-card mb-6">
-          <CardContent className="p-6">
-            <div className="flex flex-wrap items-end gap-4">
-              <div className="flex-1 min-w-[300px] flex flex-col gap-2">
-                <Label className="pl-1">Location Filter</Label>
-                <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                  <SelectTrigger className="h-11 text-body">
-                    <SelectValue placeholder="Select Location" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all" className="text-body">All Locations</SelectItem>
-                    {locations.map(loc => (
-                      <SelectItem key={loc.id} value={loc.id} className="text-body">{loc.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
 
-              <Button
-                variant="outline"
-                onClick={fetchReports}
-                className="h-11 px-5 font-medium active:scale-95 gap-2 text-[#6b7280]"
-              >
-                <Filter className="h-3.5 w-3.5" /> Apply
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Reports Table */}
         <Card className="standard-card">
           <Table>
             <TableHeader className="standard-table-header">
               <TableRow className="hover:bg-transparent">
-                <TableHead className="standard-table-head">Audit Blueprint</TableHead>
-                <TableHead className="standard-table-head">Branch Intelligence</TableHead>
-                <TableHead className="standard-table-head">Completion Timeline</TableHead>
-                <TableHead className="standard-table-head text-center">Executive Score</TableHead>
-                <TableHead className="standard-table-head text-right"></TableHead>
+                <TableHead className="standard-table-head">Audit Template</TableHead>
+                <TableHead className="standard-table-head">Location</TableHead>
+                <TableHead className="standard-table-head">Completed On</TableHead>
+                <TableHead className="standard-table-head text-right">Score</TableHead>
+                <TableHead className="standard-table-head w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -212,41 +224,35 @@ export default function AdminReportsPage() {
                 filteredReports.map((report) => (
                   <TableRow
                     key={report.id}
-                    className="standard-table-row group cursor-pointer"
+                    className="standard-table-row group"
                   >
                     <TableCell className="standard-table-cell">
-                      <Link href={`/dashboard/admin/reports/${report.id}`} className="block space-y-1">
-                        <p className="group-hover:text-primary transition-colors">{report.templateTitle}</p>
-                        <p className="muted-label opacity-40 tabular-nums">ID: {report.id.slice(-8)}</p>
+                      <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
+                        <span className="text-[14px] font-normal text-body group-hover:text-primary transition-colors">{report.templateTitle}</span>
                       </Link>
                     </TableCell>
                     <TableCell className="standard-table-cell">
                       <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
-                        <div className="flex items-center gap-2.5">
-                          <MapPin className="h-3.5 w-3.5 text-primary opacity-50" />
-                          <span>{report.locationName}</span>
-                        </div>
+                        <span className="text-[14px] font-normal text-body">{report.locationName}</span>
                       </Link>
                     </TableCell>
                     <TableCell className="standard-table-cell">
-                      <Link href={`/dashboard/admin/reports/${report.id}`} className="block space-y-1">
-                        <p>{report.completedAt ? format(report.completedAt.toDate(), 'MMMM d, yyyy') : 'N/A'}</p>
-                        <p className="muted-label opacity-50">Finalized submission</p>
+                      <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
+                        <span className="text-[14px] font-normal text-body">{report.completedAt ? format(report.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</span>
                       </Link>
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-center">
-                      <Link href={`/dashboard/admin/reports/${report.id}`} className="flex justify-center">
-                        <div className={cn(
-                          "inline-flex items-center justify-center h-10 w-14 rounded-xl font-medium text-[13px] italic tracking-tighter tabular-nums shadow-lg shadow-black/5",
-                          report.scorePercentage >= 90 ? "bg-success text-success-foreground" : report.scorePercentage >= 70 ? "bg-primary text-primary-foreground" : "bg-destructive text-destructive-foreground"
+                    <TableCell className="standard-table-cell text-right">
+                      <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
+                        <span className={cn(
+                          "text-[14px] font-medium tabular-nums",
+                          report.scorePercentage < 70 ? "text-destructive" : report.scorePercentage >= 90 ? "text-success" : "text-primary"
                         )}>
                           {report.scorePercentage}%
-                        </div>
+                        </span>
                       </Link>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-right">
-                      <Link href={`/dashboard/admin/reports/${report.id}`} className="flex items-center justify-end gap-3 text-muted-text/40 group-hover:text-primary group-hover:translate-x-1 transition-all">
-                        <span className="muted-label hidden sm:inline">Inspect intelligence</span>
+                      <Link href={`/dashboard/admin/reports/${report.id}`} className="flex items-center justify-end text-muted-text/30 group-hover:text-primary group-hover:translate-x-1 transition-all">
                         <ArrowRight className="h-4 w-4" />
                       </Link>
                     </TableCell>

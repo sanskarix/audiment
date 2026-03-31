@@ -11,8 +11,26 @@ import {
   orderBy,
   getDocs,
   doc,
-  getDoc
+  getDoc,
+  updateDoc,
+  serverTimestamp
 } from 'firebase/firestore';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -44,6 +62,11 @@ export default function AdminCorrectiveActionsPage() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [managers, setManagers] = useState<any[]>([]);
+  const [editingCA, setEditingCA] = useState<any>(null);
+  const [selectedManager, setSelectedManager] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -61,7 +84,7 @@ export default function AdminCorrectiveActionsPage() {
     const q = query(
       collection(db, 'correctiveActions'),
       where('organizationId', '==', session.organizationId),
-      where('status', 'in', ['open', 'in_progress']),
+      where('status', 'in', ['open', 'in_progress', 'completed']),
       orderBy('deadline', 'asc')
     );
 
@@ -93,6 +116,43 @@ export default function AdminCorrectiveActionsPage() {
     return () => unsubscribe();
   }, [session]);
 
+  useEffect(() => {
+    if (!session?.organizationId) return;
+    const fetchManagers = async () => {
+      const q = query(collection(db, 'users'), where('organizationId', '==', session.organizationId), where('role', '==', 'MANAGER'));
+      const snap = await getDocs(q);
+      setManagers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    };
+    fetchManagers();
+  }, [session]);
+
+  const handleAssign = async () => {
+    if (!editingCA || !selectedManager || !selectedDate) return;
+    setIsUpdating(true);
+    try {
+      await updateDoc(doc(db, 'correctiveActions', editingCA.id), {
+        assignedManagerId: selectedManager,
+        deadline: new Date(selectedDate),
+      });
+      setEditingCA(null);
+    } catch (error) {
+      console.error("Error updating CA", error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleResolve = async (caId: string) => {
+    try {
+      await updateDoc(doc(db, 'correctiveActions', caId), {
+        status: 'resolved',
+        resolvedAt: serverTimestamp()
+      });
+    } catch (error) {
+      console.error("Error resolving CA", error);
+    }
+  };
+
   const filteredActions = actions.filter((action) =>
     action.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     action.issueDescription?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -102,27 +162,21 @@ export default function AdminCorrectiveActionsPage() {
   return (
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="page-heading flex items-center gap-3 font-semibold text-heading">
-              <AlertCircle className="h-8 w-8 text-destructive" />
-              CRITICAL ACTIONS
-            </h1>
-            <p className="body-text">Unresolved safety and quality failures requiring immediate executive attention</p>
+        <div className="page-header-section mb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col gap-1.5">
+            <h1 className="page-heading">Corrective Actions</h1>
+            <p className="body-text">Unresolved quality failures requiring attention</p>
           </div>
-
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 font-medium px-4 py-1.5 text-[10px] tracking-tight ">
-              {actions.length} OPEN ISSUES
-            </Badge>
-          </div>
+          <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[11px] font-normal">
+            {actions.length} open
+          </Badge>
         </div>
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
               placeholder="Search actions by location, issue, or manager..."
-              className="pl-9 h-11 bg-background text-body"
+              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -134,41 +188,41 @@ export default function AdminCorrectiveActionsPage() {
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <Card className="standard-card border-l-4 border-l-destructive p-6 overflow-hidden relative group">
-            <div className="flex items-center justify-between mb-4 relative z-10">
-              <CardTitle className="text-sm font-medium  tracking-wider text-muted-text">Overdue Tasks</CardTitle>
-              <Clock className="h-5 w-5 text-destructive/60" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          <Card className="standard-card p-6 overflow-hidden relative">
+            <div className="flex items-center justify-between mb-4">
+              <p className="section-heading">Overdue Tasks</p>
+              <Clock className="h-4 w-4 text-destructive/40" />
             </div>
-            <div className="relative z-10">
-              <div className="text-4xl font-medium tracking-tight text-destructive">
+            <div>
+              <div className="text-[32px] font-semibold tracking-tight text-destructive tabular-nums leading-tight">
                 {actions.filter(a => a.deadline?.toDate() < new Date()).length}
               </div>
-              <p className="text-xs text-muted-text mt-2 font-normal">Critical mission delays</p>
+              <p className="body-text mt-2">Past deadline</p>
             </div>
           </Card>
 
-          <Card className="standard-card border-l-4 border-l-warning p-6 overflow-hidden relative">
+          <Card className="standard-card p-6 overflow-hidden relative">
             <div className="flex items-center justify-between mb-4">
-              <CardTitle className="text-sm font-medium  tracking-wider text-muted-text">High Severity</CardTitle>
-              <AlertCircle className="h-5 w-5 text-warning/60" />
+              <p className="section-heading">High Severity</p>
+              <AlertCircle className="h-4 w-4 text-warning/40" />
             </div>
             <div>
-              <div className="text-4xl font-medium tracking-tight text-warning">
+              <div className="text-[32px] font-semibold tracking-tight text-warning tabular-nums leading-tight">
                 {actions.filter(a => a.severity === 'critical').length}
               </div>
-              <p className="text-xs text-muted-text mt-2 font-normal">Immediate business risk</p>
+              <p className="body-text mt-2">Immediate business risk</p>
             </div>
           </Card>
 
-          <Card className="standard-card border-l-4 border-l-primary p-6 overflow-hidden relative">
+          <Card className="standard-card p-6 overflow-hidden relative">
             <div className="flex items-center justify-between mb-4">
-              <CardTitle className="text-sm font-medium  tracking-wider text-muted-text">Average TAT</CardTitle>
-              <ClipboardList className="h-5 w-5 text-primary/60" />
+              <p className="section-heading">Target Resolution</p>
+              <ClipboardList className="h-4 w-4 text-primary/40" />
             </div>
             <div>
-              <div className="text-4xl font-medium tracking-tight text-heading">48h</div>
-              <p className="text-xs text-muted-text mt-2 font-normal">Target resolution window</p>
+              <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">48h</div>
+              <p className="body-text mt-2">Target resolution window</p>
             </div>
           </Card>
         </div>
@@ -178,23 +232,24 @@ export default function AdminCorrectiveActionsPage() {
           <Table>
             <TableHeader className="standard-table-header">
               <TableRow className="hover:bg-transparent">
-                <TableHead className="standard-table-head">Location & Responsibility</TableHead>
-                <TableHead className="standard-table-head">Issue Blueprint</TableHead>
+                <TableHead className="standard-table-head">Location</TableHead>
+                <TableHead className="standard-table-head">Issue</TableHead>
                 <TableHead className="standard-table-head">Severity</TableHead>
                 <TableHead className="standard-table-head">Deadline</TableHead>
                 <TableHead className="standard-table-head text-center">Status</TableHead>
+                <TableHead className="standard-table-head text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 [1, 2, 3, 4, 5].map(i => (
                   <TableRow key={i} className="animate-pulse">
-                    <TableCell colSpan={5} className="h-16 bg-white" />
+                    <TableCell colSpan={6} className="h-16 bg-white" />
                   </TableRow>
                 ))
               ) : actions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="standard-table-cell py-24 text-center text-muted-text bg-muted/5">
+                  <TableCell colSpan={6} className="standard-table-cell py-24 text-center text-muted-text bg-muted/5">
                     <div className="flex flex-col items-center gap-4">
                       <div className="bg-success/10 p-4 rounded-full">
                         <CheckCircle2 className="h-8 w-8 text-success opacity-40" />
@@ -206,46 +261,48 @@ export default function AdminCorrectiveActionsPage() {
               ) : (
                 filteredActions.map((action) => (
                   <TableRow key={action.id} className="standard-table-row group">
-                    <TableCell className="standard-table-cell">
-                      <div className="space-y-1.5">
-                        <div className="flex items-center gap-2 font-normal text-heading text-sm  tracking-tight group-hover:text-primary transition-colors">
-                          <MapPin className="h-3.5 w-3.5 text-primary opacity-50" /> {action.locationName}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-muted-text text-[10px] font-normal  tracking-tight pl-5 opacity-60">
-                          <User className="h-3 w-3" /> {action.managerName}
-                        </div>
-                      </div>
+                    <TableCell className="py-4 px-4 text-[14px] font-medium text-heading align-middle">
+                      {action.locationName}
                     </TableCell>
-                    <TableCell className="standard-table-cell">
-                      <div className="flex flex-col gap-1">
-                        <p className="text-sm font-normal text-body leading-tight">{action.questionText}</p>
-                        <p className="text-[10px] text-muted-text italic line-clamp-1 opacity-60 font-normal">{action.description}</p>
-                      </div>
+                    <TableCell className="py-4 px-4 text-[14px] font-normal text-body leading-relaxed align-middle">
+                      {action.questionText}
                     </TableCell>
-                    <TableCell className="standard-table-cell">
+                    <TableCell className="py-4 px-4 align-middle">
                       <Badge className={cn(
-                        "font-normal text-[9px] tracking-tight px-3 py-1  rounded-full border-none shadow-sm",
-                        action.severity === 'critical' ? "bg-destructive text-white" : "bg-warning text-warning-foreground"
+                        "h-6 rounded-full border-none px-2.5 text-[11px] font-normal capitalize",
+                        action.severity === 'critical' ? "bg-destructive/10 text-destructive" : "bg-warning/10 text-warning"
                       )}>
                         {action.severity}
                       </Badge>
                     </TableCell>
-                    <TableCell className="standard-table-cell">
+                    <TableCell className="py-4 px-4 align-middle">
                       <div className={cn(
-                        "flex items-center gap-2 font-normal text-[11px]  tracking-tight tabular-nums",
-                        action.deadline?.toDate() < new Date() ? "text-destructive animate-pulse" : "text-muted-text"
+                        "text-[13px] font-normal tabular-nums",
+                        action.deadline?.toDate() < new Date() ? "text-destructive font-medium" : "text-muted-text"
                       )}>
-                        <Clock className="h-3.5 w-3.5 opacity-50" />
-                        {format(action.deadline?.toDate(), 'MMM d, ha')}
+                        {format(action.deadline?.toDate(), 'MMM d, h:mm a')}
                       </div>
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-center">
-                      <Badge variant="outline" className={cn(
-                        "font-normal text-[9px] px-3 py-1  tracking-tight rounded-lg border-muted/20",
-                        action.status === 'in_progress' ? "text-primary border-primary/20 bg-primary/5" : "text-warning border-warning/20 bg-warning/5"
+                    <TableCell className="px-3 py-2 text-center">
+                      <Badge variant="secondary" className={cn(
+                        "h-6 rounded-full border-none px-2.5 text-[11px] font-normal capitalize",
+                        action.status === 'in_progress' ? "bg-primary/10 text-primary" : 
+                        action.status === 'completed' ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
                       )}>
                         {action.status.replace('_', ' ')}
                       </Badge>
+                    </TableCell>
+                    <TableCell className="px-3 py-2 text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" size="sm" className="h-8 text-xs font-medium tracking-widest" onClick={() => {
+                            setEditingCA(action);
+                            setSelectedManager(action.assignedManagerId || '');
+                            setSelectedDate(action.deadline?.toDate() ? format(action.deadline.toDate(), 'yyyy-MM-dd') : '');
+                        }}>Edit</Button>
+                        {action.status === 'completed' && (
+                          <Button size="sm" className="h-8 text-xs font-medium tracking-widest bg-success text-success-foreground hover:bg-success/90" onClick={() => handleResolve(action.id)}>Resolve</Button>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))
@@ -254,6 +311,36 @@ export default function AdminCorrectiveActionsPage() {
           </Table>
         </Card>
       </div>
+
+      <Dialog open={!!editingCA} onOpenChange={(open) => !open && setEditingCA(null)}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Assign Action</DialogTitle>
+            <DialogDescription>Assign this issue to a manager and set a deadline.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label>Assigned Manager</Label>
+              <Select value={selectedManager} onValueChange={setSelectedManager}>
+                <SelectTrigger><SelectValue placeholder="Select manager" /></SelectTrigger>
+                <SelectContent>
+                  {managers.map(m => (
+                    <SelectItem key={m.id} value={m.id}>{m.name || m.email}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Deadline</Label>
+              <Input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingCA(null)}>Cancel</Button>
+            <Button onClick={handleAssign} disabled={isUpdating || !selectedManager || !selectedDate}>{isUpdating ? "Saving..." : "Save Changes"}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardShell>
   );
 }

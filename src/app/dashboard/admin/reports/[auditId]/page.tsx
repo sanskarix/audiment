@@ -119,54 +119,56 @@ export default function AuditReportDetailPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
           <div className="flex flex-col gap-2">
-            <Button variant="ghost" asChild className="-ml-4 h-8 w-fit gap-2 text-muted-text hover:bg-transparent hover:text-primary transition-colors">
+            <Button variant="ghost" asChild className="-ml-3 h-8 w-fit gap-2 text-muted-text hover:bg-transparent hover:text-primary transition-colors text-body">
               <Link href="/dashboard/admin/reports">
-                <ArrowLeft className="h-4 w-4" /> System Archive
+                <ArrowLeft className="h-4 w-4" /> Reports
               </Link>
             </Button>
-            <h1 className="page-heading">Analytical Intelligence</h1>
-            <p className="body-text">Deep-drill verification of branch quality performance</p>
+            <h1 className="page-heading">Detailed Report</h1>
+            <p className="body-text">Comprehensive findings and performance breakdown for this audit</p>
           </div>
-            <Button
-              onClick={exportToPDF}
-              disabled={isExporting}
-              className="font-medium gap-3 shadow-xl shadow-primary/20 transition-all hover:scale-105 active:scale-95"
-            >
-              {isExporting ? <Clock className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-              {isExporting ? 'Compiling PDF...' : 'Export Intelligence'}
-            </Button>
+          <Button
+            onClick={exportToPDF}
+            disabled={isExporting}
+            className="h-11 font-medium gap-3 shadow-lg shadow-primary/20 transition-all active:scale-95"
+          >
+            {isExporting ? <Clock className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            {isExporting ? 'Exporting...' : 'Export PDF'}
+          </Button>
         </div>
 
-        <div ref={reportRef} className="standard-card p-8 bg-background">
+        <div ref={reportRef} className="standard-card p-10 bg-background">
           {/* Report Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-muted/20 pb-8 mb-8 gap-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-border/50 pb-10 mb-10 gap-10">
             <div className="space-y-6 flex-1">
               <div className="flex items-center gap-3">
-                <Badge variant="outline" className="border-muted/50 text-muted-text">Strategic dossier</Badge>
-                <Badge variant="outline" className="bg-success/10 text-success border-success/20 italic">Verified</Badge>
+                <Badge variant="secondary" className="h-6 rounded-full bg-muted/10 text-muted-text border-none px-2.5 text-[12px] font-normal">Audit Report</Badge>
+                <Badge variant="secondary" className="h-6 rounded-full bg-success/10 text-success border-none px-2.5 text-[12px] font-normal">Verified</Badge>
               </div>
-              <h1 className="page-heading">{audit.templateTitle}</h1>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-4">
-                <div className="space-y-2">
-                  <p className="muted-label">Target location</p>
-                  <p className="flex items-center gap-2.5 whitespace-nowrap"><MapPin className="h-4 w-4 text-primary opacity-50" /> {audit.locationName}</p>
+              <h1 className="text-[28px] font-semibold text-heading leading-tight">{audit.templateTitle}</h1>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-10 pt-4">
+                <div className="flex flex-col gap-1.5">
+                  <p className="text-[11px] font-normal text-muted-text/50 uppercase tracking-wider">Location</p>
+                  <p className="text-body flex items-center gap-2.5 whitespace-nowrap">{audit.locationName}</p>
                 </div>
-                <div className="space-y-2">
-                  <p className="muted-label">Submission date</p>
-                  <p className="flex items-center gap-2.5 whitespace-nowrap"><Calendar className="h-4 w-4 text-primary opacity-50" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMMM d, yyyy') : 'N/A'}</p>
+                <div className="flex flex-col gap-1.5">
+                  <p className="text-[11px] font-normal text-muted-text/50 uppercase tracking-wider">Completed On</p>
+                  <p className="text-body flex items-center gap-2.5 whitespace-nowrap">{audit.completedAt ? format(audit.completedAt.toDate(), 'MMMM d, yyyy') : 'N/A'}</p>
                 </div>
-                <div className="space-y-2 col-span-2 md:col-span-1">
-                  <p className="muted-label">Assigned personnel</p>
-                  <p className="flex items-center gap-2.5 whitespace-nowrap"><User className="h-4 w-4 text-primary opacity-50" /> {audit.assignedAuditorName || 'System generated'}</p>
+                <div className="flex flex-col gap-1.5 col-span-2 md:col-span-1">
+                  <p className="text-[11px] font-normal text-muted-text/50 uppercase tracking-wider">Auditor</p>
+                  <p className="text-body flex items-center gap-2.5 whitespace-nowrap">{audit.assignedAuditorName || 'System'}</p>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col items-center justify-center bg-foreground text-background p-8 rounded-md min-w-[200px] shadow-2xl relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-transparent opacity-50" />
-              <p className="muted-label relative z-10 opacity-60 text-white">Score index</p>
-              <div className="page-heading tabular-nums relative z-10 py-1 text-white">{audit.scorePercentage}%</div>
-              <div className="h-1.5 shadow-sm w-full bg-muted/20 rounded-full mt-4 relative z-10 overflow-hidden">
+            <div className="flex flex-col items-center justify-center p-10 rounded-2xl bg-muted/5 border border-border/50 min-w-[220px]">
+              <p className="text-[11px] font-normal text-muted-text/50 uppercase tracking-wider mb-2">Final Score</p>
+              <div className={cn(
+                "text-[42px] font-bold tabular-nums leading-none",
+                audit.scorePercentage >= 90 ? "text-success" : audit.scorePercentage >= 70 ? "text-primary" : "text-destructive"
+              )}>{audit.scorePercentage}%</div>
+              <div className="h-2 w-full bg-muted/20 rounded-full mt-6 overflow-hidden">
                 <div
                   className={cn(
                     "h-full rounded-full transition-all duration-1000",
@@ -179,54 +181,51 @@ export default function AuditReportDetailPage() {
           </div>
 
           {/* Response Details */}
-          <div className="space-y-6">
-            <h3 className="muted-label mb-6">Verification Insights</h3>
-            <div className="grid gap-6">
+          <div className="space-y-8">
+            <h3 className="text-[14px] font-medium text-heading mb-6 px-1">Detailed Findings</h3>
+            <div className="grid gap-4">
               {responses.sort((a, b) => (a.order || 0) - (b.order || 0)).map((resp, i) => (
-                <div key={resp.id} className="border-b border-muted/10 pb-8 last:border-0 hover:bg-muted/5 transition-all p-4 rounded-md group/row">
-                  <div className="flex flex-col md:flex-row gap-6">
+                <div key={resp.id} className="border border-border/40 hover:bg-muted/5 transition-all p-8 rounded-xl group/row">
+                  <div className="flex flex-col md:flex-row gap-8">
                     <div className="flex-1 space-y-6">
-                      <div className="flex items-start justify-between gap-6">
+                      <div className="flex items-start justify-between gap-10">
                         <div className="space-y-3">
-                          <p className="section-heading italic">{resp.questionText}</p>
-                          <div className="flex flex-wrap items-center gap-4">
-                            <Badge variant="outline" className="border-muted-foreground/20 text-muted-text">
-                              {String(resp.severity ?? '').toLowerCase()} criticality
+                          <p className="text-[16px] font-normal text-body leading-relaxed">{resp.questionText}</p>
+                          <div className="flex flex-wrap items-center gap-3">
+                            <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-2.5 text-[11px] font-normal capitalize">
+                              {String(resp.severity ?? '').toLowerCase()} Quality
                             </Badge>
                             {resp.notes && (
-                              <div className="flex items-center gap-2.5 bg-muted/10 px-3 py-1.5 rounded-md border border-muted/20">
-                                <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                                <span className="body-text">
-                                  Observation: "{resp.notes}"
+                              <div className="flex items-center gap-2.5 bg-muted/5 px-3 py-1.5 rounded-lg border border-border/50">
+                                <span className="body-text text-muted-text">
+                                  <b>Note:</b> {resp.notes}
                                 </span>
                               </div>
                             )}
                           </div>
                         </div>
-                        <div className="flex flex-col items-end gap-2 min-w-[120px]">
+                        <div className="flex flex-col items-end gap-1.5 min-w-[120px]">
                           <div className={cn(
-                            "flex items-center gap-2.5 px-4 py-2 rounded-md font-medium italic",
-                            resp.answer === 'yes' ? "bg-success/10 text-success border border-success/20" :
-                              resp.answer === 'no' ? "bg-destructive/10 text-destructive border border-destructive/20 shadow-lg shadow-destructive/5" :
-                                "bg-muted/10 text-muted-text border border-muted/20"
+                            "h-8 rounded-full border-none px-4 text-[13px] font-medium flex items-center gap-2",
+                            resp.answer === 'yes' ? "bg-success/10 text-success" :
+                              resp.answer === 'no' ? "bg-destructive/10 text-destructive" :
+                                "bg-muted/10 text-muted-text"
                           )}>
-                            {resp.answer === 'yes' ? <CheckCircle2 className="h-4 w-4" /> : resp.answer === 'no' ? <XCircle className="h-4 w-4" /> : <HelpCircle className="h-4 w-4" />}
-                            {resp.answer}
+                            {resp.answer === 'yes' ? <CheckCircle2 className="h-3.5 w-3.5" /> : resp.answer === 'no' ? <XCircle className="h-3.5 w-3.5" /> : <HelpCircle className="h-3.5 w-3.5" />}
+                            <span className="capitalize">{resp.answer}</span>
                           </div>
-                          <p className="muted-label pt-1 opacity-50 tabular-nums">{resp.score} / {resp.maxScore || 10} pts</p>
+                          <p className="text-[11px] font-normal text-muted-text/40 tabular-nums px-2">{resp.score} / {resp.maxScore || 10} pts</p>
                         </div>
                       </div>
 
-                      {/* Response Photos */}
                       {resp.photoUrls && resp.photoUrls.length > 0 && (
-                        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 mt-6">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 mt-6 pt-6 border-t border-border/30">
                           {resp.photoUrls.map((url: string, pi: number) => (
-                            <div key={pi} className="group relative aspect-square rounded-md overflow-hidden border border-muted/20 shadow-xl bg-muted/5 transition-all hover:scale-105">
-                              <img src={url} alt={`Evidence ${pi + 1}`} className="h-full w-full object-cover transition-transform grayscale hover:grayscale-0 duration-500" />
-                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <ImageIcon className="h-8 w-8 text-white" />
+                            <div key={pi} className="group relative aspect-square rounded-lg overflow-hidden border border-border/50 bg-muted/5 transition-all hover:scale-[1.02]">
+                              <img src={url} alt={`Evidence ${pi + 1}`} className="h-full w-full object-cover" />
+                              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <ImageIcon className="h-6 w-6 text-white" />
                               </div>
-                              <div className="absolute bottom-2 right-2 bg-background/90 backdrop-blur-md px-2 py-1 rounded-lg muted-label border border-border">Img {pi + 1}</div>
                             </div>
                           ))}
                         </div>
@@ -238,15 +237,14 @@ export default function AuditReportDetailPage() {
             </div>
           </div>
 
-          {/* Footer Signature */}
-          <div className="mt-20 pt-16 border-t border-muted/20 flex flex-col md:flex-row items-center justify-between muted-label gap-8 opacity-40">
-            <div className="space-y-2 text-center md:text-left">
-              <p>Intelligence Generated On {format(new Date(), 'MMMM d, yyyy h:mm a')}</p>
-              <p>Audiment Strategic Platform &trade;</p>
+          <div className="mt-20 pt-10 border-t border-border/50 flex flex-col md:flex-row items-center justify-between text-[11px] font-normal text-muted-text/30 gap-8 uppercase tracking-widest">
+            <div className="space-y-1 text-center md:text-left">
+              <p>Generated On {format(new Date(), 'MMMM d, yyyy h:mm a')}</p>
+              <p>Audiment &copy; 2026</p>
             </div>
-            <div className="text-center md:text-right space-y-2">
-              <p>Dossier Reference ID: {audit.id}</p>
-              <p>Mission Grid Node: {audit.locationId}</p>
+            <div className="text-center md:text-right space-y-1">
+              <p>Report ID: {audit.id}</p>
+              <p>Location ID: {audit.locationId}</p>
             </div>
           </div>
         </div>

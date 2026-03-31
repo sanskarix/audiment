@@ -1,0 +1,22 @@
+[debug] [2026-03-31T12:18:53.774Z] ----------------------------------------------------------------------
+[debug] [2026-03-31T12:18:53.776Z] Command:       /Users/sanskar/.nvm/versions/node/v22.19.0/bin/node /tmp/npm-cache/_npx/ba4f1959e38407b5/node_modules/.bin/firebase projects:list --json
+[debug] [2026-03-31T12:18:53.776Z] CLI Version:   15.12.0
+[debug] [2026-03-31T12:18:53.776Z] Platform:      darwin
+[debug] [2026-03-31T12:18:53.776Z] Node Version:  v22.19.0
+[debug] [2026-03-31T12:18:53.776Z] Time:          Tue Mar 31 2026 17:48:53 GMT+0530 (India Standard Time)
+[debug] [2026-03-31T12:18:53.777Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-31T12:18:53.778Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2026-03-31T12:18:53.907Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-31T12:18:53.907Z] > authorizing via signed-in user (sanskarix@gmail.com)
+[debug] [2026-03-31T12:18:53.909Z] Checked if tokens are valid: false, expires at: 1774670432057
+[debug] [2026-03-31T12:18:53.909Z] Checked if tokens are valid: false, expires at: 1774670432057
+[debug] [2026-03-31T12:18:53.909Z] > refreshing access token with scopes: []
+[debug] [2026-03-31T12:18:53.909Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-03-31T12:18:53.909Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-03-31T12:18:54.479Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-03-31T12:18:54.479Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-03-31T12:18:54.489Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2026-03-31T12:18:54.557Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2026-03-31T12:18:54.558Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2026-03-31T12:18:55.480Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200

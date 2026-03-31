@@ -185,38 +185,38 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <CardTitle className="text-sm font-medium  tracking-wider text-muted-text">Monthly Audits</CardTitle>
-              <ClipboardList className="h-5 w-5 text-primary/60" />
+              <p className="section-heading">Monthly Audits</p>
+              <ClipboardList className="h-4 w-4 text-primary/40 transition-colors" />
             </div>
             <div>
-              <div className="text-3xl font-medium tracking-tight text-heading">{stats?.totalAuditsThisMonth}</div>
+              <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{stats?.totalAuditsThisMonth}</div>
               <p className="body-text mt-2">Total audits published this month</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <CardTitle className="text-sm font-medium  tracking-wider text-muted-text">Completion Rate</CardTitle>
-              <CheckCircle2 className="h-5 w-5 text-success/60" />
+              <p className="section-heading">Completion Rate</p>
+              <CheckCircle2 className="h-4 w-4 text-success/40 transition-colors" />
             </div>
             <div>
-              <div className="text-3xl font-medium tracking-tight text-success">{stats?.completionRate}%</div>
+              <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{stats?.completionRate}%</div>
               <p className="body-text mt-2">Percentage of audits completed</p>
               <Progress value={stats?.completionRate} className="mt-4 h-1.5 bg-success/10" />
             </div>
           </Card>
 
           <Link href="/dashboard/admin/corrective-actions" className="block group">
-            <Card className="standard-card p-6 h-full group-hover:bg-destructive/5 transition-colors">
-              <div className="flex items-center justify-between mb-4">
-                <CardTitle className="text-sm font-medium  tracking-wider text-muted-text">Open Corrective Actions</CardTitle>
-                <AlertCircle className="h-5 w-5 text-destructive/60" />
+            <Card className="standard-card p-6 h-full group-hover:bg-destructive/5 transition-colors cursor-pointer">
+              <div className="flex items-center justify-between mb-3">
+                <p className="section-heading">Open Actions</p>
+                <AlertCircle className="h-4 w-4 text-destructive/40 transition-colors" />
               </div>
               <div>
-                <div className="text-3xl font-medium tracking-tight text-destructive">{stats?.openCorrectiveActions}</div>
-                <p className="muted-label mt-2 text-destructive">Attention Required</p>
-                <div className="mt-6 flex items-center text-[10px] font-medium text-destructive  tracking-widest bg-destructive/10 w-fit px-2 py-1 rounded">
-                  View Queue <TrendingUp className="ml-1 h-3 w-3" />
+                <div className="text-[32px] font-semibold tracking-tight text-destructive tabular-nums leading-tight">{stats?.openCorrectiveActions}</div>
+                <p className="body-text mt-2 text-destructive/60 font-medium">Attention required</p>
+                <div className="mt-5 flex items-center gap-1.5 text-[11px] font-medium text-destructive bg-destructive/10 w-fit px-3 py-1.5 rounded-full">
+                  View Queue <TrendingUp className="h-3 w-3" />
                 </div>
               </div>
             </Card>
@@ -227,8 +227,8 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 gap-6">
           <Card className="standard-card p-6">
             <div className="mb-6">
-              <h3 className="section-heading">Cross-Branch Performance</h3>
-              <p className="body-text">Average audit scores across all active locations</p>
+              <h3 className="section-heading">Location Performance</h3>
+              <p className="body-text mt-1">Average audit scores across all active locations</p>
             </div>
             <div className="h-[400px] w-full">
               <ResponsiveContainer width="100%" height="100%">

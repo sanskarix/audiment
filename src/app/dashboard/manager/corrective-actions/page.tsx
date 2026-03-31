@@ -57,7 +57,7 @@ interface CorrectiveAction {
   id: string;
   organizationId: string;
   assignedManagerId: string;
-  status: 'open' | 'in_progress' | 'resolved';
+  status: 'open' | 'in_progress' | 'completed' | 'resolved';
   severity: 'high' | 'medium' | 'low';
   questionText: string;
   description: string;
@@ -65,6 +65,7 @@ interface CorrectiveAction {
   locationId: string;
   deadline: any;
   createdAt: any;
+  completedAt?: any;
   resolvedAt?: any;
   resolutionNote?: string;
   resolutionPhotoUrls?: string[];
@@ -119,24 +120,34 @@ export default function CorrectiveActionsPage() {
     return () => unsubscribe();
   }, [session]);
 
-  const handleResolve = async () => {
+  const handleComplete = async () => {
     if (!selectedCA || !resolutionNote) return;
     setIsResolving(true);
     try {
       const caRef = doc(db, 'correctiveActions', selectedCA.id);
       await updateDoc(caRef, {
-        status: 'resolved',
+        status: 'completed',
         resolutionNote,
         resolutionPhotoUrls: resolutionPhotos,
-        resolvedAt: serverTimestamp()
+        completedAt: serverTimestamp()
       });
       setSelectedCA(null);
       setResolutionNote('');
       setResolutionPhotos([]);
     } catch (error) {
-      console.error('Error resolving CA:', error);
+      console.error('Error completing CA:', error);
     } finally {
       setIsResolving(false);
+    }
+  };
+
+  const handleMarkOngoing = async (caId: string) => {
+    try {
+      await updateDoc(doc(db, 'correctiveActions', caId), {
+        status: 'in_progress'
+      });
+    } catch (error) {
+      console.error('Error marking as ongoing:', error);
     }
   };
 
@@ -175,7 +186,7 @@ export default function CorrectiveActionsPage() {
   );
 
   const openActions = filteredActions.filter(ca => ca.status === 'open' || ca.status === 'in_progress');
-  const resolvedActions = filteredActions.filter(ca => ca.status === 'resolved');
+  const completedActions = filteredActions.filter(ca => ca.status === 'completed' || ca.status === 'resolved');
 
   if (loading) {
     return (
@@ -199,7 +210,7 @@ export default function CorrectiveActionsPage() {
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             <Card className="px-4 py-2 flex items-center gap-3 border-destructive/30 bg-destructive/10 shadow-sm rounded-lg flex-shrink-0">
               <span className="text-[10px] font-medium text-destructive  tracking-widest leading-none mt-0.5">Attention Required</span>
-              <span className="text-xl font-medium text-destructive leading-none">{actions.filter(a => a.status !== 'resolved').length}</span>
+              <span className="text-xl font-medium text-destructive leading-none">{openActions.length}</span>
             </Card>
           </div>
         </div>
@@ -226,7 +237,7 @@ export default function CorrectiveActionsPage() {
               Open Issues ({openActions.length})
             </TabsTrigger>
             <TabsTrigger value="resolved" className="data-[state=active]:bg-background data-[state=active]:shadow-sm px-6 font-medium text-xs  tracking-widest h-full transition-all rounded-md">
-              Resolved ({resolvedActions.length})
+              Completed ({completedActions.length})
             </TabsTrigger>
           </TabsList>
 
@@ -271,12 +282,21 @@ export default function CorrectiveActionsPage() {
                         </div>
                       </div>
                     </CardContent>
-                    <CardFooter className="p-xl pt-0 mt-auto">
+                    <CardFooter className="p-xl pt-0 mt-auto flex gap-2">
+                       {ca.status === 'open' && (
+                        <Button
+                          variant="outline"
+                          className="flex-1 font-medium tracking-widest text-xs h-10 shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+                          onClick={() => handleMarkOngoing(ca.id)}
+                        >
+                          Mark Ongoing
+                        </Button>
+                      )}
                       <Button
-                        className="w-full font-medium  tracking-widest text-xs h-10 shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        className="flex-1 font-medium tracking-widest text-xs h-10 shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] bg-primary text-primary-foreground hover:bg-primary/90"
                         onClick={() => setSelectedCA(ca)}
                       >
-                        Add Resolution Notes
+                        {ca.status === 'open' ? 'Complete Issue' : 'Complete Issue'}
                       </Button>
                     </CardFooter>
                   </Card>
@@ -287,13 +307,13 @@ export default function CorrectiveActionsPage() {
 
           <TabsContent value="resolved" className="mt-0">
             <div className="space-y-6">
-              {resolvedActions.length === 0 ? (
+              {completedActions.length === 0 ? (
                 <Card className="py-20 border-dashed border-2 flex flex-col items-center justify-center text-muted-text bg-muted/5 rounded-2xl">
-                  <p className="page-heading text-lg opacity-40  tracking-[0.2em] font-normal">No Resolved Issues Found</p>
+                  <p className="page-heading text-lg opacity-40  tracking-[0.2em] font-normal">No Completed Issues Found</p>
                 </Card>
               ) : (
                 <div className="grid gap-6 lg:grid-cols-2">
-                  {resolvedActions.map((ca) => (
+                  {completedActions.map((ca) => (
                     <Card key={ca.id} className="standard-card flex flex-col overflow-hidden hover:border-success/30 transition-colors group">
                       <div className="p-xl border-b border-border/50 bg-background flex-1">
                         <div className="flex items-center justify-between gap-2 mb-md">
@@ -301,7 +321,9 @@ export default function CorrectiveActionsPage() {
                             <div className="bg-success/20 p-1 rounded-full">
                               <CheckCircle2 className="h-3 w-3 text-success" />
                             </div>
-                            <span className="text-[10px] font-medium text-success  tracking-widest">Resolved</span>
+                            <span className="text-[10px] font-medium text-success  tracking-widest">
+                              {ca.status === 'resolved' ? 'Resolved by Admin' : 'Completed'}
+                            </span>
                           </div>
                           <span className="text-[10px] text-muted-text font-normal  tracking-widest opacity-60">
                             ID: {ca.id.substring(0, 8)}
@@ -317,8 +339,8 @@ export default function CorrectiveActionsPage() {
                       </div>
                       <div className="p-xl bg-muted/5 flex flex-col gap-md">
                         <div className="flex flex-col gap-xs">
-                          <p className="text-[10px] font-normal  text-muted-text tracking-widest opacity-80">Resolved On</p>
-                          <p className="text-sm font-normal text-body">{ca.resolvedAt ? format(ca.resolvedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</p>
+                          <p className="text-[10px] font-normal  text-muted-text tracking-widest opacity-80">Completed On</p>
+                          <p className="text-sm font-normal text-body">{ca.completedAt ? format(ca.completedAt.toDate(), 'MMM d, yyyy') : (ca.resolvedAt ? format(ca.resolvedAt.toDate(), 'MMM d, yyyy') : 'N/A')}</p>
                         </div>
                         {ca.resolutionPhotoUrls && ca.resolutionPhotoUrls.length > 0 && (
                           <div className="flex gap-sm overflow-x-auto pb-2">
@@ -343,7 +365,7 @@ export default function CorrectiveActionsPage() {
         <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden border-border/50">
           <DialogHeader className="p-xl border-b border-border/50 bg-muted/10">
             <DialogTitle className="flex items-center gap-3 text-success font-semibold text-xl">
-              <CheckCircle2 className="h-5 w-5" /> RESOLVE ISSUE
+              <CheckCircle2 className="h-5 w-5" /> COMPLETE ISSUE
             </DialogTitle>
             <DialogDescription className="font-normal text-body bg-background p-md rounded-lg border border-border/50 mt-md flex flex-col gap-sm">
               <span className="text-[10px] font-normal text-muted-text  tracking-widest">Identified Issue</span>
@@ -401,12 +423,12 @@ export default function CorrectiveActionsPage() {
           <DialogFooter className="bg-muted/10 p-xl border-t border-border/50 gap-sm">
             <Button variant="outline" onClick={() => setSelectedCA(null)} className="font-medium text-xs  tracking-widest text-body">Discard</Button>
             <Button
-              onClick={handleResolve}
+              onClick={handleComplete}
               disabled={isResolving || !resolutionNote}
               className="font-medium text-xs  tracking-widest shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               {isResolving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle2 className="h-4 w-4 mr-2" />}
-              Complete Resolution
+              Submit Completion
             </Button>
           </DialogFooter>
         </DialogContent>

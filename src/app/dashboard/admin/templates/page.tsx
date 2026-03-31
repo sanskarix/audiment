@@ -16,7 +16,7 @@ import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { MoreHorizontal, Plus, ClipboardCheck, Settings2, Trash2, Search, Filter } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -26,6 +26,7 @@ export default function AdminTemplatesPage() {
   const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -106,10 +107,18 @@ export default function AdminTemplatesPage() {
     }
   };
 
-  const filteredTemplates = templates.filter((t) =>
-    t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    t.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredTemplates = templates.filter((t) => {
+    const matchesSearch = t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      t.category.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    if (!matchesSearch) return false;
+    
+    if (categoryFilter !== 'all' && t.category !== categoryFilter) return false;
+    
+    return true;
+  });
+
+  const categories = Array.from(new Set(templates.map(t => t.category))).filter(Boolean).sort();
 
   const handleToggleActive = async (id: string, currentStatus: boolean) => {
     try {
@@ -145,11 +154,9 @@ export default function AdminTemplatesPage() {
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-xs">
+          <div className="flex flex-col gap-2">
             <h1 className="page-heading">Audit Templates</h1>
-            <p className="body-text">
-              Build and manage the blueprints for audits across your organization.
-            </p>
+            <p className="body-text">Build and manage the blueprints for audits across your organization.</p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             {!hasFssai && (
@@ -158,13 +165,13 @@ export default function AdminTemplatesPage() {
                 size="default"
                 onClick={loadFssaiDefaults}
                 disabled={loading}
-                className="font-medium text-success hover:text-success hover:bg-success/5 border-success/20 transition-all active:scale-95"
+                className="h-11 px-5 text-[14px] font-medium text-success hover:text-success hover:bg-success/5 border-success/20 transition-all active:scale-95"
               >
                 <ClipboardCheck className="mr-2 h-4 w-4" /> Load FSSAI Defaults
               </Button>
             )}
             <Link href="/dashboard/admin/templates/new">
-              <Button size="default" className="shadow-lg shadow-primary/20 font-medium active:scale-95 transition-all">
+              <Button size="default" className="shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2 active:scale-95 transition-all">
                 <Plus className="mr-2 h-4 w-4" /> Create Template
               </Button>
             </Link>
@@ -181,10 +188,26 @@ export default function AdminTemplatesPage() {
 	              onChange={(e) => setSearchQuery(e.target.value)}
 	            />
 	          </div>
-	          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
-	            <Filter className="h-4 w-4" />
-	            Filters
-	          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
+                <Filter className="h-4 w-4" />
+                Filters
+                {categoryFilter !== 'all' && (
+                  <Badge variant="secondary" className="ml-1 px-1 py-0 h-4 text-[10px] rounded-sm">1</Badge>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[200px]">
+              <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
+              <DropdownMenuRadioGroup value={categoryFilter} onValueChange={setCategoryFilter}>
+                <DropdownMenuRadioItem value="all">All Categories</DropdownMenuRadioItem>
+                {categories.map(cat => (
+                  <DropdownMenuRadioItem key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <Card className="standard-card">
@@ -211,30 +234,35 @@ export default function AdminTemplatesPage() {
               ) : (
                 filteredTemplates.map((t) => (
                   <TableRow key={t.id} className="standard-table-row group">
-                    <TableCell className="standard-table-cell min-w-[200px]">
-                      <div className="flex items-center gap-3">
-                        <span>{t.title}</span>
+                    <TableCell className="standard-table-cell font-normal text-sm text-heading">
+                      <div className="flex items-center">
+                        {t.title}
                         {t.isFssaiDefault && (
-                          <Badge variant="success" className="border-success/30">
+                          <Badge variant="secondary" className="ml-2 h-6 rounded-full bg-success/10 text-success border-none text-[12px] font-normal px-2.5">
                             FSSAI Blueprint
                           </Badge>
                         )}
                       </div>
                     </TableCell>
                     <TableCell className="standard-table-cell">
-                      <Badge variant="outline" className="bg-background">{t.category}</Badge>
+                      <Badge 
+                        variant="secondary" 
+                        className="px-2 py-0.5 text-body bg-muted/60 text-muted-text border-none"
+                        style={{ fontSize: 12, fontWeight: 400 }}
+                      >
+                        {t.category.charAt(0).toUpperCase() + t.category.slice(1)}
+                      </Badge>
                     </TableCell>
-                    <TableCell className="standard-table-cell tabular-nums">{t.createdAt?.toDate().toLocaleDateString()}</TableCell>
+                    <TableCell className="standard-table-cell tabular-nums text-body font-normal">{t.createdAt?.toDate().toLocaleDateString()}</TableCell>
                     <TableCell className="standard-table-cell">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center">
                         <Switch checked={t.isActive !== false} onCheckedChange={() => handleToggleActive(t.id, t.isActive !== false)} />
-                        <span>{t.isActive !== false ? 'Active' : 'Inactive'}</span>
                       </div>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0 rounded-full hover:bg-muted"><MoreHorizontal className="h-4 w-4" /></Button>
+                          <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-40">
                           <DropdownMenuItem onClick={() => router.push(`/dashboard/admin/templates/${t.id}/edit`)} className="text-body">

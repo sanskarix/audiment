@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card } from '@/components/ui/card';
-import { MoreHorizontal, Pencil, MapPin, Plus, Search, Filter } from 'lucide-react';
+import { MoreHorizontal, Pencil, Plus, Search, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function AdminLocationsPage() {
@@ -205,14 +205,14 @@ export default function AdminLocationsPage() {
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-xs">
+          <div className="flex flex-col gap-2">
             <h1 className="page-heading">Locations Management</h1>
             <p className="body-text">Manage branches, outlets, and assign managers to specific sites.</p>
           </div>
 
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
-              <Button size="default" className="shadow-lg shadow-primary/20 font-medium">
+              <Button size="default" className="shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2 active:scale-95 transition-all">
                 <Plus className="mr-2 h-4 w-4" /> Create Location
               </Button>
             </DialogTrigger>
@@ -267,7 +267,7 @@ export default function AdminLocationsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
               placeholder="Search locations by name, address, or city..."
-              className="pl-9 h-11 text-body"
+              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -299,21 +299,18 @@ export default function AdminLocationsPage() {
               ) : (
                 filteredLocations.map((location: any) => (
                   <TableRow key={location.id} className="standard-table-row group">
-                    <TableCell className="standard-table-cell">
-                      <div className="flex items-center gap-3">
-                        <MapPin className="h-4 w-4 text-primary opacity-60" />
-                        {location.name}
-                      </div>
+                    <TableCell className="standard-table-cell font-normal text-sm text-body">
+                      {location.name}
                     </TableCell>
-                    <TableCell className="standard-table-cell">{location.city}</TableCell>
-                    <TableCell className="standard-table-cell">{getManagerNames(location.assignedManagerIds, location.assignedManagerId)}</TableCell>
+                    <TableCell className="standard-table-cell text-body font-normal">{location.city}</TableCell>
+                    <TableCell className="standard-table-cell text-body font-normal">{getManagerNames(location.assignedManagerIds, location.assignedManagerId)}</TableCell>
                     <TableCell className="standard-table-cell">
                       <Switch checked={location.isActive} onCheckedChange={() => handleToggleActive(location.id, location.isActive)} />
                     </TableCell>
-                    <TableCell className="standard-table-cell">
+                    <TableCell className="standard-table-cell text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-muted/80 rounded-xl"><MoreHorizontal className="h-4 w-4" /></Button>
+                          <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => {

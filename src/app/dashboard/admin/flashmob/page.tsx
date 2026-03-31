@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import DashboardShell from '@/components/DashboardShell';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,16 +19,21 @@ import {
   Video,
   ImageIcon,
   Search,
-  Filter
+  Filter,
+  Trash2
 } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 export default function AdminFlashmobPage() {
   const [flashmobs, setFlashmobs] = useState<any[]>([]);
   const [session, setSession] = useState<{ orgId: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -65,6 +70,23 @@ export default function AdminFlashmobPage() {
     return () => unsubscribe();
   }, [session]);
 
+  const handleDelete = async (id: string) => {
+    if (confirmDeleteId !== id) {
+      setConfirmDeleteId(id);
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      await deleteDoc(doc(db, 'flashmobAudits', id));
+      setConfirmDeleteId(null);
+    } catch (error) {
+      console.error('Delete error:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   if (loading) return <div className="flex h-screen items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
 
   const filteredFlashmobs = flashmobs.filter((audit) =>
@@ -76,33 +98,26 @@ export default function AdminFlashmobPage() {
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-xs">
-            <h1 className="page-heading flex items-center gap-3">
-              <Video className="h-6 w-6 text-primary" />
-              Flash Logs
-            </h1>
-            <p className="body-text">
-              Review video evidence and compliance verification from the field.
-            </p>
+          <div className="flex flex-col gap-2">
+            <h1 className="page-heading">Flash Logs</h1>
+            <p className="body-text">Review video evidence and compliance verification from the field.</p>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="secondary">
-              {flashmobs.length} sessions
-            </Badge>
-          </div>
+          <Badge variant="secondary" className="h-6 rounded-full bg-muted/10 text-muted-text border-none px-2.5 text-[12px] font-normal">
+            {flashmobs.length} sessions
+          </Badge>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
               placeholder="Search logs by location or auditor..."
-              className="pl-9 bg-background text-body font-normal"
+              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="border-border/50 text-[#6b7280]">
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
             <Filter className="h-4 w-4" />
             Filters
           </Button>
@@ -118,7 +133,7 @@ export default function AdminFlashmobPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredFlashmobs.map((audit) => (
               <Card key={audit.id} className="standard-card flex flex-col group hover:scale-[1.01] transition-all duration-300">
                 <div className="relative aspect-video bg-muted overflow-hidden rounded-t-xl">
@@ -133,46 +148,56 @@ export default function AdminFlashmobPage() {
                       e.currentTarget.currentTime = 0;
                     }}
                   />
-                  <div className="absolute top-4 left-4">
-                    <div className="bg-background/80 backdrop-blur-xl px-3 py-1 rounded-lg border border-border/50 shadow-lg">
-                      <span className="muted-label">{audit.locationName}</span>
-                    </div>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <div className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-muted shadow-lg">
+                  <div className="absolute top-4 right-4 z-10">
+                    <div className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-muted shadow-lg ring-4 ring-primary/5">
                       <img src={audit.selfieUrl} alt="Selfie" className="h-full w-full object-cover" />
                     </div>
                   </div>
-                  <div className="absolute bottom-4 left-4">
-                    <div className="bg-primary/90 backdrop-blur-md px-2 py-1 rounded-md flex items-center gap-2 shadow-lg">
-                      <Play className="h-2.5 w-2.5 text-white fill-white" />
-                      <span className="muted-label text-white">Preview</span>
+                  <div className="absolute bottom-4 left-4 z-10">
+                    <div className="bg-primary/90 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-2 shadow-lg">
+                      <Play className="h-2 w-2 text-white fill-white" />
+                      <span className="text-[10px] font-semibold text-white uppercase tracking-wider">Live Preview</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-6 flex-1 flex flex-col gap-4">
+                <div className="p-6 flex-1 flex flex-col gap-5">
                   <div className="space-y-1">
-                    <h3 className="section-heading line-clamp-1 group-hover:text-primary transition-colors">
+                    <h3 className="section-heading line-clamp-1 group-hover:text-primary transition-colors text-[16px] font-medium">
                       {audit.locationName}
                     </h3>
-                    <div className="flex flex-col gap-2 pt-2">
-                      <div className="flex items-center gap-2 text-muted-text/60">
-                        <User className="h-3.5 w-3.5 text-primary/60" />
-                        <span>{audit.auditorName || 'Unknown auditor'}</span>
+                    <div className="flex flex-col gap-1.5 pt-2">
+                      <div className="flex items-center gap-2 text-muted-text/50">
+                        <User className="h-3.5 w-3.5 text-primary/40" />
+                        <span className="text-[13px]">{audit.auditorName || 'Unknown auditor'}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-muted-text/60">
-                        <CalendarIcon className="h-3.5 w-3.5 text-primary/60" />
-                        <span>{format(audit.submittedAt?.toDate(), 'MMM d, p')}</span>
+                      <div className="flex items-center gap-2 text-muted-text/50">
+                        <CalendarIcon className="h-3.5 w-3.5 text-primary/40" />
+                        <span className="text-[13px]">{format(audit.submittedAt?.toDate(), 'MMM d, h:mm a')}</span>
                       </div>
                     </div>
                   </div>
 
-                  <Link href={`/dashboard/admin/flashmob/${audit.id}`} passHref className="mt-auto">
-                    <Button size="default" className="w-full shadow-lg shadow-primary/10 active:scale-95 transition-all font-medium">
-                      Integrity Check <ChevronRight className="ml-2 h-4 w-4" />
+                  <div className="flex items-center gap-2 mt-auto">
+                    <Link href={`/dashboard/admin/flashmob/${audit.id}`} passHref className="flex-1">
+                      <Button variant="secondary" className="w-full h-10 shadow-lg shadow-black/5 active:scale-95 transition-all font-medium text-[13px]">
+                        Review Log <ChevronRight className="ml-1 h-3.5 w-3.5" />
+                      </Button>
+                    </Link>
+                    <Button
+                      variant={confirmDeleteId === audit.id ? "destructive" : "ghost"}
+                      size="icon"
+                      onClick={() => handleDelete(audit.id)}
+                      disabled={isDeleting && confirmDeleteId === audit.id}
+                      className={cn("h-10 w-10 shrink-0", confirmDeleteId === audit.id && "w-fit px-4 gap-2 text-[12px]")}
+                    >
+                      {isDeleting && confirmDeleteId === audit.id
+                        ? <Loader2 className="h-4 w-4 animate-spin" />
+                        : confirmDeleteId === audit.id
+                          ? <span className="text-[12px] font-medium">Confirm?</span>
+                          : <Trash2 className="h-4 w-4" />}
                     </Button>
-                  </Link>
+                  </div>
                 </div>
               </Card>
             ))}

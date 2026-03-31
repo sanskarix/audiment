@@ -161,13 +161,31 @@ export default function FlashmobAuditPage() {
   const startRecording = () => {
     if (!stream) return;
 
+    const pickRecordingMimeType = () => {
+      if (typeof MediaRecorder === 'undefined' || typeof MediaRecorder.isTypeSupported !== 'function') return undefined;
+      const candidates = [
+        // Chrome/Edge/Firefox variants
+        'video/webm;codecs=vp9,opus',
+        'video/webm;codecs=vp8,opus',
+        'video/webm;codecs=vp9',
+        'video/webm;codecs=vp8',
+        'video/webm',
+        // Some Safari builds support MediaRecorder but not WebM; mp4 support is inconsistent.
+        'video/mp4;codecs=avc1.42E01E,mp4a.40.2',
+        'video/mp4'
+      ];
+      return candidates.find((t) => MediaRecorder.isTypeSupported(t));
+    };
+
     const chunks: Blob[] = [];
-    const recorder = new MediaRecorder(stream);
+    const mimeType = pickRecordingMimeType();
+    const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
     recorderRef.current = recorder;
 
     recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
     recorder.onstop = () => {
-      const blob = new Blob(chunks, { type: 'video/webm' });
+      const blobType = recorder.mimeType || (mimeType ?? undefined);
+      const blob = new Blob(chunks, blobType ? { type: blobType } : undefined);
       setVideoBlob(blob);
       setVideoUrl(URL.createObjectURL(blob));
       setStep('review');

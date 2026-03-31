@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { MoreHorizontal, Pencil, Trash2, Mail, UserPlus, Search, Filter } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -23,6 +23,9 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<any[]>([]);
   const [session, setSession] = useState<{ orgId: string } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [managerFilter, setManagerFilter] = useState('all');
+  const [locationFilter, setLocationFilter] = useState('all');
+  const [locations, setLocations] = useState<any[]>([]);
 
   // Form states
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -46,6 +49,7 @@ export default function AdminUsersPage() {
   const [editFormData, setEditFormData] = useState({
     name: '',
     managerId: '',
+    hasFlashmobAccess: false,
   });
 
   useEffect(() => {
@@ -77,7 +81,24 @@ export default function AdminUsersPage() {
       setUsers(fetchedUsers);
     });
 
-    return () => unsubscribe();
+    const qLoc = query(
+      collection(db, 'locations'),
+      where('organizationId', '==', session.orgId)
+    );
+
+    const unsubscribeLoc = onSnapshot(qLoc, (snapshot) => {
+      const fetchedLocations: any[] = [];
+      snapshot.forEach((doc) => {
+        fetchedLocations.push({ id: doc.id, ...doc.data() });
+      });
+      fetchedLocations.sort((a, b) => a.name.localeCompare(b.name));
+      setLocations(fetchedLocations);
+    });
+
+    return () => {
+      unsubscribe();
+      unsubscribeLoc();
+    };
   }, [session]);
 
   const handleToggleActive = async (userId: string, currentStatus: boolean) => {
@@ -177,26 +198,36 @@ export default function AdminUsersPage() {
     }
   };
 
-  const handleToggleFlashmob = async (userId: string, currentStatus: boolean) => {
-    try {
-      await updateDoc(doc(db, 'users', userId), {
-        hasFlashmobAccess: !currentStatus,
-      });
-    } catch (err) {
-      console.error('Failed to toggle flashmob access', err);
-    }
-  };
+
 
   // Logic: Manager must be active to appear in listener
   const activeManagers = users.filter(
     (u) => String(u.role ?? '').toUpperCase() === 'MANAGER' && u.isActive !== false
   );
 
-  const filteredUsers = users.filter((u) =>
-    u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    u.role.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredUsers = users.filter((u) => {
+    const matchesSearch = u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      u.role.toLowerCase().includes(searchQuery.toLowerCase());
+
+    if (!matchesSearch) return false;
+
+    if (managerFilter !== 'all') {
+      if (u.role !== 'AUDITOR' || u.managerId !== managerFilter) return false;
+    }
+
+    if (locationFilter !== 'all') {
+      const loc = locations.find(l => l.id === locationFilter);
+      if (!loc) return false;
+      const assignedIds = loc.assignedManagerIds || (loc.assignedManagerId ? [loc.assignedManagerId] : []);
+
+      if (u.role === 'AUDITOR' && !assignedIds.includes(u.managerId)) return false;
+      if (u.role === 'MANAGER' && !assignedIds.includes(u.id)) return false;
+      if (u.role === 'ADMIN') return false;
+    }
+
+    return true;
+  });
 
   return (
     <DashboardShell role="Admin">
@@ -279,10 +310,36 @@ export default function AdminUsersPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
+                <Filter className="h-4 w-4" />
+                Filters
+                {(managerFilter !== 'all' || locationFilter !== 'all') && (
+                  <Badge variant="secondary" className="ml-1 px-1 py-0 h-4 text-[10px] rounded-sm">1</Badge>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[200px]">
+              <DropdownMenuLabel>Filter by Manager</DropdownMenuLabel>
+              <DropdownMenuRadioGroup value={managerFilter} onValueChange={(val) => { setManagerFilter(val); setLocationFilter('all'); }}>
+                <DropdownMenuRadioItem value="all">All Managers</DropdownMenuRadioItem>
+                {activeManagers.map(m => (
+                  <DropdownMenuRadioItem key={m.id} value={m.id}>{m.name}</DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuLabel>Filter by Location</DropdownMenuLabel>
+              <DropdownMenuRadioGroup value={locationFilter} onValueChange={(val) => { setLocationFilter(val); setManagerFilter('all'); }}>
+                <DropdownMenuRadioItem value="all">All Locations</DropdownMenuRadioItem>
+                {locations.map(loc => (
+                  <DropdownMenuRadioItem key={loc.id} value={loc.id}>{loc.name}</DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <Card className="standard-card">
@@ -293,7 +350,6 @@ export default function AdminUsersPage() {
                 <TableHead className="standard-table-head">Email</TableHead>
                 <TableHead className="standard-table-head">Role</TableHead>
                 <TableHead className="standard-table-head">Status</TableHead>
-                <TableHead className="standard-table-head">Flashmob</TableHead>
                 <TableHead className="standard-table-head text-right w-[100px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -331,20 +387,6 @@ export default function AdminUsersPage() {
                         />
                       </div>
                     </TableCell>
-                    <TableCell className="standard-table-cell">
-                      {user.role === 'AUDITOR' ? (
-                        <div className="flex items-center">
-                          <Switch
-                            checked={user.hasFlashmobAccess === true}
-                            onCheckedChange={() =>
-                              handleToggleFlashmob(user.id, user.hasFlashmobAccess === true)
-                            }
-                          />
-                        </div>
-                      ) : (
-                        <span className="text-muted-text/30" style={{ fontSize: 14, fontWeight: 400 }}>-</span>
-                      )}
-                    </TableCell>
                     <TableCell className="px-4 py-3 text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -353,13 +395,14 @@ export default function AdminUsersPage() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => {
                             setSelectedUser(user);
-                            setEditFormData({ name: user.name, managerId: user.managerId || '' });
+                            setEditFormData({
+                              name: user.name,
+                              managerId: user.managerId || '',
+                              hasFlashmobAccess: user.hasFlashmobAccess === true
+                            });
                             setIsEditOpen(true);
                           }} disabled={user.role === 'ADMIN'}>
                             <Pencil className="mr-2 h-4 w-4" /> Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleResetPassword(user.email)}>
-                            <Mail className="mr-2 h-4 w-4" /> Reset Password
                           </DropdownMenuItem>
                           <DropdownMenuItem className="text-destructive" onClick={() => {
                             setSelectedUser(user);
@@ -390,18 +433,48 @@ export default function AdminUsersPage() {
                 <Input value={editFormData.name} onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })} required className="text-body" />
               </div>
               {selectedUser?.role === 'AUDITOR' && (
-                <div className="space-y-2">
-                  <Label className="text-body font-normal">Assigned Manager</Label>
-                  <Select value={editFormData.managerId} onValueChange={(val) => setEditFormData({ ...editFormData, managerId: val })} required>
-                    <SelectTrigger className="text-body"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      {activeManagers.map(m => <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <>
+                  <div className="space-y-2">
+                    <Label className="text-body font-normal">Assigned Manager</Label>
+                    <Select value={editFormData.managerId} onValueChange={(val) => setEditFormData({ ...editFormData, managerId: val })} required>
+                      <SelectTrigger className="text-body"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {activeManagers.map(m => <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-center justify-between p-3 border rounded-lg bg-muted/10">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-medium">Flashmob Access</Label>
+                      <p className="text-xs text-muted-text">Allow auditor to record flashmob videos</p>
+                    </div>
+                    <Switch
+                      checked={editFormData.hasFlashmobAccess}
+                      onCheckedChange={(checked) => setEditFormData({ ...editFormData, hasFlashmobAccess: checked })}
+                    />
+                  </div>
+                </>
               )}
+
+              <div className="pt-4 border-t">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full text-xs gap-2"
+                  onClick={() => handleResetPassword(selectedUser.email)}
+                >
+                  <Mail className="h-3.5 w-3.5" />
+                  Send Password Reset Email
+                </Button>
+              </div>
+
               {error && <p className="text-sm text-destructive">{error}</p>}
-              <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Updating...' : 'Save Changes'}</Button></DialogFooter>
+              <DialogFooter>
+                <div className="flex w-full gap-3 pt-2">
+                  <Button type="button" variant="ghost" className="flex-1" onClick={() => setIsEditOpen(false)}>Cancel</Button>
+                  <Button type="submit" disabled={loading} className="flex-1 font-medium">{loading ? 'Updating...' : 'Save Changes'}</Button>
+                </div>
+              </DialogFooter>
             </form>
           </DialogContent>
         </Dialog>

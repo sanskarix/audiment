@@ -27,7 +27,7 @@ import { Switch } from '@/components/ui/switch';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
-import { CalendarIcon, Plus, CheckSquare, Clock, MapPin, AlertCircle, Search, MoreHorizontal, Pencil, Loader2, Filter } from 'lucide-react';
+import { CalendarIcon, Plus, CheckSquare, Clock, AlertCircle, Search, MoreHorizontal, Pencil, Loader2, Filter } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -189,12 +189,42 @@ export default function AdminAuditsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'published': return <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/20">Published</Badge>;
-      case 'assigned': return <Badge variant="secondary" className="bg-warning/10 text-warning border-warning/20">Assigned</Badge>;
-      case 'in_progress': return <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">Active</Badge>;
-      case 'completed': return <Badge variant="success">Completed</Badge>;
-      case 'missed': return <Badge variant="destructive">Missed</Badge>;
-      default: return <Badge variant="outline">{status}</Badge>;
+      case 'published':
+        return (
+          <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">
+            Published
+          </Badge>
+        );
+      case 'assigned':
+        return (
+          <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">
+            Assigned
+          </Badge>
+        );
+      case 'in_progress':
+        return (
+          <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">
+            Active
+          </Badge>
+        );
+      case 'completed':
+        return (
+          <Badge variant="secondary" className="h-6 rounded-full bg-success/10 text-success border-none px-2.5 text-[12px] font-normal">
+            Completed
+          </Badge>
+        );
+      case 'missed':
+        return (
+          <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[12px] font-normal">
+            Missed
+          </Badge>
+        );
+      default:
+        return (
+          <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-2.5 text-[12px] font-normal">
+            {status}
+          </Badge>
+        );
     }
   };
 
@@ -209,7 +239,7 @@ export default function AdminAuditsPage() {
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-xs">
+          <div className="flex flex-col gap-2">
             <h1 className="page-heading">Audits Management</h1>
             <p className="body-text">Monitor and publish audit instances for your organization's locations.</p>
           </div>
@@ -228,28 +258,26 @@ export default function AdminAuditsPage() {
             }
           }}>
             <DialogTrigger asChild>
-              <Button size="default" className="shadow-lg shadow-primary/20 active:scale-95 transition-all font-medium">
+              <Button size="default" className="shadow-lg shadow-primary/20 h-11 px-5 text-[14px] font-medium gap-2 active:scale-95 transition-all">
                 <Plus className="mr-2 h-4 w-4" /> Publish Audit
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden border-none shadow-2xl">
-              <DialogHeader className="p-8 bg-muted/5 border-b border-muted/20">
-                <DialogTitle className="page-heading flex items-center gap-3">
-                  <div className="bg-primary p-2 rounded-lg">
-                    <CheckSquare className="h-5 w-5 text-white" />
-                  </div>
+            <DialogContent className="sm:max-w-[550px]">
+              <DialogHeader>
+                <DialogTitle className="font-semibold text-heading">
                   {editingAuditId ? 'Edit Audit Instance' : 'Publish New Audit'}
                 </DialogTitle>
-                <DialogDescription className="body-text mt-2">
+                <DialogDescription className="text-muted-text">
                   {editingAuditId ? 'Update parameters for this existing audit instance.' : 'Assign a template to a location and set the schedule.'}
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-6 p-6">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-8 p-8">
+                {/* Primary Selectors - Stacked for clarity */}
+                <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="template" className="text-body font-normal">Template</Label>
+                    <Label htmlFor="template" className="text-body font-normal">Audit Template</Label>
                     <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
-                      <SelectTrigger id="template" className="text-body">
+                      <SelectTrigger id="template" className="h-11 text-body border-border/50">
                         <SelectValue placeholder="Select template" />
                       </SelectTrigger>
                       <SelectContent>
@@ -259,13 +287,14 @@ export default function AdminAuditsPage() {
                       </SelectContent>
                     </Select>
                   </div>
+
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="location" className="text-body font-normal">Location</Label>
+                    <Label htmlFor="location" className="text-body font-normal">Target Location</Label>
                     <Select value={selectedLocation} onValueChange={(val) => {
                       setSelectedLocation(val);
-                      setSelectedManager(''); // Reset manager when location changes
+                      setSelectedManager('');
                     }}>
-                      <SelectTrigger id="location" className="text-body">
+                      <SelectTrigger id="location" className="h-11 text-body border-border/50">
                         <SelectValue placeholder="Select location" />
                       </SelectTrigger>
                       <SelectContent>
@@ -275,49 +304,49 @@ export default function AdminAuditsPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                </div>
 
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="manager" className="text-body font-normal">Assigned Manager</Label>
-                  <Select value={selectedManager} onValueChange={setSelectedManager} disabled={!selectedLocation}>
-                    <SelectTrigger id="manager" className="text-body">
-                      <SelectValue placeholder={selectedLocation ? "Select manager for this audit" : "Select location first"} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {selectedLocation && managers
-                        .filter(m => {
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="manager" className="text-body font-normal">Assigned Manager</Label>
+                    <Select value={selectedManager} onValueChange={setSelectedManager} disabled={!selectedLocation}>
+                      <SelectTrigger id="manager" className="h-11 text-body border-border/50">
+                        <SelectValue placeholder={selectedLocation ? "Select manager for this audit" : "Select location first"} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {selectedLocation && managers
+                          .filter(m => {
+                            const loc = locations.find(l => l.id === selectedLocation);
+                            const assignedIds = loc?.assignedManagerIds || (loc?.assignedManagerId ? [loc.assignedManagerId] : []);
+                            return assignedIds.includes(m.id);
+                          })
+                          .map(m => (
+                            <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>
+                          ))
+                        }
+                        {selectedLocation && managers.filter(m => {
                           const loc = locations.find(l => l.id === selectedLocation);
-                          // Support both array and legacy string
                           const assignedIds = loc?.assignedManagerIds || (loc?.assignedManagerId ? [loc.assignedManagerId] : []);
                           return assignedIds.includes(m.id);
-                        })
-                        .map(m => (
-                          <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>
-                        ))
-                      }
-                      {selectedLocation && managers.filter(m => {
-                        const loc = locations.find(l => l.id === selectedLocation);
-                        const assignedIds = loc?.assignedManagerIds || (loc?.assignedManagerId ? [loc.assignedManagerId] : []);
-                        return assignedIds.includes(m.id);
-                      }).length === 0 && (
-                          <SelectItem value="none" disabled className="text-muted-text">No managers assigned to this location</SelectItem>
-                        )}
-                    </SelectContent>
-                  </Select>
-                  <p className="body-text">Select which branch manager will assign an auditor for this task.</p>
+                        }).length === 0 && (
+                            <SelectItem value="none" disabled className="text-muted-text">No managers assigned to this location</SelectItem>
+                          )}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-[12px] text-muted-text/40 font-normal mt-1 leading-relaxed">The branch manager will be responsible for assigning the final auditor.</p>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                {/* Date Selection - 2 Columns */}
+                <div className="grid grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
                     <Label className="text-body font-normal">Scheduled Date</Label>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className={cn("w-full justify-start text-left font-normal text-body", !scheduledDate && "text-muted-text")}>
-                          <CalendarIcon className="mr-2 h-4 w-4" />
+                        <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50", !scheduledDate && "text-muted-text")}>
+                          <CalendarIcon className="mr-2 h-4 w-4 opacity-40" />
                           {scheduledDate ? format(scheduledDate, "PPP") : "Pick a date"}
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
+                      <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl">
                         <Calendar mode="single" selected={scheduledDate} onSelect={(date: any) => {
                           setScheduledDate(date);
                           if (date && (!deadline || date > deadline)) {
@@ -333,89 +362,94 @@ export default function AdminAuditsPage() {
                     <Label className="text-body font-normal">Deadline</Label>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className={cn("w-full justify-start text-left font-normal text-body", !deadline && "text-muted-text")}>
-                          <CalendarIcon className="mr-2 h-4 w-4" />
+                        <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50", !deadline && "text-muted-text")}>
+                          <CalendarIcon className="mr-2 h-4 w-4 opacity-40" />
                           {deadline ? format(deadline, "PPP") : "Pick a date"}
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
+                      <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl">
                         <Calendar mode="single" selected={deadline} onSelect={setDeadline} disabled={(date: any) => scheduledDate ? date < scheduledDate : false} initialFocus />
                       </PopoverContent>
                     </Popover>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg bg-muted/40 border">
-	                  <div className="space-y-0.5">
-	                    <Label>Surprise audit</Label>
-	                    <p className="body-text">Location won't be notified until the scheduled date.</p>
-	                  </div>
-                  <Switch checked={isSurprise} onCheckedChange={setIsSurprise} />
-                </div>
+                {/* Configuration Options */}
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center justify-between p-5 rounded-xl bg-muted/20 border border-border/40">
+                    <div className="flex flex-col gap-1.5">
+                      <Label className="text-body font-medium">Surprise Audit</Label>
+                      <p className="text-[12px] text-muted-text/60 font-normal leading-normal">Location won't be notified until the date.</p>
+                    </div>
+                    <Switch checked={isSurprise} onCheckedChange={setIsSurprise} />
+                  </div>
 
-                <div className="space-y-4 p-4 rounded-lg bg-muted/40 border">
-	                  <div className="space-y-0.5">
-	                    <Label>Recurring schedule</Label>
-	                    <p className="body-text">Automatically generate the next audit instance.</p>
-	                  </div>
-                  <Select value={recurring} onValueChange={(val: any) => setRecurring(val)}>
-                    <SelectTrigger className="text-body">
-                      <SelectValue placeholder="Select frequency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none" className="text-body">Does not repeat</SelectItem>
-                      <SelectItem value="daily" className="text-body">Daily</SelectItem>
-                      <SelectItem value="weekly" className="text-body">Weekly</SelectItem>
-                      <SelectItem value="monthly" className="text-body">Monthly</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {recurring === 'weekly' && (
-                    <div className="space-y-2">
-	                      <Label>Repeat on day of week</Label>
-                      <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select day" />
+                  <div className="space-y-5 p-5 rounded-xl bg-muted/20 border border-border/40">
+                    <div className="flex flex-col gap-1.5">
+                      <Label className="text-body font-medium">Recurring Schedule</Label>
+                      <p className="text-[12px] text-muted-text/60 font-normal leading-normal">Automatically generate the next instance.</p>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4 pt-1">
+                      <Select value={recurring} onValueChange={(val: any) => setRecurring(val)}>
+                        <SelectTrigger className="h-11 text-body border-border/50 bg-background">
+                          <SelectValue placeholder="Select frequency" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="0">Sunday</SelectItem>
-                          <SelectItem value="1">Monday</SelectItem>
-                          <SelectItem value="2">Tuesday</SelectItem>
-                          <SelectItem value="3">Wednesday</SelectItem>
-                          <SelectItem value="4">Thursday</SelectItem>
-                          <SelectItem value="5">Friday</SelectItem>
-                          <SelectItem value="6">Saturday</SelectItem>
+                          <SelectItem value="none" className="text-body">Does not repeat</SelectItem>
+                          <SelectItem value="daily" className="text-body">Daily</SelectItem>
+                          <SelectItem value="weekly" className="text-body">Weekly</SelectItem>
+                          <SelectItem value="monthly" className="text-body">Monthly</SelectItem>
                         </SelectContent>
                       </Select>
-                    </div>
-                  )}
 
-                  {recurring === 'monthly' && (
-                    <div className="space-y-2">
-	                      <Label>Repeat on date of month</Label>
-                      <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select date" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
-                            <SelectItem key={day} value={day.toString()}>Day {day}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      {recurring === 'weekly' && (
+                        <div className="flex flex-col gap-2">
+                          <Label className="text-[12px] font-medium text-muted-text">Repeat on</Label>
+                          <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
+                            <SelectTrigger className="h-11 text-body border-border/50 bg-background">
+                              <SelectValue placeholder="Select day" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="0" className="text-body">Sunday</SelectItem>
+                              <SelectItem value="1" className="text-body">Monday</SelectItem>
+                              <SelectItem value="2" className="text-body">Tuesday</SelectItem>
+                              <SelectItem value="3" className="text-body">Wednesday</SelectItem>
+                              <SelectItem value="4" className="text-body">Thursday</SelectItem>
+                              <SelectItem value="5" className="text-body">Friday</SelectItem>
+                              <SelectItem value="6" className="text-body">Saturday</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+
+                      {recurring === 'monthly' && (
+                        <div className="flex flex-col gap-2">
+                          <Label className="text-[12px] font-medium text-muted-text">Repeat on</Label>
+                          <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
+                            <SelectTrigger className="h-11 text-body border-border/50 bg-background">
+                              <SelectValue placeholder="Select date" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                                <SelectItem key={day} value={day.toString()} className="text-body">Day {day}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
-              <DialogFooter className="p-6 bg-muted/5 border-t border-muted/20">
-	                <Button variant="ghost" onClick={() => setOpen(false)} className="font-medium h-12 px-6">Cancel</Button>
+              <DialogFooter>
+                <Button variant="ghost" onClick={() => setOpen(false)} className="font-medium h-11 px-4">Cancel</Button>
                 <Button
                   onClick={handlePublish}
                   disabled={loading || !selectedTemplate || !selectedLocation || !selectedManager || !scheduledDate || !deadline}
-	                  className="font-medium h-12 px-10 shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  className="font-medium h-11 px-5 gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all"
                 >
-                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {editingAuditId ? 'Save Changes' : 'Publish Instance'}
+                  {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {editingAuditId ? 'Save Changes' : 'Publish Audit'}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -427,12 +461,12 @@ export default function AdminAuditsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
               placeholder="Search audits by template, location, manager or status..."
-              className="pl-9 bg-background text-body"
+              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="border-border/50 text-[#6b7280]">
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
             <Filter className="h-4 w-4" />
             Filters
           </Button>
@@ -467,63 +501,51 @@ export default function AdminAuditsPage() {
                 filteredAudits.map((a) => (
                   <TableRow key={a.id} className="standard-table-row group">
                     <TableCell className="standard-table-cell">
-                      <div className="flex flex-col gap-1">
-                        <span className="group-hover:text-primary transition-colors">{a.templateTitle}</span>
-                        <span className="muted-label tabular-nums opacity-40">ID: {a.id.slice(0, 8).toLowerCase()}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="standard-table-cell">
-                      <div className="flex items-center gap-2.5">
-                        <MapPin className="h-3.5 w-3.5 text-primary opacity-50" />
-                        <span>{a.locationName}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="standard-table-cell">{getStatusBadge(a.status)}</TableCell>
-                    <TableCell className="standard-table-cell">
-                      <div className="flex flex-col gap-1.5 font-normal">
-                        <div className="flex items-center gap-2">
-                          <span className="muted-label opacity-50 w-10">Due</span>
-                          <span className="text-destructive">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="muted-label opacity-50 w-10">Sched</span>
-                          <span className="italic">{a.scheduledDate?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                        </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
                         {a.recurring && a.recurring !== 'none' && (
-                          <div className="bg-primary/5 text-primary border border-primary/10 rounded-full px-2 py-0.5 mt-1 inline-flex items-center gap-1.5 w-fit">
-                            <Clock className="w-3 h-3" />
-                            <span className="muted-label">{a.recurring}</span>
+                          <div className="h-5 rounded-full bg-primary/10 text-primary px-2 flex items-center gap-1.5 w-fit text-[11px] font-normal">
+                            <Clock className="w-2.5 h-2.5" />
+                            <span className="capitalize">{a.recurring}</span>
                           </div>
                         )}
                       </div>
                     </TableCell>
+                    <TableCell className="standard-table-cell text-[14px] font-normal text-body">
+                      {a.locationName}
+                    </TableCell>
+                    <TableCell className="standard-table-cell">{getStatusBadge(a.status)}</TableCell>
+                    <TableCell className="standard-table-cell">
+                      <div className="flex flex-col gap-1.5 font-normal">
+                        <span className="text-[14px] font-normal text-body">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                      </div>
+                    </TableCell>
                     <TableCell className="standard-table-cell">
                       {a.isSurprise ? (
-                        <div className="flex items-center gap-2">
-                          <div className="h-2 w-2 rounded-full bg-warning animate-pulse" />
-                          <span className="muted-label text-warning">Surprise</span>
-                        </div>
+                        <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">
+                          Surprise
+                        </Badge>
                       ) : (
-                        <span className="muted-label text-muted-text/40 italic">Routine</span>
+                        <span className="text-[14px] font-normal text-muted-text">Routine</span>
                       )}
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-right">
+                    <TableCell className="standard-table-cell text-right">
                       {a.status === 'completed' ? (
-                        <div className="flex flex-col items-end">
-                          <span className={cn("text-[22px] font-medium italic tabular-nums leading-none", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
+                        <div className="flex flex-col items-end gap-0.5">
+                          <span className={cn("text-[14px] font-medium tabular-nums", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
                             {a.scorePercentage}%
                           </span>
-                          <span className="muted-label opacity-50 mt-1">{a.totalScore} / {a.maxPossibleScore}</span>
+                          <span className="text-[11px] font-normal text-muted-text/50 tabular-nums">{a.totalScore} / {a.maxPossibleScore}</span>
                         </div>
                       ) : (
-                        <span className="muted-label text-muted-text/30 font-normal italic">Pending</span>
+                        <span className="text-[14px] font-normal text-muted-text">Pending</span>
                       )}
                     </TableCell>
                     <TableCell className="px-4 py-3">
                       {(a.status === 'published' || a.status === 'assigned') && (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-9 w-9 p-0 hover:bg-muted/80 rounded-xl"><MoreHorizontal className="h-4 w-4 opacity-50" /></Button>
+                            <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4 opacity-50" /></Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-48 p-1.5 rounded-xl border-muted/20 shadow-xl">
                             <DropdownMenuItem

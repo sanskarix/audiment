@@ -56,7 +56,7 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
   try {
     const body = await req.json();
-    const { uid, name, managerId } = body;
+    const { uid, name, managerId, hasFlashmobAccess } = body;
 
     if (!uid) {
       return NextResponse.json({ error: 'Missing user UID' }, { status: 400 });
@@ -71,6 +71,7 @@ export async function PATCH(req: Request) {
     const updateData: any = {};
     if (name) updateData.name = name;
     if (managerId !== undefined) updateData.managerId = managerId;
+    if (hasFlashmobAccess !== undefined) updateData.hasFlashmobAccess = hasFlashmobAccess;
 
     await adminDb.collection('users').doc(uid).update(updateData);
 

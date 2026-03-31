@@ -19,8 +19,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CheckSquare, UserPlus, MapPin, AlertCircle, Clock, CheckCircle2, Loader2 } from 'lucide-react';
+import { CheckSquare, UserPlus, MapPin, AlertCircle, Clock, CheckCircle2, Loader2, Search, Filter } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
@@ -32,6 +33,7 @@ export default function ManagerAuditsPage() {
   const [open, setOpen] = useState(false);
   const [selectedAudit, setSelectedAudit] = useState<any>(null);
   const [selectedAuditor, setSelectedAuditor] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -75,6 +77,12 @@ export default function ManagerAuditsPage() {
     return () => unsubAudits();
   }, [session]);
 
+  const filteredAudits = audits.filter((audit) => 
+    audit.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    audit.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    audit.status?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const handleAssign = async () => {
     if (!selectedAudit || !selectedAuditor || !session) return;
 
@@ -115,12 +123,12 @@ export default function ManagerAuditsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'published': return <Badge variant="secondary" className="bg-blue-500/10 text-blue-500 border-blue-500/20 px-2 py-0.5 text-xs font-bold uppercase tracking-tight">Awaiting Assignment</Badge>;
-      case 'assigned': return <Badge variant="secondary" className="bg-warning/10 text-warning border-warning/20 px-2 py-0.5 text-xs font-bold uppercase tracking-tight">Assigned</Badge>;
-      case 'in_progress': return <Badge variant="secondary" className="bg-indigo-500/10 text-indigo-500 border-indigo-500/20 px-2 py-0.5 text-xs font-bold uppercase tracking-tight">In Progress</Badge>;
-      case 'completed': return <Badge variant="secondary" className="bg-success/10 text-success border-success/20 px-2 py-0.5 text-xs font-bold uppercase tracking-tight">Completed</Badge>;
-      case 'missed': return <Badge variant="destructive" className="px-2 py-0.5 text-xs font-bold uppercase tracking-tight">Missed</Badge>;
-      default: return <Badge variant="outline" className="px-2 py-0.5 text-xs font-bold uppercase tracking-tight">{status}</Badge>;
+      case 'published': return <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-2 py-0.5 text-xs font-medium uppercase tracking-tight">Awaiting Assignment</Badge>;
+      case 'assigned': return <Badge variant="secondary" className="bg-warning/10 text-warning border-warning/20 px-2 py-0.5 text-xs font-medium uppercase tracking-tight">Assigned</Badge>;
+      case 'in_progress': return <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-2 py-0.5 text-xs font-medium uppercase tracking-tight">In Progress</Badge>;
+      case 'completed': return <Badge variant="secondary" className="bg-success/10 text-success border-success/20 px-2 py-0.5 text-xs font-medium uppercase tracking-tight">Completed</Badge>;
+      case 'missed': return <Badge variant="destructive" className="px-2 py-0.5 text-xs font-medium uppercase tracking-tight">Missed</Badge>;
+      default: return <Badge variant="outline" className="px-2 py-0.5 text-xs font-medium uppercase tracking-tight">{status}</Badge>;
     }
   };
 
@@ -128,76 +136,89 @@ export default function ManagerAuditsPage() {
     <DashboardShell role="Manager">
       <div className="dashboard-page-container">
         <div className="page-header-section">
-          <div>
+          <div className="flex flex-col gap-2">
             <h1 className="page-heading">Audit Operations</h1>
             <p className="body-text">Assign auditors to blueprints and monitor their execution.</p>
           </div>
         </div>
 
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+            <Input 
+              placeholder="Search audits by template, location, or status..." 
+              className="pl-9 h-11 bg-background text-body"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+            <Filter className="h-4 w-4" />
+            Filters
+          </Button>
+        </div>
+
         <Card className="standard-card">
           <Table>
-            <TableHeader >
-              <TableRow >
-                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Audit Blueprint</TableHead>
-                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Branch Location</TableHead>
-                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Deadline</TableHead>
-                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Status</TableHead>
-                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Assigned Personnel</TableHead>
-                <TableHead className="h-11 text-xs font-medium text-muted-foreground text-right">Action</TableHead>
+            <TableHeader className="standard-table-header">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="standard-table-head">Audit Blueprint</TableHead>
+                <TableHead className="standard-table-head">Branch Location</TableHead>
+                <TableHead className="standard-table-head">Deadline</TableHead>
+                <TableHead className="standard-table-head">Status</TableHead>
+                <TableHead className="standard-table-head">Assigned Personnel</TableHead>
+                <TableHead className="standard-table-head text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {audits.length === 0 ? (
+              {filteredAudits.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-24 text-muted-foreground">
-                    <div className="flex flex-col items-center justify-center space-y-4">
-                      <div className="bg-muted/10 p-4 rounded-full">
-                        <Clock className="h-8 w-8 opacity-20" />
-                      </div>
-                      <p className="page-heading text-lg opacity-40 uppercase tracking-tight">No audits published for your locations yet.</p>
-                    </div>
+                  <TableCell colSpan={6} className="standard-table-cell h-32 text-center text-muted-text">
+                    No audits found matching your search.
                   </TableCell>
                 </TableRow>
               ) : (
-                audits.map((a) => (
-                  <TableRow key={a.id} className="border-b last:border-0 transition-colors hover:bg-muted/40">
-                    <TableCell className="px-4 py-3">
-                      <div className="flex flex-col gap-1.5">
-                        <span className="font-bold text-foreground text-sm leading-none group-hover:text-primary transition-colors">{a.templateTitle}</span>
+                filteredAudits.map((a) => (
+                  <TableRow key={a.id} className="standard-table-row group">
+                    <TableCell className="standard-table-cell">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-normal text-sm text-heading">{a.templateTitle}</span>
                         {a.isSurprise && (
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1.5 mt-1">
                             <div className="h-1.5 w-1.5 rounded-full bg-warning animate-pulse" />
-                            <span className="text-[9px] font-bold text-warning uppercase tracking-tight">Surprise Audit</span>
+                            <span className="text-[10px] font-normal text-warning uppercase tracking-widest">Surprise Audit</span>
                           </div>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="px-4 py-3">
-                      <div className="flex items-center gap-2.5">
-                        <MapPin className="h-3.5 w-3.5 text-primary opacity-50" />
-                        <span className="text-[11px] font-bold uppercase tracking-tight text-foreground/80">{a.locationName}</span>
+                    <TableCell className="standard-table-cell">
+                      <div className="flex items-center gap-2 font-normal text-body">
+                        <MapPin className="h-4 w-4 text-primary opacity-60" />
+                        <span className="text-sm">{a.locationName}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="px-6 py-5 text-[11px] font-bold text-destructive">
-                      {a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    <TableCell className="standard-table-cell">
+                      <span className="text-sm font-normal text-destructive">
+                        {a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
                     </TableCell>
-                    <TableCell className="px-4 py-3">{getStatusBadge(a.status)}</TableCell>
-                    <TableCell className="px-4 py-3">
+                    <TableCell className="standard-table-cell">{getStatusBadge(a.status)}</TableCell>
+                    <TableCell className="standard-table-cell">
                       {a.assignedAuditorId ? (
-                        <div className="flex items-center gap-2.5 bg-success/5 border border-success/10 px-3 py-1.5 rounded-lg w-fit">
-                          <CheckCircle2 className="h-3.5 w-3.5 text-success" />
-                          <span className="text-xs font-bold uppercase tracking-tight text-success/80">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-success" />
+                          <span className="text-sm font-normal text-success">
                             {auditors.find(aud => aud.id === a.assignedAuditorId)?.name || 'Auditor Assigned'}
                           </span>
                         </div>
                       ) : (
-                        <div className="flex items-center gap-2 text-muted-foreground/30 italic">
-                          <Clock className="h-3.5 w-3.5" />
-                          <span className="text-xs font-bold uppercase tracking-tight">Awaiting Assignment</span>
+                        <div className="flex items-center gap-2 text-muted-text/60 italic font-normal">
+                          <Clock className="h-4 w-4" />
+                          <span className="text-sm">Awaiting Assignment</span>
                         </div>
                       )}
                     </TableCell>
-                    <TableCell className="px-6 py-5 text-right">
+                    <TableCell className="standard-table-cell text-right">
                       {a.status === 'published' && (
                         <Dialog open={open && selectedAudit?.id === a.id} onOpenChange={(val) => {
                           if (!val) {
@@ -206,48 +227,48 @@ export default function ManagerAuditsPage() {
                           }
                         }}>
                           <DialogTrigger asChild>
-                            <Button size="sm" variant="outline" className="h-9 px-4 font-bold uppercase tracking-tight text-[10px] border-primary/20 text-primary hover:bg-primary/5 shadow-sm transition-all hover:scale-105 active:scale-95" onClick={() => {
+                            <Button size="sm" variant="outline" className="h-8 gap-2 text-xs font-medium uppercase tracking-widest text-primary hover:bg-primary/5 transition-all active:scale-95" onClick={() => {
                               setSelectedAudit(a);
                               setOpen(true);
                             }}>
-                              <UserPlus className="mr-2 h-4 w-4" /> Assign Personnel
+                              <UserPlus className="h-4 w-4" /> Assign Personnel
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="sm:max-w-[450px] p-0 overflow-hidden border-none shadow-2xl">
-                            <DialogHeader className="px-6 pb-4">
-                              <DialogTitle className="text-2xl font-sans flex items-center gap-3">
-                                <div className="bg-primary p-2 rounded-lg">
-                                  <UserPlus className="h-5 w-5 text-white" />
+                          <DialogContent className="sm:max-w-[450px]">
+                            <DialogHeader className="p-xl border-b border-border/50">
+                              <DialogTitle className="text-lg font-semibold flex items-center gap-3 text-heading">
+                                <div className="bg-primary/10 p-2 rounded-lg">
+                                  <UserPlus className="h-5 w-5 text-primary" />
                                 </div>
                                 AUDITOR ASSIGNMENT
                               </DialogTitle>
-                              <DialogDescription className="text-xs font-bold uppercase text-muted-foreground tracking-tight mt-2">
-                                Assigning blueprint <strong>{a.templateTitle}</strong> to {a.locationName}
+                              <DialogDescription className="body-text text-xs mt-2">
+                                Assigning blueprint <strong className="text-heading">{a.templateTitle}</strong> to {a.locationName}
                               </DialogDescription>
                             </DialogHeader>
-                            <div className="p-8 space-y-6">
-                              <div className="space-y-3">
-                                <Label className="text-xs font-bold uppercase text-muted-foreground tracking-tight">Select Qualified Auditor</Label>
+                            <div className="space-y-lg p-xl">
+                              <div className="space-y-xs">
+                                <Label className="text-xs font-normal uppercase tracking-widest text-muted-text">Select Qualified Auditor</Label>
                                 <Select value={selectedAuditor} onValueChange={setSelectedAuditor}>
-                                  <SelectTrigger className="h-9">
+                                  <SelectTrigger className="h-10 bg-background border-input text-body">
                                     <SelectValue placeholder="Choose an auditor" />
                                   </SelectTrigger>
-                                  <SelectContent className="">
+                                  <SelectContent>
                                     {auditors.map(aud => (
-                                      <SelectItem key={aud.id} value={aud.id} className="rounded-lg h-10 font-bold text-xs cursor-pointer">{aud.name}</SelectItem>
+                                      <SelectItem key={aud.id} value={aud.id} className="font-normal text-sm cursor-pointer">{aud.name}</SelectItem>
                                     ))}
                                   </SelectContent>
                                 </Select>
                               </div>
                             </div>
-                            <DialogFooter className="px-6 py-4 border-t">
-                              <Button variant="ghost" onClick={() => setOpen(false)} className="h-9 px-4 text-sm">Cancel</Button>
+                            <DialogFooter className="p-xl border-t border-border/50 bg-muted/10 gap-sm">
+                              <Button variant="outline" onClick={() => setOpen(false)} className="font-medium text-xs uppercase tracking-widest shadow-sm text-body">Cancel</Button>
                               <Button
                                 onClick={handleAssign}
                                 disabled={loading || !selectedAuditor}
-                                className="h-9 px-4 text-sm"
+                                className="font-medium text-xs uppercase tracking-widest shadow-md"
                               >
-                                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
                                 Confirm Assignment
                               </Button>
                             </DialogFooter>
@@ -255,13 +276,15 @@ export default function ManagerAuditsPage() {
                         </Dialog>
                       )}
                       {a.status !== 'published' && a.status !== 'completed' && a.status !== 'missed' && (
-                        <div className="flex items-center gap-2 justify-end text-muted-foreground/40">
+                        <div className="flex items-center gap-2 justify-end text-muted-text/60">
                           <div className="h-2 w-2 rounded-full bg-primary/40 animate-pulse" />
-                          <span className="text-xs font-bold uppercase tracking-tight">Mission Ongoing...</span>
+                          <span className="text-xs font-normal uppercase tracking-widest">Ongoing</span>
                         </div>
                       )}
                       {a.status === 'completed' && (
-                        <Button size="sm" variant="ghost" className="h-9 px-4 font-bold uppercase tracking-tight text-[10px] text-success hover:bg-success/5 border border-success/10 shadow-sm transition-all hover:scale-105">View Full Report</Button>
+                        <Button size="sm" variant="ghost" className="h-8 gap-2 text-xs font-medium uppercase tracking-widest text-success hover:bg-success/5 border border-success/10 transition-all">
+                          View Report
+                        </Button>
                       )}
                     </TableCell>
                   </TableRow>

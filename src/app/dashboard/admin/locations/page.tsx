@@ -14,12 +14,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card } from '@/components/ui/card';
-import { MoreHorizontal, Pencil, MapPin, Plus } from 'lucide-react';
+import { MoreHorizontal, Pencil, MapPin, Plus, Search, Filter } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function AdminLocationsPage() {
   const [locations, setLocations] = useState<any[]>([]);
   const [managers, setManagers] = useState<any[]>([]);
   const [session, setSession] = useState<{ orgId: string } | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Form states
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -98,6 +100,12 @@ export default function AdminLocationsPage() {
       unsubscribeUsers();
     };
   }, [session]);
+
+  const filteredLocations = locations.filter((loc) => 
+    loc.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    loc.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    loc.city.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleToggleActive = async (locationId: string, currentStatus: boolean) => {
     try {
@@ -196,41 +204,41 @@ export default function AdminLocationsPage() {
   return (
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
-          <div>
+        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col gap-xs">
             <h1 className="page-heading">Locations Management</h1>
-            <p className="body-text">Manage branches, outlets, and assign managers.</p>
+            <p className="body-text">Manage branches, outlets, and assign managers to specific sites.</p>
           </div>
           
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
-              <Button size="lg" className="shadow-black/20">
+              <Button size="default" className="shadow-lg shadow-primary/20 font-medium">
                 <Plus className="mr-2 h-4 w-4" /> Create Location
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Create New Location</DialogTitle>
-                <DialogDescription>Add a new branch/outlet to your organization.</DialogDescription>
+                <DialogTitle className="font-semibold text-heading">Create New Location</DialogTitle>
+                <DialogDescription className="text-muted-text">Add a new branch/outlet to your organization.</DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleCreateLocation} className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Location Name</Label>
-                  <Input value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required placeholder="Downtown Branch" />
+              <form onSubmit={handleCreateLocation} className="space-y-4 py-6">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="name" className="text-body font-normal">Location Name</Label>
+                  <Input value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required placeholder="Downtown Branch" className="text-body" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="address">Address</Label>
-                  <Input value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} required placeholder="123 Main St" />
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="address" className="text-body font-normal">Address</Label>
+                  <Input value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} required placeholder="123 Main St" className="text-body" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="city">City</Label>
-                  <Input value={formData.city} onChange={(e) => setFormData({...formData, city: e.target.value})} required placeholder="Megacity" />
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="city" className="text-body font-normal">City</Label>
+                  <Input value={formData.city} onChange={(e) => setFormData({...formData, city: e.target.value})} required placeholder="Megacity" className="text-body" />
                 </div>
-                <div className="space-y-4">
-                  <Label>Assign Managers</Label>
+                <div className="flex flex-col gap-4">
+                  <Label className="text-body font-normal">Assign Managers</Label>
                   <div className="grid grid-cols-2 gap-4 border rounded-md p-4 bg-muted/20">
                     {managers.length === 0 ? (
-                      <p className="text-xs text-muted-foreground col-span-2">No active managers found</p>
+                      <p className="text-xs text-muted-text col-span-2">No active managers found</p>
                     ) : (
                       managers.map(m => (
                         <div key={m.id} className="flex items-center space-x-2">
@@ -248,55 +256,64 @@ export default function AdminLocationsPage() {
                   </div>
                 </div>
                 {error && <p className="text-sm text-destructive">{error}</p>}
-                <DialogFooter><Button type="submit" disabled={loading} className="w-full">{loading ? 'Creating...' : 'Create Location'}</Button></DialogFooter>
+                <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Creating...' : 'Create Location'}</Button></DialogFooter>
               </form>
             </DialogContent>
           </Dialog>
         </div>
 
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+            <Input 
+              placeholder="Search locations by name, address, or city..." 
+              className="pl-9 h-11 text-body"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+            <Filter className="h-4 w-4" />
+            Filters
+          </Button>
+        </div>
+
         <Card className="standard-card">
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>City</TableHead>
-                <TableHead>Manager</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="w-[100px] text-right">Actions</TableHead>
+            <TableHeader className="standard-table-header">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="standard-table-head">Name</TableHead>
+                <TableHead className="standard-table-head">City</TableHead>
+                <TableHead className="standard-table-head">Manager</TableHead>
+                <TableHead className="standard-table-head">Status</TableHead>
+                <TableHead className="standard-table-head text-right w-[100px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {locations.length === 0 ? (
+              {filteredLocations.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
-                    No locations found here. Add one to get started.
+                  <TableCell colSpan={5} className="standard-table-cell h-32 text-center text-muted-text">
+                    No locations found matching your search.
                   </TableCell>
                 </TableRow>
               ) : (
-                locations.map((location) => (
-                  <TableRow key={location.id}>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-primary" />
+                filteredLocations.map((location: any) => (
+                  <TableRow key={location.id} className="standard-table-row group">
+                    <TableCell className="standard-table-cell font-normal text-heading text-sm">
+                      <div className="flex items-center gap-3">
+                        <MapPin className="h-4 w-4 text-primary opacity-60" />
                         {location.name}
                       </div>
                     </TableCell>
-                    <TableCell>{location.city}</TableCell>
-                    <TableCell>
-                      <div className="max-w-[200px] truncate font-medium text-primary" title={getManagerNames(location.assignedManagerIds, location.assignedManagerId)}>
-                        {getManagerNames(location.assignedManagerIds, location.assignedManagerId)}
-                      </div>
+                    <TableCell className="standard-table-cell text-body">{location.city}</TableCell>
+                    <TableCell className="standard-table-cell text-muted-text">{getManagerNames(location.assignedManagerIds, location.assignedManagerId)}</TableCell>
+                    <TableCell className="standard-table-cell">
+                      <Switch checked={location.isActive} onCheckedChange={() => handleToggleActive(location.id, location.isActive)} />
                     </TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <Switch checked={location.isActive !== false} onCheckedChange={() => handleToggleActive(location.id, location.isActive !== false)} />
-                        <span className="text-xs font-medium">{location.isActive !== false ? 'Active' : 'Inactive'}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="standard-table-cell">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
+                          <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-muted/80 rounded-xl"><MoreHorizontal className="h-4 w-4" /></Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => {
@@ -325,24 +342,24 @@ export default function AdminLocationsPage() {
         <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Edit Location</DialogTitle>
-              <DialogDescription>Update the details for {selectedLocation?.name}.</DialogDescription>
+              <DialogTitle className="font-semibold text-heading">Edit Location</DialogTitle>
+              <DialogDescription className="text-muted-text">Update the details for {selectedLocation?.name}.</DialogDescription>
             </DialogHeader>
             <form onSubmit={handleEditLocation} className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-name">Location Name</Label>
-                <Input id="edit-name" value={editFormData.name} onChange={(e) => setEditFormData({...editFormData, name: e.target.value})} required />
+                <Label htmlFor="edit-name" className="text-body font-normal">Location Name</Label>
+                <Input id="edit-name" value={editFormData.name} onChange={(e) => setEditFormData({...editFormData, name: e.target.value})} required className="text-body" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-address">Address</Label>
-                <Input id="edit-address" value={editFormData.address} onChange={(e) => setEditFormData({...editFormData, address: e.target.value})} required />
+                <Label htmlFor="edit-address" className="text-body font-normal">Address</Label>
+                <Input id="edit-address" value={editFormData.address} onChange={(e) => setEditFormData({...editFormData, address: e.target.value})} required className="text-body" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="edit-city">City</Label>
-                <Input id="edit-city" value={editFormData.city} onChange={(e) => setEditFormData({...editFormData, city: e.target.value})} required />
+                <Label htmlFor="edit-city" className="text-body font-normal">City</Label>
+                <Input id="edit-city" value={editFormData.city} onChange={(e) => setEditFormData({...editFormData, city: e.target.value})} required className="text-body" />
               </div>
               <div className="space-y-4">
-                <Label>Assigned Managers</Label>
+                <Label className="text-body font-normal">Assigned Managers</Label>
                 <div className="grid grid-cols-2 gap-4 border rounded-md p-4 bg-muted/20">
                   {managers.map(m => (
                     <div key={m.id} className="flex items-center space-x-2">
@@ -359,7 +376,7 @@ export default function AdminLocationsPage() {
                 </div>
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}
-              <DialogFooter><Button type="submit" disabled={loading} className="w-full">{loading ? 'Updating...' : 'Save Changes'}</Button></DialogFooter>
+              <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Updating...' : 'Save Changes'}</Button></DialogFooter>
             </form>
           </DialogContent>
         </Dialog>

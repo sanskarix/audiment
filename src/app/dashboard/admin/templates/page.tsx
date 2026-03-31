@@ -15,7 +15,7 @@ import { Switch } from '@/components/ui/switch';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { MoreHorizontal, Plus, ClipboardCheck, Settings2, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Plus, ClipboardCheck, Settings2, Trash2, Search, Filter } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -25,6 +25,7 @@ export default function AdminTemplatesPage() {
   const [templates, setTemplates] = useState<any[]>([]);
   const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -98,12 +99,17 @@ export default function AdminTemplatesPage() {
       });
 
       await batch.commit();
-    } catch (err) {
-      console.error(err);
+    } catch (e) {
+      console.error(e);
     } finally {
       setLoading(false);
     }
   };
+
+  const filteredTemplates = templates.filter((t) => 
+    t.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    t.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleToggleActive = async (id: string, currentStatus: boolean) => {
     try {
@@ -138,8 +144,8 @@ export default function AdminTemplatesPage() {
   return (
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
-          <div>
+        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col gap-xs">
             <h1 className="page-heading">Audit Templates</h1>
             <p className="body-text">
               Build and manage the blueprints for audits across your organization.
@@ -147,70 +153,92 @@ export default function AdminTemplatesPage() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             {!hasFssai && (
-              <Button variant="outline" size="lg" onClick={loadFssaiDefaults} disabled={loading} className="font-semibold text-emerald-600 border-emerald-500/20 hover:bg-emerald-50">
+              <Button 
+                variant="outline" 
+                size="default" 
+                onClick={loadFssaiDefaults} 
+                disabled={loading} 
+                className="font-medium text-success hover:text-success hover:bg-success/5 border-success/20 transition-all active:scale-95"
+              >
                 <ClipboardCheck className="mr-2 h-4 w-4" /> Load FSSAI Defaults
               </Button>
             )}
             <Link href="/dashboard/admin/templates/new">
-              <Button size="lg" className="shadow-black/20 font-bold">
+              <Button size="default" className="shadow-lg shadow-primary/20 font-medium active:scale-95 transition-all">
                 <Plus className="mr-2 h-4 w-4" /> Create Template
               </Button>
             </Link>
           </div>
         </div>
 
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+            <Input 
+              placeholder="Search templates by title or category..." 
+              className="pl-9 h-11 text-body font-normal bg-background"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+            <Filter className="h-4 w-4" />
+            Filters
+          </Button>
+        </div>
+
         <Card className="standard-card">
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="font-semibold">Template Title</TableHead>
-                <TableHead className="font-semibold">Category</TableHead>
-                <TableHead className="font-semibold">Created</TableHead>
-                <TableHead className="font-semibold">Status</TableHead>
-                <TableHead className="w-[100px] text-right font-semibold">Actions</TableHead>
+            <TableHeader className="standard-table-header">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="standard-table-head">Template Title</TableHead>
+                <TableHead className="standard-table-head">Category</TableHead>
+                <TableHead className="standard-table-head">Created</TableHead>
+                <TableHead className="standard-table-head">Status</TableHead>
+                <TableHead className="standard-table-head text-right w-[100px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {templates.length === 0 ? (
+              {filteredTemplates.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
-                    <div className="flex flex-col items-center justify-center space-y-2">
+                  <TableCell colSpan={5} className="standard-table-cell text-center py-12 text-muted-text">
+                    <div className="flex flex-col items-center justify-center gap-2">
                       <ClipboardCheck className="h-8 w-8 opacity-20" />
-                      <p>No templates found. Start by loading FSSAI defaults or creating a new blueprint.</p>
+                      <p className="text-body">No templates found. Start by loading FSSAI defaults or creating a new blueprint.</p>
                     </div>
                   </TableCell>
                 </TableRow>
               ) : (
-                templates.map((t) => (
-                  <TableRow key={t.id} className="hover:bg-muted/10 transition-colors">
-                    <TableCell className="font-medium min-w-[200px]">
+                filteredTemplates.map((t) => (
+                  <TableRow key={t.id} className="standard-table-row group">
+                    <TableCell className="px-4 py-3 font-normal min-w-[200px]">
                       <div className="flex items-center gap-3">
-                        <span className="font-bold text-foreground">{t.title}</span>
+                        <span className="font-normal text-heading text-sm tracking-tight">{t.title}</span>
                         {t.isFssaiDefault && (
-                          <Badge variant="outline" className="border-success/30 text-success bg-success/10 text-[10px] uppercase font-black tracking-tighter shadow-sm px-2 py-0">
-                            FSSAI Certified
+                          <Badge variant="success" className="text-[9px] uppercase font-medium tracking-normal px-1.5 py-0 border-success/30">
+                            FSSAI Blueprint
                           </Badge>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="capitalize">
-                      <Badge variant="outline" className="bg-background">{t.category}</Badge>
+                    <TableCell className="px-4 py-3 capitalize">
+                      <Badge variant="outline" className="bg-background text-body font-normal">{t.category}</Badge>
                     </TableCell>
-                    <TableCell className="text-muted-foreground tabular-nums">{t.createdAt?.toDate().toLocaleDateString()}</TableCell>
-                    <TableCell>
+                    <TableCell className="px-4 py-3 text-muted-text tabular-nums font-normal">{t.createdAt?.toDate().toLocaleDateString()}</TableCell>
+                    <TableCell className="standard-table-cell">
                       <div className="flex items-center space-x-2">
                         <Switch checked={t.isActive !== false} onCheckedChange={() => handleToggleActive(t.id, t.isActive !== false)} />
-                        <span className="text-[10px] font-black uppercase text-muted-foreground/60 tracking-widest">{t.isActive !== false ? 'Active' : 'Inactive'}</span>
+                        <span className="text-[10px] font-medium uppercase text-muted-text/60 tracking-widest">{t.isActive !== false ? 'Active' : 'Inactive'}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="px-4 py-3 text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" className="h-8 w-8 p-0 rounded-full hover:bg-muted"><MoreHorizontal className="h-4 w-4" /></Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-40">
-                          <DropdownMenuItem onClick={() => router.push(`/dashboard/admin/templates/${t.id}/edit`)}>
-                            <Settings2 className="mr-2 h-4 w-4 text-muted-foreground" /> Edit Blueprint
+                          <DropdownMenuItem onClick={() => router.push(`/dashboard/admin/templates/${t.id}/edit`)} className="text-body">
+                            <Settings2 className="mr-2 h-4 w-4 text-muted-text" /> Edit Blueprint
                           </DropdownMenuItem>
                           <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => handleDeleteTemplate(t.id)}>
                             <Trash2 className="mr-2 h-4 w-4" /> Delete Template

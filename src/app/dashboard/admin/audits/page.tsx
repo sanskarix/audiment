@@ -27,7 +27,7 @@ import { Switch } from '@/components/ui/switch';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
-import { CalendarIcon, Plus, CheckSquare, Clock, MapPin, AlertCircle, Search, MoreHorizontal, Pencil, Loader2 } from 'lucide-react';
+import { CalendarIcon, Plus, CheckSquare, Clock, MapPin, AlertCircle, Search, MoreHorizontal, Pencil, Loader2, Filter } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -189,27 +189,29 @@ export default function AdminAuditsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'published': return <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-none">Published</Badge>;
-      case 'assigned': return <Badge variant="secondary" className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none">Assigned</Badge>;
-      case 'in_progress': return <Badge variant="secondary" className="bg-indigo-100 text-indigo-700 hover:bg-indigo-100 border-none">In Progress</Badge>;
-      case 'completed': return <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none">Completed</Badge>;
-      case 'missed': return <Badge variant="destructive" className="border-none">Missed</Badge>;
+      case 'published': return <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/20">Published</Badge>;
+      case 'assigned': return <Badge variant="secondary" className="bg-warning/10 text-warning border-warning/20">Assigned</Badge>;
+      case 'in_progress': return <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">Active</Badge>;
+      case 'completed': return <Badge variant="success">Completed</Badge>;
+      case 'missed': return <Badge variant="destructive">Missed</Badge>;
       default: return <Badge variant="outline">{status}</Badge>;
     }
   };
 
-  const filteredAudits = audits.filter(a => 
-    a.templateTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    a.locationName.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredAudits = audits.filter((audit) => 
+    audit.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    audit.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    audit.status?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    audit.assignedManagerName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
-          <div>
-            <h1 className="page-heading">Audits</h1>
-            <p className="body-text">Monitor and publish audit instances for your locations.</p>
+        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col gap-xs">
+            <h1 className="page-heading">Audits Management</h1>
+            <p className="body-text">Monitor and publish audit instances for your organization's locations.</p>
           </div>
           <Dialog open={open} onOpenChange={(val) => {
             setOpen(val);
@@ -226,59 +228,59 @@ export default function AdminAuditsPage() {
             }
           }}>
             <DialogTrigger asChild>
-              <Button className="font-black uppercase tracking-widest text-[11px] h-11 px-8 shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]">
+              <Button size="default" className="shadow-lg shadow-primary/20 active:scale-95 transition-all font-medium">
                 <Plus className="mr-2 h-4 w-4" /> Publish Audit
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden border-none shadow-2xl">
               <DialogHeader className="p-8 bg-muted/5 border-b border-muted/20">
-                <DialogTitle className="text-2xl font-black italic tracking-tighter uppercase whitespace-nowrap overflow-hidden text-ellipsis flex items-center gap-3">
+                <DialogTitle className="text-2xl font-semibold tracking-tight text-heading flex items-center gap-3">
                   <div className="bg-primary p-2 rounded-lg">
                     <CheckSquare className="h-5 w-5 text-white" />
                   </div>
-                  {editingAuditId ? 'Edit Audit Instance' : 'Publish NEW Audit'}
+                  {editingAuditId ? 'Edit Audit Instance' : 'Publish New Audit'}
                 </DialogTitle>
-                <DialogDescription className="text-xs font-bold uppercase text-muted-foreground tracking-widest mt-2">
+                <DialogDescription className="text-xs font-normal uppercase text-muted-text tracking-widest mt-2">
                   {editingAuditId ? 'Update parameters for this existing audit instance.' : 'Assign a template to a location and set the schedule.'}
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-6 py-4">
+              <div className="grid gap-6 p-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="template">Template</Label>
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="template" className="text-body font-normal">Template</Label>
                     <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
-                      <SelectTrigger id="template">
+                      <SelectTrigger id="template" className="text-body">
                         <SelectValue placeholder="Select template" />
                       </SelectTrigger>
                       <SelectContent>
                         {templates.map(t => (
-                          <SelectItem key={t.id} value={t.id}>{t.title}</SelectItem>
+                          <SelectItem key={t.id} value={t.id} className="text-body">{t.title}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Location</Label>
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="location" className="text-body font-normal">Location</Label>
                     <Select value={selectedLocation} onValueChange={(val) => {
                       setSelectedLocation(val);
                       setSelectedManager(''); // Reset manager when location changes
                     }}>
-                      <SelectTrigger id="location">
+                      <SelectTrigger id="location" className="text-body">
                         <SelectValue placeholder="Select location" />
                       </SelectTrigger>
                       <SelectContent>
                         {locations.map(l => (
-                          <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>
+                          <SelectItem key={l.id} value={l.id} className="text-body">{l.name}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="manager">Assigned Manager</Label>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="manager" className="text-body font-normal">Assigned Manager</Label>
                   <Select value={selectedManager} onValueChange={setSelectedManager} disabled={!selectedLocation}>
-                    <SelectTrigger id="manager">
+                    <SelectTrigger id="manager" className="text-body">
                       <SelectValue placeholder={selectedLocation ? "Select manager for this audit" : "Select location first"} />
                     </SelectTrigger>
                     <SelectContent>
@@ -290,7 +292,7 @@ export default function AdminAuditsPage() {
                           return assignedIds.includes(m.id);
                         })
                         .map(m => (
-                          <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
+                          <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>
                         ))
                       }
                       {selectedLocation && managers.filter(m => {
@@ -298,19 +300,19 @@ export default function AdminAuditsPage() {
                         const assignedIds = loc?.assignedManagerIds || (loc?.assignedManagerId ? [loc.assignedManagerId] : []);
                         return assignedIds.includes(m.id);
                       }).length === 0 && (
-                        <SelectItem value="none" disabled>No managers assigned to this location</SelectItem>
+                        <SelectItem value="none" disabled className="text-muted-text">No managers assigned to this location</SelectItem>
                       )}
                     </SelectContent>
                   </Select>
-                  <p className="text-[10px] text-muted-foreground">Select which branch manager will assign an auditor for this task.</p>
+                  <p className="text-[10px] text-muted-text">Select which branch manager will assign an auditor for this task.</p>
                 </div>
-
+                
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Scheduled Date</Label>
+                  <div className="flex flex-col gap-2">
+                    <Label className="text-body font-normal">Scheduled Date</Label>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !scheduledDate && "text-muted-foreground")}>
+                        <Button variant="outline" className={cn("w-full justify-start text-left font-normal text-body", !scheduledDate && "text-muted-text")}>
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {scheduledDate ? format(scheduledDate, "PPP") : "Pick a date"}
                         </Button>
@@ -327,11 +329,11 @@ export default function AdminAuditsPage() {
                       </PopoverContent>
                     </Popover>
                   </div>
-                  <div className="space-y-2">
-                    <Label>Deadline</Label>
+                  <div className="flex flex-col gap-2">
+                    <Label className="text-body font-normal">Deadline</Label>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !deadline && "text-muted-foreground")}>
+                        <Button variant="outline" className={cn("w-full justify-start text-left font-normal text-body", !deadline && "text-muted-text")}>
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {deadline ? format(deadline, "PPP") : "Pick a date"}
                         </Button>
@@ -345,26 +347,26 @@ export default function AdminAuditsPage() {
 
                 <div className="flex items-center justify-between p-4 rounded-lg bg-muted/40 border">
                   <div className="space-y-0.5">
-                    <Label className="text-sm font-semibold">Surprise Audit</Label>
-                    <p className="text-[11px] text-muted-foreground">Location won't be notified until the scheduled date.</p>
+                    <Label className="text-sm font-medium text-heading">Surprise Audit</Label>
+                    <p className="text-[11px] text-muted-text font-normal">Location won't be notified until the scheduled date.</p>
                   </div>
                   <Switch checked={isSurprise} onCheckedChange={setIsSurprise} />
                 </div>
 
                 <div className="space-y-4 p-4 rounded-lg bg-muted/40 border">
                   <div className="space-y-0.5">
-                    <Label className="text-sm font-semibold">Recurring Schedule</Label>
-                    <p className="text-[11px] text-muted-foreground">Automatically generate the next audit instance.</p>
+                    <Label className="text-sm font-medium text-heading">Recurring Schedule</Label>
+                    <p className="text-[11px] text-muted-text font-normal">Automatically generate the next audit instance.</p>
                   </div>
                   <Select value={recurring} onValueChange={(val: any) => setRecurring(val)}>
-                    <SelectTrigger>
+                    <SelectTrigger className="text-body">
                       <SelectValue placeholder="Select frequency" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">Does not repeat</SelectItem>
-                      <SelectItem value="daily">Daily</SelectItem>
-                      <SelectItem value="weekly">Weekly</SelectItem>
-                      <SelectItem value="monthly">Monthly</SelectItem>
+                      <SelectItem value="none" className="text-body">Does not repeat</SelectItem>
+                      <SelectItem value="daily" className="text-body">Daily</SelectItem>
+                      <SelectItem value="weekly" className="text-body">Weekly</SelectItem>
+                      <SelectItem value="monthly" className="text-body">Monthly</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -405,12 +407,12 @@ export default function AdminAuditsPage() {
                   )}
                 </div>
               </div>
-              <DialogFooter className="p-8 bg-muted/5 border-t border-muted/20">
-                <Button variant="ghost" onClick={() => setOpen(false)} className="font-black text-[11px] uppercase tracking-widest h-12 px-6">Cancel</Button>
+              <DialogFooter className="p-6 bg-muted/5 border-t border-muted/20">
+                <Button variant="ghost" onClick={() => setOpen(false)} className="font-medium text-[11px] uppercase tracking-widest h-12 px-6">Cancel</Button>
                 <Button 
                   onClick={handlePublish} 
                   disabled={loading || !selectedTemplate || !selectedLocation || !selectedManager || !scheduledDate || !deadline}
-                  className="font-black text-[11px] uppercase tracking-widest h-12 px-10 shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  className="font-medium text-[11px] uppercase tracking-widest h-12 px-10 shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {editingAuditId ? 'Save Changes' : 'Publish Instance'}
@@ -420,98 +422,104 @@ export default function AdminAuditsPage() {
           </Dialog>
         </div>
 
-        <div className="relative w-full max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
-          <Input 
-            placeholder="Search by template or location..." 
-            className="pl-10 h-11 bg-muted/20 border-muted text-sm rounded-xl focus:ring-primary/10 transition-all"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+            <Input 
+              placeholder="Search audits by template, location, manager or status..." 
+              className="pl-9 h-11 bg-background text-body"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+            <Filter className="h-4 w-4" />
+            Filters
+          </Button>
         </div>
 
         <Card className="standard-card">
           <Table>
-            <TableHeader className="bg-muted/30 border-b border-muted/20">
+            <TableHeader className="standard-table-header">
               <TableRow className="hover:bg-transparent">
-                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Audit Instance</TableHead>
-                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Location</TableHead>
-                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Status</TableHead>
-                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Schedule</TableHead>
-                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50">Surprise</TableHead>
-                <TableHead className="py-5 px-6 font-black uppercase text-[10px] tracking-widest opacity-50 text-right">Score</TableHead>
-                <TableHead className="py-5 px-6 w-[50px]"></TableHead>
+                <TableHead className="standard-table-head">Audit Instance</TableHead>
+                <TableHead className="standard-table-head">Location</TableHead>
+                <TableHead className="standard-table-head">Status</TableHead>
+                <TableHead className="standard-table-head">Schedule</TableHead>
+                <TableHead className="standard-table-head">Surprise</TableHead>
+                <TableHead className="standard-table-head text-right">Score</TableHead>
+                <TableHead className="standard-table-head w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredAudits.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-24 text-muted-foreground">
-                    <div className="flex flex-col items-center justify-center space-y-4">
+                  <TableCell colSpan={7} className="standard-table-cell text-center py-24 text-muted-text">
+                    <div className="flex flex-col items-center justify-center gap-4">
                       <div className="bg-muted/10 p-4 rounded-full">
                         <CheckSquare className="h-8 w-8 opacity-20" />
                       </div>
-                      <p className="page-heading text-lg opacity-40 uppercase tracking-[0.2em]">No audits published yet.</p>
+                      <p className="page-heading text-lg opacity-40 uppercase tracking-[0.2em] font-medium">No audits published yet.</p>
                     </div>
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredAudits.map((a) => (
-                  <TableRow key={a.id} className="hover:bg-muted/10 transition-all border-b border-muted/10 group">
-                    <TableCell className="px-6 py-5">
+                  <TableRow key={a.id} className="standard-table-row group">
+                    <TableCell className="standard-table-cell">
                       <div className="flex flex-col gap-1">
-                        <span className="font-bold text-foreground text-sm leading-none group-hover:text-primary transition-colors">{a.templateTitle}</span>
-                        <span className="text-[10px] text-muted-foreground font-black tabular-nums tracking-widest opacity-40">{a.id.slice(0, 8).toUpperCase()}</span>
+                        <span className="font-normal text-heading text-sm leading-none group-hover:text-primary transition-colors">{a.templateTitle}</span>
+                        <span className="text-[10px] text-muted-text font-normal tabular-nums tracking-widest opacity-40">{a.id.slice(0, 8).toUpperCase()}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="px-6 py-5">
+                    <TableCell className="standard-table-cell">
                       <div className="flex items-center gap-2.5">
                         <MapPin className="h-3.5 w-3.5 text-primary opacity-50" />
-                        <span className="text-[11px] font-black uppercase tracking-tight text-foreground/80">{a.locationName}</span>
+                        <span className="text-[11px] font-medium uppercase tracking-tight text-heading/80">{a.locationName}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="px-6 py-5">{getStatusBadge(a.status)}</TableCell>
-                    <TableCell className="px-6 py-5">
-                      <div className="flex flex-col gap-1.5">
+                    <TableCell className="standard-table-cell">{getStatusBadge(a.status)}</TableCell>
+                    <TableCell className="standard-table-cell">
+                      <div className="flex flex-col gap-1.5 font-normal">
                         <div className="flex items-center gap-2">
-                          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-50 w-8">Due</span>
-                          <span className="text-[10px] font-bold text-destructive">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                          <span className="text-[9px] font-medium uppercase tracking-widest text-muted-text opacity-50 w-8">Due</span>
+                          <span className="text-[10px] font-medium text-destructive">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-50 w-8">Sched</span>
-                          <span className="text-[11px] font-black italic">{a.scheduledDate?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                          <span className="text-[9px] font-medium uppercase tracking-widest text-muted-text opacity-50 w-8">Sched</span>
+                          <span className="text-[11px] font-medium italic text-body">{a.scheduledDate?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                         </div>
                         {a.recurring && a.recurring !== 'none' && (
                           <div className="bg-primary/5 text-primary border border-primary/10 rounded-full px-2 py-0.5 mt-1 inline-flex items-center gap-1.5 w-fit">
                             <Clock className="w-3 h-3" />
-                            <span className="text-[8px] font-black uppercase tracking-widest">{a.recurring}</span>
+                            <span className="text-[8px] font-medium uppercase tracking-widest">{a.recurring}</span>
                           </div>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="px-6 py-5">
+                    <TableCell className="standard-table-cell">
                       {a.isSurprise ? (
                         <div className="flex items-center gap-2">
                            <div className="h-2 w-2 rounded-full bg-warning animate-pulse" />
-                           <span className="text-[10px] font-black text-warning uppercase tracking-widest">Surprise</span>
+                           <span className="text-[10px] font-medium text-warning uppercase tracking-widest">Surprise</span>
                         </div>
                       ) : (
-                        <span className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-widest italic">Routine</span>
+                        <span className="text-[10px] font-normal text-muted-text/40 uppercase tracking-widest italic">Routine</span>
                       )}
                     </TableCell>
-                    <TableCell className="px-6 py-5 text-right">
+                    <TableCell className="px-4 py-3 text-right">
                       {a.status === 'completed' ? (
                         <div className="flex flex-col items-end">
-                          <span className={cn("text-xl font-black italic tracking-tighter tabular-nums leading-none", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
+                          <span className={cn("text-xl font-medium italic tracking-tight tabular-nums leading-none", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
                             {a.scorePercentage}%
                           </span>
-                          <span className="text-[10px] font-bold text-muted-foreground opacity-50 mt-1">{a.totalScore} / {a.maxPossibleScore}</span>
+                          <span className="text-[10px] font-normal text-muted-text opacity-50 mt-1">{a.totalScore} / {a.maxPossibleScore}</span>
                         </div>
                       ) : (
-                        <span className="text-[10px] text-muted-foreground/30 font-black italic uppercase tracking-widest">Pending</span>
+                        <span className="text-[10px] text-muted-text/30 font-normal italic uppercase tracking-widest">Pending</span>
                       )}
                     </TableCell>
-                    <TableCell className="px-6 py-5">
+                    <TableCell className="px-4 py-3">
                       {(a.status === 'published' || a.status === 'assigned') && (
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -519,7 +527,7 @@ export default function AdminAuditsPage() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-48 p-1.5 rounded-xl border-muted/20 shadow-xl">
                             <DropdownMenuItem 
-                              className="rounded-lg h-10 font-bold text-xs cursor-pointer focus:bg-primary/5 focus:text-primary transition-all"
+                              className="rounded-lg h-10 font-medium text-xs cursor-pointer focus:bg-primary/5 focus:text-primary transition-all text-body"
                               onClick={() => {
                                 setEditingAuditId(a.id);
                                 setSelectedTemplate(a.templateId);

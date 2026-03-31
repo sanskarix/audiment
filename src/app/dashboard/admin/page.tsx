@@ -3,40 +3,40 @@
 import { useEffect, useState } from 'react';
 import DashboardShell from '@/components/DashboardShell';
 import { db } from '@/lib/firebase';
-import { 
-  collection, 
-  query, 
-  where, 
-  getDocs, 
-  orderBy, 
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
   limit,
   Timestamp,
   onSnapshot
 } from 'firebase/firestore';
 import Link from 'next/link';
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
+import {
+  Card,
+  CardContent,
+  CardHeader,
   CardTitle,
   CardDescription
 } from '@/components/ui/card';
-import { 
-  BarChart as BarChartIcon, 
-  CheckCircle2, 
-  AlertCircle, 
+import {
+  BarChart as BarChartIcon,
+  CheckCircle2,
+  AlertCircle,
   ClipboardList,
   TrendingUp,
   MapPin,
   Clock
 } from 'lucide-react';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
   Cell
 } from 'recharts';
@@ -70,7 +70,7 @@ export default function AdminDashboardPage() {
 
         const now = new Date();
         const monthStart = startOfMonth(now);
-        
+
         // 1. Fetch Audits for this month
         const auditsRef = collection(db, 'audits');
         const auditsQuery = query(
@@ -79,7 +79,7 @@ export default function AdminDashboardPage() {
           where('createdAt', '>=', Timestamp.fromDate(monthStart))
         );
         console.log('Admin Dashboard - Fetching audits for org:', session.organizationId);
-        
+
         const auditsSnap = await getDocs(auditsQuery);
         console.log('Admin Dashboard - Audits count:', auditsSnap.size);
 
@@ -91,7 +91,7 @@ export default function AdminDashboardPage() {
         // 2. Fetch Open Corrective Actions
         const caRef = collection(db, 'correctiveActions');
         const caSnap = await getDocs(query(
-          caRef, 
+          caRef,
           where('organizationId', '==', session.organizationId),
           where('status', '==', 'open')
         ));
@@ -100,13 +100,13 @@ export default function AdminDashboardPage() {
 
         // 3. Fetch Location Scores
         const completedAuditsQuery = query(
-          auditsRef, 
+          auditsRef,
           where('organizationId', '==', session.organizationId),
           where('status', '==', 'completed'),
           orderBy('completedAt', 'desc'),
           limit(100)
         );
-        
+
         console.log('Admin Dashboard - Fetching completed audits for scores');
         const completedAuditsSnap = await getDocs(completedAuditsQuery);
         console.log('Admin Dashboard - Completed audits for scores:', completedAuditsSnap.size);
@@ -174,98 +174,107 @@ export default function AdminDashboardPage() {
   return (
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
-          <div>
+        <div className="page-header-section mb-6">
+          <div className="flex flex-col gap-2">
             <h1 className="page-heading">Executive Overview</h1>
             <p className="body-text">Organization-wide performance and compliance metrics</p>
           </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid card-gap md:grid-cols-2 lg:grid-cols-3">
-          <Card className="standard-card border-l-4 border-l-primary">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium">Monthly Audits</CardTitle>
-              <ClipboardList className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats?.totalAuditsThisMonth}</div>
-              <p className="muted-label pt-1 text-muted-foreground/60">Total audits published this month</p>
-            </CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="standard-card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-text">Monthly Audits</CardTitle>
+              <ClipboardList className="h-5 w-5 text-primary/60" />
+            </div>
+            <div>
+              <div className="text-3xl font-medium tracking-tight text-heading">{stats?.totalAuditsThisMonth}</div>
+              <p className="body-text mt-2">Total audits published this month</p>
+            </div>
           </Card>
 
-          <Card className="standard-card border-l-4 border-l-success">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
-              <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-success">{stats?.completionRate}%</div>
-              <p className="muted-label pt-1 text-muted-foreground/60">Percentage of audits completed</p>
-              <Progress value={stats?.completionRate} className="mt-3 h-1 bg-success/10" />
-            </CardContent>
+          <Card className="standard-card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-text">Completion Rate</CardTitle>
+              <CheckCircle2 className="h-5 w-5 text-success/60" />
+            </div>
+            <div>
+              <div className="text-3xl font-medium tracking-tight text-success">{stats?.completionRate}%</div>
+              <p className="body-text mt-2">Percentage of audits completed</p>
+              <Progress value={stats?.completionRate} className="mt-4 h-1.5 bg-success/10" />
+            </div>
           </Card>
 
-          <Link href="/dashboard/admin/corrective-actions" className="block">
-            <Card className="standard-card border-l-4 border-l-destructive h-full">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-sm font-medium">Open Corrective Actions</CardTitle>
-                <AlertCircle className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-destructive">{stats?.openCorrectiveActions}</div>
-                <p className="muted-label pt-1 text-destructive uppercase font-bold tracking-widest">Immediate Attention Required</p>
-                <div className="mt-4 flex items-center text-[10px] font-bold text-destructive uppercase tracking-wider">
+          <Link href="/dashboard/admin/corrective-actions" className="block group">
+            <Card className="standard-card p-6 h-full group-hover:bg-destructive/5 transition-colors">
+              <div className="flex items-center justify-between mb-4">
+                <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-text">Open Corrective Actions</CardTitle>
+                <AlertCircle className="h-5 w-5 text-destructive/60" />
+              </div>
+              <div>
+                <div className="text-3xl font-medium tracking-tight text-destructive">{stats?.openCorrectiveActions}</div>
+                <p className="muted-label mt-2 text-destructive">Attention Required</p>
+                <div className="mt-6 flex items-center text-[10px] font-medium text-destructive uppercase tracking-widest bg-destructive/10 w-fit px-2 py-1 rounded">
                   View Queue <TrendingUp className="ml-1 h-3 w-3" />
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </Link>
         </div>
 
         {/* Charts Section */}
-        <div className="grid gap-4 md:grid-cols-7">
-          <Card className="md:col-span-12">
-            <CardHeader>
-              <CardTitle>Cross-Branch Performance</CardTitle>
-              <CardDescription>Average audit scores across all active locations</CardDescription>
-            </CardHeader>
-            <CardContent className="pl-2">
-              <div className="h-[350px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={stats?.locationScores}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                    <XAxis 
-                      dataKey="name" 
-                      stroke="#888888" 
-                      fontSize={12} 
-                      tickLine={false} 
-                      axisLine={false}
-                    />
-                    <YAxis
-                      stroke="#888888"
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                      tickFormatter={(value) => `${value}%`}
-                      domain={[0, 100]}
-                    />
-                    <Tooltip 
-                      cursor={{fill: 'rgba(0,0,0,0.05)'}}
-                      contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)'}}
-                    />
-                    <Bar dataKey="score" radius={[4, 4, 0, 0]}>
-                      {stats?.locationScores.map((entry, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
-                          fill={entry.score >= 90 ? '#10b981' : entry.score >= 70 ? '#6366f1' : '#f43f5e'} 
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
+        <div className="grid grid-cols-1 gap-6">
+          <Card className="standard-card p-6">
+            <div className="mb-6">
+              <h3 className="section-heading">Cross-Branch Performance</h3>
+              <p className="body-text">Average audit scores across all active locations</p>
+            </div>
+            <div className="h-[400px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats?.locationScores} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.1} />
+                  <XAxis
+                    dataKey="name"
+                    stroke="oklch(var(--muted-text))"
+                    fontSize={11}
+                    fontWeight={500}
+                    tickLine={false}
+                    axisLine={false}
+                    tick={{ dy: 10 }}
+                  />
+                  <YAxis
+                    stroke="oklch(var(--muted-text))"
+                    fontSize={11}
+                    fontWeight={500}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(value) => `${value}%`}
+                    domain={[0, 100]}
+                  />
+                  <Tooltip
+                    cursor={{ fill: 'oklch(var(--muted))', opacity: 0.4 }}
+                    contentStyle={{
+                      backgroundColor: 'oklch(var(--background))',
+                      borderRadius: '12px',
+                      border: '1px solid oklch(var(--border))',
+                      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                      fontSize: '12px',
+                      fontWeight: '500',
+                      color: 'oklch(var(--heading))'
+                    }}
+                  />
+                  <Bar dataKey="score" radius={[6, 6, 0, 0]} barSize={40}>
+                    {stats?.locationScores.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={entry.score >= 90 ? 'oklch(0.6 0.18 150)' : entry.score >= 70 ? 'oklch(0.5 0.134 242.7)' : 'oklch(0.577 0.245 27.3)'}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </Card>
         </div>
       </div>

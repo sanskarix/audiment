@@ -123,128 +123,129 @@ export default function AuditorHistoryPage() {
   return (
     <DashboardShell role="Auditor">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
-          <div>
+        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex flex-col gap-2">
             <h1 className="page-heading">Audit History</h1>
             <p className="body-text">Review your past performance and completed audit reports.</p>
           </div>
         </div>
 
         {/* Performance Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="standard-card bg-foreground text-background overflow-hidden relative group">
-            <div className="absolute inset-0 bg-gradient-to-br from-success/30 to-transparent opacity-50" />
-            <CardHeader className="pb-2 relative z-10">
-              <CardDescription className="text-muted-foreground/60 text-xs font-medium text-muted-foreground">Total Completed</CardDescription>
-              <CardTitle className="text-3xl font-bold tabular-nums text-white">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <Card className="standard-card">
+            <div className="p-6">
+              <p className="muted-label mb-2">Total Completed</p>
+              <h3 className="text-3xl font-medium tracking-tight text-primary">
                 {history.length}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="relative z-10 pt-2">
-              <p className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-tight">SUCCESSFUL DEPLOYMENTS</p>
-            </CardContent>
+              </h3>
+            </div>
           </Card>
 
-          <Card className="standard-card overflow-hidden relative border-primary/20 bg-primary/5">
-            <CardHeader className="pb-2">
-              <CardDescription className="text-primary text-xs font-medium text-muted-foreground opacity-70">Avg. Performance</CardDescription>
-              <CardTitle className="text-3xl font-bold tabular-nums text-primary">
+          <Card className="standard-card">
+            <div className="p-6">
+              <p className="muted-label mb-2">Avg. Performance</p>
+              <h3 className="text-3xl font-medium tracking-tight text-success">
                 {avgScore}%
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-2">
-              <p className="text-[10px] text-primary/60 font-bold uppercase tracking-tight">STRATEGIC ACCURACY</p>
-            </CardContent>
+              </h3>
+            </div>
           </Card>
 
-          <Card className="standard-card overflow-hidden relative border-warning/20 bg-warning/5">
-            <CardHeader className="pb-2">
-              <CardDescription className="text-warning text-xs font-medium text-muted-foreground opacity-70">Personal Best</CardDescription>
-              <CardTitle className="text-3xl font-bold tabular-nums text-warning">{highestScore}%</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-2">
-              <p className="text-[10px] text-warning/60 font-bold uppercase tracking-tight">PEAK MISSION SCORE</p>
-            </CardContent>
+          <Card className="standard-card">
+            <div className="p-6">
+              <p className="muted-label mb-2">Personal Best</p>
+              <h3 className="text-3xl font-medium tracking-tight text-warning">{highestScore}%</h3>
+            </div>
           </Card>
         </div>
 
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+            <Input 
+              placeholder="Search history by template or location..." 
+              className="pl-9 h-11 bg-background text-body"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+            <Filter className="h-4 w-4" />
+            Filters
+          </Button>
+        </div>
+
         {/* History Table Section */}
-        <Card className="standard-card">
-          <CardHeader className="border-b border-muted/20 bg-muted/5 p-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div>
-                <CardTitle className="text-xl font-sans">Mission Archive</CardTitle>
-                <CardDescription className="text-[10px] font-bold uppercase tracking-tight text-muted-foreground mt-1">Repository of your analytical deployments</CardDescription>
-              </div>
-              <div className="relative w-full md:w-96 group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                <Input
-                  placeholder="Filter by blueprint or sector..."
-                  className="pl-9 h-9 bg-background"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+        <Card className="standard-card overflow-hidden">
+          <div className="p-6 border-b border-border/40 bg-muted/30">
+            <div className="flex flex-col gap-1">
+              <h3 className="section-heading">Completed Audits</h3>
+              <p className="body-text">Repository of your analytical deployments</p>
             </div>
-          </CardHeader>
+          </div>
           <CardContent className="p-0">
             <Table>
-              <TableHeader >
-                <TableRow >
-                  <TableHead className="h-11 text-xs font-medium text-muted-foreground">Blueprint</TableHead>
-                  <TableHead className="h-11 text-xs font-medium text-muted-foreground">Sector</TableHead>
-                  <TableHead className="h-11 text-xs font-medium text-muted-foreground">Timeline</TableHead>
-                  <TableHead className="h-11 text-xs font-medium text-muted-foreground text-center">Score</TableHead>
-                  <TableHead className="py-5 px-8 text-right"></TableHead>
+              <TableHeader className="standard-table-header">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="standard-table-head">Template</TableHead>
+                  <TableHead className="standard-table-head">Location</TableHead>
+                  <TableHead className="standard-table-head">Date</TableHead>
+                  <TableHead className="standard-table-head text-center">Score</TableHead>
+                  <TableHead className="standard-table-head text-right">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredHistory.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="py-24 text-center text-muted-foreground bg-muted/5">
-                      <div className="flex flex-col items-center justify-center gap-4">
-                        <div className="bg-muted/10 p-4 rounded-full">
-                          <History className="h-8 w-8 opacity-20" />
-                        </div>
-                        <p className="page-heading text-lg opacity-40 uppercase tracking-tight">{searchQuery ? "No matching data points." : "Archive empty."}</p>
+                    <TableCell colSpan={5} className="standard-table-cell h-64 text-center text-muted-text">
+                      <div className="flex flex-col items-center justify-center gap-3">
+                        <History className="h-10 w-10 opacity-20" />
+                        <p className="font-normal">{searchQuery ? "No matching history found." : "No audit history yet."}</p>
                       </div>
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredHistory.map((item) => (
-                    <TableRow key={item.id} className="border-b last:border-0 transition-colors hover:bg-muted/40 cursor-pointer">
-                      <TableCell className="px-8 py-5">
-                        <div className="flex flex-col gap-1.5">
-                          <span className="font-bold text-foreground group-hover:text-primary transition-colors uppercase tracking-tight">{item.templateTitle}</span>
-                          <span className="text-[10px] text-muted-foreground font-bold tracking-tight opacity-40 uppercase tabular-nums">{item.id.substring(0, 8)}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="px-4 py-3">
-                        <div className="flex items-center gap-2.5">
-                          <MapPin className="h-3.5 w-3.5 text-primary opacity-50" />
-                          <span className="text-[11px] font-bold uppercase tracking-tight text-foreground/80">{item.locationName}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="px-4 py-3">
+                    <TableRow key={item.id} className="standard-table-row group cursor-pointer">
+                      <TableCell className="standard-table-cell">
                         <div className="flex flex-col gap-1">
-                          <p className="text-[10px] font-bold text-foreground uppercase tracking-tight">
+                          <span className="font-normal text-heading">{item.templateTitle}</span>
+                          <span className="text-[10px] text-muted-text font-normal uppercase tracking-widest opacity-60">ID: {item.id.substring(0, 8)}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="standard-table-cell">
+                        <div className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-primary opacity-60" />
+                          <span className="text-sm font-normal text-body">{item.locationName}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="standard-table-cell">
+                        <div className="flex flex-col gap-1">
+                          <p className="text-sm font-normal text-heading">
                             {item.completedAt ? format(item.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}
                           </p>
-                          <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-tight opacity-50">FINALIZED</p>
+                          <p className="text-[10px] uppercase font-normal text-muted-text/60 tracking-widest">Completed</p>
                         </div>
                       </TableCell>
-                      <TableCell className="px-4 py-3">
-                        <div className={cn(
-                          "inline-flex items-center justify-center h-10 w-14 rounded-md font-bold text-[13px] tracking-tight tabular-nums shadow-lg shadow-black/5 mx-auto flex",
-                          item.scorePercentage >= 90 ? "bg-success text-success-foreground" : item.scorePercentage >= 70 ? "bg-primary text-primary-foreground" : "bg-destructive text-destructive-foreground"
-                        )}>
+                      <TableCell className="standard-table-cell text-center">
+                        <Badge 
+                          className={cn(
+                            "px-3 py-1 text-xs font-medium tracking-widest ml-auto",
+                            item.scorePercentage >= 90 ? "bg-success text-success-foreground hover:bg-success/90" : 
+                            item.scorePercentage >= 70 ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-warning text-warning-foreground hover:bg-warning/90"
+                          )}
+                        >
                           {item.scorePercentage}%
-                        </div>
+                        </Badge>
                       </TableCell>
-                      <TableCell className="px-8 py-5 text-right">
-                        <Button variant="ghost" size="sm" asChild className="h-9 px-4 gap-2 font-bold text-[10px] uppercase tracking-tight text-muted-foreground/40 group-hover:text-primary group-hover:bg-primary/5 transition-all">
+                      <TableCell className="standard-table-cell text-right">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          asChild 
+                          className="h-8 gap-2 text-xs font-medium text-muted-text hover:text-primary hover:bg-primary/5 transition-all"
+                        >
                           <Link href={`/dashboard/auditor/audits/${item.id}`}>
-                            <FileText className="h-4 w-4" /> Inspect Report <ChevronRight className="h-3 w-3" />
+                            <FileText className="h-4 w-4" /> View <ChevronRight className="h-3 w-3" />
                           </Link>
                         </Button>
                       </TableCell>

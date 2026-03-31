@@ -26,8 +26,11 @@ import {
   TrendingUp,
   Target,
   FileCheck,
-  Loader2
+  Loader2,
+  Search,
+  Filter
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
@@ -37,6 +40,14 @@ export default function AuditorDashboardPage() {
   const [userData, setUserData] = useState<any>(null);
   const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const activeAudits = audits.filter(a => a.status === 'assigned' || a.status === 'in_progress');
+  
+  const filteredAudits = activeAudits.filter(a => 
+    a.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    a.locationName?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -85,7 +96,6 @@ export default function AuditorDashboardPage() {
     return () => unsubscribe();
   }, [session]);
 
-  const activeAudits = audits.filter(a => a.status === 'assigned' || a.status === 'in_progress');
   const completedAudits = audits.filter(a => a.status === 'completed');
   const missedAudits = audits.filter(a => a.status === 'missed');
   
@@ -95,80 +105,88 @@ export default function AuditorDashboardPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'assigned': return <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">Pending Start</Badge>;
-      case 'in_progress': return <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">In Progress</Badge>;
-      case 'completed': return <Badge variant="outline" className="bg-success/10 text-success border-success/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">Completed</Badge>;
-      case 'missed': return <Badge variant="destructive" className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">Missed</Badge>;
-      default: return <Badge variant="outline" className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">{status}</Badge>;
+      case 'assigned': return <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider">Pending Start</Badge>;
+      case 'in_progress': return <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider">In Progress</Badge>;
+      case 'completed': return <Badge variant="outline" className="bg-success/10 text-success border-success/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider">Completed</Badge>;
+      case 'missed': return <Badge variant="destructive" className="px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider">Missed</Badge>;
+      default: return <Badge variant="outline" className="px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider">{status}</Badge>;
     }
   };
 
   return (
     <DashboardShell role="Auditor">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
-          <div>
-            <h1 className="page-heading">Personal Performance</h1>
-            <p className="body-text">Detailed summary of your auditing activity and quality metrics</p>
+        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex flex-col gap-2">
+            <h1 className="page-heading">Performance Dashboard</h1>
+            <p className="body-text">Summary of your auditing activity and quality metrics.</p>
           </div>
         </div>
 
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+            <Input 
+              placeholder="Search active deployments by template or location..." 
+              className="pl-9 h-11 bg-background text-body"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+            <Filter className="h-4 w-4" />
+            Filters
+          </Button>
+        </div>
+
         {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-           <Card className="standard-card overflow-hidden relative border-success/20 bg-success/5">
-              <CardHeader className="pb-2">
-                <CardDescription className="text-success font-black uppercase tracking-[0.2em] text-[10px] opacity-70">Average Score</CardDescription>
-                <CardTitle className="text-5xl font-black italic tracking-tighter tabular-nums text-success">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+           <Card className="standard-card">
+              <div className="p-6">
+                <p className="muted-label mb-2">Average Score</p>
+                <h3 className="text-3xl font-medium tracking-tight text-success">
                   {avgScore}%
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-2">
-                <p className="text-[10px] text-success/60 font-bold uppercase tracking-widest">QUALITY ACCURACY</p>
-              </CardContent>
+                </h3>
+              </div>
            </Card>
 
-           <Card className="standard-card bg-foreground text-background overflow-hidden relative group">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-transparent opacity-50" />
-              <CardHeader className="pb-2 relative z-10">
-                <CardDescription className="text-muted-foreground/60 font-black uppercase tracking-[0.2em] text-[10px]">Compliance Rate</CardDescription>
-                <CardTitle className="text-5xl font-black italic tracking-tighter tabular-nums text-white">
+           <Card className="standard-card">
+              <div className="p-6">
+                <p className="muted-label mb-2">Completed Audits</p>
+                <h3 className="text-3xl font-medium tracking-tight text-primary">
                   {completedAudits.length}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative z-10 pt-2">
-                <p className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-widest">SUCCESSFUL DEPLOYMENTS</p>
-              </CardContent>
+                </h3>
+              </div>
            </Card>
 
-           <Card className="standard-card overflow-hidden relative border-warning/20 bg-warning/5">
-              <CardHeader className="pb-2">
-                <CardDescription className="text-warning font-black uppercase tracking-[0.2em] text-[10px] opacity-70">Active Assignments</CardDescription>
-                <CardTitle className="text-5xl font-black italic tracking-tighter tabular-nums text-warning">{activeAudits.length}</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-2">
-                <p className="text-[10px] text-warning/60 font-bold uppercase tracking-widest">IMMEDIATE MISSIONS</p>
-              </CardContent>
+           <Card className="standard-card">
+              <div className="p-6">
+                <p className="muted-label mb-2">Active Tasks</p>
+                <h3 className="text-3xl font-medium tracking-tight text-warning">
+                  {activeAudits.length}
+                </h3>
+              </div>
            </Card>
         </div>
 
         {/* Flashmob Section (Conditional) */}
         {userData?.hasFlashmobAccess && (
-          <Card className="bg-zinc-950 text-white border border-zinc-800 shadow-2xl overflow-hidden relative group rounded-3xl p-2">
+          <Card className="bg-foreground text-background border border-border/20 shadow-2xl overflow-hidden relative group rounded-3xl p-2 mb-6">
             <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-              <Play className="h-48 w-48" />
+              <Play className="h-48 w-48 text-background" />
             </div>
             <div className="flex flex-col md:flex-row items-center gap-8 p-8 relative z-10">
               <div className="flex-1 space-y-4">
                 <div className="flex items-center gap-3">
-                  <Badge className="bg-warning hover:bg-warning text-warning-foreground font-black border-none text-[10px] px-3 py-1">ULTRA-PRIORITY</Badge>
-                  <Badge variant="outline" className="text-white border-white/20 text-[10px] font-black tracking-[0.2em] uppercase px-3 py-1">COVERT MISSION</Badge>
+                  <Badge className="bg-warning hover:bg-warning text-warning-foreground font-medium border-none text-[10px] px-3 py-1">ULTRA-PRIORITY</Badge>
+                  <Badge variant="outline" className="text-background border-background/20 text-[10px] font-medium tracking-[0.2em] uppercase px-3 py-1">COVERT MISSION</Badge>
                 </div>
-                <CardTitle className="text-4xl font-black italic tracking-tighter uppercase leading-none">Flashmob Intelligence</CardTitle>
-                <CardDescription className="text-zinc-400 font-medium text-lg tracking-tight max-w-xl">
+              <CardTitle className="text-4xl font-medium italic tracking-tighter uppercase leading-none text-background">Flashmob Intelligence</CardTitle>
+                <CardDescription className="text-background/70 font-normal text-lg tracking-tight max-w-xl">
                   Deploy immediate compliance checks. Record a rapid 20-second visual proof of any branch for real-time verification.
                 </CardDescription>
               </div>
-              <Button size="lg" className="h-16 px-12 font-black uppercase tracking-widest text-xs bg-white text-black hover:bg-zinc-200 shadow-2xl rounded-2xl group/btn transition-all hover:scale-105 active:scale-95" asChild>
+              <Button size="lg" className="h-16 px-12 font-normal uppercase tracking-widest text-xs bg-background text-body hover:bg-background/90 shadow-2xl rounded-2xl group/btn transition-all hover:scale-105 active:scale-95" asChild>
                 <Link href="/dashboard/auditor/flashmob">
                   Deploy Mission Control <Play className="ml-3 h-4 w-4 fill-current group-hover:translate-x-1 transition-transform" />
                 </Link>
@@ -178,37 +196,36 @@ export default function AuditorDashboardPage() {
         )}
 
         {/* Active Assignments Section */}
-        <div className="section-gap">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h3 className="text-xl font-black italic tracking-tighter uppercase">Mission Queue</h3>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">Assignments requiring immediate field deployment</p>
+        <div>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col gap-0.5">
+              <h3 className="section-heading tracking-tight italic uppercase">ACTIVE DEPLOYMENTS</h3>
+              <p className="body-text">Operational safety maneuvers in current scope</p>
             </div>
-            <div className="flex items-center gap-3">
-              <Badge variant="outline" className="text-[10px] font-black text-primary border-primary/20 bg-primary/5 px-3 py-1 uppercase tracking-widest">
-                 {activeAudits.length} Pending Actions
-              </Badge>
-            </div>
+            <Badge variant="secondary" className="px-3 py-1 font-medium text-[10px] tracking-widest uppercase bg-primary text-white border-none shadow-lg shadow-primary/20">
+               {filteredAudits.length} REQUIRED
+            </Badge>
           </div>
           
           {loading ? (
             <div className="flex items-center justify-center p-24 standard-card bg-muted/5 border-dashed border-2">
               <div className="flex flex-col items-center gap-4">
                 <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                <p className="text-xl font-black italic tracking-tighter uppercase text-foreground/40 animate-pulse">Synchronizing Mission Data</p>
+                <p className="text-xl font-normal italic tracking-tighter uppercase text-muted-text animate-pulse">Synchronizing Mission Data</p>
               </div>
             </div>
-          ) : activeAudits.length === 0 ? (
-            <div className="standard-card flex flex-col items-center justify-center p-24 text-center bg-muted/5 border-dashed border-2">
-               <div className="bg-primary/5 p-6 rounded-full mb-6">
-                <FileCheck className="h-12 w-12 text-primary opacity-20" />
-               </div>
-               <p className="text-2xl font-black italic tracking-tighter uppercase text-foreground/40">Queue Crystal Clear</p>
-               <p className="text-sm font-medium text-muted-foreground mt-2 max-w-[320px]">Zero pending missions detected. Enjoy the downtime until next deployment.</p>
-            </div>
+          ) : filteredAudits.length === 0 ? (
+            <Card className="standard-card">
+              <CardContent className="flex flex-col items-center justify-center h-[300px] text-center p-12">
+                <div className="bg-muted/10 p-6 rounded-full mb-6">
+                  <FileCheck className="h-12 w-12 opacity-20" />
+                </div>
+                <p className="text-lg opacity-40 italic font-normal text-muted-text">No active deployments identified.</p>
+              </CardContent>
+            </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {activeAudits.map((a) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredAudits.map((a) => (
                 <Card key={a.id} className="standard-card overflow-hidden group hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 border-muted/30">
                   <div className="h-2 w-full bg-muted/20 relative overflow-hidden">
                     <div 
@@ -222,31 +239,31 @@ export default function AuditorDashboardPage() {
                   <CardHeader className="pb-4 px-6 pt-6">
                     <div className="flex items-center justify-between mb-4">
                        {getStatusBadge(a.status)}
-                       <span className="text-[10px] font-black tabular-nums text-muted-foreground opacity-40 uppercase tracking-widest">{a.id.substring(0, 8)}</span>
+                       <span className="text-[10px] font-normal tabular-nums text-muted-text opacity-40 uppercase tracking-widest">{a.id.substring(0, 8)}</span>
                     </div>
-                    <CardTitle className="text-lg font-black italic tracking-tighter uppercase leading-tight group-hover:text-primary transition-colors">
+                    <CardTitle className="text-lg font-medium italic tracking-tighter uppercase leading-tight group-hover:text-primary transition-colors text-heading">
                       {a.templateTitle}
                     </CardTitle>
                     <div className="flex items-center gap-2 mt-2">
-                      <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                      <span className="text-[11px] font-black uppercase tracking-tight text-foreground/70">{a.locationName}</span>
+                       <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                       <span className="text-[11px] font-normal uppercase tracking-tight text-muted-text">{a.locationName}</span>
                     </div>
                   </CardHeader>
                   <CardContent className="pb-8 px-6 space-y-6 pt-2">
                     <div className="flex flex-col gap-3">
-                      <div className="flex items-center gap-3 text-muted-foreground font-bold text-[10px] uppercase tracking-widest">
+                      <div className="flex items-center gap-3 text-muted-text font-normal text-[10px] uppercase tracking-widest">
                         <CalendarIcon className="h-4 w-4 opacity-40" />
-                        <span>Scheduled <span className="text-foreground">{a.scheduledDate?.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span></span>
+                        <span>Scheduled <span className="text-body">{a.scheduledDate?.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span></span>
                       </div>
                       <div className={cn(
-                        "flex items-center gap-3 font-black text-[10px] px-4 py-2 rounded-xl w-full justify-center uppercase tracking-widest transition-all",
-                        a.deadline?.toDate() < new Date() ? "bg-destructive/10 text-destructive border border-destructive/20" : "bg-muted text-muted-foreground border border-muted-foreground/10"
+                        "flex items-center gap-3 font-normal text-[10px] px-4 py-2 rounded-xl w-full justify-center uppercase tracking-widest transition-all",
+                        a.deadline?.toDate() < new Date() ? "bg-destructive/10 text-destructive border border-destructive/20" : "bg-muted text-muted-text border border-muted-foreground/10"
                       )}>
                         <Clock className="h-4 w-4" />
                         <span>Deadline: {a.deadline?.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
                       </div>
                     </div>
-                    <Button className="w-full h-12 font-black uppercase tracking-[0.2em] text-[10px] shadow-xl shadow-primary/20 group-hover:scale-105 transition-all active:scale-95" asChild>
+                    <Button className="w-full h-12 font-medium uppercase tracking-[0.2em] text-[10px] shadow-xl shadow-primary/20 group-hover:scale-105 transition-all active:scale-95" asChild>
                        <Link href={`/dashboard/auditor/audits/${a.id}`}>
                         {a.status === 'in_progress' ? 'RESUME MISSION' : 'START DEPLOYMENT'}
                        </Link>

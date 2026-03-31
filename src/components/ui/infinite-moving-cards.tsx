@@ -90,7 +90,7 @@ export const InfiniteMovingCards = ({
             className="flex items-center gap-10 shrink-0"
             key={item.quote + idx}
           >
-            <span className="text-white font-black tracking-tighter mix-blend-difference whitespace-nowrap">
+            <span className="text-white font-medium tracking-tighter mix-blend-difference whitespace-nowrap">
               {item.quote}
             </span>
             <span className="text-white/20">•</span>

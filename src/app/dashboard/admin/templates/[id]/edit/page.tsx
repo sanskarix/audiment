@@ -10,7 +10,7 @@ export default function EditTemplatePage() {
 
   return (
     <DashboardShell role="Admin">
-      <div className="px-4 py-4 sm:px-0">
+      <div className="dashboard-page-container">
         <TemplateBuilder templateId={id} />
       </div>
     </DashboardShell>

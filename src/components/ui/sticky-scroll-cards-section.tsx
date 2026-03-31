@@ -20,7 +20,7 @@ const features = [
     label: "Feature 02",
     title: "Surprise Audits (Stealth Publishing)",
     heading: "See how branches run when no one's watching.",
-    description: "Publish an audit on-demand. It stays invisible on the manager's dashboard until the auditor is already at the door. A 6-hour same-day deadline prevents last-minute cleanup or calling in extra staff.\n\nThis is how you find systemic problems — not staged performances.",
+    description: "Publish an audit on-demand. It stays invisible on the manager's dashboard until the auditor is already at the door. A 6-hour same-day deadline prevents last-minute cleanup or calling in extra staff.\n\nThis is how you find systemic problems – not staged performances.",
     imageUrl: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=2070&auto=format&fit=crop",
     bgColor: "bg-white",
     textColor: "text-neutral-600"
@@ -60,7 +60,7 @@ const features = [
     label: "Feature 06",
     title: "GPS & Timestamp Verification",
     heading: "Proof they were actually there.",
-    description: "Every answer submission captures the auditor's GPS coordinates. If they're more than 50 meters from the registered branch location, the response is flagged with a \"Location Mismatch\" warning.\n\nTimestamps are server-side — even if someone changes their phone clock, the database records the real time.",
+    description: "Every answer submission captures the auditor's GPS coordinates. If they're more than 50 meters from the registered branch location, the response is flagged with a \"Location Mismatch\" warning.\n\nTimestamps are server-side – even if someone changes their phone clock, the database records the real time.",
     imageUrl: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=2070&auto=format&fit=crop",
     bgColor: "bg-neutral-100",
     textColor: "text-neutral-600"

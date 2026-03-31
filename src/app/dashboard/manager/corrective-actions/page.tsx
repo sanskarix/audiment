@@ -161,16 +161,17 @@ export default function CorrectiveActionsPage() {
 
   const getSeverityBadge = (severity: string) => {
     switch (severity) {
-      case 'high': return <Badge variant="destructive" className="uppercase text-[10px] font-bold">High</Badge>;
-      case 'medium': return <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-none uppercase text-[10px] font-bold">Medium</Badge>;
-      case 'low': return <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-none uppercase text-[10px] font-bold">Low</Badge>;
+      case 'high': return <Badge variant="destructive" className="uppercase text-[10px] font-medium">High</Badge>;
+      case 'medium': return <Badge variant="secondary" className="bg-warning/10 text-warning border-none uppercase text-[10px] font-medium">Medium</Badge>;
+      case 'low': return <Badge variant="secondary" className="bg-primary/10 text-primary border-none uppercase text-[10px] font-medium">Low</Badge>;
       default: return null;
     }
   };
 
-  const filteredActions = actions.filter(ca => 
-    ca.questionText.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    ca.locationName.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredActions = actions.filter((ca) => 
+    ca.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    ca.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    ca.questionText?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const openActions = filteredActions.filter(ca => ca.status === 'open' || ca.status === 'in_progress');
@@ -189,86 +190,90 @@ export default function CorrectiveActionsPage() {
   return (
     <DashboardShell role="Manager">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
-          <div>
+        <div className="page-header-section flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex flex-col gap-2">
             <h1 className="page-heading">Corrective Actions</h1>
             <p className="body-text">Monitor and resolve issues identified during audits.</p>
           </div>
+          
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <Card className="px-4 py-2 flex items-center gap-3 border-destructive/30 bg-destructive/10 shadow-sm rounded-lg flex-shrink-0">
+              <span className="text-[10px] font-medium text-destructive uppercase tracking-widest leading-none mt-0.5">Attention Required</span>
+              <span className="text-xl font-medium text-destructive leading-none">{actions.filter(a => a.status !== 'resolved').length}</span>
+            </Card>
+          </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative w-full md:w-96">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by question or location..."
-              className="pl-8 bg-muted/20 border-muted"
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+            <Input 
+              placeholder="Search actions by location or description..." 
+              className="pl-9 h-11 bg-background text-body"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex gap-2">
-             <Card className="px-5 py-2.5 flex items-center gap-3 border-destructive/20 bg-destructive/5 shadow-none rounded-xl">
-               <span className="text-[11px] font-black text-destructive uppercase tracking-widest">Attention Required:</span>
-               <span className="text-xl font-black text-destructive leading-none">{actions.filter(a => a.status !== 'resolved').length}</span>
-             </Card>
-          </div>
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+            <Filter className="h-4 w-4" />
+            Filters
+          </Button>
         </div>
 
-        <Tabs defaultValue="open" className="section-gap">
-          <TabsList className="bg-muted/30 p-1.5 border min-h-[48px] rounded-xl">
-            <TabsTrigger value="open" className="data-[state=active]:bg-background data-[state=active]:shadow-md px-10 font-black text-[10px] uppercase tracking-widest h-full transition-all">
+        <Tabs defaultValue="open" className="space-y-6">
+          <TabsList className="bg-muted/20 p-1 border border-border/50 rounded-lg inline-flex h-12">
+            <TabsTrigger value="open" className="data-[state=active]:bg-background data-[state=active]:shadow-sm px-6 font-medium text-xs uppercase tracking-widest h-full transition-all rounded-md">
               Open Issues ({openActions.length})
             </TabsTrigger>
-            <TabsTrigger value="resolved" className="data-[state=active]:bg-background data-[state=active]:shadow-md px-10 font-black text-[10px] uppercase tracking-widest h-full transition-all">
+            <TabsTrigger value="resolved" className="data-[state=active]:bg-background data-[state=active]:shadow-sm px-6 font-medium text-xs uppercase tracking-widest h-full transition-all rounded-md">
               Resolved ({resolvedActions.length})
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="open" className="mt-0">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2 w-full">
               {openActions.length === 0 ? (
-                <Card className="col-span-full py-20 border-dashed border-2 flex flex-col items-center justify-center text-muted-foreground bg-muted/5 rounded-2xl">
-                  <div className="bg-success/10 p-5 rounded-full mb-6">
-                    <CheckCircle2 className="h-12 w-12 text-success opacity-40" />
+                <div className="col-span-full py-32 border-dashed border-2 border-border/50 flex flex-col items-center justify-center text-muted-text bg-muted/10 rounded-2xl">
+                  <div className="bg-success/10 p-4 rounded-full mb-4">
+                    <CheckCircle2 className="h-10 w-10 text-success opacity-80" />
                   </div>
-                  <p className="page-heading text-lg">No Open Corrective Actions</p>
-                  <p className="muted-label pt-1 max-w-[280px]">Excellent! Everything is compliant across your managed locations.</p>
-                </Card>
+                  <p className="section-heading text-lg">No Open Corrective Actions</p>
+                  <p className="body-text pt-2 max-w-[320px] text-center">Excellent! Everything is compliant across your managed locations.</p>
+                </div>
               ) : (
                 openActions.map((ca) => (
-                  <Card key={ca.id} className="standard-card flex flex-col h-full group">
-                    <CardHeader className="pb-4 px-6 pt-6 bg-muted/5 border-b border-muted/20">
-                      <div className="flex justify-between items-center mb-3">
+                  <Card key={ca.id} className="standard-card flex flex-col h-full group hover:border-primary/20 transition-colors">
+                    <CardHeader className="p-xl bg-muted/10 border-b border-border/50">
+                      <div className="flex justify-between items-start mb-md">
                         {getSeverityBadge(ca.severity)}
-                        <Badge variant="outline" className="text-[9px] font-black text-destructive bg-destructive/5 border-destructive/10 uppercase tracking-widest px-2.5 py-1">
+                        <Badge variant="outline" className="text-[10px] font-medium text-destructive bg-destructive/10 border-destructive/30 uppercase tracking-widest px-2 py-0.5">
                           Due {ca.deadline ? format(ca.deadline.toDate(), 'MMM d, yyyy') : 'No Date'}
                         </Badge>
                       </div>
-                      <CardTitle className="text-base font-bold text-foreground leading-tight group-hover:text-primary transition-colors">
+                      <CardTitle className="section-heading text-lg leading-snug group-hover:text-primary transition-colors">
                         {ca.questionText}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="py-6 px-6 space-y-5 flex-grow">
-                      <div className="relative pl-5">
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary/20 rounded-full" />
-                        <p className="body-text italic leading-relaxed text-foreground/80">
+                    <CardContent className="p-xl space-y-md flex-grow">
+                      <div className="relative pl-md border-l-2 border-primary/30">
+                        <p className="body-text text-body/80 leading-relaxed italic">
                           "{ca.description}"
                         </p>
                       </div>
-                      <div className="flex flex-col gap-3 pt-2">
-                        <div className="flex items-center gap-2.5 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                          <MapPin className="h-4 w-4 text-primary" /> 
+                      <div className="flex flex-col gap-xs pt-xs">
+                        <div className="flex items-center gap-2 text-[10px] font-normal text-muted-text uppercase tracking-widest">
+                          <MapPin className="h-3.5 w-3.5 text-primary opacity-60" /> 
                           <span>{ca.locationName}</span>
                         </div>
-                        <div className="flex items-center gap-2.5 text-[10px] font-bold text-muted-foreground/60 uppercase tracking-tighter">
-                          <Calendar className="h-4 w-4 opacity-40" /> 
+                        <div className="flex items-center gap-2 text-[10px] font-normal text-muted-text/60 uppercase tracking-widest">
+                          <Calendar className="h-3.5 w-3.5 opacity-60" /> 
                           Identified {ca.createdAt ? format(ca.createdAt.toDate(), 'MMM d, h:mm a') : 'N/A'}
                         </div>
                       </div>
                     </CardContent>
-                    <CardFooter className="pt-0 pb-6 px-6 mt-auto">
+                    <CardFooter className="p-xl pt-0 mt-auto">
                       <Button 
-                        className="w-full font-black uppercase tracking-widest text-[11px] h-11 shadow-black/10 group-hover:shadow-primary/20 transition-all"
+                        className="w-full font-medium uppercase tracking-widest text-xs h-10 shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
                         onClick={() => setSelectedCA(ca)}
                       >
                          Add Resolution Notes
@@ -281,42 +286,44 @@ export default function CorrectiveActionsPage() {
           </TabsContent>
 
           <TabsContent value="resolved" className="mt-0">
-             <div className="section-gap">
+             <div className="space-y-6">
                 {resolvedActions.length === 0 ? (
-                  <Card className="py-20 border-dashed border-2 flex flex-col items-center justify-center text-muted-foreground bg-muted/5 rounded-2xl">
-                    <p className="page-heading text-lg opacity-40 uppercase tracking-[0.2em]">No Resolved Issues Found</p>
+                  <Card className="py-20 border-dashed border-2 flex flex-col items-center justify-center text-muted-text bg-muted/5 rounded-2xl">
+                    <p className="page-heading text-lg opacity-40 uppercase tracking-[0.2em] font-normal">No Resolved Issues Found</p>
                   </Card>
                 ) : (
-                  <div className="grid gap-5">
+                  <div className="grid gap-6 lg:grid-cols-2">
                    {resolvedActions.map((ca) => (
-                    <Card key={ca.id} className="standard-card flex flex-col md:flex-row overflow-hidden hover:border-success/30 transition-all group">
-                      <div className="p-6 md:w-3/4 border-b md:border-b-0 md:border-r border-muted/20">
-                        <div className="flex items-center gap-2 mb-4">
-                          <div className="bg-success p-1 rounded-full">
-                            <CheckCircle2 className="h-3 w-3 text-white" />
+                    <Card key={ca.id} className="standard-card flex flex-col overflow-hidden hover:border-success/30 transition-colors group">
+                      <div className="p-xl border-b border-border/50 bg-background flex-1">
+                        <div className="flex items-center justify-between gap-2 mb-md">
+                          <div className="flex items-center gap-2">
+                            <div className="bg-success/20 p-1 rounded-full">
+                              <CheckCircle2 className="h-3 w-3 text-success" />
+                            </div>
+                            <span className="text-[10px] font-medium text-success uppercase tracking-widest">Resolved</span>
                           </div>
-                          <span className="text-[10px] font-black text-success uppercase tracking-widest">Resolved</span>
-                          <span className="text-[10px] text-muted-foreground font-mono ml-auto opacity-30">
+                          <span className="text-[10px] text-muted-text font-normal uppercase tracking-widest opacity-60">
                             ID: {ca.id.substring(0, 8)}
                           </span>
                         </div>
-                        <h4 className="text-lg font-bold text-foreground mb-1 group-hover:text-success transition-colors">{ca.questionText}</h4>
-                        <p className="text-[11px] font-black text-muted-foreground uppercase tracking-widest mb-4 italic">{ca.locationName}</p>
+                        <h4 className="section-heading text-lg mb-2 group-hover:text-success transition-colors leading-snug">{ca.questionText}</h4>
+                        <p className="text-[10px] font-normal text-muted-text uppercase tracking-widest mb-lg">{ca.locationName}</p>
                         
-                        <div className="bg-muted/10 p-5 rounded-xl border border-muted/10 relative">
-                          <p className="text-[9px] font-black uppercase text-muted-foreground/40 mb-2 tracking-[0.2em]">Resolution Note</p>
-                          <p className="body-text italic text-foreground/70 leading-relaxed">"{ca.resolutionNote || 'No notes provided.'}"</p>
+                        <div className="bg-muted/10 p-md rounded-lg border border-border/50 relative">
+                          <p className="text-[10px] font-normal uppercase text-muted-text mb-sm tracking-widest opacity-80">Resolution Note</p>
+                          <p className="body-text italic text-body/80 leading-relaxed">"{ca.resolutionNote || 'No notes provided.'}"</p>
                         </div>
                       </div>
-                      <div className="p-6 md:w-1/4 bg-muted/5 flex flex-col justify-center gap-5">
-                         <div className="text-center">
-                            <p className="text-[9px] font-black uppercase text-muted-foreground/40 mb-1 tracking-widest">Resolved On</p>
-                            <p className="text-sm font-black text-foreground">{ca.resolvedAt ? format(ca.resolvedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</p>
+                      <div className="p-xl bg-muted/5 flex flex-col gap-md">
+                         <div className="flex flex-col gap-xs">
+                            <p className="text-[10px] font-normal uppercase text-muted-text tracking-widest opacity-80">Resolved On</p>
+                            <p className="text-sm font-normal text-body">{ca.resolvedAt ? format(ca.resolvedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</p>
                          </div>
                          {ca.resolutionPhotoUrls && ca.resolutionPhotoUrls.length > 0 && (
-                           <div className="flex justify-center gap-2 flex-wrap">
+                           <div className="flex gap-sm overflow-x-auto pb-2">
                              {ca.resolutionPhotoUrls.map((url, i) => (
-                               <div key={i} className="h-12 w-12 rounded-lg border border-muted/30 overflow-hidden bg-white shadow-sm ring-2 ring-white hover:scale-110 transition-transform">
+                               <div key={i} className="h-14 w-14 rounded-md border border-border/50 overflow-hidden bg-muted/20 flex-shrink-0 transition-transform hover:scale-105 active:scale-95">
                                  <img src={url} alt="Proof" className="h-full w-full object-cover" />
                                </div>
                              ))}
@@ -332,71 +339,71 @@ export default function CorrectiveActionsPage() {
         </Tabs>
       </div>
 
-      {/* Resolution Dialog */}
       <Dialog open={!!selectedCA} onOpenChange={(open) => !open && setSelectedCA(null)}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader className="pb-6 border-b border-muted/20">
-            <DialogTitle className="flex items-center gap-3 text-success text-2xl font-black italic tracking-tighter">
-              <CheckCircle2 className="h-6 w-6" /> RESOLVE ISSUE
+        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden border-border/50">
+          <DialogHeader className="p-xl border-b border-border/50 bg-muted/10">
+            <DialogTitle className="flex items-center gap-3 text-success font-semibold text-xl">
+              <CheckCircle2 className="h-5 w-5" /> RESOLVE ISSUE
             </DialogTitle>
-            <DialogDescription className="font-bold text-foreground bg-muted/5 p-4 rounded-xl border border-muted/10 mt-4">
-              <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest block mb-1">Identified Issue</span>
-              <span className="text-base italic leading-tight">"{selectedCA?.questionText}"</span>
-              <span className="block text-[10px] font-black text-primary pt-2 uppercase tracking-widest">{selectedCA?.locationName}</span>
+            <DialogDescription className="font-normal text-body bg-background p-md rounded-lg border border-border/50 mt-md flex flex-col gap-sm">
+              <span className="text-[10px] font-normal text-muted-text uppercase tracking-widest">Identified Issue</span>
+              <span className="text-sm italic leading-snug">"{selectedCA?.questionText}"</span>
+              <span className="text-[10px] font-normal text-primary uppercase tracking-widest mt-1">{selectedCA?.locationName}</span>
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="note" className="text-xs font-bold uppercase text-muted-foreground">Resolution Note</Label>
+          <div className="p-xl space-y-md">
+            <div className="space-y-sm">
+              <Label htmlFor="note" className="text-xs font-normal uppercase text-muted-text tracking-widest">Resolution Note</Label>
               <Textarea 
                 id="note"
                 placeholder="Describe how the issue was fixed..."
                 value={resolutionNote}
                 onChange={(e) => setResolutionNote(e.target.value)}
-                className="min-h-[100px] text-sm focus:ring-emerald-500"
+                className="min-h-[120px] text-sm bg-background border-input text-body"
               />
             </div>
             
-            <div className="space-y-2">
-              <Label className="text-xs font-bold uppercase text-muted-foreground">Evidence Photo (Optional)</Label>
-              <div className="flex items-center gap-4">
+            <div className="space-y-sm">
+              <Label className="text-xs font-normal uppercase text-muted-text tracking-widest">Evidence Photo (Optional)</Label>
+              <div className="flex flex-col gap-md">
                 <Button 
                   type="button" 
                   variant="outline" 
-                  size="sm" 
-                  className="h-20 w-full border-dashed flex-col gap-2 border-zinc-300 hover:border-emerald-400 hover:bg-emerald-50 transition-colors"
+                  className="h-24 w-full border-dashed flex-col gap-sm border-border hover:border-primary hover:bg-primary/5 transition-colors"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
                 >
-                  {isUploading ? <Loader2 className="h-4 w-4 animate-spin"/> : <Camera className="h-5 w-5 text-zinc-400" />}
-                  <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Click to upload proof</span>
+                  {isUploading ? <Loader2 className="h-5 w-5 animate-spin text-muted-text"/> : <Camera className="h-5 w-5 text-muted-text" />}
+                  <span className="text-[10px] font-normal text-muted-text uppercase tracking-widest flex items-center gap-1.5"><span className="text-primary font-medium">Upload</span> or drag and drop</span>
                 </Button>
                 <input type="file" className="hidden" ref={fileInputRef} accept="image/*" onChange={handleFileUpload} />
               </div>
               
-              <div className="flex gap-2 overflow-x-auto py-2">
-                {resolutionPhotos.map((url, i) => (
-                  <div key={i} className="relative h-20 w-20 rounded-md overflow-hidden border shadow-sm flex-shrink-0">
-                    <img src={url} alt="Evidence" className="h-full w-full object-cover" />
-                    <button 
-                      className="absolute top-0 right-0 bg-red-500 text-white p-1 hover:bg-red-600 transition-colors"
-                      onClick={() => setResolutionPhotos(prev => prev.filter(p => p !== url))}
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+              {resolutionPhotos.length > 0 && (
+                <div className="flex gap-md overflow-x-auto py-2 mt-2">
+                  {resolutionPhotos.map((url, i) => (
+                    <div key={i} className="relative h-20 w-20 rounded-md overflow-hidden border border-border/50 shadow-sm flex-shrink-0">
+                      <img src={url} alt="Evidence" className="h-full w-full object-cover" />
+                      <button 
+                        className="absolute top-1 right-1 bg-destructive/90 text-destructive-foreground p-1 rounded hover:bg-destructive transition-colors"
+                        onClick={() => setResolutionPhotos(prev => prev.filter(p => p !== url))}
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
-          <DialogFooter className="bg-muted/5 p-6 border-t border-muted/20">
-            <Button variant="ghost" onClick={() => setSelectedCA(null)} className="font-black text-[11px] uppercase tracking-widest h-11 px-6">Discard</Button>
+          <DialogFooter className="bg-muted/10 p-xl border-t border-border/50 gap-sm">
+            <Button variant="outline" onClick={() => setSelectedCA(null)} className="font-medium text-xs uppercase tracking-widest text-body">Discard</Button>
             <Button 
               onClick={handleResolve} 
               disabled={isResolving || !resolutionNote}
-              className="font-black text-[11px] uppercase tracking-widest h-11 px-10 shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="font-medium text-xs uppercase tracking-widest shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               {isResolving ? <Loader2 className="h-4 w-4 animate-spin mr-2"/> : <CheckCircle2 className="h-4 w-4 mr-2" />}
               Complete Resolution

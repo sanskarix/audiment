@@ -15,12 +15,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { MoreHorizontal, Pencil, Trash2, Mail, UserPlus } from 'lucide-react';
+import { MoreHorizontal, Pencil, Trash2, Mail, UserPlus, Search, Filter } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<any[]>([]);
   const [session, setSession] = useState<{ orgId: string } | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Form states
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -188,109 +190,148 @@ export default function AdminUsersPage() {
   // Logic: Manager must be active to appear in listener
   const activeManagers = users.filter((u) => u.role.toUpperCase() === 'MANAGER' && u.isActive !== false);
 
+  const filteredUsers = users.filter((u) => 
+    u.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    u.role.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
-          <div>
+        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col gap-xs">
             <h1 className="page-heading">Users Management</h1>
             <p className="body-text">Manage permissions, roles, and status for all organization users.</p>
           </div>
 
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
-              <Button size="lg" className="shadow-black/20">
+              <Button size="default" className="shadow-lg shadow-primary/20 font-medium">
                 <UserPlus className="mr-2 h-4 w-4" /> Create User
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Create New User</DialogTitle>
-                <DialogDescription>Add a new account to your organization.</DialogDescription>
+                <DialogTitle className="font-semibold text-heading">Create New User</DialogTitle>
+                <DialogDescription className="text-muted-text">Add a new account to your organization.</DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleCreateUser} className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required placeholder="John Doe" />
+              <form onSubmit={handleCreateUser} className="space-y-4 py-6">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="name" className="text-body font-normal">Full Name</Label>
+                  <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required placeholder="John Doe" className="text-body" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required placeholder="john@example.com" />
+                  <Label htmlFor="email" className="text-body font-normal">Email</Label>
+                  <Input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required placeholder="john@example.com" className="text-body" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">Temporary Password</Label>
-                  <Input type="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required minLength={6} />
+                  <Label htmlFor="password" className="text-body font-normal">Temporary Password</Label>
+                  <Input type="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required minLength={6} className="text-body" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="role">Role</Label>
+                  <Label htmlFor="role" className="text-body font-normal">Role</Label>
                   <Select value={formData.role} onValueChange={(val) => setFormData({ ...formData, role: val })}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="text-body"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="MANAGER">Manager</SelectItem>
-                      <SelectItem value="AUDITOR">Auditor</SelectItem>
+                      <SelectItem value="MANAGER" className="text-body">Manager</SelectItem>
+                      <SelectItem value="AUDITOR" className="text-body">Auditor</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 {formData.role === 'AUDITOR' && (
                   <div className="space-y-2">
-                    <Label htmlFor="managerId">Assign to Manager</Label>
+                    <Label htmlFor="managerId" className="text-body font-normal">Assign to Manager</Label>
                     <Select value={formData.managerId} onValueChange={(val) => setFormData({ ...formData, managerId: val })} required>
-                      <SelectTrigger><SelectValue placeholder="Select active manager" /></SelectTrigger>
+                      <SelectTrigger className="text-body"><SelectValue placeholder="Select active manager" /></SelectTrigger>
                       <SelectContent>
                         {activeManagers.length === 0 ? (
-                          <SelectItem value="none" disabled>No active managers found</SelectItem>
+                          <SelectItem value="none" disabled className="text-muted-text">No active managers found</SelectItem>
                         ) : (
-                          activeManagers.map(m => <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>)
+                          activeManagers.map(m => <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>)
                         )}
                       </SelectContent>
                     </Select>
                   </div>
                 )}
                 {error && <p className="text-sm text-destructive">{error}</p>}
-                <DialogFooter><Button type="submit" disabled={loading} className="w-full">{loading ? 'Creating...' : 'Create User'}</Button></DialogFooter>
+                <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Creating...' : 'Create User'}</Button></DialogFooter>
               </form>
             </DialogContent>
           </Dialog>
         </div>
 
-        {success && <div className="bg-success/10 border border-success/50 text-success p-3 rounded-md text-sm font-medium animate-in fade-in slide-in-from-top-1">{success}</div>}
+        {success && <div className="bg-success/10 border border-success/50 text-success p-3 rounded-md text-sm font-normal animate-in fade-in slide-in-from-top-1">{success}</div>}
+
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+            <Input 
+              placeholder="Search users by name, email, or role..." 
+              className="pl-9 h-11 text-body font-normal bg-background"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+            <Filter className="h-4 w-4" />
+            Filters
+          </Button>
+        </div>
 
         <Card className="standard-card">
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Flashmob</TableHead>
-                <TableHead className="w-[100px] text-right">Actions</TableHead>
+            <TableHeader className="standard-table-header">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="standard-table-head">Name</TableHead>
+                <TableHead className="standard-table-head">Email</TableHead>
+                <TableHead className="standard-table-head">Role</TableHead>
+                <TableHead className="standard-table-head">Status</TableHead>
+                <TableHead className="standard-table-head">Flashmob</TableHead>
+                <TableHead className="standard-table-head text-right w-[100px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell><Badge variant={user.role === 'ADMIN' ? 'default' : user.role === 'MANAGER' ? 'secondary' : 'outline'}>{user.role}</Badge></TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
+              {filteredUsers.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="standard-table-cell h-32 text-center text-muted-text">
+                    No users found matching your search.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredUsers.map((user) => (
+                <TableRow key={user.id} className="standard-table-row group">
+                  <TableCell className="standard-table-cell font-normal text-body text-sm">{user.name}</TableCell>
+                  <TableCell className="standard-table-cell text-body">{user.email}</TableCell>
+                  <TableCell className="standard-table-cell">
+                    <Badge variant={user.role === 'ADMIN' ? 'default' : user.role === 'MANAGER' ? 'secondary' : 'outline'} className="font-normal text-[9px] uppercase tracking-widest px-2 py-0.5 text-body">
+                      {user.role}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="standard-table-cell">
+                    <div className="flex items-center space-x-3">
                       <Switch checked={user.isActive !== false} onCheckedChange={() => handleToggleActive(user.id, user.isActive !== false)} disabled={user.role === 'ADMIN'} />
-                      <span className="text-xs">{user.isActive !== false ? 'Active' : 'Inactive'}</span>
+                      <span className={cn("text-[10px] font-medium uppercase tracking-widest", user.isActive !== false ? "text-success" : "text-muted-text opacity-50")}>
+                        {user.isActive !== false ? 'Active' : 'Inactive'}
+                      </span>
                     </div>
                   </TableCell>
-                  <TableCell>
-                    {user.role === 'AUDITOR' && (
-                      <div className="flex items-center space-x-2">
+                  <TableCell className="standard-table-cell">
+                    {user.role === 'AUDITOR' ? (
+                      <div className="flex items-center space-x-3">
                         <Switch 
                           checked={user.hasFlashmobAccess === true} 
                           onCheckedChange={() => handleToggleFlashmob(user.id, user.hasFlashmobAccess === true)} 
                         />
-                        <span className="text-xs">{user.hasFlashmobAccess ? 'Enabled' : 'Disabled'}</span>
+                        <span className={cn("text-[10px] font-medium uppercase tracking-widest", user.hasFlashmobAccess ? "text-primary" : "text-muted-text opacity-50")}>
+                          {user.hasFlashmobAccess ? 'Enabled' : 'Disabled'}
+                        </span>
                       </div>
+                    ) : (
+                      <span className="text-[10px] font-medium uppercase tracking-widest text-muted-text/30">-</span>
                     )}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="px-4 py-3 text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
@@ -316,8 +357,9 @@ export default function AdminUsersPage() {
                     </DropdownMenu>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
+              ))
+            )}
+          </TableBody>
           </Table>
         </Card>
 
@@ -325,27 +367,27 @@ export default function AdminUsersPage() {
         <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Edit User</DialogTitle>
-              <DialogDescription>Update the details for {selectedUser?.name}.</DialogDescription>
+              <DialogTitle className="font-semibold text-heading">Edit User</DialogTitle>
+              <DialogDescription className="text-muted-text">Update the details for {selectedUser?.name}.</DialogDescription>
             </DialogHeader>
             <form onSubmit={handleEditUser} className="space-y-4">
               <div className="space-y-2">
-                <Label>Full Name</Label>
-                <Input value={editFormData.name} onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })} required />
+                <Label className="text-body font-normal">Full Name</Label>
+                <Input value={editFormData.name} onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })} required className="text-body" />
               </div>
               {selectedUser?.role === 'AUDITOR' && (
                 <div className="space-y-2">
-                  <Label>Assigned Manager</Label>
+                  <Label className="text-body font-normal">Assigned Manager</Label>
                   <Select value={editFormData.managerId} onValueChange={(val) => setEditFormData({ ...editFormData, managerId: val })} required>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="text-body"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      {activeManagers.map(m => <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>)}
+                      {activeManagers.map(m => <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
               )}
               {error && <p className="text-sm text-destructive">{error}</p>}
-              <DialogFooter><Button type="submit" disabled={loading} className="w-full">{loading ? 'Updating...' : 'Save Changes'}</Button></DialogFooter>
+              <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Updating...' : 'Save Changes'}</Button></DialogFooter>
             </form>
           </DialogContent>
         </Dialog>
@@ -354,15 +396,15 @@ export default function AdminUsersPage() {
         <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will permanently delete <strong>{selectedUser?.name}</strong> from both Firebase Authentication and the database.
+              <AlertDialogTitle className="font-semibold text-heading">Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription className="text-body font-normal">
+                This will permanently delete <strong className="font-medium text-heading">{selectedUser?.name}</strong> from both Firebase Authentication and the database.
                 This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={() => setSelectedUser(null)}>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteUser} className="bg-destructive hover:bg-destructive/90 text-white" disabled={loading}>
+              <AlertDialogAction onClick={handleDeleteUser} className="bg-destructive hover:bg-destructive/90 text-white font-medium" disabled={loading}>
                 {loading ? 'Deleting...' : 'Delete User'}
               </AlertDialogAction>
             </AlertDialogFooter>

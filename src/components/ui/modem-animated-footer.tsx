@@ -46,11 +46,11 @@ export const Footer = ({
             <div className="w-full flex flex-col items-center">
               <div className="space-y-2 flex flex-col items-center flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-foreground text-3xl font-bold">
+                  <span className="text-heading text-3xl font-medium">
                     {brandName}
                   </span>
                 </div>
-                <p className="text-muted-foreground font-semibold text-center w-full max-w-sm sm:w-96 px-4 sm:px-0">
+                <p className="text-muted-text font-normal text-center w-full max-w-sm sm:w-96 px-4 sm:px-0">
                   {brandDescription}
                 </p>
               </div>
@@ -61,7 +61,7 @@ export const Footer = ({
                     <Link
                       key={index}
                       href={link.href}
-                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      className="text-muted-text hover:text-heading transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -75,11 +75,11 @@ export const Footer = ({
               )}
 
               {navLinks.length > 0 && (
-                <div className="flex flex-wrap justify-center gap-4 text-sm font-medium text-muted-foreground max-w-full px-4">
+                <div className="flex flex-wrap justify-center gap-4 text-sm font-normal text-muted-text max-w-full px-4">
                   {navLinks.map((link, index) => (
                     <Link
                       key={index}
-                      className="hover:text-foreground duration-300 hover:font-semibold"
+                      className="hover:text-heading duration-300"
                       href={link.href}
                     >
                       {link.label}
@@ -91,7 +91,7 @@ export const Footer = ({
           </div>
 
           <div className="mt-20 md:mt-24 flex flex-col gap-2 md:gap-1 items-center justify-center md:flex-row md:items-center md:justify-between px-4 md:px-0">
-            <p className="text-base text-muted-foreground text-center md:text-left">
+            <p className="text-base font-normal text-muted-text text-center md:text-left">
               ©{new Date().getFullYear()} {brandName}. All rights reserved.
             </p>
             {creatorName && creatorUrl && (
@@ -99,7 +99,7 @@ export const Footer = ({
                 <Link
                   href={creatorUrl}
                   target="_blank"
-                  className="text-base text-muted-foreground hover:text-foreground transition-colors duration-300 hover:font-medium"
+                  className="text-base font-normal text-muted-text hover:text-heading transition-colors duration-300 hover:font-medium"
                 >
                   Crafted by {creatorName}
                 </Link>
@@ -110,7 +110,7 @@ export const Footer = ({
 
         {/* Large background text - FIXED */}
         <div
-          className="bg-gradient-to-b from-foreground/20 via-foreground/10 to-transparent bg-clip-text text-transparent leading-none absolute left-1/2 -translate-x-1/2 bottom-40 md:bottom-32 font-extrabold tracking-tighter pointer-events-none select-none text-center px-4"
+          className="bg-gradient-to-b from-foreground/20 via-foreground/10 to-transparent bg-clip-text text-transparent leading-none absolute left-1/2 -translate-x-1/2 bottom-40 md:bottom-32 font-medium tracking-tighter pointer-events-none select-none text-center px-4"
           style={{
             fontSize: 'clamp(3rem, 12vw, 10rem)',
             maxWidth: '95vw'

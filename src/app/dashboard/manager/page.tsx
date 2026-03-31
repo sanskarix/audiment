@@ -254,176 +254,181 @@ export default function ManagerDashboardPage() {
   return (
     <DashboardShell role="Manager">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
-          <div>
+        <div className="page-header-section mb-6">
+          <div className="flex flex-col gap-2">
             <h1 className="page-heading">Branch Performance</h1>
             <p className="body-text">Monitoring quality and compliance across your assigned locations</p>
           </div>
         </div>
 
         {/* Top Summary Cards */}
-        <div className="grid card-gap md:grid-cols-2 lg:grid-cols-2">
-          <Card className="standard-card border-l-4 border-l-primary">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium">Managed Branches</CardTitle>
-              <MapPin className="h-4 w-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats?.assignedLocations}</div>
-              <p className="muted-label pt-1 text-muted-foreground/60">Total active locations under your oversight</p>
-            </CardContent>
+        <div className="grid gap-6 md:grid-cols-2 mb-6">
+          <Card className="standard-card">
+            <div className="flex flex-row items-center justify-between pb-2 space-y-0 border-b border-border/40 p-6">
+              <CardTitle className="section-heading">Managed Branches</CardTitle>
+              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <MapPin className="h-5 w-5 text-primary" />
+              </div>
+            </div>
+            <div className="p-6 pt-4">
+              <div className="text-3xl font-medium tracking-tight text-heading">{stats?.assignedLocations}</div>
+              <p className="muted-label mt-2">Active locations</p>
+            </div>
           </Card>
 
-          <Card className="standard-card border-l-4 border-l-success">
-            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-sm font-medium">Reporting Auditors</CardTitle>
-              <Users className="h-4 w-4 text-success" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats?.activeAuditors}</div>
-              <p className="muted-label pt-1 text-muted-foreground/60">Auditors currently reporting to you</p>
-            </CardContent>
+          <Card className="standard-card">
+            <div className="flex flex-row items-center justify-between pb-2 space-y-0 border-b border-border/40 p-6">
+              <CardTitle className="section-heading">Reporting Auditors</CardTitle>
+              <div className="h-10 w-10 rounded-xl bg-success/10 flex items-center justify-center">
+                <Users className="h-5 w-5 text-success" />
+              </div>
+            </div>
+            <div className="p-6 pt-4">
+              <div className="text-3xl font-medium tracking-tight text-heading">{stats?.activeAuditors}</div>
+              <p className="muted-label mt-2">Active personnel</p>
+            </div>
           </Card>
         </div>
 
         {/* Corrective Actions Section */}
         {correctiveActions.length > 0 && (
-          <div className="card-gap flex flex-col">
+          <div className="flex flex-col gap-4 mb-6">
             <h3 className="section-heading text-destructive flex items-center gap-2">
               <AlertTriangle className="h-5 w-5" />
               Critical Issues ({correctiveActions.length})
             </h3>
-            <div className="grid card-gap md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {correctiveActions.map((ca) => (
-                <Card key={ca.id} className="border-rose-100 shadow-sm hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-2">
-                    <div className="flex justify-between items-start">
-                      <Badge variant="destructive" className="muted-label">
+                <Card key={ca.id} className="standard-card border-destructive/20 hover:border-destructive/40 transition-colors shadow-sm bg-background">
+                  <div className="p-6 pb-2">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge variant="destructive" className="text-[10px] font-medium uppercase tracking-widest px-2 py-0.5">
                         {ca.severity}
                       </Badge>
-                      <Badge variant="outline" className="muted-label text-destructive bg-destructive/5 font-bold italic tracking-tighter">
+                      <Badge variant="outline" className="text-[10px] border-destructive/20 text-destructive bg-destructive/5 font-medium uppercase tracking-widest px-2 py-0.5">
                         Due {format(ca.deadline.toDate(), 'MMM d')}
                       </Badge>
                     </div>
-                    <CardTitle className="text-sm font-bold pt-2">{ca.questionText}</CardTitle>
-                    <CardDescription className="text-xs line-clamp-2">{ca.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="pb-3 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1.5 font-medium">
-                      <MapPin className="h-3 w-3" /> {ca.locationName}
+                    <CardTitle className="text-sm font-medium leading-tight text-heading">{ca.questionText}</CardTitle>
+                    <CardDescription className="body-text text-xs line-clamp-2 mt-1">{ca.description}</CardDescription>
+                  </div>
+                  <div className="px-6 pt-2 pb-0 text-xs text-muted-text">
+                    <div className="flex items-center gap-1.5 font-normal">
+                      <MapPin className="h-3.5 w-3.5" /> {ca.locationName}
                     </div>
-                  </CardContent>
-                  <CardContent className="pt-0 flex gap-2">
+                  </div>
+                  <div className="p-6 pt-4 flex gap-2">
                     <Button 
                       size="sm" 
-                      className="flex-1 h-8 text-[11px] font-bold"
+                      variant="outline"
+                      className="w-full font-medium text-xs shadow-sm hover:text-success hover:border-success/30 hover:bg-success/5 active:scale-95 transition-all text-muted-text"
                       onClick={() => setSelectedCA(ca)}
                     >
                        Mark as Resolved
                     </Button>
-                  </CardContent>
+                  </div>
                 </Card>
               ))}
             </div>
           </div>
         )}
 
-        <div className="grid gap-4 md:grid-cols-7 lg:grid-cols-7">
+        <div className="grid gap-6 md:grid-cols-7 mb-6">
           {/* Trend Chart */}
-          <Card className="md:col-span-4 shadow-sm border-muted">
-            <CardHeader>
-              <CardTitle>Score History</CardTitle>
-              <CardDescription>Average performance trend over recent audits</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[250px] w-full mt-4">
+          <Card className="md:col-span-4 standard-card">
+            <div className="border-b border-border/40 p-6 md:p-8">
+              <CardTitle className="section-heading">Score History</CardTitle>
+              <CardDescription className="body-text">Average performance trend over recent audits</CardDescription>
+            </div>
+            <div className="p-4 md:p-6">
+              <div className="h-[250px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={stats?.recentAuditScores}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                    <XAxis dataKey="date" stroke="#888888" fontSize={11} axisLine={false} tickLine={false} />
-                    <YAxis stroke="#888888" fontSize={11} axisLine={false} tickLine={false} domain={[0, 100]} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.1} />
+                    <XAxis dataKey="date" stroke="oklch(var(--muted-text))" fontSize={11} axisLine={false} tickLine={false} fontWeight={500} />
+                    <YAxis stroke="oklch(var(--muted-text))" fontSize={11} axisLine={false} tickLine={false} domain={[0, 100]} fontWeight={500} />
                     <Tooltip 
-                      contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)'}}
+                      contentStyle={{borderRadius: 'var(--radius-lg)', border: '1px solid oklch(var(--border))', backgroundColor: 'oklch(var(--background))', color: 'oklch(var(--heading))', fontWeight: '500'}}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="score" 
-                      stroke="#2563eb" 
+                      stroke="hsl(var(--primary))" 
                       strokeWidth={3} 
-                      dot={{ r: 4, fill: '#2563eb', strokeWidth: 2 }} 
+                      dot={{ r: 4, fill: 'hsl(var(--primary))', strokeWidth: 2 }} 
                       activeDot={{ r: 6, strokeWidth: 0 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
-            </CardContent>
+            </div>
           </Card>
 
           {/* Activity Feed */}
           <Card className="md:col-span-3 standard-card">
-            <CardHeader>
-              <CardTitle>Auditor Activity</CardTitle>
-              <CardDescription>Current workload distribution</CardDescription>
-            </CardHeader>
-            <CardContent>
+            <div className="border-b border-border/40 p-6 md:p-8">
+              <CardTitle className="section-heading">Auditor Activity</CardTitle>
+              <CardDescription className="body-text">Current workload distribution</CardDescription>
+            </div>
+            <div className="p-6 md:p-8">
               <div className="space-y-6">
                 {stats?.auditorActivity.map((aud, i) => (
                   <div key={i} className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <p className="text-sm font-bold text-foreground">{aud.name}</p>
+                    <div className="space-y-1">
+                      <p className="font-normal text-sm text-body">{aud.name}</p>
                       <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-[10px] text-success bg-success/10 h-5 px-1.5 font-bold border-success/10">
+                        <Badge variant="outline" className="text-[10px] uppercase font-medium tracking-widest text-success border-success/30 bg-success/10 px-2 py-0.5">
                           {aud.completed} Done
                         </Badge>
-                        <Badge variant="outline" className="text-[10px] text-muted-foreground h-5 px-1.5 font-bold">
+                        <Badge variant="outline" className="text-[10px] uppercase font-medium tracking-widest text-muted-text border-border px-2 py-0.5">
                           {aud.pending} In Progress
                         </Badge>
                       </div>
                     </div>
-                    <CheckCircle2 className={aud.pending === 0 ? "text-success h-4 w-4" : "text-muted/30 h-4 w-4"} />
+                    <CheckCircle2 className={aud.pending === 0 ? "text-success h-5 w-5" : "text-muted-text/30 h-5 w-5"} />
                   </div>
                 ))}
               </div>
-            </CardContent>
+            </div>
           </Card>
         </div>
 
         {/* Recent Audits Table Section */}
         <Card className="standard-card">
-          <CardHeader>
+          <div className="border-b border-border/40 p-6 md:p-8">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>A live look at submissions across your branches</CardDescription>
+                <CardTitle className="section-heading">Recent Activity</CardTitle>
+                <CardDescription className="body-text">A live look at submissions across your branches</CardDescription>
               </div>
-              <TrendingUp className="h-5 w-5 text-muted/30" />
+              <TrendingUp className="h-5 w-5 text-muted-text/50" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          </div>
+          <div className="p-4 md:p-6">
+            <div className="space-y-3">
               {stats?.recentAudits.map((audit, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-transparent hover:border-muted/50 hover:bg-muted/10 transition-colors">
+                <div key={i} className="flex items-center justify-between p-4 rounded-lg border border-border/40 hover:bg-muted/30 transition-colors">
                   <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
                       <ClipboardList className="h-5 w-5" />
                     </div>
-                    <div>
-                      <p className="text-sm font-bold text-foreground">{audit.templateTitle}</p>
-                      <p className="text-[11px] text-muted-foreground flex items-center gap-1 font-medium italic">
-                        <MapPin className="h-3 w-3" /> {audit.locationName} &bull; <Clock className="h-3 w-3" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMM d, h:mm a') : 'Scheduled'}
+                    <div className="space-y-1">
+                      <p className="text-sm font-normal text-heading leading-none">{audit.templateTitle}</p>
+                      <p className="text-[11px] font-normal text-muted-text flex items-center gap-1.5 uppercase tracking-widest">
+                        <MapPin className="h-3 w-3" /> {audit.locationName} <span className="opacity-50">&bull;</span> <Clock className="h-3 w-3" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMM d, h:mm a') : 'Scheduled'}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right shrink-0">
                     {audit.status === 'completed' ? (
-                      <div className={cn(
-                        "text-[10px] font-black text-white px-2 py-1 rounded-full shadow-sm",
-                        audit.scorePercentage >= 90 ? "bg-success" : audit.scorePercentage >= 70 ? "bg-primary" : "bg-destructive"
+                      <Badge className={cn(
+                        "text-[10px] font-medium uppercase tracking-widest px-2 py-0.5",
+                        audit.scorePercentage >= 90 ? "bg-success text-success-foreground" : audit.scorePercentage >= 70 ? "bg-primary text-primary-foreground" : "bg-warning text-warning-foreground"
                       )}>
                         {audit.scorePercentage}%
-                      </div>
+                      </Badge>
                     ) : (
-                      <Badge variant="outline" className="uppercase text-[10px] font-bold text-muted-foreground">
+                      <Badge variant="outline" className="text-[10px] font-medium uppercase tracking-widest text-muted-text bg-muted/50">
                         {audit.status}
                       </Badge>
                     )}
@@ -431,76 +436,77 @@ export default function ManagerDashboardPage() {
                 </div>
               ))}
             </div>
-          </CardContent>
+          </div>
         </Card>
       </div>
 
       {/* Resolution Dialog */}
       <Dialog open={!!selectedCA} onOpenChange={(open) => !open && setSelectedCA(null)}>
         <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-rose-600">
-              <CheckCircle className="h-5 w-5" /> Resolve Issue
+          <DialogHeader className="p-xl border-b border-border/50">
+            <DialogTitle className="text-lg font-semibold flex items-center gap-2 text-heading">
+              <CheckCircle className="h-5 w-5 text-success" /> Resolve Issue
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="body-text text-xs mt-2">
               {selectedCA?.questionText} at {selectedCA?.locationName}
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="note" className="text-xs font-bold uppercase text-muted-foreground">Resolution Note</Label>
+          <div className="space-y-lg p-xl">
+            <div className="space-y-xs">
+              <Label htmlFor="note" className="text-xs font-normal uppercase tracking-widest text-muted-text">Resolution Note</Label>
               <Textarea 
                 id="note"
                 placeholder="Describe how the issue was fixed..."
                 value={resolutionNote}
                 onChange={(e) => setResolutionNote(e.target.value)}
-                className="min-h-[100px] text-sm"
+                className="min-h-[120px] text-sm bg-background border-input focus:ring-primary/20 text-body"
               />
             </div>
             
-            <div className="space-y-2">
-              <Label className="text-xs font-bold uppercase text-muted-foreground">Evidence Photo (Optional)</Label>
-              <div className="flex items-center gap-4">
+            <div className="space-y-xs">
+              <Label className="text-xs font-normal uppercase tracking-widest text-muted-text">Evidence Photo (Optional)</Label>
+              <div className="flex items-center gap-md">
                 <Button 
                   type="button" 
                   variant="outline" 
-                  size="sm" 
-                  className="h-20 w-full border-dashed flex-col gap-2"
+                  className="h-20 w-full border-dashed flex-col gap-2 hover:bg-muted/30 transition-colors"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
                 >
-                  {isUploading ? <Loader2 className="h-4 w-4 animate-spin"/> : <Camera className="h-5 w-5 text-muted-foreground" />}
-                  <span className="text-[10px] font-bold">CLICK TO UPLOAD</span>
+                  {isUploading ? <Loader2 className="h-5 w-5 animate-spin text-primary"/> : <Camera className="h-5 w-5 text-muted-text" />}
+                  <span className="text-[10px] font-medium tracking-widest uppercase text-muted-text">CLICK TO UPLOAD</span>
                 </Button>
                 <input type="file" className="hidden" ref={fileInputRef} accept="image/*" onChange={handleFileUpload} />
               </div>
               
-              <div className="flex gap-2 overflow-x-auto py-2">
-                {resolutionPhotos.map((url, i) => (
-                  <div key={i} className="relative h-16 w-16 rounded-md overflow-hidden border">
-                    <img src={url} alt="Evidence" className="h-full w-full object-cover" />
-                    <button 
-                      className="absolute top-0 right-0 bg-red-500 text-white rounded-bl-md p-1"
-                      onClick={() => setResolutionPhotos(prev => prev.filter(p => p !== url))}
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+              {resolutionPhotos.length > 0 && (
+                <div className="flex gap-sm overflow-x-auto py-2 mt-2">
+                  {resolutionPhotos.map((url, i) => (
+                    <div key={i} className="relative h-16 w-16 rounded-md overflow-hidden border border-border/50 shrink-0">
+                      <img src={url} alt="Evidence" className="h-full w-full object-cover" />
+                      <button 
+                        className="absolute top-1 right-1 bg-destructive/90 text-destructive-foreground rounded-full p-1 hover:bg-destructive active:scale-95 transition-all"
+                        onClick={() => setResolutionPhotos(prev => prev.filter(p => p !== url))}
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setSelectedCA(null)} className="font-bold text-xs uppercase h-9">Cancel</Button>
+          <DialogFooter className="p-xl border-t border-border/50 bg-muted/10 gap-sm">
+            <Button variant="outline" onClick={() => setSelectedCA(null)} className="font-medium text-xs uppercase tracking-widest shadow-sm text-muted-text">Cancel</Button>
             <Button 
               onClick={handleResolve} 
               disabled={isResolving || !resolutionNote}
-              className="bg-success hover:bg-success/90 text-success-foreground font-bold text-xs uppercase tracking-wider h-9 px-6"
+              className="font-medium text-xs uppercase tracking-widest shadow-lg shadow-success/20 bg-success hover:bg-success/90 text-success-foreground"
             >
               {isResolving ? <Loader2 className="h-4 w-4 animate-spin mr-2"/> : <CheckCircle className="h-4 w-4 mr-2" />}
-              Complete Resolution
+              Complete
             </Button>
           </DialogFooter>
         </DialogContent>

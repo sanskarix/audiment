@@ -20,7 +20,7 @@ const faqs = [
   },
   {
     q: "What happens if the auditor doesn't have internet during an audit?",
-    a: "They can complete the entire audit offline. All data — including photos and videos — syncs automatically once they're back online.",
+    a: "They can complete the entire audit offline. All data – including photos and videos – syncs automatically once they're back online.",
   },
   {
     q: "Can managers see surprise audits before the auditor arrives?",
@@ -44,7 +44,7 @@ const faqs = [
   },
   {
     q: "What industries is this for?",
-    a: "Any business operating multiple physical locations where consistent standards matter — restaurants, retail chains, hotels, warehouses, healthcare facilities, franchise operations, facility management companies.",
+    a: "Any business operating multiple physical locations where consistent standards matter – restaurants, retail chains, hotels, warehouses, healthcare facilities, franchise operations, facility management companies.",
   },
 ];
 
@@ -87,7 +87,7 @@ const steps = [
   {
     number: "02",
     title: "Schedule or Publish",
-    desc: "Set it to recur (every Monday at 9 AM) or publish it as a surprise — invisible to managers until the auditor arrives.",
+    desc: "Set it to recur (every Monday at 9 AM) or publish it as a surprise – invisible to managers until the auditor arrives.",
   },
   {
     number: "03",
@@ -148,7 +148,7 @@ const useCases = [
   {
     icon: Utensils,
     title: "Restaurants & Café Chains",
-    desc: "A QSR chain with 20 outlets pushes a \"Pre-Opening Audit\" every morning at 8 AM. The manager confirms all equipment is on and staff is present within 30 minutes. Auditors perform freezer temperature checks — anything above 4°C triggers an immediate maintenance alert.",
+    desc: "A QSR chain with 20 outlets pushes a \"Pre-Opening Audit\" every morning at 8 AM. The manager confirms all equipment is on and staff is present within 30 minutes. Auditors perform freezer temperature checks – anything above 4°C triggers an immediate maintenance alert.",
     checks: "Kitchen hygiene, food storage temperatures, staff grooming, equipment status, FSSAI compliance.",
   },
   {
@@ -160,13 +160,13 @@ const useCases = [
   {
     icon: Hotel,
     title: "Hotels & Hospitality",
-    desc: "Housekeeping quality, lobby cleanliness, room readiness — all checked with photo evidence and GPS verification. Surprise audits catch the real state of operations, not the version prepared for announced inspections.",
+    desc: "Housekeeping quality, lobby cleanliness, room readiness – all checked with photo evidence and GPS verification. Surprise audits catch the real state of operations, not the version prepared for announced inspections.",
     checks: "Room cleanliness, amenity restocking, common area maintenance, safety equipment, guest-facing standards.",
   },
   {
     icon: Warehouse,
     title: "Facility Management & Warehouses",
-    desc: "Safety equipment checks, fire exit clearance, pest control verification — all on recurring schedules with critical-severity scoring. A blocked fire exit doesn't get lost in a spreadsheet. It triggers an immediate escalation.",
+    desc: "Safety equipment checks, fire exit clearance, pest control verification – all on recurring schedules with critical-severity scoring. A blocked fire exit doesn't get lost in a spreadsheet. It triggers an immediate escalation.",
     checks: "Fire safety, pest control, equipment maintenance, PPE compliance, loading dock organization.",
   },
 ];
@@ -195,7 +195,7 @@ export default function Home() {
               <span className="text-neutral-400">That&apos;s the problem.</span>
             </h2>
             <p className="text-xl text-neutral-400 leading-relaxed">
-              When you ran one location, you saw everything. Now you have 5, 20, or 50 — and you rely on managers to tell you the truth.
+              When you ran one location, you saw everything. Now you have 5, 20, or 50 – and you rely on managers to tell you the truth.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -210,7 +210,7 @@ export default function Home() {
               },
               {
                 title: "One branch can sink the brand",
-                desc: "A hygiene violation, a safety hazard, a terrible customer experience — it only takes one location to destroy years of reputation. And you didn't even know.",
+                desc: "A hygiene violation, a safety hazard, a terrible customer experience – it only takes one location to destroy years of reputation. And you didn't even know.",
               },
             ].map((card, i) => (
               <div
@@ -342,7 +342,7 @@ export default function Home() {
                 items: [
                   "Mobile-first interface, one question at a time",
                   "Captures photos, videos, GPS, and notes during audits",
-                  "Works offline — syncs automatically when back online",
+                  "Works offline – syncs automatically when back online",
                 ],
               },
             ].map((role, i) => (
@@ -446,7 +446,7 @@ export default function Home() {
             <span className="text-neutral-400">stored and searchable.</span>
           </h2>
           <p className="text-xl text-neutral-500 leading-relaxed max-w-3xl mx-auto mb-8">
-            Need to pull up inspection records for an FSSAI audit? An ISO review? A franchise compliance check? Every completed audit — with all photos, videos, scores, timestamps, GPS data, and corrective action history — lives in a searchable archive.
+            Need to pull up inspection records for an FSSAI audit? An ISO review? A franchise compliance check? Every completed audit – with all photos, videos, scores, timestamps, GPS data, and corrective action history – lives in a searchable archive.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 mt-12">
             {[
@@ -586,7 +586,7 @@ export default function Home() {
             <span className="text-neutral-400">Start seeing.</span>
           </h2>
           <p className="text-xl md:text-2xl text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-            Set up your first audit template in minutes. Know exactly what&apos;s happening at every branch — with proof.
+            Set up your first audit template in minutes. Know exactly what&apos;s happening at every branch – with proof.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
             <Link

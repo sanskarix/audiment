@@ -110,42 +110,42 @@ export default function ManagerCalendarPage() {
   return (
     <DashboardShell role="Manager">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
-          <div>
+        <div className="page-header-section mb-xl flex flex-col md:flex-row md:items-center justify-between gap-xl">
+          <div className="flex flex-col gap-xs">
             <h1 className="page-heading">Audit Schedule</h1>
             <p className="body-text">Monthly strategic overview of upcoming planned quality missions.</p>
           </div>
           
-          <div className="flex items-center gap-3 bg-muted/20 p-1.5 rounded-xl border border-muted/50 shadow-sm backdrop-blur-sm">
+          <div className="flex items-center gap-xs bg-muted/20 p-1.5 rounded-lg border border-border/50 shadow-sm">
             <Button 
-              variant="ghost" 
+              variant="outline" 
               size="icon" 
               onClick={prevMonth} 
-              className="h-9 w-9 rounded-lg hover:bg-background transition-all active:scale-90"
+              className="h-8 w-8 hover:bg-background transition-all active:scale-95 shadow-sm"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-4 w-4" />
             </Button>
             <div className="px-4 min-w-[140px] text-center">
-              <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground italic">
+              <h2 className="text-xs font-medium uppercase tracking-widest text-heading">
                 {format(currentMonth, 'MMMM yyyy')}
               </h2>
             </div>
             <Button 
-              variant="ghost" 
+              variant="outline" 
               size="icon" 
               onClick={nextMonth} 
-              className="h-9 w-9 rounded-lg hover:bg-background transition-all active:scale-90"
+              className="h-8 w-8 hover:bg-background transition-all active:scale-95 shadow-sm"
             >
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
 
         <Card className="standard-card">
           <CardContent className="p-0 overflow-hidden">
-            <div className="grid grid-cols-7 border-b border-muted/20 bg-muted/40 backdrop-blur-md">
+            <div className="grid grid-cols-7 border-b border-border/50 bg-muted/30">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                <div key={day} className="py-4 text-center text-[10px] uppercase font-black tracking-[0.3em] text-muted-foreground opacity-60">
+                <div key={day} className="py-4 text-center text-xs uppercase font-medium tracking-widest text-muted-text/80">
                   {day}
                 </div>
               ))}
@@ -159,52 +159,52 @@ export default function ManagerCalendarPage() {
                   <div
                     key={day.toString()}
                     className={cn(
-                      "border-r border-b border-muted/10 p-3 flex flex-col gap-2.5 transition-all relative group",
-                      !isCurrentMonth ? "bg-muted/5 opacity-50" : "bg-card hover:bg-muted/10",
-                      isToday(day) && "bg-primary/[0.03]"
+                      "border-r border-b border-border/30 p-sm flex flex-col gap-xs transition-colors relative group",
+                      !isCurrentMonth ? "bg-muted/10 opacity-60" : "bg-background hover:bg-muted/20",
+                      isToday(day) && "bg-primary/[0.02]"
                     )}
                   >
-                    <div className="flex justify-between items-start">
+                    <div className="flex justify-between items-start mb-1 px-1 pt-1">
                       <span className={cn(
-                        "text-[11px] font-black h-7 w-7 flex items-center justify-center rounded-lg transition-all",
+                        "text-xs font-medium h-7 w-7 flex items-center justify-center rounded-md transition-all",
                         isToday(day) 
-                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110" 
+                          ? "bg-primary text-primary-foreground shadow-sm shadow-primary/20 scale-105" 
                           : !isCurrentMonth 
-                            ? "text-muted-foreground/30" 
-                            : "text-foreground opacity-60 group-hover:opacity-100"
+                            ? "text-muted-text/50" 
+                            : "text-body group-hover:text-primary"
                       )}>
                         {format(day, dateFormat)}
                       </span>
                       {dayEvents.length > 0 && (
-                        <div className="h-2 w-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
+                        <div className="h-2 w-2 rounded-full bg-primary shadow-sm mt-2.5 mr-1" />
                       )}
                     </div>
                     
-                    <ScrollArea className="flex-1 -mx-2 px-2 overflow-hidden">
-                      <div className="flex flex-col gap-2 pb-2">
+                    <ScrollArea className="flex-1 -mx-sm px-sm overflow-hidden border-t border-transparent group-hover:border-border/10 transition-colors">
+                      <div className="flex flex-col gap-xs pb-2 mt-1">
                         {dayEvents.map((event: any, idx) => (
                           <div 
                             key={event.id || idx} 
                             className={cn(
-                              "text-[10px] p-2.5 rounded-xl border flex flex-col gap-1.5 transition-all group/event cursor-default shadow-sm backdrop-blur-sm",
+                              "text-[10px] p-2 rounded-md border flex flex-col gap-1 transition-colors group/event cursor-default shadow-sm",
                               event.status === 'in_progress' 
                                 ? "bg-primary/5 border-primary/20 text-primary" 
-                                : "bg-muted/20 border-muted text-foreground hover:bg-muted/30"
+                                : "bg-muted/10 border-border/50 text-body hover:bg-muted/30"
                             )}
                           >
-                            <div className="font-black uppercase tracking-tight leading-none truncate" title={event.templateTitle}>
+                            <div className="font-medium text-heading leading-tight truncate px-1" title={event.templateTitle}>
                               {event.templateTitle}
                             </div>
-                            <div className="flex flex-col gap-1 pt-1 opacity-70">
-                              <div className="flex items-center gap-2 truncate" title={event.locationName}>
+                            <div className="flex flex-col gap-0.5 pt-1 px-1 opacity-80">
+                              <div className="flex items-center gap-1.5 truncate" title={event.locationName}>
                                 <MapPin className="h-3 w-3 flex-shrink-0" />
-                                <span className="font-bold truncate">{event.locationName}</span>
+                                <span className="font-normal text-body truncate">{event.locationName}</span>
                               </div>
-                              <div className="flex items-center gap-2 truncate" title={event.auditorName}>
+                              <div className="flex items-center gap-1.5 truncate" title={event.auditorName}>
                                 <User className="h-3 w-3 flex-shrink-0" />
                                 <span className={cn(
-                                  "font-black tracking-widest text-[9px] truncate", 
-                                  !event.assignedAuditorId && "text-destructive animate-pulse"
+                                  "font-medium uppercase tracking-widest text-[9px] truncate text-muted-text", 
+                                  !event.assignedAuditorId && "text-warning animate-pulse"
                                 )}>
                                   {event.auditorName || 'UNASSIGNED'}
                                 </span>

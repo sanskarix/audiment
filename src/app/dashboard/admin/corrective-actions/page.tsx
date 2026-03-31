@@ -21,6 +21,7 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -31,7 +32,8 @@ import {
   CheckCircle2, 
   ClipboardList,
   Filter,
-  ArrowUpRight
+  ArrowUpRight,
+  Search
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -41,6 +43,7 @@ export default function AdminCorrectiveActionsPage() {
   const [actions, setActions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -90,73 +93,96 @@ export default function AdminCorrectiveActionsPage() {
     return () => unsubscribe();
   }, [session]);
 
+  const filteredActions = actions.filter((action) => 
+    action.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    action.issueDescription?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    action.managerName?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
+        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="page-heading flex items-center gap-3">
-              <AlertCircle className="h-8 w-8 text-destructive animate-pulse" />
+            <h1 className="page-heading flex items-center gap-3 font-semibold text-heading">
+              <AlertCircle className="h-8 w-8 text-destructive" />
               CRITICAL ACTIONS
             </h1>
             <p className="body-text">Unresolved safety and quality failures requiring immediate executive attention</p>
           </div>
           
           <div className="flex items-center gap-2">
-             <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 font-bold px-4 py-1.5 text-[10px] tracking-tight uppercase">
+             <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 font-medium px-4 py-1.5 text-[10px] tracking-tight uppercase">
                {actions.length} OPEN ISSUES
              </Badge>
           </div>
         </div>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+            <Input 
+              placeholder="Search actions by location, issue, or manager..." 
+              className="pl-9 h-11 bg-background text-body"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+            <Filter className="h-4 w-4" />
+            Filters
+          </Button>
+        </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-           <Card className="standard-card bg-foreground text-background overflow-hidden relative group">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-transparent opacity-50" />
-              <CardHeader className="pb-2 relative z-10">
-                <CardDescription className="text-muted-foreground/60 text-xs font-medium text-muted-foreground">Overdue Tasks</CardDescription>
-                <CardTitle className="text-3xl font-bold tabular-nums text-white">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+           <Card className="standard-card border-l-4 border-l-destructive p-6 overflow-hidden relative group">
+              <div className="flex items-center justify-between mb-4 relative z-10">
+                <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-text">Overdue Tasks</CardTitle>
+                <Clock className="h-5 w-5 text-destructive/60" />
+              </div>
+              <div className="relative z-10">
+                <div className="text-4xl font-medium tracking-tight text-destructive">
                   {actions.filter(a => a.deadline?.toDate() < new Date()).length}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative z-10 pt-2">
-                <p className="text-[10px] text-muted-foreground/80 font-bold uppercase tracking-tight">CRITICAL MISSION DELAYS</p>
-              </CardContent>
+                </div>
+                <p className="text-xs text-muted-text mt-2 font-normal">Critical mission delays</p>
+              </div>
            </Card>
 
-           <Card className="standard-card overflow-hidden relative border-destructive/20 bg-destructive/5">
-              <CardHeader className="pb-2">
-                <CardDescription className="text-destructive text-xs font-medium text-muted-foreground opacity-70">High Severity</CardDescription>
-                <CardTitle className="text-3xl font-bold tabular-nums text-destructive">
+           <Card className="standard-card border-l-4 border-l-warning p-6 overflow-hidden relative">
+              <div className="flex items-center justify-between mb-4">
+                <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-text">High Severity</CardTitle>
+                <AlertCircle className="h-5 w-5 text-warning/60" />
+              </div>
+              <div>
+                <div className="text-4xl font-medium tracking-tight text-warning">
                   {actions.filter(a => a.severity === 'critical').length}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-2">
-                <p className="text-[10px] text-destructive/60 font-bold uppercase tracking-tight">IMMEDIATE BUSINESS RISK</p>
-              </CardContent>
+                </div>
+                <p className="text-xs text-muted-text mt-2 font-normal">Immediate business risk</p>
+              </div>
            </Card>
 
-           <Card className="standard-card overflow-hidden relative">
-              <CardHeader className="pb-2">
-                <CardDescription className="text-muted-foreground text-xs font-medium text-muted-foreground">Average TAT</CardDescription>
-                <CardTitle className="text-3xl font-bold tabular-nums text-foreground">48h</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-2">
-                <p className="text-[10px] text-muted-foreground/60 font-bold uppercase tracking-tight">TARGET RESOLUTION WINDOW</p>
-              </CardContent>
+           <Card className="standard-card border-l-4 border-l-primary p-6 overflow-hidden relative">
+              <div className="flex items-center justify-between mb-4">
+                <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-text">Average TAT</CardTitle>
+                <ClipboardList className="h-5 w-5 text-primary/60" />
+              </div>
+              <div>
+                <div className="text-4xl font-medium tracking-tight text-heading">48h</div>
+                <p className="text-xs text-muted-text mt-2 font-normal">Target resolution window</p>
+              </div>
            </Card>
         </div>
 
         {/* Actions Table */}
         <Card className="standard-card">
           <Table>
-            <TableHeader >
-              <TableRow >
-                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Location & Responsibility</TableHead>
-                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Issue Blueprint</TableHead>
-                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Severity</TableHead>
-                <TableHead className="h-11 text-xs font-medium text-muted-foreground">Deadline</TableHead>
-                <TableHead className="h-11 text-xs font-medium text-muted-foreground text-center">Status</TableHead>
+            <TableHeader className="standard-table-header">
+               <TableRow className="hover:bg-transparent">
+                <TableHead className="standard-table-head">Location & Responsibility</TableHead>
+                <TableHead className="standard-table-head">Issue Blueprint</TableHead>
+                <TableHead className="standard-table-head">Severity</TableHead>
+                <TableHead className="standard-table-head">Deadline</TableHead>
+                <TableHead className="standard-table-head text-center">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -168,54 +194,54 @@ export default function AdminCorrectiveActionsPage() {
                 ))
               ) : actions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="py-24 text-center text-muted-foreground bg-muted/5">
+                  <TableCell colSpan={5} className="standard-table-cell py-24 text-center text-muted-text bg-muted/5">
                     <div className="flex flex-col items-center gap-4">
                         <div className="bg-success/10 p-4 rounded-full">
                           <CheckCircle2 className="h-8 w-8 text-success opacity-40" />
                         </div>
-                        <p className="page-heading text-lg opacity-40 uppercase tracking-tight">All systems operational. No open actions.</p>
+                        <p className="page-heading text-lg opacity-40 uppercase tracking-tight font-medium">All systems operational. No open actions.</p>
                     </div>
                   </TableCell>
                 </TableRow>
               ) : (
-                actions.map((action) => (
-                  <TableRow key={action.id} className="border-b last:border-0 transition-colors hover:bg-muted/40">
-                    <TableCell className="px-4 py-3">
+                filteredActions.map((action) => (
+                  <TableRow key={action.id} className="standard-table-row group">
+                    <TableCell className="standard-table-cell">
                       <div className="space-y-1.5">
-                        <div className="flex items-center gap-2 font-bold text-foreground text-sm uppercase tracking-tight group-hover:text-primary transition-colors">
+                        <div className="flex items-center gap-2 font-normal text-heading text-sm uppercase tracking-tight group-hover:text-primary transition-colors">
                           <MapPin className="h-3.5 w-3.5 text-primary opacity-50" /> {action.locationName}
                         </div>
-                        <div className="flex items-center gap-1.5 text-muted-foreground text-[10px] font-bold uppercase tracking-tight pl-5 opacity-60">
+                        <div className="flex items-center gap-1.5 text-muted-text text-[10px] font-normal uppercase tracking-tight pl-5 opacity-60">
                           <User className="h-3 w-3" /> {action.managerName}
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="px-4 py-3">
+                    <TableCell className="standard-table-cell">
                       <div className="flex flex-col gap-1">
-                        <p className="text-sm font-bold text-foreground leading-tight">{action.questionText}</p>
-                        <p className="text-[10px] text-muted-foreground italic line-clamp-1 opacity-60">{action.description}</p>
+                        <p className="text-sm font-normal text-body leading-tight">{action.questionText}</p>
+                        <p className="text-[10px] text-muted-text italic line-clamp-1 opacity-60 font-normal">{action.description}</p>
                       </div>
                     </TableCell>
-                    <TableCell className="px-4 py-3">
+                    <TableCell className="standard-table-cell">
                       <Badge className={cn(
-                        "font-bold text-[9px] tracking-tight px-3 py-1 uppercase rounded-full border-none shadow-sm",
+                        "font-normal text-[9px] tracking-tight px-3 py-1 uppercase rounded-full border-none shadow-sm",
                         action.severity === 'critical' ? "bg-destructive text-white" : "bg-warning text-warning-foreground"
                       )}>
                         {action.severity}
                       </Badge>
                     </TableCell>
-                    <TableCell className="px-4 py-3">
+                    <TableCell className="standard-table-cell">
                       <div className={cn(
-                        "flex items-center gap-2 font-bold text-[11px] uppercase tracking-tight tabular-nums",
-                        action.deadline?.toDate() < new Date() ? "text-destructive animate-pulse" : "text-muted-foreground"
+                        "flex items-center gap-2 font-normal text-[11px] uppercase tracking-tight tabular-nums",
+                        action.deadline?.toDate() < new Date() ? "text-destructive animate-pulse" : "text-muted-text"
                       )}>
                         <Clock className="h-3.5 w-3.5 opacity-50" />
                         {format(action.deadline?.toDate(), 'MMM d, ha')}
                       </div>
                     </TableCell>
-                    <TableCell className="px-6 py-5 text-center">
+                    <TableCell className="px-4 py-3 text-center">
                        <Badge variant="outline" className={cn(
-                         "font-bold text-[9px] px-3 py-1 uppercase tracking-tight rounded-lg border-muted/20",
+                         "font-normal text-[9px] px-3 py-1 uppercase tracking-tight rounded-lg border-muted/20",
                          action.status === 'in_progress' ? "text-primary border-primary/20 bg-primary/5" : "text-warning border-warning/20 bg-warning/5"
                        )}>
                          {action.status.replace('_', ' ')}

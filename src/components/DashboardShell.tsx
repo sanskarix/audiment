@@ -149,7 +149,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                 </Avatar>
                 <div className="flex flex-col gap-0.5 leading-none overflow-hidden text-left ml-2">
                   <span className="font-medium truncate text-sm text-body">{userState?.name || 'Loading...'}</span>
-                  <span className="text-[10px] font-medium uppercase tracking-wider text-muted-text/50 truncate">
+                  <span className="text-[10px] font-medium  tracking-wider text-muted-text/50 truncate">
                     {role}
                   </span>
                 </div>

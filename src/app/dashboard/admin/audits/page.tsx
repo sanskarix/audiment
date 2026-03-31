@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { 
-  collection, 
-  query, 
-  where, 
-  onSnapshot, 
-  doc, 
-  addDoc, 
-  getDocs, 
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  doc,
+  addDoc,
+  getDocs,
   serverTimestamp,
   getDoc,
   Timestamp,
@@ -59,7 +59,7 @@ export default function AdminAuditsPage() {
       try {
         const data = JSON.parse(decodeURIComponent(match[1]));
         setSession({ orgId: data.organizationId, uid: data.uid });
-      } catch (e) {}
+      } catch (e) { }
     }
   }, []);
 
@@ -97,7 +97,7 @@ export default function AdminAuditsPage() {
 
   const handlePublish = async () => {
     if (!selectedTemplate || !selectedLocation || !selectedManager || !scheduledDate || !deadline || !session) return;
-    
+
     setLoading(true);
     try {
       const template = templates.find(t => t.id === selectedTemplate);
@@ -129,7 +129,7 @@ export default function AdminAuditsPage() {
         auditData.totalScore = 0;
         auditData.maxPossibleScore = 0;
         auditData.scorePercentage = 0;
-        
+
         const occurrences = recurring === 'none' ? 1 : 5;
         let currentDate = new Date(scheduledDate);
         let currentDeadline = new Date(deadline);
@@ -139,7 +139,7 @@ export default function AdminAuditsPage() {
           const instanceData = { ...auditData };
           instanceData.scheduledDate = Timestamp.fromDate(new Date(currentDate));
           instanceData.deadline = Timestamp.fromDate(new Date(currentDate.getTime() + durationMs));
-          
+
           const docRef = await addDoc(collection(db, 'audits'), instanceData);
 
           if (i === 0) {
@@ -198,8 +198,8 @@ export default function AdminAuditsPage() {
     }
   };
 
-  const filteredAudits = audits.filter((audit) => 
-    audit.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredAudits = audits.filter((audit) =>
+    audit.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     audit.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     audit.status?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     audit.assignedManagerName?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -234,13 +234,13 @@ export default function AdminAuditsPage() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden border-none shadow-2xl">
               <DialogHeader className="p-8 bg-muted/5 border-b border-muted/20">
-                <DialogTitle className="text-2xl font-semibold tracking-tight text-heading flex items-center gap-3">
+                <DialogTitle className="page-heading flex items-center gap-3">
                   <div className="bg-primary p-2 rounded-lg">
                     <CheckSquare className="h-5 w-5 text-white" />
                   </div>
                   {editingAuditId ? 'Edit Audit Instance' : 'Publish New Audit'}
                 </DialogTitle>
-                <DialogDescription className="text-xs font-normal uppercase text-muted-text tracking-widest mt-2">
+                <DialogDescription className="body-text mt-2">
                   {editingAuditId ? 'Update parameters for this existing audit instance.' : 'Assign a template to a location and set the schedule.'}
                 </DialogDescription>
               </DialogHeader>
@@ -300,13 +300,13 @@ export default function AdminAuditsPage() {
                         const assignedIds = loc?.assignedManagerIds || (loc?.assignedManagerId ? [loc.assignedManagerId] : []);
                         return assignedIds.includes(m.id);
                       }).length === 0 && (
-                        <SelectItem value="none" disabled className="text-muted-text">No managers assigned to this location</SelectItem>
-                      )}
+                          <SelectItem value="none" disabled className="text-muted-text">No managers assigned to this location</SelectItem>
+                        )}
                     </SelectContent>
                   </Select>
-                  <p className="text-[10px] text-muted-text">Select which branch manager will assign an auditor for this task.</p>
+                  <p className="body-text">Select which branch manager will assign an auditor for this task.</p>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-2">
                     <Label className="text-body font-normal">Scheduled Date</Label>
@@ -346,18 +346,18 @@ export default function AdminAuditsPage() {
                 </div>
 
                 <div className="flex items-center justify-between p-4 rounded-lg bg-muted/40 border">
-                  <div className="space-y-0.5">
-                    <Label className="text-sm font-medium text-heading">Surprise Audit</Label>
-                    <p className="text-[11px] text-muted-text font-normal">Location won't be notified until the scheduled date.</p>
-                  </div>
+	                  <div className="space-y-0.5">
+	                    <Label>Surprise audit</Label>
+	                    <p className="body-text">Location won't be notified until the scheduled date.</p>
+	                  </div>
                   <Switch checked={isSurprise} onCheckedChange={setIsSurprise} />
                 </div>
 
                 <div className="space-y-4 p-4 rounded-lg bg-muted/40 border">
-                  <div className="space-y-0.5">
-                    <Label className="text-sm font-medium text-heading">Recurring Schedule</Label>
-                    <p className="text-[11px] text-muted-text font-normal">Automatically generate the next audit instance.</p>
-                  </div>
+	                  <div className="space-y-0.5">
+	                    <Label>Recurring schedule</Label>
+	                    <p className="body-text">Automatically generate the next audit instance.</p>
+	                  </div>
                   <Select value={recurring} onValueChange={(val: any) => setRecurring(val)}>
                     <SelectTrigger className="text-body">
                       <SelectValue placeholder="Select frequency" />
@@ -372,7 +372,7 @@ export default function AdminAuditsPage() {
 
                   {recurring === 'weekly' && (
                     <div className="space-y-2">
-                      <Label className="text-xs">Repeat on Day of Week</Label>
+	                      <Label>Repeat on day of week</Label>
                       <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select day" />
@@ -392,7 +392,7 @@ export default function AdminAuditsPage() {
 
                   {recurring === 'monthly' && (
                     <div className="space-y-2">
-                      <Label className="text-xs">Repeat on Date of Month</Label>
+	                      <Label>Repeat on date of month</Label>
                       <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select date" />
@@ -408,11 +408,11 @@ export default function AdminAuditsPage() {
                 </div>
               </div>
               <DialogFooter className="p-6 bg-muted/5 border-t border-muted/20">
-                <Button variant="ghost" onClick={() => setOpen(false)} className="font-medium text-[11px] uppercase tracking-widest h-12 px-6">Cancel</Button>
-                <Button 
-                  onClick={handlePublish} 
+	                <Button variant="ghost" onClick={() => setOpen(false)} className="font-medium h-12 px-6">Cancel</Button>
+                <Button
+                  onClick={handlePublish}
                   disabled={loading || !selectedTemplate || !selectedLocation || !selectedManager || !scheduledDate || !deadline}
-                  className="font-medium text-[11px] uppercase tracking-widest h-12 px-10 shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
+	                  className="font-medium h-12 px-10 shadow-black/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {editingAuditId ? 'Save Changes' : 'Publish Instance'}
@@ -422,17 +422,17 @@ export default function AdminAuditsPage() {
           </Dialog>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input 
-              placeholder="Search audits by template, location, manager or status..." 
-              className="pl-9 h-11 bg-background text-body"
+            <Input
+              placeholder="Search audits by template, location, manager or status..."
+              className="pl-9 bg-background text-body"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+          <Button variant="outline" className="border-border/50 text-[#6b7280]">
             <Filter className="h-4 w-4" />
             Filters
           </Button>
@@ -454,12 +454,12 @@ export default function AdminAuditsPage() {
             <TableBody>
               {filteredAudits.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="standard-table-cell text-center py-24 text-muted-text">
+                  <TableCell colSpan={7} className="standard-table-cell text-center py-24">
                     <div className="flex flex-col items-center justify-center gap-4">
                       <div className="bg-muted/10 p-4 rounded-full">
                         <CheckSquare className="h-8 w-8 opacity-20" />
                       </div>
-                      <p className="page-heading text-lg opacity-40 uppercase tracking-[0.2em] font-medium">No audits published yet.</p>
+                      <p className="page-heading opacity-40">No audits published yet.</p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -468,31 +468,31 @@ export default function AdminAuditsPage() {
                   <TableRow key={a.id} className="standard-table-row group">
                     <TableCell className="standard-table-cell">
                       <div className="flex flex-col gap-1">
-                        <span className="font-normal text-heading text-sm leading-none group-hover:text-primary transition-colors">{a.templateTitle}</span>
-                        <span className="text-[10px] text-muted-text font-normal tabular-nums tracking-widest opacity-40">{a.id.slice(0, 8).toUpperCase()}</span>
+                        <span className="group-hover:text-primary transition-colors">{a.templateTitle}</span>
+                        <span className="muted-label tabular-nums opacity-40">ID: {a.id.slice(0, 8).toLowerCase()}</span>
                       </div>
                     </TableCell>
                     <TableCell className="standard-table-cell">
                       <div className="flex items-center gap-2.5">
                         <MapPin className="h-3.5 w-3.5 text-primary opacity-50" />
-                        <span className="text-[11px] font-medium uppercase tracking-tight text-heading/80">{a.locationName}</span>
+                        <span>{a.locationName}</span>
                       </div>
                     </TableCell>
                     <TableCell className="standard-table-cell">{getStatusBadge(a.status)}</TableCell>
                     <TableCell className="standard-table-cell">
                       <div className="flex flex-col gap-1.5 font-normal">
                         <div className="flex items-center gap-2">
-                          <span className="text-[9px] font-medium uppercase tracking-widest text-muted-text opacity-50 w-8">Due</span>
-                          <span className="text-[10px] font-medium text-destructive">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                          <span className="muted-label opacity-50 w-10">Due</span>
+                          <span className="text-destructive">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[9px] font-medium uppercase tracking-widest text-muted-text opacity-50 w-8">Sched</span>
-                          <span className="text-[11px] font-medium italic text-body">{a.scheduledDate?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                          <span className="muted-label opacity-50 w-10">Sched</span>
+                          <span className="italic">{a.scheduledDate?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                         </div>
                         {a.recurring && a.recurring !== 'none' && (
                           <div className="bg-primary/5 text-primary border border-primary/10 rounded-full px-2 py-0.5 mt-1 inline-flex items-center gap-1.5 w-fit">
                             <Clock className="w-3 h-3" />
-                            <span className="text-[8px] font-medium uppercase tracking-widest">{a.recurring}</span>
+                            <span className="muted-label">{a.recurring}</span>
                           </div>
                         )}
                       </div>
@@ -500,23 +500,23 @@ export default function AdminAuditsPage() {
                     <TableCell className="standard-table-cell">
                       {a.isSurprise ? (
                         <div className="flex items-center gap-2">
-                           <div className="h-2 w-2 rounded-full bg-warning animate-pulse" />
-                           <span className="text-[10px] font-medium text-warning uppercase tracking-widest">Surprise</span>
+                          <div className="h-2 w-2 rounded-full bg-warning animate-pulse" />
+                          <span className="muted-label text-warning">Surprise</span>
                         </div>
                       ) : (
-                        <span className="text-[10px] font-normal text-muted-text/40 uppercase tracking-widest italic">Routine</span>
+                        <span className="muted-label text-muted-text/40 italic">Routine</span>
                       )}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-right">
                       {a.status === 'completed' ? (
                         <div className="flex flex-col items-end">
-                          <span className={cn("text-xl font-medium italic tracking-tight tabular-nums leading-none", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
+                          <span className={cn("text-[22px] font-medium italic tabular-nums leading-none", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
                             {a.scorePercentage}%
                           </span>
-                          <span className="text-[10px] font-normal text-muted-text opacity-50 mt-1">{a.totalScore} / {a.maxPossibleScore}</span>
+                          <span className="muted-label opacity-50 mt-1">{a.totalScore} / {a.maxPossibleScore}</span>
                         </div>
                       ) : (
-                        <span className="text-[10px] text-muted-text/30 font-normal italic uppercase tracking-widest">Pending</span>
+                        <span className="muted-label text-muted-text/30 font-normal italic">Pending</span>
                       )}
                     </TableCell>
                     <TableCell className="px-4 py-3">
@@ -526,8 +526,8 @@ export default function AdminAuditsPage() {
                             <Button variant="ghost" className="h-9 w-9 p-0 hover:bg-muted/80 rounded-xl"><MoreHorizontal className="h-4 w-4 opacity-50" /></Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-48 p-1.5 rounded-xl border-muted/20 shadow-xl">
-                            <DropdownMenuItem 
-                              className="rounded-lg h-10 font-medium text-xs cursor-pointer focus:bg-primary/5 focus:text-primary transition-all text-body"
+                            <DropdownMenuItem
+                              className="rounded-lg h-10 font-medium cursor-pointer focus:bg-primary/5 focus:text-primary transition-all text-body"
                               onClick={() => {
                                 setEditingAuditId(a.id);
                                 setSelectedTemplate(a.templateId);

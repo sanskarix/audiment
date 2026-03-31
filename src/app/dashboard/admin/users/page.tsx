@@ -188,10 +188,12 @@ export default function AdminUsersPage() {
   };
 
   // Logic: Manager must be active to appear in listener
-  const activeManagers = users.filter((u) => u.role.toUpperCase() === 'MANAGER' && u.isActive !== false);
+  const activeManagers = users.filter(
+    (u) => String(u.role ?? '').toUpperCase() === 'MANAGER' && u.isActive !== false
+  );
 
-  const filteredUsers = users.filter((u) => 
-    u.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredUsers = users.filter((u) =>
+    u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
     u.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -200,15 +202,19 @@ export default function AdminUsersPage() {
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-xs">
-            <h1 className="page-heading">Users Management</h1>
+          <div className="flex flex-col gap-2">
+            <h1 className="page-heading">User Management</h1>
             <p className="body-text">Manage permissions, roles, and status for all organization users.</p>
           </div>
 
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
-              <Button size="default" className="shadow-lg shadow-primary/20 font-medium">
-                <UserPlus className="mr-2 h-4 w-4" /> Create User
+              <Button
+                size="default"
+                className="shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2"
+              >
+                <UserPlus className="h-4 w-4" />
+                <span>Create User</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -263,17 +269,17 @@ export default function AdminUsersPage() {
 
         {success && <div className="bg-success/10 border border-success/50 text-success p-3 rounded-md text-sm font-normal animate-in fade-in slide-in-from-top-1">{success}</div>}
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input 
-              placeholder="Search users by name, email, or role..." 
-              className="pl-9 h-11 text-body font-normal bg-background"
+            <Input
+              placeholder="Search users by name, email, or role..."
+              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
             <Filter className="h-4 w-4" />
             Filters
           </Button>
@@ -294,72 +300,80 @@ export default function AdminUsersPage() {
             <TableBody>
               {filteredUsers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="standard-table-cell h-32 text-center text-muted-text">
+                  <TableCell colSpan={6} className="standard-table-cell h-32 text-center">
                     No users found matching your search.
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredUsers.map((user) => (
-                <TableRow key={user.id} className="standard-table-row group">
-                  <TableCell className="standard-table-cell font-normal text-body text-sm">{user.name}</TableCell>
-                  <TableCell className="standard-table-cell text-body">{user.email}</TableCell>
-                  <TableCell className="standard-table-cell">
-                    <Badge variant={user.role === 'ADMIN' ? 'default' : user.role === 'MANAGER' ? 'secondary' : 'outline'} className="font-normal text-[9px] uppercase tracking-widest px-2 py-0.5 text-body">
-                      {user.role}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="standard-table-cell">
-                    <div className="flex items-center space-x-3">
-                      <Switch checked={user.isActive !== false} onCheckedChange={() => handleToggleActive(user.id, user.isActive !== false)} disabled={user.role === 'ADMIN'} />
-                      <span className={cn("text-[10px] font-medium uppercase tracking-widest", user.isActive !== false ? "text-success" : "text-muted-text opacity-50")}>
-                        {user.isActive !== false ? 'Active' : 'Inactive'}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="standard-table-cell">
-                    {user.role === 'AUDITOR' ? (
-                      <div className="flex items-center space-x-3">
-                        <Switch 
-                          checked={user.hasFlashmobAccess === true} 
-                          onCheckedChange={() => handleToggleFlashmob(user.id, user.hasFlashmobAccess === true)} 
+                  <TableRow key={user.id} className="standard-table-row group">
+                    <TableCell className="standard-table-cell">{user.name}</TableCell>
+                    <TableCell className="standard-table-cell">{user.email}</TableCell>
+                    <TableCell className="standard-table-cell">
+                      <Badge
+                        variant={user.role === 'ADMIN' ? 'default' : user.role === 'MANAGER' ? 'secondary' : 'outline'}
+                        className={cn("px-2 py-0.5 text-body", user.role === 'ADMIN' && "text-white")}
+                        style={{ fontSize: 12, fontWeight: 400 }}
+                      >
+                        {String(user.role ?? '')
+                          .toLowerCase()
+                          .replace(/^\w/, (c) => c.toUpperCase())}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="standard-table-cell">
+                      <div className="flex items-center">
+                        <Switch
+                          checked={user.isActive !== false}
+                          onCheckedChange={() =>
+                            handleToggleActive(user.id, user.isActive !== false)
+                          }
+                          disabled={user.role === 'ADMIN'}
                         />
-                        <span className={cn("text-[10px] font-medium uppercase tracking-widest", user.hasFlashmobAccess ? "text-primary" : "text-muted-text opacity-50")}>
-                          {user.hasFlashmobAccess ? 'Enabled' : 'Disabled'}
-                        </span>
                       </div>
-                    ) : (
-                      <span className="text-[10px] font-medium uppercase tracking-widest text-muted-text/30">-</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => {
-                          setSelectedUser(user);
-                          setEditFormData({ name: user.name, managerId: user.managerId || '' });
-                          setIsEditOpen(true);
-                        }} disabled={user.role === 'ADMIN'}>
-                          <Pencil className="mr-2 h-4 w-4" /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleResetPassword(user.email)}>
-                          <Mail className="mr-2 h-4 w-4" /> Reset Password
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive" onClick={() => {
-                          setSelectedUser(user);
-                          setIsDeleteOpen(true);
-                        }} disabled={user.role === 'ADMIN'}>
-                          <Trash2 className="mr-2 h-4 w-4" /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
+                    </TableCell>
+                    <TableCell className="standard-table-cell">
+                      {user.role === 'AUDITOR' ? (
+                        <div className="flex items-center">
+                          <Switch
+                            checked={user.hasFlashmobAccess === true}
+                            onCheckedChange={() =>
+                              handleToggleFlashmob(user.id, user.hasFlashmobAccess === true)
+                            }
+                          />
+                        </div>
+                      ) : (
+                        <span className="text-muted-text/30" style={{ fontSize: 14, fontWeight: 400 }}>-</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => {
+                            setSelectedUser(user);
+                            setEditFormData({ name: user.name, managerId: user.managerId || '' });
+                            setIsEditOpen(true);
+                          }} disabled={user.role === 'ADMIN'}>
+                            <Pencil className="mr-2 h-4 w-4" /> Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleResetPassword(user.email)}>
+                            <Mail className="mr-2 h-4 w-4" /> Reset Password
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="text-destructive" onClick={() => {
+                            setSelectedUser(user);
+                            setIsDeleteOpen(true);
+                          }} disabled={user.role === 'ADMIN'}>
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
           </Table>
         </Card>
 

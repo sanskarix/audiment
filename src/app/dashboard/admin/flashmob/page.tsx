@@ -67,7 +67,7 @@ export default function AdminFlashmobPage() {
 
   if (loading) return <div className="flex h-screen items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
 
-  const filteredFlashmobs = flashmobs.filter((audit) => 
+  const filteredFlashmobs = flashmobs.filter((audit) =>
     audit.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     audit.auditorName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -86,23 +86,23 @@ export default function AdminFlashmobPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="px-3 py-1 text-[10px] font-medium text-muted-text">
-              {flashmobs.length} SESSIONS
+            <Badge variant="secondary">
+              {flashmobs.length} sessions
             </Badge>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input 
-              placeholder="Search logs by location or auditor..." 
-              className="pl-9 h-11 bg-background text-body font-normal"
+            <Input
+              placeholder="Search logs by location or auditor..."
+              className="pl-9 bg-background text-body font-normal"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+          <Button variant="outline" className="border-border/50 text-[#6b7280]">
             <Filter className="h-4 w-4" />
             Filters
           </Button>
@@ -114,7 +114,7 @@ export default function AdminFlashmobPage() {
               <div className="bg-muted/10 p-6 rounded-full mb-6">
                 <Video className="h-12 w-12 opacity-20" />
               </div>
-              <p className="page-heading text-lg opacity-40 uppercase tracking-tight font-medium text-heading">No flashmob audits reported yet.</p>
+              <p className="page-heading opacity-40">No flashmob audits reported yet.</p>
             </CardContent>
           </Card>
         ) : (
@@ -135,7 +135,7 @@ export default function AdminFlashmobPage() {
                   />
                   <div className="absolute top-4 left-4">
                     <div className="bg-background/80 backdrop-blur-xl px-3 py-1 rounded-lg border border-border/50 shadow-lg">
-                      <span className="text-[10px] font-medium uppercase tracking-widest text-heading">{audit.locationName}</span>
+                      <span className="muted-label">{audit.locationName}</span>
                     </div>
                   </div>
                   <div className="absolute top-4 right-4">
@@ -146,7 +146,7 @@ export default function AdminFlashmobPage() {
                   <div className="absolute bottom-4 left-4">
                     <div className="bg-primary/90 backdrop-blur-md px-2 py-1 rounded-md flex items-center gap-2 shadow-lg">
                       <Play className="h-2.5 w-2.5 text-white fill-white" />
-                      <span className="text-[8px] font-medium text-white tracking-widest uppercase">Preview</span>
+                      <span className="muted-label text-white">Preview</span>
                     </div>
                   </div>
                 </div>
@@ -159,11 +159,11 @@ export default function AdminFlashmobPage() {
                     <div className="flex flex-col gap-2 pt-2">
                       <div className="flex items-center gap-2 text-muted-text/60">
                         <User className="h-3.5 w-3.5 text-primary/60" />
-                        <span className="text-[10px] font-normal uppercase tracking-tight">{audit.auditorName || 'Unknown Auditor'}</span>
+                        <span>{audit.auditorName || 'Unknown auditor'}</span>
                       </div>
                       <div className="flex items-center gap-2 text-muted-text/60">
                         <CalendarIcon className="h-3.5 w-3.5 text-primary/60" />
-                        <span className="text-[10px] font-normal uppercase tracking-tight">{format(audit.submittedAt?.toDate(), 'MMM d, p')}</span>
+                        <span>{format(audit.submittedAt?.toDate(), 'MMM d, p')}</span>
                       </div>
                     </div>
                   </div>

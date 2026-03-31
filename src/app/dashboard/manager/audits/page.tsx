@@ -77,8 +77,8 @@ export default function ManagerAuditsPage() {
     return () => unsubAudits();
   }, [session]);
 
-  const filteredAudits = audits.filter((audit) => 
-    audit.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredAudits = audits.filter((audit) =>
+    audit.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     audit.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     audit.status?.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -123,12 +123,12 @@ export default function ManagerAuditsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'published': return <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-2 py-0.5 text-xs font-medium uppercase tracking-tight">Awaiting Assignment</Badge>;
-      case 'assigned': return <Badge variant="secondary" className="bg-warning/10 text-warning border-warning/20 px-2 py-0.5 text-xs font-medium uppercase tracking-tight">Assigned</Badge>;
-      case 'in_progress': return <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-2 py-0.5 text-xs font-medium uppercase tracking-tight">In Progress</Badge>;
-      case 'completed': return <Badge variant="secondary" className="bg-success/10 text-success border-success/20 px-2 py-0.5 text-xs font-medium uppercase tracking-tight">Completed</Badge>;
-      case 'missed': return <Badge variant="destructive" className="px-2 py-0.5 text-xs font-medium uppercase tracking-tight">Missed</Badge>;
-      default: return <Badge variant="outline" className="px-2 py-0.5 text-xs font-medium uppercase tracking-tight">{status}</Badge>;
+      case 'published': return <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-2 py-0.5 text-xs font-medium  tracking-tight">Awaiting Assignment</Badge>;
+      case 'assigned': return <Badge variant="secondary" className="bg-warning/10 text-warning border-warning/20 px-2 py-0.5 text-xs font-medium  tracking-tight">Assigned</Badge>;
+      case 'in_progress': return <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 px-2 py-0.5 text-xs font-medium  tracking-tight">In Progress</Badge>;
+      case 'completed': return <Badge variant="secondary" className="bg-success/10 text-success border-success/20 px-2 py-0.5 text-xs font-medium  tracking-tight">Completed</Badge>;
+      case 'missed': return <Badge variant="destructive" className="px-2 py-0.5 text-xs font-medium  tracking-tight">Missed</Badge>;
+      default: return <Badge variant="outline" className="px-2 py-0.5 text-xs font-medium  tracking-tight">{status}</Badge>;
     }
   };
 
@@ -142,17 +142,17 @@ export default function ManagerAuditsPage() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input 
-              placeholder="Search audits by template, location, or status..." 
+            <Input
+              placeholder="Search audits by template, location, or status..."
               className="pl-9 h-11 bg-background text-body"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
             <Filter className="h-4 w-4" />
             Filters
           </Button>
@@ -173,7 +173,7 @@ export default function ManagerAuditsPage() {
             <TableBody>
               {filteredAudits.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="standard-table-cell h-32 text-center text-muted-text">
+                  <TableCell colSpan={6} className="standard-table-cell h-32 text-center">
                     No audits found matching your search.
                   </TableCell>
                 </TableRow>
@@ -182,19 +182,19 @@ export default function ManagerAuditsPage() {
                   <TableRow key={a.id} className="standard-table-row group">
                     <TableCell className="standard-table-cell">
                       <div className="flex flex-col gap-1">
-                        <span className="font-normal text-sm text-heading">{a.templateTitle}</span>
+                        <span>{a.templateTitle}</span>
                         {a.isSurprise && (
                           <div className="flex items-center gap-1.5 mt-1">
                             <div className="h-1.5 w-1.5 rounded-full bg-warning animate-pulse" />
-                            <span className="text-[10px] font-normal text-warning uppercase tracking-widest">Surprise Audit</span>
+                            <span className="muted-label text-warning">Surprise Audit</span>
                           </div>
                         )}
                       </div>
                     </TableCell>
                     <TableCell className="standard-table-cell">
-                      <div className="flex items-center gap-2 font-normal text-body">
+                      <div className="flex items-center gap-2 font-normal">
                         <MapPin className="h-4 w-4 text-primary opacity-60" />
-                        <span className="text-sm">{a.locationName}</span>
+                        <span>{a.locationName}</span>
                       </div>
                     </TableCell>
                     <TableCell className="standard-table-cell">
@@ -227,7 +227,7 @@ export default function ManagerAuditsPage() {
                           }
                         }}>
                           <DialogTrigger asChild>
-                            <Button size="sm" variant="outline" className="h-8 gap-2 text-xs font-medium uppercase tracking-widest text-primary hover:bg-primary/5 transition-all active:scale-95" onClick={() => {
+                            <Button size="sm" variant="outline" className="h-8 gap-2 text-xs font-medium  tracking-widest text-primary hover:bg-primary/5 transition-all active:scale-95" onClick={() => {
                               setSelectedAudit(a);
                               setOpen(true);
                             }}>
@@ -248,7 +248,7 @@ export default function ManagerAuditsPage() {
                             </DialogHeader>
                             <div className="space-y-lg p-xl">
                               <div className="space-y-xs">
-                                <Label className="text-xs font-normal uppercase tracking-widest text-muted-text">Select Qualified Auditor</Label>
+                                <Label className="text-xs font-normal  tracking-widest text-muted-text">Select Qualified Auditor</Label>
                                 <Select value={selectedAuditor} onValueChange={setSelectedAuditor}>
                                   <SelectTrigger className="h-10 bg-background border-input text-body">
                                     <SelectValue placeholder="Choose an auditor" />
@@ -262,11 +262,11 @@ export default function ManagerAuditsPage() {
                               </div>
                             </div>
                             <DialogFooter className="p-xl border-t border-border/50 bg-muted/10 gap-sm">
-                              <Button variant="outline" onClick={() => setOpen(false)} className="font-medium text-xs uppercase tracking-widest shadow-sm text-body">Cancel</Button>
+                              <Button variant="outline" onClick={() => setOpen(false)} className="font-medium text-xs  tracking-widest shadow-sm text-body">Cancel</Button>
                               <Button
                                 onClick={handleAssign}
                                 disabled={loading || !selectedAuditor}
-                                className="font-medium text-xs uppercase tracking-widest shadow-md"
+                                className="font-medium text-xs  tracking-widest shadow-md"
                               >
                                 {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
                                 Confirm Assignment
@@ -278,11 +278,11 @@ export default function ManagerAuditsPage() {
                       {a.status !== 'published' && a.status !== 'completed' && a.status !== 'missed' && (
                         <div className="flex items-center gap-2 justify-end text-muted-text/60">
                           <div className="h-2 w-2 rounded-full bg-primary/40 animate-pulse" />
-                          <span className="text-xs font-normal uppercase tracking-widest">Ongoing</span>
+                          <span className="text-xs font-normal  tracking-widest">Ongoing</span>
                         </div>
                       )}
                       {a.status === 'completed' && (
-                        <Button size="sm" variant="ghost" className="h-8 gap-2 text-xs font-medium uppercase tracking-widest text-success hover:bg-success/5 border border-success/10 transition-all">
+                        <Button size="sm" variant="ghost" className="h-8 gap-2 text-xs font-medium  tracking-widest text-success hover:bg-success/5 border border-success/10 transition-all">
                           View Report
                         </Button>
                       )}

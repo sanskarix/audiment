@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 import DashboardShell from '@/components/DashboardShell';
 import { db } from '@/lib/firebase';
-import { 
-  collection, 
-  query, 
-  where, 
+import {
+  collection,
+  query,
+  where,
   onSnapshot,
   doc,
   addDoc,
@@ -14,16 +14,16 @@ import {
   getDocs
 } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
+import {
+  Card,
+  CardContent,
+  CardHeader,
   CardTitle,
   CardDescription
 } from '@/components/ui/card';
-import { 
-  Users, 
-  UserPlus, 
+import {
+  Users,
+  UserPlus,
   Search,
   Filter,
   MoreVertical,
@@ -37,13 +37,13 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from '@/components/ui/table';
 import {
   Dialog,
@@ -73,7 +73,7 @@ export default function AuditorsPage() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Add Auditor State
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newAuditorName, setNewAuditorName] = useState('');
@@ -85,7 +85,7 @@ export default function AuditorsPage() {
     if (match) {
       try {
         setSession(JSON.parse(decodeURIComponent(match[1])));
-      } catch (e) {}
+      } catch (e) { }
     }
   }, []);
 
@@ -146,7 +146,7 @@ export default function AuditorsPage() {
     }
   };
 
-  const filteredAuditors = auditors.filter(auditor => 
+  const filteredAuditors = auditors.filter(auditor =>
     auditor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     auditor.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -171,7 +171,7 @@ export default function AuditorsPage() {
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="lg" className="shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-95 transition-all text-xs font-medium uppercase tracking-widest">
+              <Button size="lg" className="shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-95 transition-all text-xs font-medium  tracking-widest">
                 <UserPlus className="mr-2 h-4 w-4" /> Add Auditor
               </Button>
             </DialogTrigger>
@@ -185,10 +185,10 @@ export default function AuditorsPage() {
               <form onSubmit={handleAddAuditor}>
                 <div className="space-y-lg p-xl">
                   <div className="space-y-xs">
-                    <Label htmlFor="name" className="text-xs font-normal uppercase tracking-widest text-muted-text">Full Name</Label>
-                    <Input 
-                      id="name" 
-                      placeholder="John Doe" 
+                    <Label htmlFor="name" className="text-xs font-normal  tracking-widest text-muted-text">Full Name</Label>
+                    <Input
+                      id="name"
+                      placeholder="John Doe"
                       value={newAuditorName}
                       onChange={(e) => setNewAuditorName(e.target.value)}
                       required
@@ -196,11 +196,11 @@ export default function AuditorsPage() {
                     />
                   </div>
                   <div className="space-y-xs">
-                    <Label htmlFor="email" className="text-xs font-normal uppercase tracking-widest text-muted-text">Email Address</Label>
-                    <Input 
-                      id="email" 
-                      type="email" 
-                      placeholder="john@example.com" 
+                    <Label htmlFor="email" className="text-xs font-normal  tracking-widest text-muted-text">Email Address</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="john@example.com"
                       value={newAuditorEmail}
                       onChange={(e) => setNewAuditorEmail(e.target.value)}
                       required
@@ -209,8 +209,8 @@ export default function AuditorsPage() {
                   </div>
                 </div>
                 <DialogFooter className="p-xl border-t border-border/50 bg-muted/10 gap-sm">
-                  <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-medium text-xs uppercase tracking-widest shadow-sm text-body">Cancel</Button>
-                  <Button type="submit" disabled={isSubmitting} className="font-medium text-xs uppercase tracking-widest shadow-md">
+                  <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-medium text-xs  tracking-widest shadow-sm text-body">Cancel</Button>
+                  <Button type="submit" disabled={isSubmitting} className="font-medium text-xs  tracking-widest shadow-md">
                     {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
                     Create Auditor
                   </Button>
@@ -220,17 +220,17 @@ export default function AuditorsPage() {
           </Dialog>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input 
-              placeholder="Search auditors by name or email..." 
+            <Input
+              placeholder="Search auditors by name or email..."
               className="pl-9 h-11 bg-background text-body"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
             <Filter className="h-4 w-4" />
             Filters
           </Button>
@@ -246,7 +246,7 @@ export default function AuditorsPage() {
               </h3>
             </div>
           </Card>
-          
+
           <Card className="standard-card">
             <div className="p-6">
               <p className="muted-label mb-2">Avg. Efficiency</p>
@@ -255,7 +255,7 @@ export default function AuditorsPage() {
               </h3>
             </div>
           </Card>
-          
+
           <Card className="standard-card">
             <div className="p-6">
               <p className="muted-label mb-2">Pending Tasks</p>
@@ -309,7 +309,7 @@ export default function AuditorsPage() {
                     <TableRow key={auditor.id} className="standard-table-row group">
                       <TableCell className="standard-table-cell">
                         <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium text-sm uppercase shrink-0">
+                          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium text-sm  shrink-0">
                             {auditor.name.substring(0, 2)}
                           </div>
                           <span className="font-normal text-sm text-heading">{auditor.name}</span>
@@ -321,12 +321,12 @@ export default function AuditorsPage() {
                         </div>
                       </TableCell>
                       <TableCell className="standard-table-cell">
-                        <Badge variant="outline" className="bg-success/10 text-success border-success/30 font-medium text-[10px] uppercase tracking-widest px-2 py-0.5">
+                        <Badge variant="outline" className="bg-success/10 text-success border-success/30 font-medium text-[10px]  tracking-widest px-2 py-0.5">
                           Active
                         </Badge>
                       </TableCell>
                       <TableCell className="standard-table-cell">
-                         <div className="flex items-center gap-1.5 font-normal text-body">
+                        <div className="flex items-center gap-1.5 font-normal text-body">
                           <MapPin className="h-3.5 w-3.5 text-primary opacity-60" /> {auditor.assignedLocations?.length || 0} Locations
                         </div>
                       </TableCell>

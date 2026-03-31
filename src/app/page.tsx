@@ -399,7 +399,7 @@ export default function Home() {
                 </div>
                 <p className="text-neutral-500 leading-relaxed mb-6">{uc.desc}</p>
                 <div className="pt-5 border-t border-neutral-100">
-                  <span className="text-xs font-semibold uppercase tracking-widest text-neutral-400 block mb-2">Key Checks</span>
+                  <span className="text-xs font-semibold  tracking-widest text-neutral-400 block mb-2">Key Checks</span>
                   <p className="text-sm text-neutral-600">{uc.checks}</p>
                 </div>
               </div>
@@ -419,8 +419,8 @@ export default function Home() {
           </div>
           <div className="rounded-2xl border border-white/10 overflow-hidden">
             <div className="grid grid-cols-[1fr_1.5fr] bg-white/5 border-b border-white/10">
-              <div className="px-6 py-4 text-sm font-semibold text-neutral-400 uppercase tracking-widest">Threat</div>
-              <div className="px-6 py-4 text-sm font-semibold text-neutral-400 uppercase tracking-widest border-l border-white/10">How Audiment Prevents It</div>
+              <div className="px-6 py-4 text-sm font-semibold text-neutral-400  tracking-widest">Threat</div>
+              <div className="px-6 py-4 text-sm font-semibold text-neutral-400  tracking-widest border-l border-white/10">How Audiment Prevents It</div>
             </div>
             {tamperRows.map((row, i) => (
               <div

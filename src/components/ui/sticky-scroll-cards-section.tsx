@@ -112,27 +112,27 @@ const useScrollAnimation = () => {
 
 // --- Header Component ---
 const AnimatedHeader = () => {
-    const [headerRef, headerInView] = useScrollAnimation();
-    const [pRef, pInView] = useScrollAnimation();
+  const [headerRef, headerInView] = useScrollAnimation();
+  const [pRef, pInView] = useScrollAnimation();
 
-    return (
-        <div className="text-center max-w-3xl mx-auto mb-20 px-6">
-            <h2 
-                ref={headerRef}
-                className={`text-4xl md:text-5xl font-semibold tracking-tight transition-all duration-700 ease-out text-neutral-900 ${headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                style={{ transformStyle: 'preserve-3d' }}
-            >
-                Every feature exists to solve a trust or operations problem.
-            </h2>
-            <p 
-                ref={pRef}
-                className={`text-lg md:text-xl text-neutral-600 mt-6 transition-all duration-700 ease-out delay-200 ${pInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                style={{ transformStyle: 'preserve-3d' }}
-            >
-                Built specifically for multi-branch businesses, every feature addresses a real gap in how inspections and accountability work today.
-            </p>
-        </div>
-    );
+  return (
+    <div className="text-center max-w-3xl mx-auto mb-20 px-6">
+      <h2
+        ref={headerRef}
+        className={`text-4xl md:text-5xl font-semibold tracking-tight transition-all duration-700 ease-out text-neutral-900 ${headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        Every feature exists to solve a trust or operations problem.
+      </h2>
+      <p
+        ref={pRef}
+        className={`text-lg md:text-xl text-neutral-600 mt-6 transition-all duration-700 ease-out delay-200 ${pInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        Built specifically for multi-branch businesses, every feature addresses a real gap in how inspections and accountability work today.
+      </p>
+    </div>
+  );
 };
 
 export function StickyFeatureSection() {
@@ -141,22 +141,22 @@ export function StickyFeatureSection() {
       <div className="px-6">
         <div className="max-w-6xl mx-auto">
           <section className="py-24 md:py-32 flex flex-col items-center">
-            
+
             <AnimatedHeader />
 
             <div className="w-full">
               {features.map((feature, index) => (
                 <div
-                    key={index}
-                    className={`${feature.bgColor} grid grid-cols-1 md:grid-cols-2 items-center gap-8 md:gap-12 p-8 md:p-12 rounded-[2rem] border border-neutral-200/50 mb-16 shadow-lg shadow-neutral-900/5 sticky`}
-                    style={{ top: '150px' }}
+                  key={index}
+                  className={`${feature.bgColor} grid grid-cols-1 md:grid-cols-2 items-center gap-8 md:gap-12 p-8 md:p-12 rounded-[2rem] border border-neutral-200/50 mb-16 shadow-lg shadow-neutral-900/5 sticky`}
+                  style={{ top: '150px' }}
                 >
                   <div className="flex flex-col justify-center">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-10 h-10 rounded-xl bg-neutral-900 flex items-center justify-center flex-shrink-0">
                         <feature.icon className="w-5 h-5 text-white" />
                       </div>
-                      <span className="text-xs font-semibold uppercase tracking-widest text-neutral-400">{feature.label}</span>
+                      <span className="text-xs font-semibold  tracking-widest text-neutral-400">{feature.label}</span>
                     </div>
                     <h3 className="text-2xl md:text-4xl font-semibold mb-3 text-neutral-900 tracking-tight">{feature.title}</h3>
                     <p className="text-lg font-semibold text-neutral-700 mb-4 italic">{feature.heading}</p>
@@ -164,15 +164,15 @@ export function StickyFeatureSection() {
                       <p key={i} className={`${feature.textColor} text-base leading-relaxed mb-3`}>{para}</p>
                     ))}
                   </div>
-                  
+
                   <div className="image-wrapper mt-8 md:mt-0 relative aspect-[4/3] rounded-2xl overflow-hidden border border-neutral-200/50 shadow-sm">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img 
-                        src={feature.imageUrl} 
-                        alt={feature.title}
-                        loading="lazy"
-                        className="w-full h-full object-cover absolute inset-0 transition-transform duration-700 hover:scale-105"
-                        onError={(e) => { (e.target as HTMLImageElement).onerror = null; (e.target as HTMLImageElement).src = "https://placehold.co/600x400/cccccc/ffffff?text=Image+Not+Found"; }}
+                    <img
+                      src={feature.imageUrl}
+                      alt={feature.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover absolute inset-0 transition-transform duration-700 hover:scale-105"
+                      onError={(e) => { (e.target as HTMLImageElement).onerror = null; (e.target as HTMLImageElement).src = "https://placehold.co/600x400/cccccc/ffffff?text=Image+Not+Found"; }}
                     />
                   </div>
                 </div>

@@ -26,17 +26,17 @@ export default function AdminLocationsPage() {
   // Form states
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
   const [formData, setFormData] = useState({
     name: '',
     address: '',
     city: '',
-    assignedManagerIds: [] as string[], 
+    assignedManagerIds: [] as string[],
   });
 
   const [editFormData, setEditFormData] = useState({
@@ -101,8 +101,8 @@ export default function AdminLocationsPage() {
     };
   }, [session]);
 
-  const filteredLocations = locations.filter((loc) => 
-    loc.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredLocations = locations.filter((loc) =>
+    loc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     loc.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
     loc.city.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -175,7 +175,7 @@ export default function AdminLocationsPage() {
   const getManagerNames = (managerIds: string[] | undefined, legacyId?: string) => {
     const ids = managerIds || (legacyId ? [legacyId] : []);
     if (ids.length === 0) return 'Unassigned';
-    
+
     const names = ids.map(id => {
       const m = managers.find(mgr => mgr.id === id);
       return m ? m.name : 'Unknown';
@@ -209,7 +209,7 @@ export default function AdminLocationsPage() {
             <h1 className="page-heading">Locations Management</h1>
             <p className="body-text">Manage branches, outlets, and assign managers to specific sites.</p>
           </div>
-          
+
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
               <Button size="default" className="shadow-lg shadow-primary/20 font-medium">
@@ -224,15 +224,15 @@ export default function AdminLocationsPage() {
               <form onSubmit={handleCreateLocation} className="space-y-4 py-6">
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="name" className="text-body font-normal">Location Name</Label>
-                  <Input value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required placeholder="Downtown Branch" className="text-body" />
+                  <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required placeholder="Downtown Branch" className="text-body" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="address" className="text-body font-normal">Address</Label>
-                  <Input value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} required placeholder="123 Main St" className="text-body" />
+                  <Input value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} required placeholder="123 Main St" className="text-body" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="city" className="text-body font-normal">City</Label>
-                  <Input value={formData.city} onChange={(e) => setFormData({...formData, city: e.target.value})} required placeholder="Megacity" className="text-body" />
+                  <Input value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} required placeholder="Megacity" className="text-body" />
                 </div>
                 <div className="flex flex-col gap-4">
                   <Label className="text-body font-normal">Assign Managers</Label>
@@ -242,9 +242,9 @@ export default function AdminLocationsPage() {
                     ) : (
                       managers.map(m => (
                         <div key={m.id} className="flex items-center space-x-2">
-                          <input 
-                            type="checkbox" 
-                            id={`mgr-${m.id}`} 
+                          <input
+                            type="checkbox"
+                            id={`mgr-${m.id}`}
                             checked={formData.assignedManagerIds.includes(m.id)}
                             onChange={() => toggleManagerSelection(m.id, false)}
                             className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
@@ -262,17 +262,17 @@ export default function AdminLocationsPage() {
           </Dialog>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input 
-              placeholder="Search locations by name, address, or city..." 
+            <Input
+              placeholder="Search locations by name, address, or city..."
               className="pl-9 h-11 text-body"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
             <Filter className="h-4 w-4" />
             Filters
           </Button>
@@ -292,21 +292,21 @@ export default function AdminLocationsPage() {
             <TableBody>
               {filteredLocations.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="standard-table-cell h-32 text-center text-muted-text">
+                  <TableCell colSpan={5} className="standard-table-cell h-32 text-center">
                     No locations found matching your search.
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredLocations.map((location: any) => (
                   <TableRow key={location.id} className="standard-table-row group">
-                    <TableCell className="standard-table-cell font-normal text-heading text-sm">
+                    <TableCell className="standard-table-cell">
                       <div className="flex items-center gap-3">
                         <MapPin className="h-4 w-4 text-primary opacity-60" />
                         {location.name}
                       </div>
                     </TableCell>
-                    <TableCell className="standard-table-cell text-body">{location.city}</TableCell>
-                    <TableCell className="standard-table-cell text-muted-text">{getManagerNames(location.assignedManagerIds, location.assignedManagerId)}</TableCell>
+                    <TableCell className="standard-table-cell">{location.city}</TableCell>
+                    <TableCell className="standard-table-cell">{getManagerNames(location.assignedManagerIds, location.assignedManagerId)}</TableCell>
                     <TableCell className="standard-table-cell">
                       <Switch checked={location.isActive} onCheckedChange={() => handleToggleActive(location.id, location.isActive)} />
                     </TableCell>
@@ -318,8 +318,8 @@ export default function AdminLocationsPage() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => {
                             setSelectedLocation(location);
-                            setEditFormData({ 
-                              name: location.name, 
+                            setEditFormData({
+                              name: location.name,
                               address: location.address || '',
                               city: location.city || '',
                               assignedManagerIds: location.assignedManagerIds || (location.assignedManagerId ? [location.assignedManagerId] : [])
@@ -348,24 +348,24 @@ export default function AdminLocationsPage() {
             <form onSubmit={handleEditLocation} className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="edit-name" className="text-body font-normal">Location Name</Label>
-                <Input id="edit-name" value={editFormData.name} onChange={(e) => setEditFormData({...editFormData, name: e.target.value})} required className="text-body" />
+                <Input id="edit-name" value={editFormData.name} onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })} required className="text-body" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="edit-address" className="text-body font-normal">Address</Label>
-                <Input id="edit-address" value={editFormData.address} onChange={(e) => setEditFormData({...editFormData, address: e.target.value})} required className="text-body" />
+                <Input id="edit-address" value={editFormData.address} onChange={(e) => setEditFormData({ ...editFormData, address: e.target.value })} required className="text-body" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="edit-city" className="text-body font-normal">City</Label>
-                <Input id="edit-city" value={editFormData.city} onChange={(e) => setEditFormData({...editFormData, city: e.target.value})} required className="text-body" />
+                <Input id="edit-city" value={editFormData.city} onChange={(e) => setEditFormData({ ...editFormData, city: e.target.value })} required className="text-body" />
               </div>
               <div className="space-y-4">
                 <Label className="text-body font-normal">Assigned Managers</Label>
                 <div className="grid grid-cols-2 gap-4 border rounded-md p-4 bg-muted/20">
                   {managers.map(m => (
                     <div key={m.id} className="flex items-center space-x-2">
-                      <input 
-                        type="checkbox" 
-                        id={`edit-mgr-${m.id}`} 
+                      <input
+                        type="checkbox"
+                        id={`edit-mgr-${m.id}`}
                         checked={editFormData.assignedManagerIds.includes(m.id)}
                         onChange={() => toggleManagerSelection(m.id, true)}
                         className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"

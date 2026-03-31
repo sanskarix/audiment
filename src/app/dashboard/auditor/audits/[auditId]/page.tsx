@@ -397,16 +397,16 @@ export default function AuditExecutionPage() {
       <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl px-6 py-4 shadow-sm">
         <div className="mx-auto max-w-3xl space-y-4">
           <div className="flex items-center justify-between">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => saveProgress(false).then(() => router.push('/dashboard/auditor'))} 
-              className="gap-2 font-medium text-muted-text hover:text-destructive hover:bg-destructive/10 uppercase tracking-widest text-xs"
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => saveProgress(false).then(() => router.push('/dashboard/auditor'))}
+              className="gap-2 font-medium text-muted-text hover:text-destructive hover:bg-destructive/10  tracking-widest text-xs"
             >
               <X className="h-4 w-4" /> Abort
             </Button>
             <div className="text-center group cursor-default">
-              <p className="text-[10px] font-normal uppercase tracking-widest text-muted-text opacity-60 leading-none mb-1 group-hover:opacity-100 transition-opacity">
+              <p className="text-[10px] font-normal  tracking-widest text-muted-text opacity-60 leading-none mb-1 group-hover:opacity-100 transition-opacity">
                 Progress
               </p>
               <div className="flex items-center gap-2 justify-center">
@@ -416,19 +416,19 @@ export default function AuditExecutionPage() {
                 </p>
               </div>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => saveProgress(false)} 
-              disabled={saving} 
-              className="gap-2 font-medium uppercase tracking-widest text-xs border-primary/20 text-primary hover:bg-primary/5 shadow-sm active:scale-95"
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => saveProgress(false)}
+              disabled={saving}
+              className="gap-2 font-medium  tracking-widest text-xs border-primary/20 text-primary hover:bg-primary/5 shadow-sm active:scale-95"
             >
               {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />} Save
             </Button>
           </div>
           <div className="relative h-1.5 w-full bg-muted rounded-full overflow-hidden">
-            <div 
-              className="absolute top-0 left-0 h-full bg-primary transition-all duration-500 ease-out" 
+            <div
+              className="absolute top-0 left-0 h-full bg-primary transition-all duration-500 ease-out"
               style={{ width: `${progressValue}%` }}
             />
           </div>
@@ -439,7 +439,7 @@ export default function AuditExecutionPage() {
         <div className="mx-auto max-w-3xl">
           <Card className="standard-card overflow-hidden border-border/50">
             <div className="h-2 w-full bg-primary/10">
-              <div 
+              <div
                 className={cn(
                   "h-full transition-all duration-300",
                   currentQuestion.severity === 'critical' ? "bg-destructive" : currentQuestion.severity === 'medium' ? "bg-warning" : "bg-success"
@@ -449,8 +449,8 @@ export default function AuditExecutionPage() {
             </div>
             <CardHeader className="space-y-6 pt-8 pb-4">
               <div className="flex items-center gap-3">
-                <Badge 
-                  variant={currentQuestion.severity === 'critical' ? 'destructive' : 'secondary'} 
+                <Badge
+                  variant={currentQuestion.severity === 'critical' ? 'destructive' : 'secondary'}
                   className={cn(
                     "text-[10px] font-medium tracking-widest px-3 py-1",
                     currentQuestion.severity !== 'critical' && "bg-muted text-muted-text"
@@ -477,8 +477,8 @@ export default function AuditExecutionPage() {
                       variant={currentResponse?.answer === 'yes' ? 'default' : 'outline'}
                       className={cn(
                         "h-24 md:h-32 text-xl md:text-3xl font-medium tracking-tight transition-all duration-300 rounded-xl",
-                        currentResponse?.answer === 'yes' 
-                          ? "bg-success hover:bg-success/90 text-success-foreground shadow-lg active:scale-95" 
+                        currentResponse?.answer === 'yes'
+                          ? "bg-success hover:bg-success/90 text-success-foreground shadow-lg active:scale-95"
                           : "hover:bg-success/5 border-border active:scale-95"
                       )}
                       onClick={() => handleAnswer('yes', 1)}
@@ -490,8 +490,8 @@ export default function AuditExecutionPage() {
                       variant={currentResponse?.answer === 'no' ? 'default' : 'outline'}
                       className={cn(
                         "h-24 md:h-32 text-xl md:text-3xl font-medium tracking-tight transition-all duration-300 rounded-xl",
-                        currentResponse?.answer === 'no' 
-                          ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg active:scale-95" 
+                        currentResponse?.answer === 'no'
+                          ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg active:scale-95"
                           : "hover:bg-destructive/5 border-border active:scale-95"
                       )}
                       onClick={() => handleAnswer('no', 0)}
@@ -508,8 +508,8 @@ export default function AuditExecutionPage() {
                         variant={currentResponse?.score === num ? 'default' : 'outline'}
                         className={cn(
                           "h-12 w-12 sm:h-14 sm:w-14 p-0 font-medium text-lg md:text-xl transition-all rounded-lg active:scale-95",
-                          currentResponse?.score === num 
-                            ? "bg-primary text-primary-foreground shadow-lg z-10" 
+                          currentResponse?.score === num
+                            ? "bg-primary text-primary-foreground shadow-lg z-10"
                             : "hover:bg-primary/10 hover:border-primary/30 text-muted-text"
                         )}
                         onClick={() => handleAnswer(num.toString(), num)}
@@ -524,7 +524,7 @@ export default function AuditExecutionPage() {
               {/* Photo Upload Area */}
               <div className="space-y-lg pt-6 md:pt-8 border-t border-border/50">
                 <div className="flex items-center justify-between">
-                  <Label className="text-xs font-normal uppercase tracking-widest text-muted-text flex items-center gap-2">
+                  <Label className="text-xs font-normal  tracking-widest text-muted-text flex items-center gap-2">
                     <ImageIcon className="h-4 w-4" /> Visual Evidence
                   </Label>
                   <Button
@@ -566,7 +566,7 @@ export default function AuditExecutionPage() {
 
               {/* Notes Area */}
               <div className="space-y-3 pt-6 md:pt-8 border-t border-border/50">
-                <Label className="text-xs font-normal uppercase tracking-widest text-muted-text">
+                <Label className="text-xs font-normal  tracking-widest text-muted-text">
                   Observations & Notes
                 </Label>
                 <Textarea
@@ -593,7 +593,7 @@ export default function AuditExecutionPage() {
           >
             <ChevronLeft className="mr-2 h-4 w-4" /> Previous
           </Button>
- 
+
           {currentIndex === questions.length - 1 ? (
             <Button
               size="lg"

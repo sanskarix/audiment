@@ -56,19 +56,39 @@
   }
 
   @keyframes mesh-gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
   }
 
   @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
   }
 
   @keyframes spotlight {
@@ -76,6 +96,7 @@
       opacity: 0;
       transform: translate(-72%, -62%) scale(0.5);
     }
+
     100% {
       opacity: 1;
       transform: translate(-50%, -40%) scale(1);
@@ -111,8 +132,9 @@
   --success-foreground: oklch(0.98 0 0);
   --warning: oklch(0.8 0.12 80);
   --warning-foreground: oklch(0.2 0.02 80);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
+  /* Slightly darker borders (≈ +10% contrast) */
+  --border: oklch(0.9 0 0);
+  --input: oklch(0.9 0 0);
   --ring: oklch(0.708 0 0);
   --radius: 0.625rem;
 
@@ -210,6 +232,37 @@
 }
 
 @layer utilities {
+  .text-heading {
+    font-size: 20px;
+    font-weight: 600;
+    color: #121317;
+  }
+
+  .text-body {
+    font-size: 14px;
+    font-weight: 400;
+    color: #45474d;
+  }
+
+  .text-muted {
+    font-size: 12px;
+    font-weight: 400;
+    color: #6b7280;
+  }
+
+  /* Dark mode variants for typography utilities */
+  .dark .text-heading {
+    color: #f4f4f5;
+  }
+
+  .dark .text-body {
+    color: #d1d5db;
+  }
+
+  .dark .text-muted {
+    color: #9ca3af;
+  }
+
   /* Typography scope: dashboard + auth surfaces */
   .typography-scope {
     color: var(--color-body);
@@ -228,12 +281,17 @@
     @apply text-[15px] font-medium text-heading tracking-tight;
   }
 
-  .body-text {
-    @apply text-[13px] text-body leading-relaxed;
+.body-text {
+  @apply text-[12px] font-normal leading-relaxed;
+  color: #45474d;
+}
+
+  .dark .body-text {
+    color: #d1d5db;
   }
 
   .muted-label {
-    @apply text-[9px] font-medium uppercase tracking-[0.15em] text-muted-text/60;
+    @apply text-[12px] font-medium text-muted-text/80;
   }
 
   .page-padding {
@@ -257,31 +315,50 @@
   }
 
   .standard-card {
-    @apply shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)] transition-all hover:shadow-[0_10px_20px_-10px_rgba(0,0,0,0.04)] border border-border/40 bg-card rounded-xl;
+    @apply transition-all border border-border/50 bg-card rounded-xl;
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.02),
+      0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+
+  .standard-card:hover {
+    box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.04);
   }
 
   .standard-table-header {
-    @apply bg-muted/30 border-b border-muted/20;
+    @apply bg-muted/30 border-b border-muted/30;
   }
 
   .standard-table-row {
-    @apply hover:bg-muted/10 transition-all border-b border-muted/10;
+    @apply hover:bg-muted/10 transition-all border-b border-muted/20;
   }
 
   .standard-table-head {
-    @apply py-3 px-4 font-medium uppercase text-[10px] tracking-widest text-muted-text;
+    @apply py-3 px-4 font-medium text-[12px];
+    color: #6b7280;
+  }
+
+  .dark .standard-table-head {
+    color: #9ca3af;
   }
 
   .standard-table-cell {
-    @apply px-4 py-3;
+    @apply px-4 py-3 text-[14px] font-normal;
+    color: #45474d;
+  }
+
+  .dark .standard-table-cell {
+    color: #d1d5db;
   }
 
   .glass {
-    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.05)];
+    @apply bg-white/70 backdrop-blur-xl border border-white/20;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
   }
 
   .glass-dark {
-    @apply bg-black/50 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)];
+    @apply bg-black/50 backdrop-blur-xl border border-white/10;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   }
 
   .text-balance {

@@ -28,7 +28,7 @@ Apply these classes to maintain consistent text hierarchy:
 - **`.page-heading`**: Main headers (`h1`). 2XL/3XL, Bold, Tight tracking.
 - **`.section-heading`**: Category headers (`h2`/`h3`). LG/XL, Semibold.
 - **`.body-text`**: Standard paragraph text. SM size, Muted foreground.
-- **`.muted-label`**: Small, uppercase, tracking-wider labels for metadata.
+- **`.muted-label`**: Small, , tracking-wider labels for metadata.
 
 ### 3. Layout Tokens (Spacing & Radius)
 - **Radius**: System-wide corner rounding is **`0.625rem` (10px)** (`--radius-lg`). This provides a modern, balanced look halfway between "boxy" and "rounded".

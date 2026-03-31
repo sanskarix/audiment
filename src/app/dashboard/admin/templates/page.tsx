@@ -106,8 +106,8 @@ export default function AdminTemplatesPage() {
     }
   };
 
-  const filteredTemplates = templates.filter((t) => 
-    t.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredTemplates = templates.filter((t) =>
+    t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     t.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -121,17 +121,17 @@ export default function AdminTemplatesPage() {
 
   const handleDeleteTemplate = async (templateId: string) => {
     if (!confirm('Are you sure you want to delete this template and all its questions? This cannot be undone.')) return;
-    
+
     try {
       const qRef = collection(db, `auditTemplates/${templateId}/questions`);
       const qSnap = await getDocs(qRef);
-      
+
       const batch = writeBatch(db);
       qSnap.forEach(qDoc => {
         batch.delete(qDoc.ref);
       });
       batch.delete(doc(db, 'auditTemplates', templateId));
-      
+
       await batch.commit();
     } catch (e) {
       console.error('Error deleting template:', e);
@@ -153,11 +153,11 @@ export default function AdminTemplatesPage() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             {!hasFssai && (
-              <Button 
-                variant="outline" 
-                size="default" 
-                onClick={loadFssaiDefaults} 
-                disabled={loading} 
+              <Button
+                variant="outline"
+                size="default"
+                onClick={loadFssaiDefaults}
+                disabled={loading}
                 className="font-medium text-success hover:text-success hover:bg-success/5 border-success/20 transition-all active:scale-95"
               >
                 <ClipboardCheck className="mr-2 h-4 w-4" /> Load FSSAI Defaults
@@ -171,20 +171,20 @@ export default function AdminTemplatesPage() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input 
-              placeholder="Search templates by title or category..." 
-              className="pl-9 h-11 text-body font-normal bg-background"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
+	            <Input
+	              placeholder="Search templates by title or category..."
+	              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
+	              value={searchQuery}
+	              onChange={(e) => setSearchQuery(e.target.value)}
+	            />
+	          </div>
+	          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
+	            <Filter className="h-4 w-4" />
+	            Filters
+	          </Button>
         </div>
 
         <Card className="standard-card">
@@ -201,7 +201,7 @@ export default function AdminTemplatesPage() {
             <TableBody>
               {filteredTemplates.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="standard-table-cell text-center py-12 text-muted-text">
+                  <TableCell colSpan={5} className="standard-table-cell text-center py-12">
                     <div className="flex flex-col items-center justify-center gap-2">
                       <ClipboardCheck className="h-8 w-8 opacity-20" />
                       <p className="text-body">No templates found. Start by loading FSSAI defaults or creating a new blueprint.</p>
@@ -211,24 +211,24 @@ export default function AdminTemplatesPage() {
               ) : (
                 filteredTemplates.map((t) => (
                   <TableRow key={t.id} className="standard-table-row group">
-                    <TableCell className="px-4 py-3 font-normal min-w-[200px]">
+                    <TableCell className="standard-table-cell min-w-[200px]">
                       <div className="flex items-center gap-3">
-                        <span className="font-normal text-heading text-sm tracking-tight">{t.title}</span>
+                        <span>{t.title}</span>
                         {t.isFssaiDefault && (
-                          <Badge variant="success" className="text-[9px] uppercase font-medium tracking-normal px-1.5 py-0 border-success/30">
+                          <Badge variant="success" className="border-success/30">
                             FSSAI Blueprint
                           </Badge>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="px-4 py-3 capitalize">
-                      <Badge variant="outline" className="bg-background text-body font-normal">{t.category}</Badge>
+                    <TableCell className="standard-table-cell">
+                      <Badge variant="outline" className="bg-background">{t.category}</Badge>
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-muted-text tabular-nums font-normal">{t.createdAt?.toDate().toLocaleDateString()}</TableCell>
+                    <TableCell className="standard-table-cell tabular-nums">{t.createdAt?.toDate().toLocaleDateString()}</TableCell>
                     <TableCell className="standard-table-cell">
                       <div className="flex items-center space-x-2">
                         <Switch checked={t.isActive !== false} onCheckedChange={() => handleToggleActive(t.id, t.isActive !== false)} />
-                        <span className="text-[10px] font-medium uppercase text-muted-text/60 tracking-widest">{t.isActive !== false ? 'Active' : 'Inactive'}</span>
+                        <span>{t.isActive !== false ? 'Active' : 'Inactive'}</span>
                       </div>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-right">

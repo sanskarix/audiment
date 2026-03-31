@@ -22154,7 +22154,7 @@ d); }
   .text-zinc-50 { color: var(--color-zinc-50); }
   .capitalize { text-transform: capitalize; }
   .lowercase { text-transform: lowercase; }
-  .uppercase { text-transform: uppercase; }
+  . { text-transform: ; }
   .italic { font-style: italic; }
   .tabular-nums { --tw-numeric-spacing: tabular-nums; font-variant-numeric:=
  var(--tw-ordinal,)var(--tw-slashed-zero,)var(--tw-numeric-figure,)var(--tw=
@@ -30573,7 +30573,7 @@ no text-[0.60rem] md:block style-lyra:max-w-10 style-mira:max-w-10">--chart=
 -5</div></div></div></div></div><div data-slot=3D"card" data-size=3D"defaul=
 t" class=3D"cn-card group/card flex flex-col"><div data-slot=3D"card-conten=
 t" class=3D"cn-card-content flex flex-col gap-2"><div class=3D"text-xs font=
--medium tracking-wide text-muted-foreground uppercase">Inherit - Inter</div=
+-medium tracking-wide text-muted-foreground ">Inherit - Inter</div=
 ><p class=3D"cn-font-heading text-2xl font-medium">Designing with rhythm an=
 d hierarchy.</p><p class=3D"text-sm leading-relaxed text-muted-foreground">=
 A strong body style keeps long-form content readable and balances the visua=
@@ -31632,9 +31632,9 @@ div class=3D"grid w-full grid-cols-3 divide-x divide-border/60"><div class=
 =3D"px-2 text-center"><div class=3D"text-[0.65rem] text-muted-foreground up=
 percase">Desktop</div><div class=3D"text-sm font-medium tabular-nums">1,224=
 </div></div><div class=3D"px-2 text-center"><div class=3D"text-[0.65rem] te=
-xt-muted-foreground uppercase">Mobile</div><div class=3D"text-sm font-mediu=
+xt-muted-foreground ">Mobile</div><div class=3D"text-sm font-mediu=
 m tabular-nums">860</div></div><div class=3D"px-2 text-center"><div class=
-=3D"text-[0.65rem] text-muted-foreground uppercase">Mix Delta</div><div cla=
+=3D"text-[0.65rem] text-muted-foreground ">Mix Delta</div><div cla=
 ss=3D"text-sm font-medium tabular-nums">+42%</div></div></div></div><div da=
 ta-slot=3D"card-footer" class=3D"cn-card-footer flex items-center"><button =
 data-slot=3D"button" data-variant=3D"default" data-size=3D"default" class=

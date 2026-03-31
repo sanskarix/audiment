@@ -3,10 +3,10 @@
 import { useEffect, useState, useRef } from 'react';
 import DashboardShell from '@/components/DashboardShell';
 import { db } from '@/lib/firebase';
-import { 
-  collection, 
-  query, 
-  where, 
+import {
+  collection,
+  query,
+  where,
   onSnapshot,
   doc,
   updateDoc,
@@ -14,22 +14,22 @@ import {
   orderBy
 } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
+import {
+  Card,
+  CardContent,
+  CardHeader,
   CardTitle,
   CardDescription,
   CardFooter
 } from '@/components/ui/card';
-import { 
-  AlertTriangle, 
-  CheckCircle, 
-  Clock, 
-  MapPin, 
-  Camera, 
-  X, 
-  Loader2, 
+import {
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  MapPin,
+  Camera,
+  X,
+  Loader2,
   Search,
   Filter,
   CheckCircle2,
@@ -75,7 +75,7 @@ export default function CorrectiveActionsPage() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Resolution Dialog State
   const [selectedCA, setSelectedCA] = useState<CorrectiveAction | null>(null);
   const [resolutionNote, setResolutionNote] = useState('');
@@ -89,7 +89,7 @@ export default function CorrectiveActionsPage() {
     if (match) {
       try {
         setSession(JSON.parse(decodeURIComponent(match[1])));
-      } catch (e) {}
+      } catch (e) { }
     }
   }, []);
 
@@ -161,15 +161,15 @@ export default function CorrectiveActionsPage() {
 
   const getSeverityBadge = (severity: string) => {
     switch (severity) {
-      case 'high': return <Badge variant="destructive" className="uppercase text-[10px] font-medium">High</Badge>;
-      case 'medium': return <Badge variant="secondary" className="bg-warning/10 text-warning border-none uppercase text-[10px] font-medium">Medium</Badge>;
-      case 'low': return <Badge variant="secondary" className="bg-primary/10 text-primary border-none uppercase text-[10px] font-medium">Low</Badge>;
+      case 'high': return <Badge variant="destructive" className=" text-[10px] font-medium">High</Badge>;
+      case 'medium': return <Badge variant="secondary" className="bg-warning/10 text-warning border-none  text-[10px] font-medium">Medium</Badge>;
+      case 'low': return <Badge variant="secondary" className="bg-primary/10 text-primary border-none  text-[10px] font-medium">Low</Badge>;
       default: return null;
     }
   };
 
-  const filteredActions = actions.filter((ca) => 
-    ca.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredActions = actions.filter((ca) =>
+    ca.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     ca.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     ca.questionText?.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -195,26 +195,26 @@ export default function CorrectiveActionsPage() {
             <h1 className="page-heading">Corrective Actions</h1>
             <p className="body-text">Monitor and resolve issues identified during audits.</p>
           </div>
-          
+
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             <Card className="px-4 py-2 flex items-center gap-3 border-destructive/30 bg-destructive/10 shadow-sm rounded-lg flex-shrink-0">
-              <span className="text-[10px] font-medium text-destructive uppercase tracking-widest leading-none mt-0.5">Attention Required</span>
+              <span className="text-[10px] font-medium text-destructive  tracking-widest leading-none mt-0.5">Attention Required</span>
               <span className="text-xl font-medium text-destructive leading-none">{actions.filter(a => a.status !== 'resolved').length}</span>
             </Card>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input 
-              placeholder="Search actions by location or description..." 
+            <Input
+              placeholder="Search actions by location or description..."
               className="pl-9 h-11 bg-background text-body"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
             <Filter className="h-4 w-4" />
             Filters
           </Button>
@@ -222,10 +222,10 @@ export default function CorrectiveActionsPage() {
 
         <Tabs defaultValue="open" className="space-y-6">
           <TabsList className="bg-muted/20 p-1 border border-border/50 rounded-lg inline-flex h-12">
-            <TabsTrigger value="open" className="data-[state=active]:bg-background data-[state=active]:shadow-sm px-6 font-medium text-xs uppercase tracking-widest h-full transition-all rounded-md">
+            <TabsTrigger value="open" className="data-[state=active]:bg-background data-[state=active]:shadow-sm px-6 font-medium text-xs  tracking-widest h-full transition-all rounded-md">
               Open Issues ({openActions.length})
             </TabsTrigger>
-            <TabsTrigger value="resolved" className="data-[state=active]:bg-background data-[state=active]:shadow-sm px-6 font-medium text-xs uppercase tracking-widest h-full transition-all rounded-md">
+            <TabsTrigger value="resolved" className="data-[state=active]:bg-background data-[state=active]:shadow-sm px-6 font-medium text-xs  tracking-widest h-full transition-all rounded-md">
               Resolved ({resolvedActions.length})
             </TabsTrigger>
           </TabsList>
@@ -246,7 +246,7 @@ export default function CorrectiveActionsPage() {
                     <CardHeader className="p-xl bg-muted/10 border-b border-border/50">
                       <div className="flex justify-between items-start mb-md">
                         {getSeverityBadge(ca.severity)}
-                        <Badge variant="outline" className="text-[10px] font-medium text-destructive bg-destructive/10 border-destructive/30 uppercase tracking-widest px-2 py-0.5">
+                        <Badge variant="outline" className="text-[10px] font-medium text-destructive bg-destructive/10 border-destructive/30  tracking-widest px-2 py-0.5">
                           Due {ca.deadline ? format(ca.deadline.toDate(), 'MMM d, yyyy') : 'No Date'}
                         </Badge>
                       </div>
@@ -261,22 +261,22 @@ export default function CorrectiveActionsPage() {
                         </p>
                       </div>
                       <div className="flex flex-col gap-xs pt-xs">
-                        <div className="flex items-center gap-2 text-[10px] font-normal text-muted-text uppercase tracking-widest">
-                          <MapPin className="h-3.5 w-3.5 text-primary opacity-60" /> 
+                        <div className="flex items-center gap-2 text-[10px] font-normal text-muted-text  tracking-widest">
+                          <MapPin className="h-3.5 w-3.5 text-primary opacity-60" />
                           <span>{ca.locationName}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-[10px] font-normal text-muted-text/60 uppercase tracking-widest">
-                          <Calendar className="h-3.5 w-3.5 opacity-60" /> 
+                        <div className="flex items-center gap-2 text-[10px] font-normal text-muted-text/60  tracking-widest">
+                          <Calendar className="h-3.5 w-3.5 opacity-60" />
                           Identified {ca.createdAt ? format(ca.createdAt.toDate(), 'MMM d, h:mm a') : 'N/A'}
                         </div>
                       </div>
                     </CardContent>
                     <CardFooter className="p-xl pt-0 mt-auto">
-                      <Button 
-                        className="w-full font-medium uppercase tracking-widest text-xs h-10 shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      <Button
+                        className="w-full font-medium  tracking-widest text-xs h-10 shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
                         onClick={() => setSelectedCA(ca)}
                       >
-                         Add Resolution Notes
+                        Add Resolution Notes
                       </Button>
                     </CardFooter>
                   </Card>
@@ -286,14 +286,14 @@ export default function CorrectiveActionsPage() {
           </TabsContent>
 
           <TabsContent value="resolved" className="mt-0">
-             <div className="space-y-6">
-                {resolvedActions.length === 0 ? (
-                  <Card className="py-20 border-dashed border-2 flex flex-col items-center justify-center text-muted-text bg-muted/5 rounded-2xl">
-                    <p className="page-heading text-lg opacity-40 uppercase tracking-[0.2em] font-normal">No Resolved Issues Found</p>
-                  </Card>
-                ) : (
-                  <div className="grid gap-6 lg:grid-cols-2">
-                   {resolvedActions.map((ca) => (
+            <div className="space-y-6">
+              {resolvedActions.length === 0 ? (
+                <Card className="py-20 border-dashed border-2 flex flex-col items-center justify-center text-muted-text bg-muted/5 rounded-2xl">
+                  <p className="page-heading text-lg opacity-40  tracking-[0.2em] font-normal">No Resolved Issues Found</p>
+                </Card>
+              ) : (
+                <div className="grid gap-6 lg:grid-cols-2">
+                  {resolvedActions.map((ca) => (
                     <Card key={ca.id} className="standard-card flex flex-col overflow-hidden hover:border-success/30 transition-colors group">
                       <div className="p-xl border-b border-border/50 bg-background flex-1">
                         <div className="flex items-center justify-between gap-2 mb-md">
@@ -301,40 +301,40 @@ export default function CorrectiveActionsPage() {
                             <div className="bg-success/20 p-1 rounded-full">
                               <CheckCircle2 className="h-3 w-3 text-success" />
                             </div>
-                            <span className="text-[10px] font-medium text-success uppercase tracking-widest">Resolved</span>
+                            <span className="text-[10px] font-medium text-success  tracking-widest">Resolved</span>
                           </div>
-                          <span className="text-[10px] text-muted-text font-normal uppercase tracking-widest opacity-60">
+                          <span className="text-[10px] text-muted-text font-normal  tracking-widest opacity-60">
                             ID: {ca.id.substring(0, 8)}
                           </span>
                         </div>
                         <h4 className="section-heading text-lg mb-2 group-hover:text-success transition-colors leading-snug">{ca.questionText}</h4>
-                        <p className="text-[10px] font-normal text-muted-text uppercase tracking-widest mb-lg">{ca.locationName}</p>
-                        
+                        <p className="text-[10px] font-normal text-muted-text  tracking-widest mb-lg">{ca.locationName}</p>
+
                         <div className="bg-muted/10 p-md rounded-lg border border-border/50 relative">
-                          <p className="text-[10px] font-normal uppercase text-muted-text mb-sm tracking-widest opacity-80">Resolution Note</p>
+                          <p className="text-[10px] font-normal  text-muted-text mb-sm tracking-widest opacity-80">Resolution Note</p>
                           <p className="body-text italic text-body/80 leading-relaxed">"{ca.resolutionNote || 'No notes provided.'}"</p>
                         </div>
                       </div>
                       <div className="p-xl bg-muted/5 flex flex-col gap-md">
-                         <div className="flex flex-col gap-xs">
-                            <p className="text-[10px] font-normal uppercase text-muted-text tracking-widest opacity-80">Resolved On</p>
-                            <p className="text-sm font-normal text-body">{ca.resolvedAt ? format(ca.resolvedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</p>
-                         </div>
-                         {ca.resolutionPhotoUrls && ca.resolutionPhotoUrls.length > 0 && (
-                           <div className="flex gap-sm overflow-x-auto pb-2">
-                             {ca.resolutionPhotoUrls.map((url, i) => (
-                               <div key={i} className="h-14 w-14 rounded-md border border-border/50 overflow-hidden bg-muted/20 flex-shrink-0 transition-transform hover:scale-105 active:scale-95">
-                                 <img src={url} alt="Proof" className="h-full w-full object-cover" />
-                               </div>
-                             ))}
-                           </div>
-                         )}
+                        <div className="flex flex-col gap-xs">
+                          <p className="text-[10px] font-normal  text-muted-text tracking-widest opacity-80">Resolved On</p>
+                          <p className="text-sm font-normal text-body">{ca.resolvedAt ? format(ca.resolvedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</p>
+                        </div>
+                        {ca.resolutionPhotoUrls && ca.resolutionPhotoUrls.length > 0 && (
+                          <div className="flex gap-sm overflow-x-auto pb-2">
+                            {ca.resolutionPhotoUrls.map((url, i) => (
+                              <div key={i} className="h-14 w-14 rounded-md border border-border/50 overflow-hidden bg-muted/20 flex-shrink-0 transition-transform hover:scale-105 active:scale-95">
+                                <img src={url} alt="Proof" className="h-full w-full object-cover" />
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </Card>
-                   ))}
-                  </div>
-                )}
-             </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </TabsContent>
         </Tabs>
       </div>
@@ -346,16 +346,16 @@ export default function CorrectiveActionsPage() {
               <CheckCircle2 className="h-5 w-5" /> RESOLVE ISSUE
             </DialogTitle>
             <DialogDescription className="font-normal text-body bg-background p-md rounded-lg border border-border/50 mt-md flex flex-col gap-sm">
-              <span className="text-[10px] font-normal text-muted-text uppercase tracking-widest">Identified Issue</span>
+              <span className="text-[10px] font-normal text-muted-text  tracking-widest">Identified Issue</span>
               <span className="text-sm italic leading-snug">"{selectedCA?.questionText}"</span>
-              <span className="text-[10px] font-normal text-primary uppercase tracking-widest mt-1">{selectedCA?.locationName}</span>
+              <span className="text-[10px] font-normal text-primary  tracking-widest mt-1">{selectedCA?.locationName}</span>
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="p-xl space-y-md">
             <div className="space-y-sm">
-              <Label htmlFor="note" className="text-xs font-normal uppercase text-muted-text tracking-widest">Resolution Note</Label>
-              <Textarea 
+              <Label htmlFor="note" className="text-xs font-normal  text-muted-text tracking-widest">Resolution Note</Label>
+              <Textarea
                 id="note"
                 placeholder="Describe how the issue was fixed..."
                 value={resolutionNote}
@@ -363,29 +363,29 @@ export default function CorrectiveActionsPage() {
                 className="min-h-[120px] text-sm bg-background border-input text-body"
               />
             </div>
-            
+
             <div className="space-y-sm">
-              <Label className="text-xs font-normal uppercase text-muted-text tracking-widest">Evidence Photo (Optional)</Label>
+              <Label className="text-xs font-normal  text-muted-text tracking-widest">Evidence Photo (Optional)</Label>
               <div className="flex flex-col gap-md">
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   className="h-24 w-full border-dashed flex-col gap-sm border-border hover:border-primary hover:bg-primary/5 transition-colors"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
                 >
-                  {isUploading ? <Loader2 className="h-5 w-5 animate-spin text-muted-text"/> : <Camera className="h-5 w-5 text-muted-text" />}
-                  <span className="text-[10px] font-normal text-muted-text uppercase tracking-widest flex items-center gap-1.5"><span className="text-primary font-medium">Upload</span> or drag and drop</span>
+                  {isUploading ? <Loader2 className="h-5 w-5 animate-spin text-muted-text" /> : <Camera className="h-5 w-5 text-muted-text" />}
+                  <span className="text-[10px] font-normal text-muted-text  tracking-widest flex items-center gap-1.5"><span className="text-primary font-medium">Upload</span> or drag and drop</span>
                 </Button>
                 <input type="file" className="hidden" ref={fileInputRef} accept="image/*" onChange={handleFileUpload} />
               </div>
-              
+
               {resolutionPhotos.length > 0 && (
                 <div className="flex gap-md overflow-x-auto py-2 mt-2">
                   {resolutionPhotos.map((url, i) => (
                     <div key={i} className="relative h-20 w-20 rounded-md overflow-hidden border border-border/50 shadow-sm flex-shrink-0">
                       <img src={url} alt="Evidence" className="h-full w-full object-cover" />
-                      <button 
+                      <button
                         className="absolute top-1 right-1 bg-destructive/90 text-destructive-foreground p-1 rounded hover:bg-destructive transition-colors"
                         onClick={() => setResolutionPhotos(prev => prev.filter(p => p !== url))}
                       >
@@ -399,13 +399,13 @@ export default function CorrectiveActionsPage() {
           </div>
 
           <DialogFooter className="bg-muted/10 p-xl border-t border-border/50 gap-sm">
-            <Button variant="outline" onClick={() => setSelectedCA(null)} className="font-medium text-xs uppercase tracking-widest text-body">Discard</Button>
-            <Button 
-              onClick={handleResolve} 
+            <Button variant="outline" onClick={() => setSelectedCA(null)} className="font-medium text-xs  tracking-widest text-body">Discard</Button>
+            <Button
+              onClick={handleResolve}
               disabled={isResolving || !resolutionNote}
-              className="font-medium text-xs uppercase tracking-widest shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="font-medium text-xs  tracking-widest shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              {isResolving ? <Loader2 className="h-4 w-4 animate-spin mr-2"/> : <CheckCircle2 className="h-4 w-4 mr-2" />}
+              {isResolving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle2 className="h-4 w-4 mr-2" />}
               Complete Resolution
             </Button>
           </DialogFooter>

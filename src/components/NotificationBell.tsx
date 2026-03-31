@@ -2,34 +2,34 @@
 
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { 
-  collection, 
-  query, 
-  where, 
-  onSnapshot, 
-  doc, 
-  updateDoc, 
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  doc,
+  updateDoc,
   serverTimestamp,
   orderBy,
   limit,
   writeBatch
 } from 'firebase/firestore';
-import { 
-  Bell, 
-  CheckCheck, 
-  CheckSquare, 
-  AlertTriangle, 
-  Zap, 
+import {
+  Bell,
+  CheckCheck,
+  CheckSquare,
+  AlertTriangle,
+  Zap,
   FileText,
   Clock
 } from 'lucide-react';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -48,7 +48,7 @@ export default function NotificationBell() {
       try {
         const data = JSON.parse(decodeURIComponent(match[1]));
         setSession({ uid: data.uid });
-      } catch (e) {}
+      } catch (e) { }
     }
   }, []);
 
@@ -122,7 +122,7 @@ export default function NotificationBell() {
             <span className="muted-label">{unreadCount} Unread Alerts</span>
           </div>
           {unreadCount > 0 && (
-            <Button variant="ghost" size="sm" onClick={markAllAsRead} className="h-7 text-[10px] uppercase font-medium text-primary hover:text-primary hover:bg-primary/10 transition-colors">
+            <Button variant="ghost" size="sm" onClick={markAllAsRead} className="h-7 text-[10px]  font-medium text-primary hover:text-primary hover:bg-primary/10 transition-colors">
               <CheckCheck className="mr-1.5 h-3 w-3" /> Mark all read
             </Button>
           )}
@@ -140,8 +140,8 @@ export default function NotificationBell() {
           ) : (
             <div className="flex flex-col">
               {notifications.map((n) => (
-                <div 
-                   key={n.id} 
+                <div
+                  key={n.id}
                   className={cn(
                     "relative flex gap-4 p-4 transition-all border-b border-border/30 last:border-0 hover:bg-muted/30 cursor-pointer overflow-hidden group",
                     !n.isRead && "bg-primary/5 border-l-2 border-l-primary",
@@ -159,7 +159,7 @@ export default function NotificationBell() {
                     <div className="flex items-start justify-between gap-2">
                       <p className={cn("text-sm leading-none truncate flex items-center gap-2", !n.isRead ? "text-heading font-medium" : "text-muted-text font-normal")}>
                         {n.type === 'surprise_audit' && (
-                          <Badge className="bg-amber-500 hover:bg-amber-600 h-3.5 px-1 py-0 text-[8px] font-medium uppercase text-white animate-pulse">URGENT</Badge>
+                          <Badge className="bg-amber-500 hover:bg-amber-600 h-3.5 px-1 py-0 text-[8px] font-medium  text-white animate-pulse">URGENT</Badge>
                         )}
                         {n.title}
                       </p>
@@ -178,7 +178,7 @@ export default function NotificationBell() {
         </ScrollArea>
         <DropdownMenuSeparator className="m-0 bg-border/50" />
         <div className="p-2 bg-muted/5">
-          <Button variant="ghost" className="w-full h-9 text-xs font-medium uppercase tracking-wider text-muted-text hover:text-heading hover:bg-muted/50 transition-colors">
+          <Button variant="ghost" className="w-full h-9 text-xs font-medium  tracking-wider text-muted-text hover:text-heading hover:bg-muted/50 transition-colors">
             View All Notifications
           </Button>
         </div>

@@ -12,11 +12,11 @@ interface TimelineEntry {
   content: React.ReactNode;
 }
 
-export const Timeline = ({ 
+export const Timeline = ({
   data,
   title,
-  description 
-}: { 
+  description
+}: {
   data: TimelineEntry[];
   title?: string | React.ReactNode;
   description?: string | React.ReactNode;
@@ -46,7 +46,7 @@ export const Timeline = ({
       ref={containerRef}
     >
       <div className="max-w-7xl mx-auto py-20 px-4 md:px-8 lg:px-10 text-center flex flex-col items-center">
-        <h2 className="text-4xl md:text-6xl mb-6 text-heading max-w-4xl font-medium tracking-tighter uppercase">
+        <h2 className="text-4xl md:text-6xl mb-6 text-heading max-w-4xl font-medium tracking-tighter ">
           {title || "Step-by-step"}
         </h2>
         {description && (

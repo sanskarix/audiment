@@ -47,9 +47,9 @@ export default function FlashmobAuditDetailsPage() {
     return (
       <DashboardShell role="Admin">
         <div className="text-center py-12">
-          <h2 className="text-2xl font-medium text-heading mb-4">Audit Not Found</h2>
+          <h2 className="page-heading mb-4">Audit not found</h2>
           <Link href="/dashboard/admin/flashmob" passHref>
-            <Button className="font-medium text-xs uppercase tracking-widest">Return to Flashmob Logs</Button>
+            <Button>Return to flashmob logs</Button>
           </Link>
         </div>
       </DashboardShell>
@@ -81,33 +81,33 @@ export default function FlashmobAuditDetailsPage() {
             <CardContent className="p-xl space-y-xl">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div className="space-y-1">
-                  <span className="text-sm font-medium text-muted-text flex items-center gap-1.5"><User className="h-4 w-4" /> Auditor</span>
-                  <p className="font-medium text-body">{audit.auditorName || 'Unknown'}</p>
+                  <span className="muted-label flex items-center gap-1.5"><User className="h-4 w-4" /> Auditor</span>
+                  <p className="standard-table-cell p-0">{audit.auditorName || 'Unknown'}</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm font-medium text-muted-text flex items-center gap-1.5"><MapPin className="h-4 w-4" /> Location</span>
-                  <p className="font-medium text-body">{audit.locationName}</p>
+                  <span className="muted-label flex items-center gap-1.5"><MapPin className="h-4 w-4" /> Location</span>
+                  <p className="standard-table-cell p-0">{audit.locationName}</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm font-medium text-muted-text flex items-center gap-1.5"><Calendar className="h-4 w-4" /> Date</span>
-                  <p className="font-medium text-body">{date ? date.toLocaleDateString() : 'N/A'}</p>
+                  <span className="muted-label flex items-center gap-1.5"><Calendar className="h-4 w-4" /> Date</span>
+                  <p className="standard-table-cell p-0">{date ? date.toLocaleDateString() : 'N/A'}</p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm font-medium text-muted-text flex items-center gap-1.5"><Clock className="h-4 w-4" /> Time</span>
-                  <p className="font-medium text-body">{date ? date.toLocaleTimeString() : 'N/A'}</p>
+                  <span className="muted-label flex items-center gap-1.5"><Clock className="h-4 w-4" /> Time</span>
+                  <p className="standard-table-cell p-0">{date ? date.toLocaleTimeString() : 'N/A'}</p>
                 </div>
               </div>
-              
+
               {(audit.latitude && audit.longitude) && (
                 <div className="pt-xl border-t border-border/50 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <MapPin className="h-5 w-5 text-success" />
                     <div>
-                      <p className="font-medium text-muted-text uppercase tracking-widest text-[10px]">Geo-Location Verified</p>
-                      <p className="text-xs font-normal text-heading">{audit.latitude}, {audit.longitude}</p>
+                      <p className="muted-label">Geo-location verified</p>
+                      <p>{audit.latitude}, {audit.longitude}</p>
                     </div>
                   </div>
-                  <Button variant="secondary" className="font-medium text-muted-text uppercase tracking-widest text-[10px]" onClick={() => window.open(`https://www.google.com/maps?q=${audit.latitude},${audit.longitude}`, '_blank')}>
+                  <Button variant="secondary" onClick={() => window.open(`https://www.google.com/maps?q=${audit.latitude},${audit.longitude}`, '_blank')}>
                     View on Map
                   </Button>
                 </div>
@@ -118,7 +118,7 @@ export default function FlashmobAuditDetailsPage() {
           <Card className="standard-card md:col-span-2 flex flex-col">
             <CardHeader className="bg-muted/30 border-b border-border/50 p-xl">
               <CardTitle className="section-heading">Video Evidence</CardTitle>
-              <CardDescription className="text-[10px] font-normal uppercase tracking-widest text-muted-text">Uncut 20-second location scan</CardDescription>
+              <CardDescription className="body-text">Uncut 20-second location scan</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 flex flex-col p-xl">
               <div className="relative aspect-video bg-black rounded-lg overflow-hidden flex-1 shadow-inner">
@@ -130,7 +130,7 @@ export default function FlashmobAuditDetailsPage() {
           <Card className="standard-card flex flex-col">
             <CardHeader className="bg-muted/30 border-b border-border/50 p-xl">
               <CardTitle className="section-heading">Auditor Verification</CardTitle>
-              <CardDescription className="text-[10px] font-normal uppercase tracking-widest text-muted-text">Selfie captured on-site</CardDescription>
+              <CardDescription className="body-text">Selfie captured on-site</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 flex flex-col p-xl">
               <div className="relative flex-1 bg-muted/30 rounded-lg overflow-hidden min-h-[300px] shadow-inner">

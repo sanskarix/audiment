@@ -185,7 +185,7 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-text">Monthly Audits</CardTitle>
+              <CardTitle className="text-sm font-medium  tracking-wider text-muted-text">Monthly Audits</CardTitle>
               <ClipboardList className="h-5 w-5 text-primary/60" />
             </div>
             <div>
@@ -196,7 +196,7 @@ export default function AdminDashboardPage() {
 
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-text">Completion Rate</CardTitle>
+              <CardTitle className="text-sm font-medium  tracking-wider text-muted-text">Completion Rate</CardTitle>
               <CheckCircle2 className="h-5 w-5 text-success/60" />
             </div>
             <div>
@@ -209,13 +209,13 @@ export default function AdminDashboardPage() {
           <Link href="/dashboard/admin/corrective-actions" className="block group">
             <Card className="standard-card p-6 h-full group-hover:bg-destructive/5 transition-colors">
               <div className="flex items-center justify-between mb-4">
-                <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-text">Open Corrective Actions</CardTitle>
+                <CardTitle className="text-sm font-medium  tracking-wider text-muted-text">Open Corrective Actions</CardTitle>
                 <AlertCircle className="h-5 w-5 text-destructive/60" />
               </div>
               <div>
                 <div className="text-3xl font-medium tracking-tight text-destructive">{stats?.openCorrectiveActions}</div>
                 <p className="muted-label mt-2 text-destructive">Attention Required</p>
-                <div className="mt-6 flex items-center text-[10px] font-medium text-destructive uppercase tracking-widest bg-destructive/10 w-fit px-2 py-1 rounded">
+                <div className="mt-6 flex items-center text-[10px] font-medium text-destructive  tracking-widest bg-destructive/10 w-fit px-2 py-1 rounded">
                   View Queue <TrendingUp className="ml-1 h-3 w-3" />
                 </div>
               </div>

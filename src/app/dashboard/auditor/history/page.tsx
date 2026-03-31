@@ -158,17 +158,17 @@ export default function AuditorHistoryPage() {
           </Card>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input 
-              placeholder="Search history by template or location..." 
+            <Input
+              placeholder="Search history by template or location..."
               className="pl-9 h-11 bg-background text-body"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs uppercase tracking-widest border-border/40 text-muted-text">
+          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
             <Filter className="h-4 w-4" />
             Filters
           </Button>
@@ -209,7 +209,7 @@ export default function AuditorHistoryPage() {
                       <TableCell className="standard-table-cell">
                         <div className="flex flex-col gap-1">
                           <span className="font-normal text-heading">{item.templateTitle}</span>
-                          <span className="text-[10px] text-muted-text font-normal uppercase tracking-widest opacity-60">ID: {item.id.substring(0, 8)}</span>
+                          <span className="text-[10px] text-muted-text font-normal  tracking-widest opacity-60">ID: {item.id.substring(0, 8)}</span>
                         </div>
                       </TableCell>
                       <TableCell className="standard-table-cell">
@@ -223,25 +223,25 @@ export default function AuditorHistoryPage() {
                           <p className="text-sm font-normal text-heading">
                             {item.completedAt ? format(item.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}
                           </p>
-                          <p className="text-[10px] uppercase font-normal text-muted-text/60 tracking-widest">Completed</p>
+                          <p className="text-[10px]  font-normal text-muted-text/60 tracking-widest">Completed</p>
                         </div>
                       </TableCell>
                       <TableCell className="standard-table-cell text-center">
-                        <Badge 
+                        <Badge
                           className={cn(
                             "px-3 py-1 text-xs font-medium tracking-widest ml-auto",
-                            item.scorePercentage >= 90 ? "bg-success text-success-foreground hover:bg-success/90" : 
-                            item.scorePercentage >= 70 ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-warning text-warning-foreground hover:bg-warning/90"
+                            item.scorePercentage >= 90 ? "bg-success text-success-foreground hover:bg-success/90" :
+                              item.scorePercentage >= 70 ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-warning text-warning-foreground hover:bg-warning/90"
                           )}
                         >
                           {item.scorePercentage}%
                         </Badge>
                       </TableCell>
                       <TableCell className="standard-table-cell text-right">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          asChild 
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          asChild
                           className="h-8 gap-2 text-xs font-medium text-muted-text hover:text-primary hover:bg-primary/5 transition-all"
                         >
                           <Link href={`/dashboard/auditor/audits/${item.id}`}>

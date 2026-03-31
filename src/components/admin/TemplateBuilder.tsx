@@ -201,7 +201,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-muted-text animate-pulse font-normal uppercase tracking-widest text-[10px]">Synchronizing Architectural Data</p>
+        <p className="text-muted-text animate-pulse font-normal  tracking-widest text-[10px]">Synchronizing Architectural Data</p>
       </div>
     );
   }
@@ -226,20 +226,20 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                 {templateId ? 'Edit Blueprint' : 'New Blueprint'}
               </h1>
             </div>
-            <p className="text-[10px] font-normal text-muted-text uppercase tracking-widest opacity-60">Design the structural intelligence for operations</p>
+            <p className="text-[10px] font-normal text-muted-text  tracking-widest opacity-60">Design the structural intelligence for operations</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           {error && (
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-destructive/5 border border-destructive/20 rounded-lg text-destructive text-[10px] font-normal uppercase tracking-widest animate-in slide-in-from-right">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-destructive/5 border border-destructive/20 rounded-lg text-destructive text-[10px] font-normal  tracking-widest animate-in slide-in-from-right">
               <AlertCircle className="h-4 w-4" /> {error}
             </div>
           )}
-          <Button variant="ghost" onClick={() => router.back()} className="h-10 px-4 font-medium uppercase tracking-widest text-[10px] opacity-40 hover:opacity-100 italic transition-all text-muted-text">Discard</Button>
+          <Button variant="ghost" onClick={() => router.back()} className="h-10 px-4 font-medium  tracking-widest text-[10px] opacity-40 hover:opacity-100 italic transition-all text-muted-text">Discard</Button>
           <Button
             onClick={saveTemplate}
             disabled={loading}
-            className="h-10 px-6 font-medium uppercase tracking-widest text-[10px] shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95 bg-primary"
+            className="h-10 px-6 font-medium  tracking-widest text-[10px] shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95 bg-primary"
           >
             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
             Commit Blueprint
@@ -260,7 +260,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
             </div>
             <div className="p-6 space-y-4">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="title" className="text-[10px] font-normal uppercase text-muted-text tracking-widest pl-1">Blueprint Title</Label>
+                <Label htmlFor="title" className="text-[10px] font-normal  text-muted-text tracking-widest pl-1">Blueprint Title</Label>
                 <Input
                   id="title"
                   value={title}
@@ -270,16 +270,16 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="category" className="text-[10px] font-normal uppercase text-muted-text tracking-widest pl-1">Category</Label>
+                <Label htmlFor="category" className="text-[10px] font-normal  text-muted-text tracking-widest pl-1">Category</Label>
                 <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger id="category" className="h-10 text-xs font-medium uppercase tracking-widest text-body">
+                  <SelectTrigger id="category" className="h-10 text-xs font-medium  tracking-widest text-body">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="hygiene" className="font-normal uppercase tracking-widest text-[10px] text-body">Hygiene</SelectItem>
-                    <SelectItem value="safety" className="font-normal uppercase tracking-widest text-[10px] text-body">Safety</SelectItem>
-                    <SelectItem value="inventory" className="font-normal uppercase tracking-widest text-[10px] text-body">Inventory</SelectItem>
-                    <SelectItem value="custom" className="font-normal uppercase tracking-widest text-[10px] text-body">Other</SelectItem>
+                    <SelectItem value="hygiene" className="font-normal  tracking-widest text-[10px] text-body">Hygiene</SelectItem>
+                    <SelectItem value="safety" className="font-normal  tracking-widest text-[10px] text-body">Safety</SelectItem>
+                    <SelectItem value="inventory" className="font-normal  tracking-widest text-[10px] text-body">Inventory</SelectItem>
+                    <SelectItem value="custom" className="font-normal  tracking-widest text-[10px] text-body">Other</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -287,7 +287,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
           </Card>
 
           <div className="rounded-xl border border-primary/20 bg-primary/5 p-6 space-y-4 shadow-sm">
-            <h4 className="text-[10px] font-medium uppercase tracking-widest text-primary/60">CONSTRUCTION RULES</h4>
+            <h4 className="text-[10px] font-medium  tracking-widest text-primary/60">CONSTRUCTION RULES</h4>
             <ul className="text-xs font-normal space-y-3 leading-relaxed text-muted-text">
               <li className="flex gap-2">
                 <span className="text-primary font-medium">01</span>
@@ -324,7 +324,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                 <Plus className="h-16 w-16 mb-8 opacity-10" />
                 <p className="text-2xl font-normal text-heading/40">Zero Intelligence Defined</p>
                 <p className="text-sm font-normal opacity-60 mt-2 max-w-[320px] text-center">Your blueprint requires analytical modules to be operational.</p>
-                <Button variant="outline" size="lg" onClick={addEmptyQuestion} className="mt-8 h-14 px-10 rounded-2xl font-medium uppercase tracking-widest text-[10px] border-primary/20 text-primary hover:bg-primary/5 transition-all">Start Engineering</Button>
+                <Button variant="outline" size="lg" onClick={addEmptyQuestion} className="mt-8 h-14 px-10 rounded-2xl font-medium  tracking-widest text-[10px] border-primary/20 text-primary hover:bg-primary/5 transition-all">Start Engineering</Button>
               </div>
             ) : (
               <Accordion type="multiple" className="w-full" defaultValue={questions.map(q => q.order.toString())}>
@@ -335,17 +335,17 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                         <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 bg-muted/50 font-medium text-base tabular-nums group-hover:bg-primary/10 group-hover:text-primary transition-colors border border-border/50 text-heading">{q.order}</div>
                         <div className="flex-1 overflow-hidden">
                           <span className="font-medium text-base text-heading block truncate group-hover:text-primary transition-colors">{q.questionText || 'New Question...'}</span>
-                          <span className="text-[9px] font-normal uppercase tracking-widest text-muted-text block mt-0.5 opacity-50">UNIT_{q.order.toString().padStart(3, '0')}</span>
+                          <span className="text-[9px] font-normal  tracking-widest text-muted-text block mt-0.5 opacity-50">UNIT_{q.order.toString().padStart(3, '0')}</span>
                         </div>
                         <div className="flex items-center gap-3 shrink-0">
                           {q.requiresPhoto && (
-                            <Badge variant="outline" className="text-[9px] font-medium bg-muted/30 uppercase tracking-widest px-2 py-0.5 text-muted-text">
+                            <Badge variant="outline" className="text-[9px] font-medium bg-muted/30  tracking-widest px-2 py-0.5 text-muted-text">
                               <Camera className="h-3 w-3 mr-1" /> Photo Ref
                             </Badge>
                           )}
                           <Badge
                             variant={q.severity === 'critical' ? 'destructive' : q.severity === 'medium' ? 'secondary' : 'outline'}
-                            className="text-[9px] font-medium uppercase tracking-widest px-2 py-0.5"
+                            className="text-[9px] font-medium  tracking-widest px-2 py-0.5"
                           >
                             {q.severity}
                           </Badge>
@@ -355,7 +355,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                     <AccordionContent className="px-6 py-6 border-t border-border/50 bg-muted/10">
                       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                         <div className="md:col-span-12 flex flex-col gap-2">
-                          <Label className="text-[10px] font-normal uppercase text-muted-text tracking-widest pl-1">Inquiry Definition</Label>
+                          <Label className="text-[10px] font-normal  text-muted-text tracking-widest pl-1">Inquiry Definition</Label>
                           <Input
                             value={q.questionText}
                             onChange={e => updateQuestion(idx, 'questionText', e.target.value)}
@@ -365,35 +365,35 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                         </div>
 
                         <div className="md:col-span-4 flex flex-col gap-2">
-                          <Label className="text-[10px] font-normal uppercase text-muted-text tracking-widest pl-1">Data Model</Label>
+                          <Label className="text-[10px] font-normal  text-muted-text tracking-widest pl-1">Data Model</Label>
                           <Select value={q.questionType} onValueChange={val => updateQuestion(idx, 'questionType', val)}>
-                            <SelectTrigger className="h-10 text-[10px] font-medium uppercase tracking-widest text-body">
+                            <SelectTrigger className="h-10 text-[10px] font-medium  tracking-widest text-body">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="yes_no" className="font-normal uppercase tracking-widest text-[10px] text-body">Yes / No</SelectItem>
-                              <SelectItem value="rating" className="font-normal uppercase tracking-widest text-[10px] text-body">Rating (1-10)</SelectItem>
+                              <SelectItem value="yes_no" className="font-normal  tracking-widest text-[10px] text-body">Yes / No</SelectItem>
+                              <SelectItem value="rating" className="font-normal  tracking-widest text-[10px] text-body">Rating (1-10)</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
 
                         <div className="md:col-span-4 flex flex-col gap-2">
-                          <Label className="text-[10px] font-normal uppercase text-muted-text tracking-widest pl-1">Severity</Label>
+                          <Label className="text-[10px] font-normal  text-muted-text tracking-widest pl-1">Severity</Label>
                           <Select value={q.severity} onValueChange={val => updateQuestion(idx, 'severity', val)}>
-                            <SelectTrigger className="h-10 text-[10px] font-medium uppercase tracking-widest text-body">
+                            <SelectTrigger className="h-10 text-[10px] font-medium  tracking-widest text-body">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="low" className="font-normal uppercase tracking-widest text-[10px] text-body">Low</SelectItem>
-                              <SelectItem value="medium" className="font-normal uppercase tracking-widest text-[10px] text-body">Medium</SelectItem>
-                              <SelectItem value="critical" className="font-normal uppercase tracking-widest text-[10px] text-destructive">Critical</SelectItem>
+                              <SelectItem value="low" className="font-normal  tracking-widest text-[10px] text-body">Low</SelectItem>
+                              <SelectItem value="medium" className="font-normal  tracking-widest text-[10px] text-body">Medium</SelectItem>
+                              <SelectItem value="critical" className="font-normal  tracking-widest text-[10px] text-destructive">Critical</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
 
                         <div className="md:col-span-4 flex items-end">
                           <div className="flex items-center justify-between w-full h-10 px-4 rounded-lg border border-border bg-background">
-                            <Label className="text-[10px] font-normal uppercase text-muted-text tracking-widest cursor-pointer" htmlFor={`photo-${idx}`}>Mandatory Photo</Label>
+                            <Label className="text-[10px] font-normal  text-muted-text tracking-widest cursor-pointer" htmlFor={`photo-${idx}`}>Mandatory Photo</Label>
                             <Switch id={`photo-${idx}`} checked={q.requiresPhoto} onCheckedChange={val => updateQuestion(idx, 'requiresPhoto', val)} />
                           </div>
                         </div>
@@ -419,7 +419,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                               <ArrowDown className="w-4 h-4" />
                             </Button>
                           </div>
-                          <Button variant="ghost" size="sm" className="text-destructive hover:bg-destructive/10 rounded-md font-medium text-[10px] uppercase tracking-widest" onClick={() => removeQuestion(idx)}>
+                          <Button variant="ghost" size="sm" className="text-destructive hover:bg-destructive/10 rounded-md font-medium text-[10px]  tracking-widest" onClick={() => removeQuestion(idx)}>
                             <Trash2 className="w-3.5 h-3.5 mr-2" /> Delete
                           </Button>
                         </div>

@@ -108,8 +108,7 @@ export default function ManagerCalendarPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Audit Schedule</h1>
-            <p className="body-text text-sm font-normal">Strategic overview of upcoming planned quality missions.</p>
+            <h1 className="page-heading">Calendar</h1>
           </div>
 
           <div className="flex items-center gap-2 bg-muted/20 p-1 rounded-lg border border-border/50 shadow-sm">

@@ -201,20 +201,20 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
   if (fetching) {
     return (
       <div className="flex min-h-screen flex-col bg-muted/20">
-         <div className="h-20 bg-background border-b border-border/50 flex items-center px-6">
-            <Skeleton className="h-6 w-48" />
-         </div>
-         <div className="flex-1 p-6 md:p-20">
-            <div className="max-w-3xl mx-auto space-y-6">
-               <Skeleton className="h-4 w-32" />
-               <Skeleton className="h-10 w-full" />
-               <Skeleton className="h-64 w-full rounded-xl" />
-               <div className="grid grid-cols-2 gap-4">
-                  <Skeleton className="h-24 rounded-xl" />
-                  <Skeleton className="h-24 rounded-xl" />
-               </div>
+        <div className="h-20 bg-background border-b border-border/50 flex items-center px-6">
+          <Skeleton className="h-6 w-48" />
+        </div>
+        <div className="flex-1 p-6 md:p-20">
+          <div className="max-w-3xl mx-auto space-y-6">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-64 w-full rounded-xl" />
+            <div className="grid grid-cols-2 gap-4">
+              <Skeleton className="h-24 rounded-xl" />
+              <Skeleton className="h-24 rounded-xl" />
             </div>
-         </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -224,22 +224,15 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
 
       {/* ── Sticky Top Bar ── */}
       <div className="sticky top-0 z-50 -mx-6 -mt-8 px-6 py-4 bg-background/95 backdrop-blur-xl border-b border-border/50 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={() => router.back()}
-            className="rounded-full hover:bg-muted transition-all active:scale-90"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div className="flex flex-col gap-0.5">
-            <h1 className="page-heading">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-4">
+            <button onClick={() => router.back()} className="text-muted-text hover:text-primary transition-colors flex items-center">
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <div className="h-5 w-[1px] bg-border/80"></div>
+            <h1 className="text-xl font-semibold text-heading">
               {templateId ? 'Edit Template' : 'New Template'}
             </h1>
-            <p className="body-text">
-              {templateId ? 'Update the blueprint for this audit template.' : 'Build the blueprint for a new audit template.'}
-            </p>
           </div>
         </div>
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import DashboardShell from '@/components/DashboardShell';
 import { db } from '@/lib/firebase';
@@ -29,13 +30,13 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  ArrowLeft, 
-  Target, 
-  CheckCircle2, 
-  AlertCircle, 
+import {
+  ArrowLeft,
+  Target,
+  CheckCircle2,
+  AlertCircle,
   Clock,
-  ClipboardList 
+  ClipboardList
 } from 'lucide-react';
 
 interface Auditor {
@@ -90,7 +91,7 @@ export default function PerformancePage() {
         id: d.id,
         ...d.data()
       })) as Audit[];
-      
+
       fetched.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
       setAudits(fetched);
       setLoading(false);
@@ -106,8 +107,8 @@ export default function PerformancePage() {
     missed: audits.filter(a => a.status === 'missed').length,
   };
 
-  const completionRate = stats.total > 0 
-    ? Math.round((stats.completed / stats.total) * 100) 
+  const completionRate = stats.total > 0
+    ? Math.round((stats.completed / stats.total) * 100)
     : 0;
 
   const getStatusBadge = (status: string) => {
@@ -139,17 +140,13 @@ export default function PerformancePage() {
     <DashboardShell role="Manager">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-8">
-          <div className="flex items-center gap-4">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              onClick={() => router.push('/dashboard/manager/auditors')}
-              className="h-11 w-11 rounded-full border-border/50 text-muted-text hover:text-primary transition-all shadow-sm flex-shrink-0"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <div className="flex flex-col gap-1.5">
-              <h1 className="page-heading flex items-center gap-3">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-4">
+              <Link href="/dashboard/manager/auditors" className="text-muted-text hover:text-primary transition-colors flex items-center">
+                <ArrowLeft className="h-5 w-5" />
+              </Link>
+              <div className="h-5 w-[1px] bg-border/80"></div>
+              <h1 className="text-xl font-semibold text-heading flex items-center gap-3">
                 {auditor?.name || 'Loading Data...'}
                 {auditor && (
                   <Badge variant="secondary" className={cn(
@@ -160,8 +157,8 @@ export default function PerformancePage() {
                   </Badge>
                 )}
               </h1>
-              <p className="body-text">{auditor ? `${auditor.email} • Auditor Performance Analytics` : 'Fetching analytics...'}</p>
             </div>
+            {auditor?.email && <p className="body-text">{auditor.email}</p>}
           </div>
         </div>
 
@@ -173,7 +170,7 @@ export default function PerformancePage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{stats.total}</div>
-              <p className="body-text mt-2 font-normal">Lifetime missions assigned</p>
+              <p className="body-text mt-2 font-normal">Total audits assigned</p>
             </div>
           </Card>
 
@@ -184,7 +181,7 @@ export default function PerformancePage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{completionRate}%</div>
-              <p className="body-text mt-2 font-normal">Overall success efficiency</p>
+              <p className="body-text mt-2 font-normal">Average score</p>
             </div>
           </Card>
 
@@ -195,7 +192,7 @@ export default function PerformancePage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-warning tabular-nums leading-tight">{stats.inProgress}</div>
-              <p className="body-text mt-2 font-normal">Active & ongoing audits</p>
+              <p className="body-text mt-2 font-normal">Audits currently in progress</p>
             </div>
           </Card>
 
@@ -206,12 +203,12 @@ export default function PerformancePage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-destructive tabular-nums leading-tight">{stats.missed}</div>
-              <p className="body-text mt-2 font-normal">Missed or delayed deadlines</p>
+              <p className="body-text mt-2 font-normal">Audits past the deadline</p>
             </div>
           </Card>
         </div>
 
-        <h3 className="section-heading mb-4 ml-1">Mission Log</h3>
+
         <Card className="standard-card overflow-hidden">
           <div className="overflow-x-auto">
             <Table>

@@ -184,8 +184,7 @@ export default function AdminDashboardPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Executive Overview</h1>
-            <p className="body-text">Organization-wide performance and compliance metrics</p>
+            <h1 className="page-heading">Overview</h1>
           </div>
         </div>
 
@@ -198,7 +197,7 @@ export default function AdminDashboardPage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{stats?.totalAuditsThisMonth}</div>
-              <p className="body-text mt-2">Total audits published this month</p>
+              <p className="body-text mt-2">Audits published this month</p>
             </div>
           </Card>
 
@@ -209,7 +208,7 @@ export default function AdminDashboardPage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{stats?.completionRate}%</div>
-              <p className="body-text mt-2">Percentage of audits completed</p>
+              <p className="body-text mt-2">Audits completed</p>
               <Progress value={stats?.completionRate} className="mt-4 h-1.5 bg-success/10" />
             </div>
           </Card>
@@ -236,7 +235,7 @@ export default function AdminDashboardPage() {
           <Card className="standard-card p-6">
             <div className="mb-6">
               <h3 className="section-heading">Location Performance</h3>
-              <p className="body-text mt-1">Average audit scores across all active locations</p>
+              <p className="body-text mt-1">Average score across all locations</p>
             </div>
             <div className="h-[400px] w-full">
               <ResponsiveContainer width="100%" height="100%">

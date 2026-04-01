@@ -36,7 +36,8 @@ import {
   MessageSquare,
   CheckCircle,
   X,
-  Plus
+  Plus,
+  ArrowRight
 } from 'lucide-react';
 import {
   AreaChart,
@@ -268,13 +269,12 @@ export default function ManagerDashboardPage() {
       <div className="dashboard-page-container px-6 md:px-10">
         <div className="page-header-section">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Branch Performance</h1>
-            <p className="body-text">Monitoring quality and compliance across your assigned locations</p>
+            <h1 className="page-heading">Overview</h1>
           </div>
         </div>
 
         {/* Top Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
               <p className="section-heading">Managed Branches</p>
@@ -282,7 +282,7 @@ export default function ManagerDashboardPage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{stats?.assignedLocations}</div>
-              <p className="body-text mt-2">Active locations under oversight</p>
+              <p className="body-text mt-2">Locations you manage</p>
             </div>
           </Card>
 
@@ -293,43 +293,52 @@ export default function ManagerDashboardPage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{stats?.activeAuditors}</div>
-              <p className="body-text mt-2">Active personnel on field</p>
+              <p className="body-text mt-2">Auditors on your team</p>
             </div>
           </Card>
         </div>
 
-        {/* Corrective Actions Section */}
+        {/* Priority Resolution Section */}
         {correctiveActions.length > 0 && (
-          <div className="flex flex-col gap-4">
-            <h3 className="section-heading text-destructive flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4" />
-              Critical Issues ({correctiveActions.length})
-            </h3>
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+              <h3 className="section-heading">Priority Resolution</h3>
+              <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-3 text-[11px] font-medium capitalize">
+                {correctiveActions.length} Pending Actions
+              </Badge>
+            </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {correctiveActions.map((ca) => (
-                <Card key={ca.id} className="standard-card border-destructive/20 hover:border-destructive/40 transition-colors bg-background">
+                <Card key={ca.id} className="standard-card relative overflow-hidden group hover:translate-y-[-2px] transition-all duration-300">
                   <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <Badge variant="destructive" className="text-[10px] font-medium tracking-widest px-2 py-0.5 uppercase">
-                        {ca.severity}
-                      </Badge>
-                      <Badge variant="outline" className="text-[10px] border-destructive/20 text-destructive bg-destructive/5 font-medium tracking-widest px-2 py-0.5">
-                        Due {format(ca.deadline.toDate(), 'MMM d')}
-                      </Badge>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <div className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" />
+                        <span className="text-[10px] font-bold tracking-widest text-muted-text/60 uppercase">{ca.severity} Severity</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-muted/20 text-[11px] font-medium text-muted-text">
+                        <Clock className="h-3 w-3 opacity-50" />
+                        {format(ca.deadline.toDate(), 'MMM d')}
+                      </div>
                     </div>
-                    <h4 className="text-sm font-semibold text-heading leading-tight line-clamp-1">{ca.questionText}</h4>
-                    <p className="body-text text-xs line-clamp-2 mt-2">{ca.description}</p>
-                    <div className="mt-4 flex items-center gap-1.5 text-[11px] font-medium text-muted-text">
-                      <MapPin className="h-3 w-3" /> {ca.locationName}
+                    
+                    <h4 className="text-[15px] font-semibold text-heading leading-snug line-clamp-2 mb-2 group-hover:text-primary transition-colors">{ca.questionText}</h4>
+                    <p className="text-[12px] text-muted-text leading-relaxed line-clamp-2 mb-6">{ca.description || 'No additional details provided for this action.'}</p>
+
+                    <div className="flex items-center justify-between pt-4 border-t border-border/40">
+                      <div className="flex items-center gap-1.5 text-[11px] font-medium text-muted-text/50">
+                        <MapPin className="h-3 w-3" /> {ca.locationName}
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 px-0 text-[12px] font-semibold text-primary hover:bg-transparent hover:text-primary/70 gap-2 overflow-hidden group/btn"
+                        onClick={() => setSelectedCA(ca)}
+                      >
+                        Resolve Issue
+                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
+                      </Button>
                     </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="w-full mt-4 h-9 font-medium text-xs shadow-sm hover:text-success hover:border-success/30 hover:bg-success/5 active:scale-95 transition-all text-muted-text"
-                      onClick={() => setSelectedCA(ca)}
-                    >
-                      Resolve Issue
-                    </Button>
                   </div>
                 </Card>
               ))}
@@ -337,12 +346,12 @@ export default function ManagerDashboardPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-7 gap-8">
           {/* Trend Chart */}
           <Card className="lg:col-span-4 standard-card p-6">
             <div className="mb-6">
               <h3 className="section-heading">Score History</h3>
-              <p className="body-text mt-1">Average performance trend over recent audits</p>
+              <p className="body-text mt-1">Average score across recent audits</p>
             </div>
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -404,7 +413,7 @@ export default function ManagerDashboardPage() {
           <Card className="lg:col-span-3 standard-card p-6">
             <div className="mb-6">
               <h3 className="section-heading">Personnel Focus</h3>
-              <p className="body-text mt-1">Real-time workload and activity distribution</p>
+              <p className="body-text mt-1">Current team workload and activity</p>
             </div>
             <div className="space-y-4">
               {stats?.auditorActivity.map((aud, i) => (
@@ -433,7 +442,7 @@ export default function ManagerDashboardPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="section-heading">Operation Stream</h3>
-                <p className="body-text mt-1">Live visibility into compliance submissions from the field</p>
+                <p className="body-text mt-1">Recent audits submitted by your team</p>
               </div>
               <TrendingUp className="h-5 w-5 text-muted-text/50" />
             </div>

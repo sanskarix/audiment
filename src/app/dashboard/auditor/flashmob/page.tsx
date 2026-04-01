@@ -27,6 +27,7 @@ import {
   UploadCloud,
   ChevronRight,
   ChevronLeft,
+  ArrowLeft,
   X,
   Clock,
   MapPin,
@@ -340,21 +341,16 @@ export default function FlashmobAuditPage() {
   return (
     <DashboardShell role="Auditor">
       <div className="dashboard-page-container max-w-2xl mx-auto pb-32">
-        <div className="page-header-section mb-xl flex flex-col md:flex-row md:items-center gap-xl">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => router.back()}
-            className="h-10 w-10 shrink-0 md:-ml-2"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-          <div className="flex flex-col gap-xs">
-            <div className="flex items-center gap-3">
+        <div className="page-header-section mb-xl flex flex-col gap-2">
+          <div className="flex items-center gap-4">
+            <button onClick={() => router.back()} className="text-muted-text hover:text-primary transition-colors flex items-center">
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <div className="h-5 w-[1px] bg-border/80"></div>
+            <h1 className="text-xl font-semibold text-heading flex items-center gap-3">
               <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-              <h1 className="page-heading">Field Target Intel</h1>
-            </div>
-            <p className="body-text">High-speed verification protocol.</p>
+              Flashmob Verification
+            </h1>
           </div>
         </div>
 
@@ -365,9 +361,9 @@ export default function FlashmobAuditPage() {
             <div className="bg-muted/30 p-xl border-b border-border/50">
               <h3 className="section-heading flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" />
-                Target Identification
+                Select Location
               </h3>
-              <p className="body-text text-xs mt-1">Operational Environment</p>
+              <p className="body-text">Quick video and selfie verification.</p>
             </div>
             <CardContent className="p-xl space-y-xl bg-card">
               <div className="space-y-sm">
@@ -394,7 +390,7 @@ export default function FlashmobAuditPage() {
                   startCamera('environment');
                 }}
               >
-                Establish Visual Link <ChevronRight className="ml-2 h-4 w-4" />
+                Start Camera <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </CardContent>
           </Card>
@@ -406,9 +402,9 @@ export default function FlashmobAuditPage() {
               <div>
                 <h3 className="section-heading flex items-center gap-2">
                   <Video className="h-4 w-4 text-primary" />
-                  Live Transmission
+                  Record Video
                 </h3>
-                <p className="body-text text-xs mt-1">Stream verification in progress</p>
+                <p className="body-text text-xs mt-1">Capture your surroundings clearly</p>
               </div>
               {recording && (
                 <div className="flex items-center gap-2 bg-destructive/10 text-destructive px-3 py-1 rounded-lg text-xs font-medium  tracking-widest animate-pulse border border-destructive/20">
@@ -476,9 +472,9 @@ export default function FlashmobAuditPage() {
             <div className="bg-muted/30 p-xl border-b border-border/50">
               <h3 className="section-heading flex items-center gap-2">
                 <RefreshCw className="h-4 w-4 text-primary" />
-                Transmission Review
+                Review Video
               </h3>
-              <p className="body-text text-xs mt-1">Validate capture quality before uplink</p>
+              <p className="body-text text-xs mt-1">Make sure everything is clear before uploading</p>
             </div>
             <CardContent className="p-xl space-y-xl bg-card">
               <div className="relative aspect-video bg-black rounded-xl overflow-hidden shadow-inner flex items-center justify-center">
@@ -522,9 +518,9 @@ export default function FlashmobAuditPage() {
             <div className="bg-muted/30 p-xl border-b border-border/50 text-center flex flex-col items-center">
               <h3 className="section-heading flex items-center justify-center gap-2">
                 <Camera className="h-4 w-4 text-primary" />
-                Identification Hash
+                Selfie Check
               </h3>
-              <p className="body-text text-xs mt-1">Capture biometric proof of presence</p>
+              <p className="body-text text-xs mt-1">Take a quick selfie to verify your presence</p>
             </div>
             <CardContent className="p-xl space-y-xl bg-card">
               <div className="relative aspect-square max-w-[400px] mx-auto bg-black rounded-full overflow-hidden border-8 border-muted/30 shadow-xl">
@@ -559,8 +555,8 @@ export default function FlashmobAuditPage() {
               <div className="mx-auto bg-primary/10 h-16 w-16 rounded-2xl flex items-center justify-center mb-6 rotate-12">
                 <UploadCloud className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="section-heading mb-1 text-2xl">Initialize Uplink</h3>
-              <p className="body-text text-xs">Transmitting field intelligence to central command</p>
+              <h3 className="section-heading mb-1 text-2xl">Submit Audit</h3>
+              <p className="body-text text-xs">Upload your video and selfie to the dashboard</p>
             </div>
             <CardContent className="p-xl flex flex-col items-center justify-center space-y-xl bg-card">
               {selfieUrl && (
@@ -579,11 +575,11 @@ export default function FlashmobAuditPage() {
               >
                 {saving ? (
                   <>
-                    <div className="mr-3 h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" /> ESTABLISHING LINK...
+                    <div className="mr-3 h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" /> UPLOADING...
                   </>
                 ) : (
                   <>
-                    <UploadCloud className="mr-3 h-5 w-5" /> COMMENCE UPLINK
+                    <UploadCloud className="mr-3 h-5 w-5" /> SUBMIT
                   </>
                 )}
               </Button>

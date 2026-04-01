@@ -128,8 +128,7 @@ export default function AdminFlashmobPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Flash Logs</h1>
-            <p className="body-text">Review video evidence and compliance verification from the field.</p>
+            <h1 className="page-heading">Flashmobs</h1>
           </div>
           <Badge variant="secondary" className="h-6 rounded-full bg-muted/10 text-muted-text border-none px-2.5 text-[12px] font-normal">
             {flashmobs.length} sessions

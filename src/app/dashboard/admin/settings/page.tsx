@@ -326,8 +326,7 @@ export default function AdminSettingsPage() {
       <div className="dashboard-page-container">
         {/* Header */}
         <div className="mb-8">
-          <p className="page-heading">Settings</p>
-          <p className="body-text mt-1">Manage your profile, organization, and notification preferences.</p>
+          <h1 className="page-heading">Settings</h1>
         </div>
 
         {/* Layout: vertical tab rail + content */}

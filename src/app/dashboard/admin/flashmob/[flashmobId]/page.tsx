@@ -86,13 +86,13 @@ export default function FlashmobAuditDetailsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div className="flex flex-col gap-2">
-            <Button variant="ghost" asChild className="-ml-3 h-8 w-fit gap-2 text-muted-text hover:bg-transparent hover:text-primary transition-colors text-body">
-              <Link href="/dashboard/admin/flashmob">
-                <ArrowLeft className="h-4 w-4" /> Flash Logs
+            <div className="flex items-center gap-4">
+              <Link href="/dashboard/admin/flashmob" className="text-muted-text hover:text-primary transition-colors flex items-center">
+                <ArrowLeft className="h-5 w-5" />
               </Link>
-            </Button>
-            <h1 className="page-heading">Integrity Check</h1>
-            <p className="body-text">Uncut verification dossier for {audit.locationName}</p>
+              <div className="h-5 w-[1px] bg-border/80"></div>
+              <h1 className="text-xl font-semibold text-heading">Flashmob Log</h1>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <Button

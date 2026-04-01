@@ -206,7 +206,6 @@ export default function AuditorsPage() {
         <div className="page-header-section">
           <div className="flex flex-col gap-2">
             <h1 className="page-heading">Auditors</h1>
-            <p className="body-text">Oversee and monitor the performance of your audit team across assigned branches.</p>
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
@@ -267,7 +266,7 @@ export default function AuditorsPage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{auditors.length}</div>
-              <p className="body-text mt-2 font-normal">Active auditors under your management</p>
+              <p className="body-text mt-2 font-normal">Auditors on your team</p>
             </div>
           </Card>
           
@@ -278,7 +277,7 @@ export default function AuditorsPage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">100%</div>
-              <p className="body-text mt-2 font-normal">Team on-field readiness status</p>
+              <p className="body-text mt-2 font-normal">Overall team performance</p>
             </div>
           </Card>
 
@@ -289,7 +288,7 @@ export default function AuditorsPage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-primary tabular-nums leading-tight">24</div>
-              <p className="body-text mt-2 font-normal">Avg. monthly audit volume</p>
+              <p className="body-text mt-2 font-normal">Audits completed per month</p>
             </div>
           </Card>
         </div>

@@ -139,8 +139,7 @@ export default function AuditorHistoryPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Audit History</h1>
-            <p className="body-text">Review your past performance and completed audit reports.</p>
+            <h1 className="page-heading">History</h1>
           </div>
         </div>
 
@@ -193,7 +192,7 @@ export default function AuditorHistoryPage() {
           <div className="p-6 border-b border-border/40 bg-muted/30">
             <div className="flex flex-col gap-1">
               <h3 className="section-heading">Completed Audits</h3>
-              <p className="body-text">Repository of your analytical deployments</p>
+              <p className="body-text">View all your completed audits</p>
             </div>
           </div>
           <CardContent className="p-0">

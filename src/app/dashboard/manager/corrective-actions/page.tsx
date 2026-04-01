@@ -75,7 +75,6 @@ export default function CorrectiveActionsPage() {
   const [actions, setActions] = useState<CorrectiveAction[]>([]);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Resolution Dialog State
   const [selectedCA, setSelectedCA] = useState<CorrectiveAction | null>(null);
@@ -179,14 +178,8 @@ export default function CorrectiveActionsPage() {
     }
   };
 
-  const filteredActions = actions.filter((ca) =>
-    ca.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    ca.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    ca.questionText?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const openActions = filteredActions.filter(ca => ca.status === 'open' || ca.status === 'in_progress');
-  const completedActions = filteredActions.filter(ca => ca.status === 'completed' || ca.status === 'resolved');
+  const openActions = actions.filter(ca => ca.status === 'open' || ca.status === 'in_progress');
+  const completedActions = actions.filter(ca => ca.status === 'completed' || ca.status === 'resolved');
 
   if (loading) {
     return (
@@ -201,49 +194,31 @@ export default function CorrectiveActionsPage() {
   return (
     <DashboardShell role="Manager">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
+        <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
             <h1 className="page-heading">Corrective Actions</h1>
-            <p className="body-text">Monitor and resolve compliance issues identified during audits.</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-1 w-full md:w-auto">
-            <Card className="standard-card px-4 py-3 flex items-center justify-between gap-6 border-destructive/20 bg-destructive/[0.02]">
-              <div className="flex flex-col">
-                <span className="text-[10px] font-semibold text-destructive uppercase tracking-wider">Critical Focus</span>
-                <span className="text-xl font-bold text-destructive tabular-nums">{openActions.length} Pending</span>
-              </div>
-              <AlertTriangle className="h-5 w-5 text-destructive/40" />
-            </Card>
           </div>
         </div>
 
-        {/* Global Controls */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative flex-1 group max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input
-              placeholder="Search actions by location or description..."
-              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
-        </div>
+
 
         <Tabs defaultValue="open" className="space-y-6">
-          <TabsList className="bg-muted/10 p-1 border border-border/50 rounded-xl inline-flex h-12">
-            <TabsTrigger value="open" className="data-[state=active]:bg-background data-[state=active]:shadow-sm px-6 font-semibold text-xs h-full transition-all rounded-lg">
-              Active ({openActions.length})
-            </TabsTrigger>
-            <TabsTrigger value="resolved" className="data-[state=active]:bg-background data-[state=active]:shadow-sm px-6 font-semibold text-xs h-full transition-all rounded-lg">
-              History ({completedActions.length})
-            </TabsTrigger>
-          </TabsList>
+          <div className="flex justify-start">
+            <TabsList className="h-10 items-center justify-center rounded-lg bg-muted/30 p-1 text-muted-text border border-border/50">
+              <TabsTrigger 
+                value="open" 
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-5 py-1.5 text-xs font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-heading data-[state=active]:shadow-sm"
+              >
+                Active ({openActions.length})
+              </TabsTrigger>
+              <TabsTrigger 
+                value="resolved" 
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-5 py-1.5 text-xs font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-heading data-[state=active]:shadow-sm"
+              >
+                History ({completedActions.length})
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="open" className="mt-0 focus-visible:outline-none">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
@@ -253,7 +228,7 @@ export default function CorrectiveActionsPage() {
                     <CheckCircle2 className="h-10 w-10 text-success opacity-40" />
                   </div>
                   <p className="font-semibold text-heading">No Pending Issues</p>
-                  <p className="body-text text-sm mt-1">Managed locations are currently compliant.</p>
+                  <p className="body-text text-sm mt-1">All your locations are compliant.</p>
                 </div>
               ) : (
                 openActions.map((ca) => (
@@ -397,12 +372,12 @@ export default function CorrectiveActionsPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-20 w-full border-dashed border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all text-muted-text flex flex-col gap-1"
+                  className="h-10 px-4 w-fit border-dashed border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all text-muted-text flex items-center gap-2"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
                 >
-                  {isUploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Camera className="h-5 w-5" />}
-                  <span className="text-[11px] font-normal uppercase tracking-wider">Upload Proof</span>
+                  {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                  <span className="text-[12px] font-medium">Attach Proof</span>
                 </Button>
                 <input type="file" className="hidden" ref={fileInputRef} accept="image/*" onChange={handleFileUpload} />
               </div>
@@ -426,13 +401,13 @@ export default function CorrectiveActionsPage() {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setSelectedCA(null)} className="font-normal text-sm">Cancel</Button>
+            <Button variant="outline" onClick={() => setSelectedCA(null)} className="h-9 px-4 font-normal text-xs">Cancel</Button>
             <Button
               onClick={handleComplete}
               disabled={isResolving || !resolutionNote}
-              className="font-normal text-sm shadow-lg shadow-primary/10 transition-all"
+              className="h-9 px-4 font-medium text-xs shadow-lg shadow-primary/10 transition-all"
             >
-              {isResolving && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              {isResolving && <Loader2 className="h-3 w-3 animate-spin mr-2" />}
               Complete Resolution
             </Button>
           </DialogFooter>

@@ -232,6 +232,24 @@
 }
 
 @layer utilities {
+  .text-heading {
+    font-size: 20px;
+    font-weight: 600;
+    color: #121317;
+  }
+
+  .text-body {
+    font-size: 14px;
+    font-weight: 400;
+    color: #45474d;
+  }
+
+  .text-muted {
+    font-size: 12px;
+    font-weight: 400;
+    color: #6b7280;
+  }
+
   .aud-heading-base {
     font-size: 20px;
     font-weight: 600;
@@ -311,7 +329,7 @@
   }
 
   .page-header-section {
-    @apply flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6;
+    @apply flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6;
   }
 
   .standard-card {

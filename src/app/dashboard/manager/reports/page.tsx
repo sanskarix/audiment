@@ -29,6 +29,15 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Filter, MapPin, ArrowRight, CheckSquare, Search } from 'lucide-react';
@@ -55,52 +64,6 @@ export default function ManagerReportsPage() {
       } catch (e) { }
     }
   }, []);
-
-  useEffect(() => {
-    if (!session?.uid) return;
-
-    async function fetchInitialData() {
-      try {
-        const locationsSnap = await getDocs(query(
-          collection(db, 'locations'),
-          where('assignedManagerId', '==', session.uid)
-        ));
-        const locs = locationsSnap.docs.map(d => ({ id: d.id, name: d.data().name }));
-        setLocations(locs);
-
-        const locIds = locs.map(l => l.id);
-        if (locIds.length > 0) {
-          await fetchReports(locIds);
-        } else {
-          setReports([]);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchInitialData();
-  }, [session]);
-
-  if (loading) {
-    return (
-      <DashboardShell role="Manager">
-        <div className="dashboard-page-container">
-          <div className="page-header-section mb-6">
-            <Skeleton className="h-8 w-64" />
-            <Skeleton className="h-4 w-96 mt-2" />
-          </div>
-          <Skeleton className="h-[120px] w-full rounded-xl mb-6" />
-          <div className="border border-border/40 rounded-xl overflow-hidden">
-            <Skeleton className="h-12 w-full rounded-none" />
-            <Skeleton className="h-96 w-full rounded-none mt-2" />
-          </div>
-        </div>
-      </DashboardShell>
-    );
-  }
 
   const fetchReports = async (ids?: string[]) => {
     setLoading(true);
@@ -133,22 +96,67 @@ export default function ManagerReportsPage() {
     }
   };
 
-  const filteredReports = reports.filter((r) =>
-    r.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    r.locationName?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    if (!session?.uid) return;
+
+    async function fetchInitialData() {
+      try {
+        const locationsSnap = await getDocs(query(
+          collection(db, 'locations'),
+          where('assignedManagerId', '==', session.uid)
+        ));
+        const locs = locationsSnap.docs.map(d => ({ id: d.id, name: d.data().name }));
+        setLocations(locs);
+
+        const locIds = locs.map(l => l.id);
+        if (locIds.length > 0) {
+          await fetchReports(locIds);
+        } else {
+          setReports([]);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchInitialData();
+  }, [session]);
 
   useEffect(() => {
     if (locations.length > 0) fetchReports();
   }, [selectedLocation]);
+
+  if (loading) {
+    return (
+      <DashboardShell role="Manager">
+        <div className="dashboard-page-container">
+          <div className="page-header-section mb-6">
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-4 w-96 mt-2" />
+          </div>
+          <Skeleton className="h-[120px] w-full rounded-xl mb-6" />
+          <div className="border border-border/40 rounded-xl overflow-hidden">
+            <Skeleton className="h-12 w-full rounded-none" />
+            <Skeleton className="h-96 w-full rounded-none mt-2" />
+          </div>
+        </div>
+      </DashboardShell>
+    );
+  }
+
+  const filteredReports = reports.filter((r) =>
+    r.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    r.locationName?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <DashboardShell role="Manager">
       <div className="dashboard-page-container">
         <div className="page-header-section">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Audit Log</h1>
-            <p className="body-text">Comprehensive list of completed audits across your managed locations</p>
+            <h1 className="page-heading">Reports</h1>
           </div>
         </div>
 
@@ -162,56 +170,45 @@ export default function ManagerReportsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
-        </div>
-
-        {/* Filters Card */}
-        <Card className="standard-card mb-6">
-          <CardContent className="p-6">
-            <div className="flex flex-wrap items-end gap-md">
-              <div className="flex-1 min-w-[280px] space-y-xs">
-                <Label className="text-xs font-normal  tracking-widest text-muted-text">
-                  Branch Performance Focus
-                </Label>
-                <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                  <SelectTrigger className="h-10 bg-background border-input transition-colors text-body">
-                    <SelectValue placeholder="All Branches" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all" className="font-normal text-sm cursor-pointer">All Active Branches</SelectItem>
-                    {locations.map(loc => (
-                      <SelectItem key={loc.id} value={loc.id} className="font-normal text-sm cursor-pointer">{loc.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="pt-2 sm:pt-0">
-                <Button
-                  variant="outline"
-                  onClick={() => fetchReports()}
-                  className="h-10 gap-2 font-medium text-xs  tracking-widest hover:bg-muted/30 shadow-sm transition-all active:scale-95 text-body"
-                >
-                  <Filter className="h-4 w-4 text-muted-text" /> Sync Log
+          <div className="flex items-center gap-3">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className={cn(
+                  "h-11 px-4 gap-2 font-medium text-xs border-border/50",
+                  selectedLocation !== 'all' ? "text-primary border-primary/20 bg-primary/5" : "text-[#6b7280]"
+                )}>
+                  <Filter className="h-4 w-4" />
+                  {selectedLocation === 'all' ? 'Filters' : locations.find(l => l.id === selectedLocation)?.name}
                 </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">Filter by Location</DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={selectedLocation} onValueChange={setSelectedLocation}>
+                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">
+                    All Locations
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuSeparator />
+                  {locations.map(loc => (
+                    <DropdownMenuRadioItem key={loc.id} value={loc.id} className="text-body cursor-pointer">
+                      {loc.name}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
 
         {/* Reports Table */}
         <Card className="standard-card">
           <Table>
             <TableHeader className="standard-table-header">
               <TableRow className="hover:bg-transparent">
-                <TableHead className="standard-table-head">Audit Blueprint</TableHead>
-                <TableHead className="standard-table-head">Branch Location</TableHead>
-                <TableHead className="standard-table-head">Timeline</TableHead>
-                <TableHead className="standard-table-head text-center">Score</TableHead>
-                <TableHead className="standard-table-head text-right">Action</TableHead>
+                <TableHead className="standard-table-head">Audit Template</TableHead>
+                <TableHead className="standard-table-head">Location</TableHead>
+                <TableHead className="standard-table-head">Completed On</TableHead>
+                <TableHead className="standard-table-head text-right">Score</TableHead>
+                <TableHead className="standard-table-head w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -228,8 +225,8 @@ export default function ManagerReportsPage() {
                       <CheckSquare className="h-10 w-10 opacity-20" />
                       <p className="font-normal">
                         {reports.length === 0
-                          ? (locations.length === 0 ? "No assigned locations found." : "No completed records in this range.")
-                          : "No reports found matching your search."}
+                          ? (locations.length === 0 ? "No locations assigned." : "No completed reports.")
+                          : "No matching reports found."}
                       </p>
                     </div>
                   </TableCell>
@@ -240,41 +237,35 @@ export default function ManagerReportsPage() {
                     key={report.id}
                     className="standard-table-row group cursor-pointer"
                   >
-	                    <TableCell className="standard-table-cell">
-	                      <Link href={`/dashboard/manager/reports/${report.id}`} className="flex flex-col gap-1">
-	                        <span>{report.templateTitle}</span>
-	                        <span className="muted-label opacity-60">ID: {report.id.slice(-8)}</span>
-	                      </Link>
-	                    </TableCell>
                     <TableCell className="standard-table-cell">
                       <Link href={`/dashboard/manager/reports/${report.id}`} className="block">
-	                        <div className="flex items-center gap-2">
-	                          <MapPin className="h-4 w-4 text-primary opacity-60" />
-	                          <span>{report.locationName}</span>
-	                        </div>
-	                      </Link>
-	                    </TableCell>
-	                    <TableCell className="standard-table-cell">
-	                      <Link href={`/dashboard/manager/reports/${report.id}`} className="flex flex-col gap-1">
-	                        <span>{report.completedAt ? format(report.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</span>
-	                        <span className="muted-label opacity-60">Completed</span>
-	                      </Link>
-	                    </TableCell>
-                    <TableCell className="standard-table-cell text-center">
-                      <Link href={`/dashboard/manager/reports/${report.id}`} className="flex justify-center">
+                        <span className="text-[14px] font-normal text-body group-hover:text-primary transition-colors">{report.templateTitle}</span>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="standard-table-cell">
+                      <Link href={`/dashboard/manager/reports/${report.id}`} className="block">
+                        <span className="text-[14px] font-normal text-body">{report.locationName}</span>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="standard-table-cell">
+                      <Link href={`/dashboard/manager/reports/${report.id}`} className="block">
+                        <span className="text-[13px] font-normal text-muted-text">{report.completedAt ? format(report.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</span>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="standard-table-cell text-right">
+                      <Link href={`/dashboard/manager/reports/${report.id}`} className="flex justify-end">
                         <Badge className={cn(
-                          "px-3 py-1 font-medium text-xs tracking-widest ",
-                          report.scorePercentage >= 90 ? "bg-success text-success-foreground hover:bg-success/90" :
-                            report.scorePercentage >= 70 ? "bg-primary text-primary-foreground hover:bg-primary/90" :
-                              "bg-warning text-warning-foreground hover:bg-warning/90"
+                          "px-2.5 py-0.5 font-medium text-[11px] rounded-sm",
+                          report.scorePercentage >= 90 ? "bg-success/10 text-success hover:bg-success/20" :
+                            report.scorePercentage >= 70 ? "bg-primary/10 text-primary hover:bg-primary/20" :
+                              "bg-destructive/10 text-destructive hover:bg-destructive/20"
                         )}>
                           {report.scorePercentage}%
                         </Badge>
                       </Link>
                     </TableCell>
-                    <TableCell className="standard-table-cell text-right">
-                      <Link href={`/dashboard/manager/reports/${report.id}`} className="flex items-center justify-end gap-2 text-muted-text group-hover:text-primary transition-colors">
-                        <span className="text-[10px] font-medium  tracking-widest hidden sm:inline">View</span>
+                    <TableCell className="standard-table-cell">
+                      <Link href={`/dashboard/manager/reports/${report.id}`} className="flex items-center justify-end text-muted-text/30 group-hover:text-primary transition-colors">
                         <ArrowRight className="h-4 w-4" />
                       </Link>
                     </TableCell>

@@ -118,8 +118,7 @@ export default function AuditorDashboardPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Performance Dashboard</h1>
-            <p className="body-text">Summary of your auditing activity and quality metrics.</p>
+            <h1 className="page-heading">Overview</h1>
           </div>
         </div>
 
@@ -200,7 +199,7 @@ export default function AuditorDashboardPage() {
           <div className="flex items-center justify-between mb-6">
             <div className="flex flex-col gap-0.5">
               <h3 className="section-heading tracking-tight italic ">ACTIVE DEPLOYMENTS</h3>
-              <p className="body-text">Operational safety maneuvers in current scope</p>
+              <p className="body-text">Your assigned audits to complete</p>
             </div>
             <Badge variant="secondary" className="px-3 py-1 font-medium text-[10px] tracking-widest  bg-primary text-white border-none shadow-lg shadow-primary/20">
               {filteredAudits.length} REQUIRED
@@ -224,7 +223,7 @@ export default function AuditorDashboardPage() {
                 <div className="bg-muted/10 p-6 rounded-full mb-6">
                   <FileCheck className="h-12 w-12 opacity-20" />
                 </div>
-                <p className="text-lg opacity-40 italic font-normal text-muted-text">No active deployments identified.</p>
+                <p className="text-lg opacity-40 italic font-normal text-muted-text">No audits assigned to you right now.</p>
               </CardContent>
             </Card>
           ) : (

@@ -143,8 +143,7 @@ export default function ManagerAuditsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Active Audits</h1>
-            <p className="body-text">Monitor ongoing and upcoming audits across your assigned locations.</p>
+            <h1 className="page-heading">Audits</h1>
           </div>
         </div>
 

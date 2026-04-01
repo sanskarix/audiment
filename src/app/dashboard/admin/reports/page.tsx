@@ -161,8 +161,7 @@ export default function AdminReportsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Audit Archive</h1>
-            <p className="body-text">Comprehensive repository of all completed quality submissions</p>
+            <h1 className="page-heading">Reports</h1>
           </div>
         </div>
 
@@ -228,7 +227,7 @@ export default function AdminReportsPage() {
                       <div className="bg-muted/10 p-4 rounded-full">
                         <FileText className="h-8 w-8 opacity-20" />
                       </div>
-                      <p className="page-heading opacity-40">No historical reports found for this criteria.</p>
+                      <p className="page-heading opacity-40">No matching reports found.</p>
                     </div>
                   </TableCell>
                 </TableRow>

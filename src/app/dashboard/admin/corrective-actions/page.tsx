@@ -205,8 +205,7 @@ export default function AdminCorrectiveActionsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-1.5">
-            <p className="page-heading">Corrective Actions</p>
-            <p className="body-text">Unresolved quality failures requiring attention</p>
+            <h1 className="page-heading">Corrective Actions</h1>
           </div>
           <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[11px] font-normal">
             {actions.length} open
@@ -239,7 +238,7 @@ export default function AdminCorrectiveActionsPage() {
               <div className="text-[32px] font-semibold tracking-tight text-destructive tabular-nums leading-tight">
                 {actions.filter(a => a.deadline?.toDate() < new Date()).length}
               </div>
-              <p className="body-text mt-2">Past deadline</p>
+              <p className="body-text mt-2">Overdue actions</p>
             </div>
           </Card>
 
@@ -252,7 +251,7 @@ export default function AdminCorrectiveActionsPage() {
               <div className="text-[32px] font-semibold tracking-tight text-warning tabular-nums leading-tight">
                 {actions.filter(a => a.severity === 'critical').length}
               </div>
-              <p className="body-text mt-2">Immediate business risk</p>
+              <p className="body-text mt-2">Critical priority actions</p>
             </div>
           </Card>
 
@@ -263,7 +262,7 @@ export default function AdminCorrectiveActionsPage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">48h</div>
-              <p className="body-text mt-2">Target resolution window</p>
+              <p className="body-text mt-2">Require resolution soon</p>
             </div>
           </Card>
         </div>

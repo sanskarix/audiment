@@ -77,7 +77,124 @@ export default function AuditReportDetailPage() {
       const canvas = await html2canvas(reportRef.current, {
         scale: 2,
         useCORS: true,
-        logging: false,
+        onclone: (clonedDoc) => {
+          // html2canvas CSS parser crashes on oklch/oklab. 
+          // We must aggressively REMOVE all original styles before it scans them.
+          const existingStyles = clonedDoc.querySelectorAll('style, link[rel="stylesheet"]');
+          existingStyles.forEach(s => s.remove());
+
+          const style = clonedDoc.createElement('style');
+          style.innerHTML = `
+            :root {
+              --background: #ffffff;
+              --foreground: #121317;
+              --card: #ffffff;
+              --card-foreground: #121317;
+              --popover: #ffffff;
+              --popover-foreground: #121317;
+              --primary: #3B82F6;
+              --primary-foreground: #ffffff;
+              --secondary: #F4F4F5;
+              --secondary-foreground: #18181b;
+              --muted: #F4F4F5;
+              --muted-foreground: #71717a;
+              --accent: #F4F4F5;
+              --accent-foreground: #18181b;
+              --destructive: #EF4444;
+              --destructive-foreground: #ffffff;
+              --success: #22C55E;
+              --success-foreground: #ffffff;
+              --warning: #F59E0B;
+              --warning-foreground: #ffffff;
+              --border: #E5E7EB;
+              --input: #E5E7EB;
+              --ring: #3B82F6;
+            }
+
+            body, * {
+              font-family: sans-serif !important;
+              color-adjust: exact !important;
+              -webkit-print-color-adjust: exact !important;
+            }
+
+            .standard-card {
+              border: 1px solid #E5E7EB !important;
+              border-radius: 12px !important;
+              background-color: #ffffff !important;
+            }
+
+            .badge {
+              display: inline-flex !important;
+              align-items: center !important;
+              border-radius: 9999px !important;
+              padding: 2px 8px !important;
+              font-size: 11px !important;
+              font-weight: 500 !important;
+            }
+
+            .bg-success { background-color: #22C55E !important; color: #ffffff !important; }
+            .bg-primary { background-color: #3B82F6 !important; color: #ffffff !important; }
+            .bg-destructive { background-color: #EF4444 !important; color: #ffffff !important; }
+            .bg-warning { background-color: #F59E0B !important; color: #ffffff !important; }
+            .bg-muted\\/5, .bg-muted\\/10, .bg-muted\\/20, .bg-muted\\/30 { background-color: #F4F4F5 !important; }
+            .text-success { color: #22C55E !important; }
+            .text-primary { color: #3B82F6 !important; }
+            .text-destructive { color: #EF4444 !important; }
+            .text-warning { color: #F59E0B !important; }
+            .text-heading { color: #121317 !important; }
+            .text-body { color: #45474D !important; }
+            .text-muted-text { color: #6B7280 !important; }
+            
+            svg { stroke: currentColor; fill: none; }
+            .fill-current { fill: currentColor; }
+            
+            /* Add structural layout support for the PDF */
+            .flex { display: flex !important; }
+            .flex-col { flex-direction: column !important; }
+            .items-center { align-items: center !important; }
+            .items-start { align-items: flex-start !important; }
+            .justify-between { justify-content: space-between !important; }
+            .justify-center { justify-content: center !important; }
+            .grid { display: grid !important; }
+            .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+            .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+            .gap-1\\.5 { gap: 0.375rem !important; }
+            .gap-3 { gap: 0.75rem !important; }
+            .gap-4 { gap: 1rem !important; }
+            .gap-6 { gap: 1.5rem !important; }
+            .gap-8 { gap: 2rem !important; }
+            .gap-10 { gap: 2.5rem !important; }
+            .p-10 { padding: 2.5rem !important; }
+            .p-8 { padding: 2rem !important; }
+            .pt-4 { padding-top: 1rem !important; }
+            .pb-10 { padding-bottom: 2.5rem !important; }
+            .mb-10 { margin-bottom: 2.5rem !important; }
+            .mb-6 { margin-bottom: 1.5rem !important; }
+            .border-b { border-bottom: 1px solid #E5E7EB !important; }
+            .border-t { border-top: 1px solid #E5E7EB !important; }
+            .border { border: 1px solid #E5E7EB !important; }
+            .w-full { width: 100% !important; }
+            .flex-1 { flex: 1 1 0% !important; }
+            .rounded-xl { border-radius: 0.75rem !important; }
+            .rounded-2xl { border-radius: 1rem !important; }
+            .rounded-full { border-radius: 9999px !important; }
+            .text-\\[28px\\] { font-size: 28px !important; }
+            .text-\\[42px\\] { font-size: 42px !important; }
+            .font-bold { font-weight: 700 !important; }
+            .font-semibold { font-weight: 600 !important; }
+            .font-medium { font-weight: 500 !important; }
+            .uppercase { text-transform: uppercase !important; }
+          `;
+          clonedDoc.head.appendChild(style);
+
+          // Also forcibly strip computed SVG styles that might have been copied inline 
+          const svgs = clonedDoc.querySelectorAll('svg');
+          svgs.forEach(svg => {
+            svg.style.color = '';
+            svg.style.stroke = '';
+            svg.style.fill = '';
+          });
+        }
       });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
@@ -119,13 +236,13 @@ export default function AuditReportDetailPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
           <div className="flex flex-col gap-2">
-            <Button variant="ghost" asChild className="-ml-3 h-8 w-fit gap-2 text-muted-text hover:bg-transparent hover:text-primary transition-colors text-body">
-              <Link href="/dashboard/admin/reports">
-                <ArrowLeft className="h-4 w-4" /> Reports
+            <div className="flex items-center gap-4">
+              <Link href="/dashboard/admin/reports" className="text-muted-text hover:text-primary transition-colors flex items-center">
+                <ArrowLeft className="h-5 w-5" />
               </Link>
-            </Button>
-            <h1 className="page-heading">Detailed Report</h1>
-            <p className="body-text">Comprehensive findings and performance breakdown for this audit</p>
+              <div className="h-5 w-[1px] bg-border/80"></div>
+              <h1 className="text-xl font-semibold text-heading">Detailed Report</h1>
+            </div>
           </div>
           <Button
             onClick={exportToPDF}
@@ -141,10 +258,6 @@ export default function AuditReportDetailPage() {
           {/* Report Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-border/50 pb-10 mb-10 gap-10">
             <div className="space-y-6 flex-1">
-              <div className="flex items-center gap-3">
-                <Badge variant="secondary" className="h-6 rounded-full bg-muted/10 text-muted-text border-none px-2.5 text-[12px] font-normal">Audit Report</Badge>
-                <Badge variant="secondary" className="h-6 rounded-full bg-success/10 text-success border-none px-2.5 text-[12px] font-normal">Verified</Badge>
-              </div>
               <h1 className="text-[28px] font-semibold text-heading leading-tight">{audit.templateTitle}</h1>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-10 pt-4">
                 <div className="flex flex-col gap-1.5">

@@ -175,7 +175,13 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer" asChild>
-                <Link href={role === 'Admin' ? '/dashboard/admin/settings' : '#'} className="flex items-center w-full">
+                <Link 
+                  href={
+                    role === 'Admin' ? '/dashboard/admin/settings' : 
+                    role === 'Manager' ? '/dashboard/manager/settings' : '#'
+                  } 
+                  className="flex items-center w-full"
+                >
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </Link>

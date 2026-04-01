@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import DashboardShell from '@/components/DashboardShell';
-import { db } from '@/lib/firebase';
+import { db, auth } from '@/lib/firebase';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import {
   collection,
   query,
@@ -11,7 +12,8 @@ import {
   doc,
   addDoc,
   serverTimestamp,
-  getDocs
+  getDocs,
+  updateDoc
 } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
 import {
@@ -26,13 +28,16 @@ import {
   UserPlus,
   Search,
   Filter,
-  MoreVertical,
+  BarChart3,
+  Key,
+  MoreHorizontal,
   Mail,
   MapPin,
   CheckCircle2,
   Clock,
   Loader2,
-  Plus
+  Plus,
+  ClipboardList
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -55,6 +60,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useRouter } from 'next/navigation';
 
 interface Auditor {
   id: string;
@@ -63,16 +76,21 @@ interface Auditor {
   email: string;
   role: string;
   status?: 'active' | 'inactive';
+  isActive?: boolean;
+  flashmobAccess?: boolean;
   lastActive?: any;
   createdAt?: any;
   assignedLocations?: string[];
 }
 
 export default function AuditorsPage() {
+  const router = useRouter();
   const [auditors, setAuditors] = useState<Auditor[]>([]);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isUpdating, setIsUpdating] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Add Auditor State
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -92,7 +110,6 @@ export default function AuditorsPage() {
   useEffect(() => {
     if (!session?.uid || !session?.organizationId) return;
 
-    // Real-time listener for auditors reporting to this manager
     const q = query(
       collection(db, 'users'),
       where('organizationId', '==', session.organizationId),
@@ -115,15 +132,37 @@ export default function AuditorsPage() {
     return () => unsubscribe();
   }, [session]);
 
+  const toggleField = async (auditorId: string, field: string, currentValue: boolean) => {
+    setIsUpdating(auditorId + field);
+    try {
+      const userRef = doc(db, 'users', auditorId);
+      await updateDoc(userRef, {
+        [field]: !currentValue,
+        ...(field === 'isActive' ? { status: !currentValue ? 'active' : 'inactive' } : {})
+      });
+    } catch (error) {
+      console.error(`Error updating ${field}:`, error);
+    } finally {
+      setIsUpdating(null);
+    }
+  };
+
+  const handleResetPassword = async (email: string) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setSuccessMessage(`Reset link sent to ${email}`);
+      setTimeout(() => setSuccessMessage(null), 5000);
+    } catch (error: any) {
+      console.error("Error sending reset link:", error);
+    }
+  };
+
   const handleAddAuditor = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newAuditorName || !newAuditorEmail || !session) return;
 
     setIsSubmitting(true);
     try {
-      // Logic for adding a new auditor
-      // This usually involves creating a user document or sending an invite
-      // For now, we'll create a platform user document (auditor role)
       await addDoc(collection(db, 'users'), {
         name: newAuditorName,
         email: newAuditorEmail,
@@ -132,10 +171,10 @@ export default function AuditorsPage() {
         managerId: session.uid,
         status: 'active',
         isActive: true,
+        flashmobAccess: false,
         createdAt: serverTimestamp(),
       });
 
-      // Reset form
       setNewAuditorName('');
       setNewAuditorEmail('');
       setIsAddDialogOpen(false);
@@ -166,53 +205,53 @@ export default function AuditorsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Auditors Management</h1>
-            <p className="body-text">Manage and monitor the performance of your audit team.</p>
+            <h1 className="page-heading">Auditors</h1>
+            <p className="body-text">Oversee and monitor the performance of your audit team across assigned branches.</p>
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="lg" className="shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-95 transition-all text-xs font-medium  tracking-widest">
-                <UserPlus className="mr-2 h-4 w-4" /> Add Auditor
+              <Button className="h-11 px-5 gap-2 font-medium text-xs shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+                <UserPlus className="h-4 w-4" /> Add Auditor
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader className="p-xl border-b border-border/50">
-                <DialogTitle className="text-lg font-semibold text-heading">Add New Auditor</DialogTitle>
-                <DialogDescription className="body-text text-xs mt-2">
-                  Invite a new auditor to your team. They will receive an email to join the platform.
+              <DialogHeader>
+                <DialogTitle className="font-semibold text-heading">Add New Auditor</DialogTitle>
+                <DialogDescription className="text-muted-text text-sm">
+                  Invite a new auditor to your reporting team.
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleAddAuditor}>
-                <div className="space-y-lg p-xl">
-                  <div className="space-y-xs">
-                    <Label htmlFor="name" className="text-xs font-normal  tracking-widest text-muted-text">Full Name</Label>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-body font-normal">Full Name</Label>
                     <Input
                       id="name"
-                      placeholder="John Doe"
+                      placeholder="e.g. Liam Smith"
                       value={newAuditorName}
                       onChange={(e) => setNewAuditorName(e.target.value)}
                       required
-                      className="bg-background border-input h-10 text-body"
+                      className="h-10 text-body bg-background border-border/50"
                     />
                   </div>
-                  <div className="space-y-xs">
-                    <Label htmlFor="email" className="text-xs font-normal  tracking-widest text-muted-text">Email Address</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-body font-normal">Email Address</Label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder="john@example.com"
+                      placeholder="liam@audiment.com"
                       value={newAuditorEmail}
                       onChange={(e) => setNewAuditorEmail(e.target.value)}
                       required
-                      className="bg-background border-input h-10 text-body"
+                      className="h-10 text-body bg-background border-border/50"
                     />
                   </div>
                 </div>
-                <DialogFooter className="p-xl border-t border-border/50 bg-muted/10 gap-sm">
-                  <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-medium text-xs  tracking-widest shadow-sm text-body">Cancel</Button>
-                  <Button type="submit" disabled={isSubmitting} className="font-medium text-xs  tracking-widest shadow-md">
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-normal text-sm">Cancel</Button>
+                  <Button type="submit" disabled={isSubmitting} className="font-normal text-sm">
                     {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
-                    Create Auditor
+                    Confirm Auditor
                   </Button>
                 </DialogFooter>
               </form>
@@ -220,12 +259,54 @@ export default function AuditorsPage() {
           </Dialog>
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="standard-card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <p className="section-heading">Reporting Team</p>
+              <Users className="h-4 w-4 text-primary/40 transition-colors" />
+            </div>
+            <div>
+              <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{auditors.length}</div>
+              <p className="body-text mt-2 font-normal">Active auditors under your management</p>
+            </div>
+          </Card>
+          
+          <Card className="standard-card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <p className="section-heading">Availability</p>
+              <Clock className="h-4 w-4 text-success/40 transition-colors" />
+            </div>
+            <div>
+              <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">100%</div>
+              <p className="body-text mt-2 font-normal">Team on-field readiness status</p>
+            </div>
+          </Card>
+
+          <Card className="standard-card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <p className="section-heading">Missions</p>
+              <ClipboardList className="h-4 w-4 text-primary/40 transition-colors" />
+            </div>
+            <div>
+              <div className="text-[32px] font-semibold tracking-tight text-primary tabular-nums leading-tight">24</div>
+              <p className="body-text mt-2 font-normal">Avg. monthly audit volume</p>
+            </div>
+          </Card>
+        </div>
+
+        {successMessage && (
+          <div className="bg-success/10 border border-success/30 text-success px-4 py-3 rounded-xl text-xs font-semibold animate-in fade-in slide-in-from-top-1 flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4" />
+            {successMessage}
+          </div>
+        )}
+
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative flex-1 group">
+          <div className="relative flex-1 group max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
               placeholder="Search auditors by name or email..."
-              className="pl-9 h-11 bg-background text-body"
+              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -236,111 +317,78 @@ export default function AuditorsPage() {
           </Button>
         </div>
 
-        {/* Auditor Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <Card className="standard-card">
-            <div className="p-6">
-              <p className="muted-label mb-2">Total Team Size</p>
-              <h3 className="text-3xl font-medium tracking-tight text-primary">
-                {auditors.length}
-              </h3>
-            </div>
-          </Card>
-
-          <Card className="standard-card">
-            <div className="p-6">
-              <p className="muted-label mb-2">Avg. Efficiency</p>
-              <h3 className="text-3xl font-medium tracking-tight text-success">
-                94%
-              </h3>
-            </div>
-          </Card>
-
-          <Card className="standard-card">
-            <div className="p-6">
-              <p className="muted-label mb-2">Pending Tasks</p>
-              <h3 className="text-3xl font-medium tracking-tight text-warning">
-                12
-              </h3>
-            </div>
-          </Card>
-        </div>
-
-        {/* Auditors Table Section */}
         <Card className="standard-card overflow-hidden">
-          <div className="p-6 border-b border-border/40 bg-muted/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex flex-col gap-1">
-              <h3 className="section-heading">Team Roster</h3>
-              <p className="body-text">A complete list of your assigned auditors.</p>
-            </div>
-            <div className="relative w-full md:w-72 group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-              <Input
-                placeholder="Search auditors..."
-                className="pl-9 h-10 w-full text-body"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-          </div>
-          <CardContent className="p-0">
+          <div className="overflow-x-auto">
             <Table>
               <TableHeader className="standard-table-header">
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="standard-table-head w-[250px]">Name</TableHead>
-                  <TableHead className="standard-table-head">Email</TableHead>
-                  <TableHead className="standard-table-head">Status</TableHead>
-                  <TableHead className="standard-table-head">Locations</TableHead>
-                  <TableHead className="standard-table-head text-right">Actions</TableHead>
+                <TableRow className="hover:bg-transparent border-none">
+                  <TableHead className="standard-table-head pl-6 py-5">Personnel</TableHead>
+                  <TableHead className="standard-table-head py-5">Email Address</TableHead>
+                  <TableHead className="standard-table-head text-center py-5">Account</TableHead>
+                  <TableHead className="standard-table-head text-center py-5">Flashmob</TableHead>
+                  <TableHead className="standard-table-head text-right pr-6 py-5 w-[80px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredAuditors.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="standard-table-cell h-64 text-center text-muted-text">
-                      <div className="flex flex-col items-center justify-center gap-3">
-                        <Users className="h-10 w-10 opacity-20" />
-                        <p className="font-normal">{searchQuery ? "No auditors matching search." : "No auditors assigned."}</p>
-                      </div>
+                    <TableCell colSpan={5} className="standard-table-cell h-32 text-center text-muted-text">
+                      No auditors found in your reporting list.
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredAuditors.map((auditor) => (
-                    <TableRow key={auditor.id} className="standard-table-row group">
+                    <TableRow 
+                      key={auditor.id} 
+                      className="standard-table-row group h-[72px] cursor-pointer hover:bg-muted/5 transition-colors"
+                      onClick={() => router.push(`/dashboard/manager/auditors/${auditor.id}`)}
+                    >
+                      <TableCell className="standard-table-cell pl-6">
+                        <span className="text-[14px] font-normal text-heading">{auditor.name}</span>
+                      </TableCell>
                       <TableCell className="standard-table-cell">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium text-sm  shrink-0">
-                            {auditor.name.substring(0, 2)}
-                          </div>
-                          <span className="font-normal text-sm text-heading">{auditor.name}</span>
+                        <span className="text-[13px] font-normal text-body">{auditor.email}</span>
+                      </TableCell>
+                      <TableCell className="standard-table-cell">
+                        <div className="flex justify-center" onClick={(e) => e.stopPropagation()}>
+                          <Switch 
+                            checked={auditor.isActive ?? true}
+                            onCheckedChange={() => toggleField(auditor.id, 'isActive', auditor.isActive ?? true)}
+                            disabled={isUpdating === auditor.id + 'isActive'}
+                            className="data-[state=checked]:bg-success"
+                          />
                         </div>
                       </TableCell>
                       <TableCell className="standard-table-cell">
-                        <div className="flex items-center gap-1.5 font-normal text-body">
-                          <Mail className="h-3.5 w-3.5 text-primary opacity-60" /> {auditor.email}
+                        <div className="flex justify-center" onClick={(e) => e.stopPropagation()}>
+                          <Switch 
+                            checked={auditor.flashmobAccess ?? false}
+                            onCheckedChange={() => toggleField(auditor.id, 'flashmobAccess', auditor.flashmobAccess ?? false)}
+                            disabled={isUpdating === auditor.id + 'flashmobAccess'}
+                            className="data-[state=checked]:bg-primary"
+                          />
                         </div>
                       </TableCell>
-                      <TableCell className="standard-table-cell">
-                        <Badge variant="outline" className="bg-success/10 text-success border-success/30 font-medium text-[10px]  tracking-widest px-2 py-0.5">
-                          Active
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="standard-table-cell">
-                        <div className="flex items-center gap-1.5 font-normal text-body">
-                          <MapPin className="h-3.5 w-3.5 text-primary opacity-60" /> {auditor.assignedLocations?.length || 0} Locations
-                        </div>
-                      </TableCell>
-                      <TableCell className="standard-table-cell text-right">
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-text hover:text-primary hover:bg-primary/10 transition-colors">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
+                      <TableCell className="standard-table-cell text-right pr-6" onClick={(e) => e.stopPropagation()}>
+                         <DropdownMenu>
+                           <DropdownMenuTrigger asChild>
+                             <Button variant="ghost" className="h-8 w-8 p-0 text-[#6b7280] hover:text-primary transition-colors">
+                               <MoreHorizontal className="h-4 w-4" />
+                             </Button>
+                           </DropdownMenuTrigger>
+                           <DropdownMenuContent align="end" className="w-[180px]">
+                             <DropdownMenuItem className="text-xs font-normal gap-2 py-2" onClick={() => handleResetPassword(auditor.email)}>
+                               <Key className="h-3.5 w-3.5 opacity-40" /> Send Reset Link
+                             </DropdownMenuItem>
+                           </DropdownMenuContent>
+                         </DropdownMenu>
                       </TableCell>
                     </TableRow>
                   ))
                 )}
               </TableBody>
             </Table>
-          </CardContent>
+          </div>
         </Card>
       </div>
     </DashboardShell>

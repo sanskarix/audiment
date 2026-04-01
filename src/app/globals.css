@@ -232,19 +232,19 @@
 }
 
 @layer utilities {
-  .text-heading {
+  .aud-heading-base {
     font-size: 20px;
     font-weight: 600;
     color: #121317;
   }
 
-  .text-body {
+  .aud-body-base {
     font-size: 14px;
     font-weight: 400;
     color: #45474d;
   }
 
-  .text-muted {
+  .aud-muted-base {
     font-size: 12px;
     font-weight: 400;
     color: #6b7280;

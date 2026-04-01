@@ -205,7 +205,7 @@ export default function AdminCorrectiveActionsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-1.5">
-            <h1 className="page-heading">Corrective Actions</h1>
+            <p className="page-heading">Corrective Actions</p>
             <p className="body-text">Unresolved quality failures requiring attention</p>
           </div>
           <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[11px] font-normal">
@@ -307,7 +307,7 @@ export default function AdminCorrectiveActionsPage() {
               ) : (
                 filteredActions.map((action) => (
                   <TableRow key={action.id} className="standard-table-row group">
-                    <TableCell className="py-4 px-4 text-[14px] font-medium text-heading align-middle">
+                    <TableCell className="py-4 px-4 text-[14px] font-normal text-heading align-middle">
                       {action.locationName}
                     </TableCell>
                     <TableCell className="py-4 px-4 text-[14px] font-normal text-body leading-relaxed align-middle">

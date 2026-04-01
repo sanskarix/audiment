@@ -74,29 +74,37 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
   const router = useRouter();
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
-  const [userState, setUserState] = useState<{ name: string; email: string } | null>(null);
-
+  const [userState, setUserState] = useState<{ name: string; email: string; photoUrl?: string } | null>(null);
   const [hasFlashmobAccess, setHasFlashmobAccess] = useState(false);
 
   useEffect(() => {
-    // Read the session details from cookie on client mount
     const match = document.cookie.match(/audiment_session=([^;]+)/);
+    let unsubUser: any;
+
     if (match) {
       try {
         const data = JSON.parse(decodeURIComponent(match[1]));
         setUserState({ name: data.name, email: data.email });
 
-        // For auditors, subscribe to their user doc to check flashmob access
-        if (role === 'Auditor' && data.uid) {
-          const unsub = onSnapshot(doc(db, 'users', data.uid), (snap) => {
-            setHasFlashmobAccess(snap.data()?.hasFlashmobAccess === true);
+        if (data.uid) {
+          unsubUser = onSnapshot(doc(db, 'users', data.uid), (snap) => {
+            const uData = snap.data();
+            if (uData) {
+              setUserState(prev => prev ? { ...prev, ...uData } : { name: uData.name, email: uData.email, photoUrl: uData.photoUrl });
+              if (role === 'Auditor') {
+                setHasFlashmobAccess(uData.hasFlashmobAccess === true);
+              }
+            }
           });
-          return unsub;
         }
       } catch (e) {
         // ignore
       }
     }
+
+    return () => {
+      if (unsubUser) unsubUser();
+    };
   }, [role]);
 
   async function handleLogout() {
@@ -114,7 +122,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
     <SidebarProvider>
       <Sidebar collapsible="none" className="border-r border-border/50">
         <SidebarHeader className="h-24 flex flex-row items-center justify-center">
-          <span className="text-[22px] font-medium tracking-tighter text-heading leading-none">
+          <span className="font-semibold tracking-tighter text-heading leading-none" style={{ fontSize: '22px' }}>
             Audiment
           </span>
         </SidebarHeader>
@@ -142,10 +150,14 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton size="lg" className="w-full data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors rounded-lg h-12">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarFallback className="rounded-lg bg-primary/10 font-medium text-primary">
-                    <User2 className="h-4 w-4" />
-                  </AvatarFallback>
+                <Avatar className="h-8 w-8 rounded-full border border-border/50">
+                  {userState?.photoUrl ? (
+                    <img src={userState.photoUrl} alt="User" className="h-full w-full object-cover" />
+                  ) : (
+                    <AvatarFallback className="rounded-full bg-primary/10 font-medium text-primary">
+                      <User2 className="h-4 w-4" />
+                    </AvatarFallback>
+                  )}
                 </Avatar>
                 <div className="flex flex-col gap-0.5 leading-none overflow-hidden text-left ml-2">
                   <span className="font-medium truncate text-sm text-body">{userState?.name || 'Loading...'}</span>
@@ -162,9 +174,11 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                 <span className="text-xs text-muted-text">{userState?.email}</span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
+              <DropdownMenuItem className="cursor-pointer" asChild>
+                <Link href={role === 'Admin' ? '/dashboard/admin/settings' : '#'} className="flex items-center w-full">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"

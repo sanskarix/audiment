@@ -39,8 +39,8 @@ import {
   Plus
 } from 'lucide-react';
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -265,8 +265,8 @@ export default function ManagerDashboardPage() {
 
   return (
     <DashboardShell role="Manager">
-      <div className="dashboard-page-container">
-        <div className="page-header-section mb-6">
+      <div className="dashboard-page-container px-6 md:px-10">
+        <div className="page-header-section">
           <div className="flex flex-col gap-2">
             <h1 className="page-heading">Branch Performance</h1>
             <p className="body-text">Monitoring quality and compliance across your assigned locations</p>
@@ -274,69 +274,61 @@ export default function ManagerDashboardPage() {
         </div>
 
         {/* Top Summary Cards */}
-        <div className="grid gap-6 md:grid-cols-2 mb-6">
-          <Card className="standard-card">
-            <div className="flex flex-row items-center justify-between pb-2 space-y-0 border-b border-border/40 p-6">
-              <CardTitle className="section-heading">Managed Branches</CardTitle>
-              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <MapPin className="h-5 w-5 text-primary" />
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="standard-card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <p className="section-heading">Managed Branches</p>
+              <MapPin className="h-4 w-4 text-primary/40 transition-colors" />
             </div>
-            <div className="p-6 pt-4">
-              <div className="text-3xl font-medium tracking-tight text-heading">{stats?.assignedLocations}</div>
-              <p className="muted-label mt-2">Active locations</p>
+            <div>
+              <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{stats?.assignedLocations}</div>
+              <p className="body-text mt-2">Active locations under oversight</p>
             </div>
           </Card>
 
-          <Card className="standard-card">
-            <div className="flex flex-row items-center justify-between pb-2 space-y-0 border-b border-border/40 p-6">
-              <CardTitle className="section-heading">Reporting Auditors</CardTitle>
-              <div className="h-10 w-10 rounded-xl bg-success/10 flex items-center justify-center">
-                <Users className="h-5 w-5 text-success" />
-              </div>
+          <Card className="standard-card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <p className="section-heading">Reporting Auditors</p>
+              <Users className="h-4 w-4 text-success/40 transition-colors" />
             </div>
-            <div className="p-6 pt-4">
-              <div className="text-3xl font-medium tracking-tight text-heading">{stats?.activeAuditors}</div>
-              <p className="muted-label mt-2">Active personnel</p>
+            <div>
+              <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{stats?.activeAuditors}</div>
+              <p className="body-text mt-2">Active personnel on field</p>
             </div>
           </Card>
         </div>
 
         {/* Corrective Actions Section */}
         {correctiveActions.length > 0 && (
-          <div className="flex flex-col gap-4 mb-6">
+          <div className="flex flex-col gap-4">
             <h3 className="section-heading text-destructive flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5" />
+              <AlertTriangle className="h-4 w-4" />
               Critical Issues ({correctiveActions.length})
             </h3>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {correctiveActions.map((ca) => (
-                <Card key={ca.id} className="standard-card border-destructive/20 hover:border-destructive/40 transition-colors shadow-sm bg-background">
-                  <div className="p-6 pb-2">
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge variant="destructive" className="text-[10px] font-medium  tracking-widest px-2 py-0.5">
+                <Card key={ca.id} className="standard-card border-destructive/20 hover:border-destructive/40 transition-colors bg-background">
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <Badge variant="destructive" className="text-[10px] font-medium tracking-widest px-2 py-0.5 uppercase">
                         {ca.severity}
                       </Badge>
-                      <Badge variant="outline" className="text-[10px] border-destructive/20 text-destructive bg-destructive/5 font-medium  tracking-widest px-2 py-0.5">
+                      <Badge variant="outline" className="text-[10px] border-destructive/20 text-destructive bg-destructive/5 font-medium tracking-widest px-2 py-0.5">
                         Due {format(ca.deadline.toDate(), 'MMM d')}
                       </Badge>
                     </div>
-                    <CardTitle className="text-sm font-medium leading-tight text-heading">{ca.questionText}</CardTitle>
-                    <CardDescription className="body-text text-xs line-clamp-2 mt-1">{ca.description}</CardDescription>
-                  </div>
-                  <div className="px-6 pt-2 pb-0 text-xs text-muted-text">
-                    <div className="flex items-center gap-1.5 font-normal">
-                      <MapPin className="h-3.5 w-3.5" /> {ca.locationName}
+                    <h4 className="text-sm font-semibold text-heading leading-tight line-clamp-1">{ca.questionText}</h4>
+                    <p className="body-text text-xs line-clamp-2 mt-2">{ca.description}</p>
+                    <div className="mt-4 flex items-center gap-1.5 text-[11px] font-medium text-muted-text">
+                      <MapPin className="h-3 w-3" /> {ca.locationName}
                     </div>
-                  </div>
-                  <div className="p-6 pt-4 flex gap-2">
                     <Button
                       size="sm"
                       variant="outline"
-                      className="w-full font-medium text-xs shadow-sm hover:text-success hover:border-success/30 hover:bg-success/5 active:scale-95 transition-all text-muted-text"
+                      className="w-full mt-4 h-9 font-medium text-xs shadow-sm hover:text-success hover:border-success/30 hover:bg-success/5 active:scale-95 transition-all text-muted-text"
                       onClick={() => setSelectedCA(ca)}
                     >
-                      Mark as Resolved
+                      Resolve Issue
                     </Button>
                   </div>
                 </Card>
@@ -345,109 +337,139 @@ export default function ManagerDashboardPage() {
           </div>
         )}
 
-        <div className="grid gap-6 md:grid-cols-7 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
           {/* Trend Chart */}
-          <Card className="md:col-span-4 standard-card">
-            <div className="border-b border-border/40 p-6 md:p-8">
-              <CardTitle className="section-heading">Score History</CardTitle>
-              <CardDescription className="body-text">Average performance trend over recent audits</CardDescription>
+          <Card className="lg:col-span-4 standard-card p-6">
+            <div className="mb-6">
+              <h3 className="section-heading">Score History</h3>
+              <p className="body-text mt-1">Average performance trend over recent audits</p>
             </div>
-            <div className="p-4 md:p-6">
-              <div className="h-[250px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={stats?.recentAuditScores}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.1} />
-                    <XAxis dataKey="date" stroke="oklch(var(--muted-text))" fontSize={11} axisLine={false} tickLine={false} fontWeight={500} />
-                    <YAxis stroke="oklch(var(--muted-text))" fontSize={11} axisLine={false} tickLine={false} domain={[0, 100]} fontWeight={500} />
-                    <Tooltip
-                      contentStyle={{ borderRadius: 'var(--radius-lg)', border: '1px solid oklch(var(--border))', backgroundColor: 'oklch(var(--background))', color: 'oklch(var(--heading))', fontWeight: '500' }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="score"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth={3}
-                      dot={{ r: 4, fill: 'hsl(var(--primary))', strokeWidth: 2 }}
-                      activeDot={{ r: 6, strokeWidth: 0 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={stats?.recentAuditScores}>
+                  <defs>
+                    <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="4 4" vertical={false} strokeOpacity={0.06} />
+                  <XAxis 
+                    dataKey="date" 
+                    stroke="oklch(var(--muted-text))" 
+                    fontSize={10} 
+                    axisLine={false} 
+                    tickLine={false} 
+                    fontWeight={500} 
+                    tick={{ dy: 10 }}
+                    tickFormatter={(val) => val.toUpperCase()}
+                  />
+                  <YAxis 
+                    stroke="oklch(var(--muted-text))" 
+                    fontSize={10} 
+                    axisLine={false} 
+                    tickLine={false} 
+                    domain={[0, 100]} 
+                    fontWeight={500}
+                    tickFormatter={(val) => `${val}%`}
+                  />
+                  <Tooltip
+                    contentStyle={{ 
+                      borderRadius: '12px', 
+                      border: '1px solid oklch(var(--border) / 0.5)', 
+                      backgroundColor: 'oklch(var(--background))', 
+                      color: 'oklch(var(--heading))', 
+                      fontSize: '11px',
+                      fontWeight: '600',
+                      boxShadow: '0 15px 30px rgba(0,0,0,0.15)',
+                      padding: '12px'
+                    }}
+                    cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 1, strokeDasharray: '4 4' }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="score"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth={3}
+                    fillOpacity={1}
+                    fill="url(#colorScore)"
+                    activeDot={{ r: 5, strokeWidth: 0, fill: 'hsl(var(--primary))' }}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
           </Card>
 
           {/* Activity Feed */}
-          <Card className="md:col-span-3 standard-card">
-            <div className="border-b border-border/40 p-6 md:p-8">
-              <CardTitle className="section-heading">Auditor Activity</CardTitle>
-              <CardDescription className="body-text">Current workload distribution</CardDescription>
+          <Card className="lg:col-span-3 standard-card p-6">
+            <div className="mb-6">
+              <h3 className="section-heading">Personnel Focus</h3>
+              <p className="body-text mt-1">Real-time workload and activity distribution</p>
             </div>
-            <div className="p-6 md:p-8">
-              <div className="space-y-6">
-                {stats?.auditorActivity.map((aud, i) => (
-                  <div key={i} className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <p className="font-normal text-sm text-body">{aud.name}</p>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-[10px]  font-medium tracking-widest text-success border-success/30 bg-success/10 px-2 py-0.5">
-                          {aud.completed} Done
-                        </Badge>
-                        <Badge variant="outline" className="text-[10px]  font-medium tracking-widest text-muted-text border-border px-2 py-0.5">
-                          {aud.pending} In Progress
-                        </Badge>
-                      </div>
+            <div className="space-y-4">
+              {stats?.auditorActivity.map((aud, i) => (
+                <div key={i} className="flex items-center justify-between p-3 rounded-xl border border-border/40 bg-muted/5">
+                  <div className="space-y-1">
+                    <p className="font-semibold text-[13px] text-heading">{aud.name}</p>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="text-[10px] font-medium tracking-widest text-success border-success/30 bg-success/5 px-2 py-0.5">
+                        {aud.completed} Completed
+                      </Badge>
+                      <Badge variant="outline" className="text-[10px] font-medium tracking-widest text-muted-text border-border px-2 py-0.5">
+                        {aud.pending} In Progress
+                      </Badge>
                     </div>
-                    <CheckCircle2 className={aud.pending === 0 ? "text-success h-5 w-5" : "text-muted-text/30 h-5 w-5"} />
                   </div>
-                ))}
-              </div>
+                  <CheckCircle2 className={aud.pending === 0 ? "text-success h-5 w-5 opacity-80" : "text-muted-text/30 h-5 w-5"} />
+                </div>
+              ))}
             </div>
           </Card>
         </div>
 
         {/* Recent Audits Table Section */}
-        <Card className="standard-card">
-          <div className="border-b border-border/40 p-6 md:p-8">
+        <Card className="standard-card p-6">
+          <div className="mb-6">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="section-heading">Recent Activity</CardTitle>
-                <CardDescription className="body-text">A live look at submissions across your branches</CardDescription>
+                <h3 className="section-heading">Operation Stream</h3>
+                <p className="body-text mt-1">Live visibility into compliance submissions from the field</p>
               </div>
               <TrendingUp className="h-5 w-5 text-muted-text/50" />
             </div>
           </div>
-          <div className="p-4 md:p-6">
-            <div className="space-y-3">
-              {stats?.recentAudits.map((audit, i) => (
-                <div key={i} className="flex items-center justify-between p-4 rounded-lg border border-border/40 hover:bg-muted/30 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                      <ClipboardList className="h-5 w-5" />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-sm font-normal text-heading leading-none">{audit.templateTitle}</p>
-                      <p className="text-[11px] font-normal text-muted-text flex items-center gap-1.5  tracking-widest">
-                        <MapPin className="h-3 w-3" /> {audit.locationName} <span className="opacity-50">&bull;</span> <Clock className="h-3 w-3" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMM d, h:mm a') : 'Scheduled'}
-                      </p>
-                    </div>
+          <div className="space-y-3">
+            {stats?.recentAudits.map((audit, i) => (
+              <div key={i} className="flex items-center justify-between p-4 rounded-xl border border-border/40 hover:bg-muted/30 transition-all duration-200 group">
+                <div className="flex items-center gap-4">
+                  <div className="h-10 w-10 rounded-full bg-primary/5 flex items-center justify-center text-primary shrink-0 group-hover:bg-primary/10 transition-colors">
+                    <ClipboardList className="h-5 w-5" />
                   </div>
-                  <div className="text-right shrink-0">
-                    {audit.status === 'completed' ? (
-                      <Badge className={cn(
-                        "text-[10px] font-medium  tracking-widest px-2 py-0.5",
-                        audit.scorePercentage >= 90 ? "bg-success text-success-foreground" : audit.scorePercentage >= 70 ? "bg-primary text-primary-foreground" : "bg-warning text-warning-foreground"
-                      )}>
-                        {audit.scorePercentage}%
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-[10px] font-medium  tracking-widest text-muted-text bg-muted/50">
-                        {audit.status}
-                      </Badge>
-                    )}
+                  <div className="space-y-1">
+                    <p className="text-sm font-semibold text-heading leading-tight">{audit.templateTitle}</p>
+                    <div className="text-[11px] font-medium text-muted-text flex items-center gap-1.5 uppercase tracking-wider">
+                      <MapPin className="h-3 w-3" /> {audit.locationName} 
+                      <span className="opacity-30 mx-1">•</span> 
+                      <Clock className="h-3 w-3" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMM d, h:mm a') : 'Scheduled'}
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
+                <div className="text-right shrink-0">
+                  {audit.status === 'completed' ? (
+                    <Badge className={cn(
+                      "text-[10px] font-semibold tracking-widest px-2.5 py-1 uppercase",
+                      audit.scorePercentage >= 90 ? "bg-success text-success-foreground" : audit.scorePercentage >= 70 ? "bg-primary text-primary-foreground" : "bg-warning text-warning-foreground"
+                    )}>
+                      {audit.scorePercentage}%
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-[10px] font-semibold tracking-widest text-muted-text bg-muted/20 uppercase px-2.5 py-1">
+                      {audit.status}
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </Card>
       </div>

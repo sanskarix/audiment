@@ -203,12 +203,13 @@ export default function AdminCorrectiveActionsPage() {
   return (
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section mb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-1.5">
-            <h1 className="page-heading">Corrective Actions</h1>
+        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col gap-2">
+            <h1 className="page-heading">Priority Actions</h1>
+            <p className="body-text text-muted-text">Resolve critical compliance failures and monitor resolution progress.</p>
           </div>
-          <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[11px] font-normal">
-            {actions.length} open
+          <Badge variant="secondary" className="h-7 rounded-full bg-destructive/10 text-destructive border-none px-4 text-[12px] font-medium animate-pulse">
+            {actions.length} URGENT RESOLUTIONS
           </Badge>
         </div>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">

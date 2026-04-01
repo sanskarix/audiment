@@ -202,7 +202,8 @@ export default function AdminLocationsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Locations</h1>
+            <h1 className="page-heading">Node Management</h1>
+            <p className="body-text text-muted-text">Define and manage organizational locations and their respective authorities.</p>
           </div>
 
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>

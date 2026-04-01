@@ -159,9 +159,12 @@ export default function AdminReportsPage() {
   return (
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Reports</h1>
+        <div className="page-header-section mb-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col gap-2">
+              <h1 className="page-heading">Compliance Intelligence</h1>
+              <p className="body-text text-muted-text">Deep dive into historical data to identify trends and regional performance.</p>
+            </div>
           </div>
         </div>
 

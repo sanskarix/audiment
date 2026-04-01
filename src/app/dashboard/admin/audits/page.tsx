@@ -257,29 +257,31 @@ export default function AdminAuditsPage() {
   return (
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Audits</h1>
-          </div>
-          <Dialog open={open} onOpenChange={(val) => {
-            setOpen(val);
-            if (!val) {
-              setEditingAuditId(null);
-              setSelectedTemplate('');
-              setSelectedLocation('');
-              setSelectedManager('');
-              setScheduledDate(undefined);
-              setDeadline(undefined);
-              setIsSurprise(false);
-              setRecurring('none');
-              setRecurringDay(1);
-            }
-          }}>
-            <DialogTrigger asChild>
-              <Button size="default" className="shadow-lg shadow-primary/20 h-11 px-5 text-[14px] font-medium gap-2 active:scale-95 transition-all">
-                <Plus className="mr-2 h-4 w-4" /> Publish Audit
-              </Button>
-            </DialogTrigger>
+        <div className="page-header-section mb-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between w-full gap-4">
+              <div className="flex flex-col gap-2">
+                <h1 className="page-heading">Command Center</h1>
+                <p className="body-text text-muted-text">Manage and publish audits across your global operational network.</p>
+              </div>
+              <Dialog open={open} onOpenChange={(val) => {
+                setOpen(val);
+                if (!val) {
+                  setEditingAuditId(null);
+                  setSelectedTemplate('');
+                  setSelectedLocation('');
+                  setSelectedManager('');
+                  setScheduledDate(undefined);
+                  setDeadline(undefined);
+                  setIsSurprise(false);
+                  setRecurring('none');
+                  setRecurringDay(1);
+                }
+              }}>
+                <DialogTrigger asChild>
+                  <Button size="default" className="shadow-lg shadow-primary/20 h-11 px-5 text-[14px] font-medium gap-2 active:scale-95 transition-all">
+                    <Plus className="mr-2 h-4 w-4" /> Publish Audit
+                  </Button>
+                </DialogTrigger>
             <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden border-none shadow-2xl">
               <DialogHeader className="px-6 pt-6 pb-4 bg-background">
                 <DialogTitle className="text-xl font-semibold text-heading">
@@ -467,7 +469,8 @@ export default function AdminAuditsPage() {
                 </Button>
               </DialogFooter>
             </DialogContent>
-          </Dialog>
+            </Dialog>
+          </div>
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

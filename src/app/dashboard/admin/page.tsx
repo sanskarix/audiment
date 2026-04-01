@@ -184,7 +184,8 @@ export default function AdminDashboardPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Overview</h1>
+            <h1 className="page-heading">Organization Vitals</h1>
+            <p className="body-text text-muted-text">Monitor compliance health and operational performance across all regions.</p>
           </div>
         </div>
 

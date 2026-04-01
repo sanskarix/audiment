@@ -143,7 +143,8 @@ export default function AdminTemplatesPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Templates</h1>
+            <h1 className="page-heading">Audit Blueprints</h1>
+            <p className="body-text text-muted-text">Create and manage standardized audit frameworks and compliance metrics.</p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             {!hasFssai && (

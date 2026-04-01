@@ -234,7 +234,8 @@ export default function AdminUsersPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Users</h1>
+            <h1 className="page-heading">Member Directory</h1>
+            <p className="body-text text-muted-text">Manage access control and organizational roles for all system users.</p>
           </div>
 
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>

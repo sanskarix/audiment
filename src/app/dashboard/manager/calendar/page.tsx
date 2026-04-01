@@ -106,9 +106,10 @@ export default function ManagerCalendarPage() {
   return (
     <DashboardShell role="Manager">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
-          <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Calendar</h1>
+        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="page-heading">Mission Calendar</h1>
+            <p className="body-text">View and manage audit schedules across all active locations.</p>
           </div>
 
           <div className="flex items-center gap-2 bg-muted/20 p-1 rounded-lg border border-border/50 shadow-sm">
@@ -121,7 +122,7 @@ export default function ManagerCalendarPage() {
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <div className="px-4 min-w-[140px] text-center">
-              <h2 className="text-[12px] font-semibold tracking-widest text-[#6b7280] uppercase">
+              <h2 className="text-[12px] font-semibold tracking-widest text-muted-text uppercase">
                 {format(currentMonth, 'MMMM yyyy')}
               </h2>
             </div>
@@ -140,7 +141,7 @@ export default function ManagerCalendarPage() {
           <CardContent className="p-0 overflow-hidden">
             <div className="grid grid-cols-7 border-b border-border/50 bg-muted/10">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                <div key={day} className="py-3 text-center text-[10px] font-bold tracking-widest text-[#6b7280] uppercase">
+                <div key={day} className="py-3 text-center text-[10px] font-bold tracking-widest text-muted-text uppercase">
                   {day}
                 </div>
               ))}
@@ -166,7 +167,7 @@ export default function ManagerCalendarPage() {
                           ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
                           : !isCurrentMonth
                             ? "text-muted-text/30"
-                            : "text-[#45474d] group-hover:text-primary"
+                            : "text-body group-hover:text-primary"
                       )}>
                         {format(day, dateFormat)}
                       </span>
@@ -201,8 +202,8 @@ export default function ManagerCalendarPage() {
                                 event.status === 'in_progress' ? "bg-primary" : "bg-muted-text/30"
                               )} />
                               <div className={cn(
-                                "font-medium text-heading leading-tight truncate",
-                                isExpanded && "whitespace-normal text-[11px] font-semibold"
+                                "font-medium text-heading leading-tight truncate text-[12px]",
+                                isExpanded && "whitespace-normal text-[13px] font-semibold"
                               )}>
                                 {event.templateTitle}
                               </div>

@@ -154,9 +154,10 @@ export default function ManagerReportsPage() {
   return (
     <DashboardShell role="Manager">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
+        <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Reports</h1>
+            <h1 className="page-heading">Audit Archive</h1>
+            <p className="body-text">Access and export completed audit reports for performance review.</p>
           </div>
         </div>
 
@@ -175,7 +176,7 @@ export default function ManagerReportsPage() {
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className={cn(
                   "h-11 px-4 gap-2 font-medium text-xs border-border/50",
-                  selectedLocation !== 'all' ? "text-primary border-primary/20 bg-primary/5" : "text-[#6b7280]"
+                  selectedLocation !== 'all' ? "text-primary border-primary/20 bg-primary/5" : "text-muted-text"
                 )}>
                   <Filter className="h-4 w-4" />
                   {selectedLocation === 'all' ? 'Filters' : locations.find(l => l.id === selectedLocation)?.name}

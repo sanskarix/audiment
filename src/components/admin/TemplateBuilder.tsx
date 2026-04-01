@@ -231,7 +231,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
             </button>
             <div className="h-5 w-[1px] bg-border/80"></div>
             <h1 className="text-xl font-semibold text-heading">
-              {templateId ? 'Edit Template' : 'New Template'}
+              {templateId ? (title || 'Edit Template') : (title || 'New Template')}
             </h1>
           </div>
         </div>

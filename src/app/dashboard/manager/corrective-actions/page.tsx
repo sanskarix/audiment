@@ -196,7 +196,8 @@ export default function CorrectiveActionsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Corrective Actions</h1>
+            <h1 className="page-heading">Priority Resolution</h1>
+            <p className="body-text">Address and resolve identified compliance issues across your branch.</p>
           </div>
         </div>
 
@@ -270,7 +271,7 @@ export default function CorrectiveActionsPage() {
                        {ca.status === 'open' && (
                         <Button
                           variant="outline"
-                          className="flex-1 font-medium text-xs h-10 border-border/50 text-[#6b7280] hover:text-primary transition-all"
+                          className="flex-1 font-medium text-xs h-10 border-border/50 text-muted-text hover:text-primary transition-all"
                           onClick={() => handleMarkOngoing(ca.id)}
                         >
                           Mark Ongoing

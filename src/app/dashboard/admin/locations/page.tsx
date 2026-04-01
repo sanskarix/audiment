@@ -14,14 +14,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card } from '@/components/ui/card';
-import { MoreHorizontal, Pencil, Plus, Search, Filter } from 'lucide-react';
+import { MoreHorizontal, Pencil, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function AdminLocationsPage() {
   const [locations, setLocations] = useState<any[]>([]);
   const [managers, setManagers] = useState<any[]>([]);
   const [session, setSession] = useState<{ orgId: string } | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+
 
   // Form states
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -101,11 +101,7 @@ export default function AdminLocationsPage() {
     };
   }, [session]);
 
-  const filteredLocations = locations.filter((loc) =>
-    loc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    loc.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    loc.city.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+
 
   const handleToggleActive = async (locationId: string, currentStatus: boolean) => {
     try {
@@ -261,21 +257,7 @@ export default function AdminLocationsPage() {
           </Dialog>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input
-              placeholder="Search locations by name, address, or city..."
-              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
-        </div>
+
 
         <Card className="standard-card">
           <Table>
@@ -289,14 +271,14 @@ export default function AdminLocationsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredLocations.length === 0 ? (
+              {locations.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="standard-table-cell h-32 text-center">
-                    No locations found matching your search.
+                    No locations found. Add your first location to get started.
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredLocations.map((location: any) => (
+                locations.map((location: any) => (
                   <TableRow key={location.id} className="standard-table-row group">
                     <TableCell className="standard-table-cell font-normal text-sm text-body">
                       {location.name}

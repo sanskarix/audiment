@@ -21,9 +21,18 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CheckSquare, UserPlus, MapPin, AlertCircle, Clock, CheckCircle2, Loader2, Search, Filter } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { CheckSquare, UserPlus, MapPin, AlertCircle, Clock, CheckCircle2, Loader2, Search, Filter, X } from 'lucide-react';
 
 export default function ManagerAuditsPage() {
   const [audits, setAudits] = useState<any[]>([]);
@@ -34,6 +43,8 @@ export default function ManagerAuditsPage() {
   const [selectedAudit, setSelectedAudit] = useState<any>(null);
   const [selectedAuditor, setSelectedAuditor] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [assigneeFilter, setAssigneeFilter] = useState('all');
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -77,11 +88,18 @@ export default function ManagerAuditsPage() {
     return () => unsubAudits();
   }, [session]);
 
-  const filteredAudits = audits.filter((audit) =>
-    audit.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    audit.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    audit.status?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredAudits = audits.filter((audit) => {
+    const matchesSearch = 
+      audit.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      audit.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      audit.status?.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesStatus = statusFilter === 'all' || audit.status === statusFilter;
+    const matchesAssignee = assigneeFilter === 'all' || 
+      (assigneeFilter === 'unassigned' ? !audit.assignedAuditorId : audit.assignedAuditorId === assigneeFilter);
+
+    return matchesSearch && matchesStatus && matchesAssignee;
+  });
 
   const handleAssign = async () => {
     if (!selectedAudit || !selectedAuditor || !session) return;
@@ -141,9 +159,10 @@ export default function ManagerAuditsPage() {
   return (
     <DashboardShell role="Manager">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
+        <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Audits</h1>
+            <h1 className="page-heading">Active Audits</h1>
+            <p className="body-text">Monitor ongoing and upcoming audits across your assigned locations.</p>
           </div>
         </div>
 
@@ -153,15 +172,54 @@ export default function ManagerAuditsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
               placeholder="Search audits by template, location, manager or status..."
-              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
+              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 placeholder:text-muted-text/60"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
+          <div className="flex items-center gap-2">
+            {(statusFilter !== 'all' || assigneeFilter !== 'all') && (
+              <Button 
+                variant="ghost" 
+                onClick={() => { setStatusFilter('all'); setAssigneeFilter('all'); }}
+                className="h-11 px-3 text-[11px] font-medium text-muted-text hover:text-destructive transition-colors group"
+              >
+                <X className="h-3 w-3 mr-1.5 opacity-40 group-hover:opacity-100" />
+                Clear
+              </Button>
+            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className={cn(
+                  "h-11 px-4 gap-2 font-medium text-xs border-border/50",
+                  (statusFilter !== 'all' || assigneeFilter !== 'all') ? "text-primary border-primary/20 bg-primary/5" : "text-muted-text"
+                )}>
+                  <Filter className="h-4 w-4" />
+                  Filters
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Status</DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={statusFilter} onValueChange={setStatusFilter}>
+                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Statuses</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="published" className="text-body cursor-pointer">Published</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="assigned" className="text-body cursor-pointer">Assigned</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="in_progress" className="text-body cursor-pointer">In Progress</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="completed" className="text-body cursor-pointer">Completed</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Assignee</DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={assigneeFilter} onValueChange={setAssigneeFilter}>
+                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Team</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="unassigned" className="text-body cursor-pointer italic text-muted-text/60">Unassigned</DropdownMenuRadioItem>
+                  <DropdownMenuSeparator />
+                  {auditors.map(aud => (
+                    <DropdownMenuRadioItem key={aud.id} value={aud.id} className="text-body cursor-pointer">{aud.name}</DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
         <Card className="standard-card">
@@ -188,7 +246,7 @@ export default function ManagerAuditsPage() {
                   filteredAudits.map((a) => (
                     <TableRow key={a.id} className="standard-table-row group">
                       <TableCell className="standard-table-cell pl-6">
-                        <div className="font-normal text-heading">{a.templateTitle}</div>
+                        <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
                         {a.isSurprise && (
                           <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-warning font-medium">
                             <span>Surprise Audit</span>
@@ -196,25 +254,21 @@ export default function ManagerAuditsPage() {
                         )}
                       </TableCell>
                       <TableCell className="standard-table-cell">
-                        <div className="font-normal text-body">
-                          {a.locationName}
-                        </div>
+                        <span className="text-[14px] font-normal text-body">{a.locationName}</span>
                       </TableCell>
                       <TableCell className="standard-table-cell">
-                        <span className="text-sm font-normal text-body">
+                        <span className="text-[13px] font-normal text-muted-text">
                           {a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </span>
                       </TableCell>
                       <TableCell className="standard-table-cell">{getStatusBadge(a.status)}</TableCell>
                       <TableCell className="standard-table-cell">
                         {a.assignedAuditorId ? (
-                          <div className="flex items-center gap-2 text-body">
-                            <span className="font-normal">
-                              {auditors.find(aud => aud.id === a.assignedAuditorId)?.name || 'Assigned'}
-                            </span>
-                          </div>
+                          <span className="text-[14px] font-normal text-body">
+                            {auditors.find(aud => aud.id === a.assignedAuditorId)?.name || 'Assigned'}
+                          </span>
                         ) : (
-                          <span className="text-muted-text/60 italic font-normal">Unassigned</span>
+                          <span className="text-[13px] font-normal text-muted-text/60 italic">Unassigned</span>
                         )}
                       </TableCell>
                       <TableCell className="standard-table-cell text-right pr-6">
@@ -226,7 +280,7 @@ export default function ManagerAuditsPage() {
                             }
                           }}>
                             <DialogTrigger asChild>
-                              <Button variant="outline" size="sm" className="h-8 text-[11px] font-normal border-border/50 text-[#6b7280] hover:text-primary transition-all" onClick={() => {
+                              <Button variant="outline" size="sm" className="h-8 text-xs font-normal border-border/50 text-muted-text hover:text-primary transition-all" onClick={() => {
                                 setSelectedAudit(a);
                                 setOpen(true);
                               }}>
@@ -266,7 +320,7 @@ export default function ManagerAuditsPage() {
                           </Dialog>
                         )}
                         {a.status === 'completed' && (
-                          <Button size="sm" variant="ghost" className="h-8 text-[11px] font-normal text-[#6b7280] hover:text-primary">
+                          <Button size="sm" variant="ghost" className="h-8 text-[11px] font-normal text-muted-text hover:text-primary">
                             Review Report
                           </Button>
                         )}

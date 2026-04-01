@@ -8,15 +8,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
+
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { MoreHorizontal, Plus, ClipboardCheck, Settings2, Trash2, Search, Filter } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, Plus, ClipboardCheck, Settings2, Trash2 } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -25,8 +25,7 @@ export default function AdminTemplatesPage() {
   const [templates, setTemplates] = useState<any[]>([]);
   const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
+
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -107,18 +106,7 @@ export default function AdminTemplatesPage() {
     }
   };
 
-  const filteredTemplates = templates.filter((t) => {
-    const matchesSearch = t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.category.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    if (!matchesSearch) return false;
-    
-    if (categoryFilter !== 'all' && t.category !== categoryFilter) return false;
-    
-    return true;
-  });
 
-  const categories = Array.from(new Set(templates.map(t => t.category))).filter(Boolean).sort();
 
   const handleToggleActive = async (id: string, currentStatus: boolean) => {
     try {
@@ -177,37 +165,7 @@ export default function AdminTemplatesPage() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-	            <Input
-	              placeholder="Search templates by title or category..."
-	              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
-	              value={searchQuery}
-	              onChange={(e) => setSearchQuery(e.target.value)}
-	            />
-	          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
-                <Filter className="h-4 w-4" />
-                Filters
-                {categoryFilter !== 'all' && (
-                  <Badge variant="secondary" className="ml-1 px-1 py-0 h-4 text-[10px] rounded-sm">1</Badge>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[200px]">
-              <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
-              <DropdownMenuRadioGroup value={categoryFilter} onValueChange={setCategoryFilter}>
-                <DropdownMenuRadioItem value="all">All Categories</DropdownMenuRadioItem>
-                {categories.map(cat => (
-                  <DropdownMenuRadioItem key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</DropdownMenuRadioItem>
-                ))}
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+
 
         <Card className="standard-card">
           <Table>
@@ -221,7 +179,7 @@ export default function AdminTemplatesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredTemplates.length === 0 ? (
+              {templates.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="standard-table-cell text-center py-12">
                     <div className="flex flex-col items-center justify-center gap-2">
@@ -231,7 +189,7 @@ export default function AdminTemplatesPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredTemplates.map((t) => (
+                templates.map((t) => (
                   <TableRow key={t.id} className="standard-table-row group">
                     <TableCell className="standard-table-cell font-normal text-sm text-heading">
                       <div className="flex items-center">

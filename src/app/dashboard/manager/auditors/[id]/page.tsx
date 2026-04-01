@@ -158,7 +158,6 @@ export default function PerformancePage() {
                 )}
               </h1>
             </div>
-            {auditor?.email && <p className="body-text">{auditor.email}</p>}
           </div>
         </div>
 
@@ -232,7 +231,7 @@ export default function PerformancePage() {
                     <TableRow key={audit.id} className="standard-table-row group h-[72px]">
                       <TableCell className="standard-table-cell pl-6">
                         <span className="text-[14px] font-normal text-heading block">{audit.templateTitle}</span>
-                        <span className="text-[11px] text-muted-text mt-0.5 block">{audit.id.substring(0, 8).toUpperCase()}</span>
+
                       </TableCell>
                       <TableCell className="standard-table-cell">
                         <span className="text-[13px] font-normal text-body">{audit.locationName || 'N/A'}</span>

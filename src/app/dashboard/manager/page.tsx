@@ -51,6 +51,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
+import Link from 'next/link';
 import {
   Dialog,
   DialogContent,
@@ -69,7 +70,7 @@ interface ManagerStats {
   assignedLocations: number;
   activeAuditors: number;
   recentAuditScores: { date: string; score: number }[];
-  auditorActivity: { name: string; completed: number; pending: number }[];
+  auditorActivity: { id: string; name: string; completed: number; pending: number }[];
   recentAudits: any[];
 }
 
@@ -165,6 +166,7 @@ export default function ManagerDashboardPage() {
         const activity = auditors.map((aud: any) => {
           const personalAudits = audits.filter(a => a.assignedAuditorId === aud.uid);
           return {
+            id: aud.id,
             name: aud.name,
             completed: personalAudits.filter(a => a.status === 'completed').length,
             pending: personalAudits.filter(a => a.status === 'assigned' || a.status === 'in_progress').length
@@ -267,9 +269,10 @@ export default function ManagerDashboardPage() {
   return (
     <DashboardShell role="Manager">
       <div className="dashboard-page-container px-6 md:px-10">
-        <div className="page-header-section">
+        <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Overview</h1>
+            <h1 className="page-heading">Branch Performance</h1>
+            <p className="body-text">Monitoring quality and compliance across your assigned locations</p>
           </div>
         </div>
 
@@ -300,50 +303,59 @@ export default function ManagerDashboardPage() {
 
         {/* Priority Resolution Section */}
         {correctiveActions.length > 0 && (
-          <div className="flex flex-col gap-6">
-            <div className="flex items-center justify-between">
-              <h3 className="section-heading">Priority Resolution</h3>
-              <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-3 text-[11px] font-medium capitalize">
-                {correctiveActions.length} Pending Actions
-              </Badge>
-            </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {correctiveActions.map((ca) => (
-                <Card key={ca.id} className="standard-card relative overflow-hidden group hover:translate-y-[-2px] transition-all duration-300">
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <div className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" />
-                        <span className="text-[10px] font-bold tracking-widest text-muted-text/60 uppercase">{ca.severity} Severity</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-muted/20 text-[11px] font-medium text-muted-text">
-                        <Clock className="h-3 w-3 opacity-50" />
-                        {format(ca.deadline.toDate(), 'MMM d')}
-                      </div>
-                    </div>
-                    
-                    <h4 className="text-[15px] font-semibold text-heading leading-snug line-clamp-2 mb-2 group-hover:text-primary transition-colors">{ca.questionText}</h4>
-                    <p className="text-[12px] text-muted-text leading-relaxed line-clamp-2 mb-6">{ca.description || 'No additional details provided for this action.'}</p>
+          <Card className="standard-card bg-muted/5 border-primary/10 overflow-hidden">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col gap-1">
+                  <h3 className="section-heading">Priority Resolution</h3>
+                  <p className="text-[12px] text-muted-text">Non-compliance items requiring immediate remediation</p>
+                </div>
+                <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-3 text-[11px] font-semibold tabular-nums">
+                  {correctiveActions.length} Pending
+                </Badge>
+              </div>
 
-                    <div className="flex items-center justify-between pt-4 border-t border-border/40">
-                      <div className="flex items-center gap-1.5 text-[11px] font-medium text-muted-text/50">
-                        <MapPin className="h-3 w-3" /> {ca.locationName}
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {correctiveActions.map((ca) => (
+                  <Card key={ca.id} className="standard-card bg-background border-border/40 hover:border-primary/20 transition-all duration-200">
+                    <div className="p-5">
+                      <div className="flex items-center justify-between mb-4">
+                        <Badge variant="secondary" className={cn(
+                          "h-5 rounded-full border-none px-2 text-[10px] font-medium uppercase tracking-tight",
+                          ca.severity === 'critical' ? "bg-destructive/10 text-destructive" : "bg-warning/10 text-warning"
+                        )}>
+                          {ca.severity}
+                        </Badge>
+                        <div className="flex items-center gap-1.5 text-[11px] font-medium text-muted-text/60">
+                          <Clock className="h-3 w-3" />
+                          {format(ca.deadline.toDate(), 'MMM d')}
+                        </div>
                       </div>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-8 px-0 text-[12px] font-semibold text-primary hover:bg-transparent hover:text-primary/70 gap-2 overflow-hidden group/btn"
-                        onClick={() => setSelectedCA(ca)}
-                      >
-                        Resolve Issue
-                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
-                      </Button>
+                      
+                      <h4 className="text-[14px] font-medium text-heading leading-tight line-clamp-3 mb-6">
+                        {ca.questionText}
+                      </h4>
+
+                      <div className="mt-4 pt-4 border-t border-border/40 flex items-center justify-between">
+                        <div className="flex items-center gap-1.5 text-[11px] font-medium text-muted-text/50">
+                          <MapPin className="h-3.5 w-3.5" />
+                          {ca.locationName}
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="link"
+                          className="h-6 p-0 text-[12px] font-semibold text-primary hover:text-primary/80 transition-colors"
+                          onClick={() => setSelectedCA(ca)}
+                        >
+                          Resolve
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                ))}
+              </div>
             </div>
-          </div>
+          </Card>
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-7 gap-8">
@@ -419,7 +431,9 @@ export default function ManagerDashboardPage() {
               {stats?.auditorActivity.map((aud, i) => (
                 <div key={i} className="flex items-center justify-between p-3 rounded-xl border border-border/40 bg-muted/5">
                   <div className="space-y-1">
-                    <p className="font-semibold text-[13px] text-heading">{aud.name}</p>
+                    <Link href={`/dashboard/manager/auditors/${aud.id}`} className="block">
+                      <p className="font-semibold text-[13px] text-heading hover:text-primary transition-colors cursor-pointer">{aud.name}</p>
+                    </Link>
                     <div className="flex items-center gap-2">
                       <Badge variant="outline" className="text-[10px] font-medium tracking-widest text-success border-success/30 bg-success/5 px-2 py-0.5">
                         {aud.completed} Completed
@@ -456,9 +470,9 @@ export default function ManagerDashboardPage() {
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-semibold text-heading leading-tight">{audit.templateTitle}</p>
-                    <div className="text-[11px] font-medium text-muted-text flex items-center gap-1.5 uppercase tracking-wider">
+                    <div className="text-[12px] font-normal text-muted-text flex items-center gap-1.5">
                       <MapPin className="h-3 w-3" /> {audit.locationName} 
-                      <span className="opacity-30 mx-1">•</span> 
+                      <span className="opacity-30 mx-0.5">•</span> 
                       <Clock className="h-3 w-3" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMM d, h:mm a') : 'Scheduled'}
                     </div>
                   </div>
@@ -486,50 +500,56 @@ export default function ManagerDashboardPage() {
       {/* Resolution Dialog */}
       <Dialog open={!!selectedCA} onOpenChange={(open) => !open && setSelectedCA(null)}>
         <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader className="p-xl border-b border-border/50">
-            <DialogTitle className="text-lg font-semibold flex items-center gap-2 text-heading">
-              <CheckCircle className="h-5 w-5 text-success" /> Resolve Issue
+          <DialogHeader className="p-6 pb-2">
+            <DialogTitle className="text-xl font-semibold text-heading flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-success" /> Resolve Issue
             </DialogTitle>
-            <DialogDescription className="body-text text-xs mt-2">
-              {selectedCA?.questionText} at {selectedCA?.locationName}
+            <DialogDescription className="text-sm text-muted-text mt-1 leading-normal">
+              {selectedCA?.questionText} at <span className="font-medium text-heading">{selectedCA?.locationName}</span>
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-lg p-xl">
-            <div className="space-y-xs">
-              <Label htmlFor="note" className="text-xs font-normal  tracking-widest text-muted-text">Resolution Note</Label>
+          <div className="p-6 pt-2 space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="note" className="text-xs font-medium text-muted-text uppercase tracking-tight">Resolution Note</Label>
               <Textarea
                 id="note"
-                placeholder="Describe how the issue was fixed..."
+                placeholder="Describe how the issue was remediated..."
                 value={resolutionNote}
                 onChange={(e) => setResolutionNote(e.target.value)}
-                className="min-h-[120px] text-sm bg-background border-input focus:ring-primary/20 text-body"
+                className="min-h-[120px] text-sm bg-background border-border/50 focus-visible:ring-primary/20 text-body resize-none"
               />
             </div>
 
-            <div className="space-y-xs">
-              <Label className="text-xs font-normal  tracking-widest text-muted-text">Evidence Photo (Optional)</Label>
-              <div className="flex items-center gap-md">
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-muted-text uppercase tracking-tight">Evidence Photo (Optional)</Label>
+              <div className="flex items-center gap-4">
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-20 w-full border-dashed flex-col gap-2 hover:bg-muted/30 transition-colors"
+                  className="h-24 w-full border-dashed border-border/60 flex flex-col gap-2 hover:bg-muted/10 hover:border-primary/30 transition-all group"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
                 >
-                  {isUploading ? <Loader2 className="h-5 w-5 animate-spin text-primary" /> : <Camera className="h-5 w-5 text-muted-text" />}
-                  <span className="text-[10px] font-medium tracking-widest  text-muted-text">CLICK TO UPLOAD</span>
+                  {isUploading ? (
+                    <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                  ) : (
+                    <Camera className="h-5 w-5 text-muted-text/60 group-hover:text-primary/60 transition-colors" />
+                  )}
+                  <span className="text-[11px] font-medium text-muted-text group-hover:text-primary transition-colors uppercase tracking-tight">
+                    {isUploading ? 'Uploading...' : 'Click to upload proof'}
+                  </span>
                 </Button>
                 <input type="file" className="hidden" ref={fileInputRef} accept="image/*" onChange={handleFileUpload} />
               </div>
 
               {resolutionPhotos.length > 0 && (
-                <div className="flex gap-sm overflow-x-auto py-2 mt-2">
+                <div className="flex gap-2 overflow-x-auto py-2 no-scrollbar">
                   {resolutionPhotos.map((url, i) => (
-                    <div key={i} className="relative h-16 w-16 rounded-md overflow-hidden border border-border/50 shrink-0">
+                    <div key={i} className="relative h-16 w-16 rounded-lg overflow-hidden border border-border/40 shrink-0 shadow-sm group">
                       <img src={url} alt="Evidence" className="h-full w-full object-cover" />
                       <button
-                        className="absolute top-1 right-1 bg-destructive/90 text-destructive-foreground rounded-full p-1 hover:bg-destructive active:scale-95 transition-all"
+                        className="absolute top-1 right-1 bg-destructive text-white rounded-md p-1 opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive/80"
                         onClick={() => setResolutionPhotos(prev => prev.filter(p => p !== url))}
                       >
                         <X className="h-3 w-3" />
@@ -541,15 +561,15 @@ export default function ManagerDashboardPage() {
             </div>
           </div>
 
-          <DialogFooter className="p-xl border-t border-border/50 bg-muted/10 gap-sm">
-            <Button variant="outline" onClick={() => setSelectedCA(null)} className="font-medium text-xs  tracking-widest shadow-sm text-muted-text">Cancel</Button>
+          <DialogFooter className="p-6 border-t border-border/40 bg-muted/5 gap-2">
+            <Button variant="outline" onClick={() => setSelectedCA(null)} className="h-9 px-4 font-medium text-xs text-muted-text">Cancel</Button>
             <Button
               onClick={handleResolve}
               disabled={isResolving || !resolutionNote}
-              className="font-medium text-xs  tracking-widest shadow-lg shadow-success/20 bg-success hover:bg-success/90 text-success-foreground"
+              className="h-9 px-4 font-medium text-xs bg-success hover:bg-success/90 text-white shadow-lg shadow-success/10 transition-all active:scale-95"
             >
-              {isResolving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle className="h-4 w-4 mr-2" />}
-              Complete
+              {isResolving ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : <CheckCircle2 className="h-3 w-3 mr-2" />}
+              Complete Resolution
             </Button>
           </DialogFooter>
         </DialogContent>

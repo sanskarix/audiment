@@ -27,10 +27,19 @@ import { Switch } from '@/components/ui/switch';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
-import { CalendarIcon, Plus, CheckSquare, Clock, AlertCircle, Search, MoreHorizontal, Pencil, Loader2, Filter } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { CalendarIcon, Plus, CheckSquare, Clock, AlertCircle, Search, MoreHorizontal, Pencil, Loader2, Filter, X } from 'lucide-react';
 
 export default function AdminAuditsPage() {
   const [audits, setAudits] = useState<any[]>([]);
@@ -40,6 +49,9 @@ export default function AdminAuditsPage() {
   const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [locationFilter, setLocationFilter] = useState('all');
+  const [managerFilter, setManagerFilter] = useState('all');
 
   // Form state
   const [selectedTemplate, setSelectedTemplate] = useState('');
@@ -228,12 +240,19 @@ export default function AdminAuditsPage() {
     }
   };
 
-  const filteredAudits = audits.filter((audit) =>
-    audit.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    audit.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    audit.status?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    audit.assignedManagerName?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredAudits = audits.filter((audit) => {
+    const matchesSearch = 
+      audit.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      audit.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      audit.status?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      audit.assignedManagerName?.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesStatus = statusFilter === 'all' || audit.status === statusFilter;
+    const matchesLocation = locationFilter === 'all' || audit.locationId === locationFilter;
+    const matchesManager = managerFilter === 'all' || audit.assignedManagerId === managerFilter;
+
+    return matchesSearch && matchesStatus && matchesLocation && matchesManager;
+  });
 
   return (
     <DashboardShell role="Admin">
@@ -261,22 +280,23 @@ export default function AdminAuditsPage() {
                 <Plus className="mr-2 h-4 w-4" /> Publish Audit
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[550px]">
-              <DialogHeader>
-                <DialogTitle className="font-semibold text-heading">
+            <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden border-none shadow-2xl">
+              <DialogHeader className="px-6 pt-6 pb-4 bg-background">
+                <DialogTitle className="text-xl font-semibold text-heading">
                   {editingAuditId ? 'Edit Audit Instance' : 'Publish New Audit'}
                 </DialogTitle>
-                <DialogDescription className="text-muted-text">
+                <DialogDescription className="text-muted-text text-[13px] mt-1.5">
                   {editingAuditId ? 'Update parameters for this existing audit instance.' : 'Assign a template to a location and set the schedule.'}
                 </DialogDescription>
               </DialogHeader>
-              <div className="flex flex-col gap-8 p-8">
-                {/* Primary Selectors - Stacked for clarity */}
-                <div className="flex flex-col gap-6">
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="template" className="text-body font-normal">Audit Template</Label>
+              
+              <div className="px-6 py-4 space-y-6 max-h-[70vh] overflow-y-auto no-scrollbar">
+                {/* Primary Assignment Section */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-2 md:col-span-2">
+                    <Label htmlFor="template" className="text-[13px] font-medium text-heading pl-0.5">Audit Template</Label>
                     <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
-                      <SelectTrigger id="template" className="h-11 text-body border-border/50">
+                      <SelectTrigger id="template" className="h-10 text-body bg-muted/5 border-border/50">
                         <SelectValue placeholder="Select template" />
                       </SelectTrigger>
                       <SelectContent>
@@ -288,12 +308,12 @@ export default function AdminAuditsPage() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="location" className="text-body font-normal">Target Location</Label>
+                    <Label htmlFor="location" className="text-[13px] font-medium text-heading pl-0.5">Target Location</Label>
                     <Select value={selectedLocation} onValueChange={(val) => {
                       setSelectedLocation(val);
                       setSelectedManager('');
                     }}>
-                      <SelectTrigger id="location" className="h-11 text-body border-border/50">
+                      <SelectTrigger id="location" className="h-10 text-body bg-muted/5 border-border/50">
                         <SelectValue placeholder="Select location" />
                       </SelectTrigger>
                       <SelectContent>
@@ -305,147 +325,142 @@ export default function AdminAuditsPage() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="manager" className="text-body font-normal">Assigned Manager</Label>
-                    <Select value={selectedManager} onValueChange={setSelectedManager} disabled={!selectedLocation}>
-                      <SelectTrigger id="manager" className="h-11 text-body border-border/50">
-                        <SelectValue placeholder={selectedLocation ? "Select manager for this audit" : "Select location first"} />
+                    <Label htmlFor="manager" className="text-[13px] font-medium text-heading pl-0.5">Managing Supervisor</Label>
+                    <Select value={selectedManager} onValueChange={setSelectedManager}>
+                      <SelectTrigger id="manager" className="h-10 text-body bg-muted/5 border-border/50">
+                        <SelectValue placeholder="Select manager" />
                       </SelectTrigger>
                       <SelectContent>
-                        {selectedLocation && managers
-                          .filter(m => {
-                            const loc = locations.find(l => l.id === selectedLocation);
-                            const assignedIds = loc?.assignedManagerIds || (loc?.assignedManagerId ? [loc.assignedManagerId] : []);
-                            return assignedIds.includes(m.id);
-                          })
-                          .map(m => (
-                            <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>
-                          ))
-                        }
-                        {selectedLocation && managers.filter(m => {
-                          const loc = locations.find(l => l.id === selectedLocation);
-                          const assignedIds = loc?.assignedManagerIds || (loc?.assignedManagerId ? [loc.assignedManagerId] : []);
-                          return assignedIds.includes(m.id);
-                        }).length === 0 && (
-                            <SelectItem value="none" disabled className="text-muted-text">No managers assigned to this location</SelectItem>
-                          )}
+                        {managers.map(m => (
+                          <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
-                    <p className="text-[12px] text-muted-text/40 font-normal mt-1 leading-relaxed">The branch manager will be responsible for assigning the final auditor.</p>
                   </div>
                 </div>
 
-                {/* Date Selection - 2 Columns */}
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="flex flex-col gap-2">
-                    <Label className="text-body font-normal">Scheduled Date</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50", !scheduledDate && "text-muted-text")}>
-                          <CalendarIcon className="mr-2 h-4 w-4 opacity-40" />
-                          {scheduledDate ? format(scheduledDate, "PPP") : "Pick a date"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl">
-                        <Calendar mode="single" selected={scheduledDate} onSelect={(date: any) => {
-                          setScheduledDate(date);
-                          if (date && (!deadline || date > deadline)) {
-                            const newDeadline = new Date(date);
-                            newDeadline.setHours(23, 59, 59);
-                            setDeadline(newDeadline);
-                          }
-                        }} initialFocus />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label className="text-body font-normal">Deadline</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50", !deadline && "text-muted-text")}>
-                          <CalendarIcon className="mr-2 h-4 w-4 opacity-40" />
-                          {deadline ? format(deadline, "PPP") : "Pick a date"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl">
-                        <Calendar mode="single" selected={deadline} onSelect={setDeadline} disabled={(date: any) => scheduledDate ? date < scheduledDate : false} initialFocus />
-                      </PopoverContent>
-                    </Popover>
+                {/* Scheduling Section */}
+                <div className="pt-2">
+                  <p className="text-[11px] font-bold text-muted-text uppercase tracking-widest mb-3 pl-0.5 opacity-50">Schedules & Deadlines</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <Label className="text-[13px] font-medium text-heading pl-0.5">Start Date</Label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !scheduledDate && "text-muted-text")}>
+                            <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
+                            {scheduledDate ? format(scheduledDate, "PPP") : "Pick a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
+                          <Calendar mode="single" selected={scheduledDate} onSelect={(date: any) => {
+                            setScheduledDate(date);
+                            if (date && (!deadline || date > deadline)) {
+                              const newDeadline = new Date(date);
+                              newDeadline.setHours(23, 59, 59);
+                              setDeadline(newDeadline);
+                            }
+                          }} initialFocus />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label className="text-[13px] font-medium text-heading pl-0.5">Deadline</Label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !deadline && "text-muted-text")}>
+                            <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
+                            {deadline ? format(deadline, "PPP") : "Pick a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="end">
+                          <Calendar mode="single" selected={deadline} onSelect={setDeadline} disabled={(date: any) => scheduledDate ? date < scheduledDate : false} initialFocus />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
                   </div>
                 </div>
 
-                {/* Configuration Options */}
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center justify-between p-5 rounded-xl bg-muted/20 border border-border/40">
-                    <div className="flex flex-col gap-1.5">
-                      <Label className="text-body font-medium">Surprise Audit</Label>
-                      <p className="text-[12px] text-muted-text/60 font-normal leading-normal">Location won't be notified until the date.</p>
+                {/* Configuration Section */}
+                <div className="grid grid-cols-1 gap-3">
+                  <div className="flex items-center justify-between p-4 rounded-xl bg-muted/5 border border-border/40 group hover:border-primary/20 transition-colors">
+                    <div className="flex flex-col gap-1">
+                      <Label className="text-[14px] font-semibold text-heading">Surprise Audit</Label>
+                      <p className="text-[12px] text-muted-text/70 font-normal leading-tight">Branch won't be notified until the start date.</p>
                     </div>
                     <Switch checked={isSurprise} onCheckedChange={setIsSurprise} />
                   </div>
 
-                  <div className="space-y-5 p-5 rounded-xl bg-muted/20 border border-border/40">
-                    <div className="flex flex-col gap-1.5">
-                      <Label className="text-body font-medium">Recurring Schedule</Label>
-                      <p className="text-[12px] text-muted-text/60 font-normal leading-normal">Automatically generate the next instance.</p>
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 pt-1">
+                  <div className="p-4 rounded-xl bg-muted/5 border border-border/40 space-y-4 group hover:border-primary/20 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-1">
+                        <Label className="text-[14px] font-semibold text-heading">Automated Recurring</Label>
+                        <p className="text-[12px] text-muted-text/70 font-normal leading-tight">Regenerate instances automatically.</p>
+                      </div>
                       <Select value={recurring} onValueChange={(val: any) => setRecurring(val)}>
-                        <SelectTrigger className="h-11 text-body border-border/50 bg-background">
-                          <SelectValue placeholder="Select frequency" />
+                        <SelectTrigger className="h-9 w-[150px] text-[13px] bg-background border-border/50">
+                          <SelectValue placeholder="Frequency" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="none" className="text-body">Does not repeat</SelectItem>
-                          <SelectItem value="daily" className="text-body">Daily</SelectItem>
-                          <SelectItem value="weekly" className="text-body">Weekly</SelectItem>
-                          <SelectItem value="monthly" className="text-body">Monthly</SelectItem>
+                          <SelectItem value="none">One-time</SelectItem>
+                          <SelectItem value="daily">Daily</SelectItem>
+                          <SelectItem value="weekly">Weekly</SelectItem>
+                          <SelectItem value="monthly">Monthly</SelectItem>
                         </SelectContent>
                       </Select>
-
-                      {recurring === 'weekly' && (
-                        <div className="flex flex-col gap-2">
-                          <Label className="text-[12px] font-medium text-muted-text">Repeat on</Label>
-                          <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
-                            <SelectTrigger className="h-11 text-body border-border/50 bg-background">
-                              <SelectValue placeholder="Select day" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="0" className="text-body">Sunday</SelectItem>
-                              <SelectItem value="1" className="text-body">Monday</SelectItem>
-                              <SelectItem value="2" className="text-body">Tuesday</SelectItem>
-                              <SelectItem value="3" className="text-body">Wednesday</SelectItem>
-                              <SelectItem value="4" className="text-body">Thursday</SelectItem>
-                              <SelectItem value="5" className="text-body">Friday</SelectItem>
-                              <SelectItem value="6" className="text-body">Saturday</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      )}
-
-                      {recurring === 'monthly' && (
-                        <div className="flex flex-col gap-2">
-                          <Label className="text-[12px] font-medium text-muted-text">Repeat on</Label>
-                          <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
-                            <SelectTrigger className="h-11 text-body border-border/50 bg-background">
-                              <SelectValue placeholder="Select date" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
-                                <SelectItem key={day} value={day.toString()} className="text-body">Day {day}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      )}
                     </div>
+
+                    {recurring !== 'none' && (
+                      <div className="pt-3 border-t border-border/30 animate-in fade-in slide-in-from-top-1">
+                        {recurring === 'weekly' && (
+                          <div className="flex flex-col gap-2">
+                            <Label className="text-[12px] font-semibold text-muted-text/80">Repeat on Day</Label>
+                            <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
+                              <SelectTrigger className="h-10 text-body bg-background border-border/50">
+                                <SelectValue placeholder="Select day" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="0">Sunday</SelectItem>
+                                <SelectItem value="1">Monday</SelectItem>
+                                <SelectItem value="2">Tuesday</SelectItem>
+                                <SelectItem value="3">Wednesday</SelectItem>
+                                <SelectItem value="4">Thursday</SelectItem>
+                                <SelectItem value="5">Friday</SelectItem>
+                                <SelectItem value="6">Saturday</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        )}
+
+                        {recurring === 'monthly' && (
+                          <div className="flex flex-col gap-2">
+                            <Label className="text-[12px] font-semibold text-muted-text/80">Repeat on Date</Label>
+                            <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
+                              <SelectTrigger className="h-10 text-body bg-background border-border/50">
+                                <SelectValue placeholder="Select date" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                                  <SelectItem key={day} value={day.toString()}>Day {day}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
-              <DialogFooter>
-                <Button variant="ghost" onClick={() => setOpen(false)} className="font-medium h-11 px-4">Cancel</Button>
+
+              <DialogFooter className="px-6 py-4 bg-muted/10 border-t border-border/50 gap-3">
+                <Button variant="ghost" onClick={() => setOpen(false)} className="font-medium h-10 px-4 text-muted-text hover:text-heading">
+                  Cancel
+                </Button>
                 <Button
                   onClick={handlePublish}
                   disabled={loading || !selectedTemplate || !selectedLocation || !selectedManager || !scheduledDate || !deadline}
-                  className="font-medium h-11 px-5 gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all"
+                  className="font-semibold h-10 px-6 gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all text-[14px]"
                 >
                   {loading && <Loader2 className="h-4 w-4 animate-spin" />}
                   {editingAuditId ? 'Save Changes' : 'Publish Audit'}
@@ -456,7 +471,7 @@ export default function AdminAuditsPage() {
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative flex-1 group">
+          <div className="relative flex-1 group max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
               placeholder="Search audits by template, location, manager or status..."
@@ -465,10 +480,57 @@ export default function AdminAuditsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
+          <div className="flex items-center gap-2">
+            {(statusFilter !== 'all' || locationFilter !== 'all' || managerFilter !== 'all') && (
+              <Button 
+                variant="ghost" 
+                onClick={() => { setStatusFilter('all'); setLocationFilter('all'); setManagerFilter('all'); }}
+                className="h-11 px-3 text-[11px] font-medium text-muted-text hover:text-destructive transition-colors group"
+              >
+                <X className="h-3 w-3 mr-1.5 opacity-40 group-hover:opacity-100" />
+                Clear
+              </Button>
+            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className={cn(
+                  "h-11 px-4 gap-2 font-medium text-xs border-border/50",
+                  (statusFilter !== 'all' || locationFilter !== 'all' || managerFilter !== 'all') ? "text-primary border-primary/20 bg-primary/5" : "text-muted-text"
+                )}>
+                  <Filter className="h-4 w-4" />
+                  Filters
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 overflow-y-auto max-h-[400px]">
+                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Status</DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={statusFilter} onValueChange={setStatusFilter}>
+                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Statuses</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="published" className="text-body cursor-pointer">Published</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="assigned" className="text-body cursor-pointer">Assigned</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="in_progress" className="text-body cursor-pointer">In Progress</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="completed" className="text-body cursor-pointer">Completed</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+                
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Location</DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={locationFilter} onValueChange={setLocationFilter}>
+                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Locations</DropdownMenuRadioItem>
+                  {locations.map(loc => (
+                    <DropdownMenuRadioItem key={loc.id} value={loc.id} className="text-body cursor-pointer">{loc.name}</DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Manager</DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={managerFilter} onValueChange={setManagerFilter}>
+                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Managers</DropdownMenuRadioItem>
+                  {managers.map(m => (
+                    <DropdownMenuRadioItem key={m.id} value={m.id} className="text-body cursor-pointer">{m.name}</DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
         <Card className="standard-card">

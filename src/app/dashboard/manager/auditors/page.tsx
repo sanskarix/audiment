@@ -64,10 +64,15 @@ import { Switch } from "@/components/ui/switch";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { useRouter } from 'next/navigation';
+import { X } from 'lucide-react';
 
 interface Auditor {
   id: string;
@@ -89,6 +94,7 @@ export default function AuditorsPage() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -185,10 +191,16 @@ export default function AuditorsPage() {
     }
   };
 
-  const filteredAuditors = auditors.filter(auditor =>
-    auditor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    auditor.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredAuditors = auditors.filter(auditor => {
+    const matchesSearch = 
+      auditor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      auditor.email.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesStatus = statusFilter === 'all' || 
+      (statusFilter === 'active' ? auditor.isActive : !auditor.isActive);
+
+    return matchesSearch && matchesStatus;
+  });
 
   if (loading) {
     return (
@@ -203,9 +215,10 @@ export default function AuditorsPage() {
   return (
     <DashboardShell role="Manager">
       <div className="dashboard-page-container">
-        <div className="page-header-section">
+        <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Auditors</h1>
+            <h1 className="page-heading">Performance Directory</h1>
+            <p className="body-text">Track audit scores and mission completion across your field team.</p>
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
@@ -305,15 +318,42 @@ export default function AuditorsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
               placeholder="Search auditors by name or email..."
-              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
+              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 placeholder:text-muted-text/60"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
+          <div className="flex items-center gap-2">
+            {statusFilter !== 'all' && (
+              <Button 
+                variant="ghost" 
+                onClick={() => setStatusFilter('all')}
+                className="h-11 px-3 text-[11px] font-medium text-muted-text hover:text-destructive transition-colors group"
+              >
+                <X className="h-3 w-3 mr-1.5 opacity-40 group-hover:opacity-100" />
+                Clear
+              </Button>
+            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className={cn(
+                  "h-11 px-4 gap-2 font-medium text-xs border-border/50",
+                  statusFilter !== 'all' ? "text-primary border-primary/20 bg-primary/5" : "text-muted-text"
+                )}>
+                  <Filter className="h-4 w-4" />
+                  Filters
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">Availability Status</DropdownMenuLabel>
+                <DropdownMenuRadioGroup value={statusFilter} onValueChange={setStatusFilter}>
+                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Personnel</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="active" className="text-body cursor-pointer">Active Only</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="inactive" className="text-body cursor-pointer">Inactive Only</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
         <Card className="standard-card overflow-hidden">
@@ -371,7 +411,7 @@ export default function AuditorsPage() {
                       <TableCell className="standard-table-cell text-right pr-6" onClick={(e) => e.stopPropagation()}>
                          <DropdownMenu>
                            <DropdownMenuTrigger asChild>
-                             <Button variant="ghost" className="h-8 w-8 p-0 text-[#6b7280] hover:text-primary transition-colors">
+                             <Button variant="ghost" className="h-8 w-8 p-0 text-muted-text hover:text-primary transition-colors">
                                <MoreHorizontal className="h-4 w-4" />
                              </Button>
                            </DropdownMenuTrigger>

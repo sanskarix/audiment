@@ -232,54 +232,7 @@
 }
 
 @layer utilities {
-  .text-heading {
-    font-size: 20px;
-    font-weight: 600;
-    color: #121317;
-  }
 
-  .text-body {
-    font-size: 14px;
-    font-weight: 400;
-    color: #45474d;
-  }
-
-  .text-muted {
-    font-size: 12px;
-    font-weight: 400;
-    color: #6b7280;
-  }
-
-  .aud-heading-base {
-    font-size: 20px;
-    font-weight: 600;
-    color: #121317;
-  }
-
-  .aud-body-base {
-    font-size: 14px;
-    font-weight: 400;
-    color: #45474d;
-  }
-
-  .aud-muted-base {
-    font-size: 12px;
-    font-weight: 400;
-    color: #6b7280;
-  }
-
-  /* Dark mode variants for typography utilities */
-  .dark .text-heading {
-    color: #f4f4f5;
-  }
-
-  .dark .text-body {
-    color: #d1d5db;
-  }
-
-  .dark .text-muted {
-    color: #9ca3af;
-  }
 
   /* Typography scope: dashboard + auth surfaces */
   .typography-scope {

@@ -114,7 +114,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
     <SidebarProvider>
       <Sidebar collapsible="none" className="border-r border-border/50">
         <SidebarHeader className="h-24 flex flex-row items-center justify-center">
-          <span className="text-2xl font-medium tracking-tighter text-heading leading-none">
+          <span className="text-[22px] font-medium tracking-tighter text-heading leading-none">
             Audiment
           </span>
         </SidebarHeader>

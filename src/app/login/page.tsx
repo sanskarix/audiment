@@ -28,9 +28,11 @@ export default function LoginPage() {
     try {
       const user = await loginUser(email, password);
       router.push(ROLE_ROUTES[user.role]);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Invalid credentials. Please try again.';
-      setError(message.includes('not found') ? message : 'Invalid email or password.');
+    } catch (err: any) {
+      console.error('Login error:', err);
+      const message = err.message || 'Invalid credentials. Please try again.';
+      // Keep the specific check for user record not found, but otherwise show the actual error to help debugging
+      setError(message.includes('User record not found') ? message : (err.code || message));
     } finally {
       setLoading(false);
     }

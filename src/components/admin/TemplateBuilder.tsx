@@ -12,7 +12,8 @@ import { Switch } from '@/components/ui/switch';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Plus, ArrowUp, ArrowDown, Trash2, ArrowLeft, Save, Loader2, AlertCircle, Camera, FileText } from 'lucide-react';
+import { Plus, ArrowUp, ArrowDown, Trash2, ArrowLeft, Save, AlertCircle, Camera, FileText } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from 'next/navigation';
 
 type QuestionType = 'yes_no' | 'rating';
@@ -199,9 +200,21 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
 
   if (fetching) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] gap-3">
-        <Loader2 className="h-6 w-6 animate-spin text-primary opacity-40" />
-        <p className="body-text">Loading template...</p>
+      <div className="flex min-h-screen flex-col bg-muted/20">
+         <div className="h-20 bg-background border-b border-border/50 flex items-center px-6">
+            <Skeleton className="h-6 w-48" />
+         </div>
+         <div className="flex-1 p-6 md:p-20">
+            <div className="max-w-3xl mx-auto space-y-6">
+               <Skeleton className="h-4 w-32" />
+               <Skeleton className="h-10 w-full" />
+               <Skeleton className="h-64 w-full rounded-xl" />
+               <div className="grid grid-cols-2 gap-4">
+                  <Skeleton className="h-24 rounded-xl" />
+                  <Skeleton className="h-24 rounded-xl" />
+               </div>
+            </div>
+         </div>
       </div>
     );
   }
@@ -250,7 +263,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
             className="h-11 px-5 font-medium shadow-lg shadow-primary/20 gap-2 active:scale-95 transition-all"
           >
             {loading
-              ? <Loader2 className="h-4 w-4 animate-spin" />
+              ? <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
               : <Save className="h-4 w-4" />
             }
             {loading ? 'Saving...' : 'Save Template'}

@@ -43,7 +43,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { format, subMonths, startOfToday, startOfMonth } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { LoaderOne } from '@/components/ui/loader';
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DashboardStats {
   totalAuditsThisMonth: number;
@@ -161,8 +161,19 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <DashboardShell role="Admin">
-        <div className="flex h-[400px] items-center justify-center">
-          <LoaderOne size={48} className="text-primary" />
+        <div className="dashboard-page-container">
+          <div className="page-header-section mb-6">
+            <div className="flex flex-col gap-2">
+              <Skeleton className="h-[32px] w-[250px]" />
+              <Skeleton className="h-[18px] w-[350px]" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Skeleton className="h-[148px] rounded-xl" />
+            <Skeleton className="h-[148px] rounded-xl" />
+            <Skeleton className="h-[148px] rounded-xl" />
+          </div>
+          <Skeleton className="h-[460px] w-full rounded-xl mt-6" />
         </div>
       </DashboardShell>
     );

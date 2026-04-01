@@ -60,7 +60,8 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useRef } from 'react';
 
 interface ManagerStats {
@@ -244,8 +245,19 @@ export default function ManagerDashboardPage() {
   if (loading) {
     return (
       <DashboardShell role="Manager">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="dashboard-page-container">
+          <div className="page-header-section mb-6">
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-4 w-96 mt-2" />
+          </div>
+          <div className="grid gap-6 md:grid-cols-2 mb-6">
+            <Skeleton className="h-[140px] rounded-xl" />
+            <Skeleton className="h-[140px] rounded-xl" />
+          </div>
+          <div className="grid gap-6 md:grid-cols-7">
+            <Skeleton className="md:col-span-4 h-[400px] rounded-xl" />
+            <Skeleton className="md:col-span-3 h-[400px] rounded-xl" />
+          </div>
         </div>
       </DashboardShell>
     );

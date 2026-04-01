@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: "Audiment",
@@ -36,14 +36,14 @@ export default function RootLayout({
     >
       <head />
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <ThemeProvider
+        <NextThemesProvider
           attribute="class"
           defaultTheme="light"
           enableSystem={false}
           disableTransitionOnChange
         >
           <TooltipProvider>{children}</TooltipProvider>
-        </ThemeProvider>
+        </NextThemesProvider>
       </body>
     </html>
   );

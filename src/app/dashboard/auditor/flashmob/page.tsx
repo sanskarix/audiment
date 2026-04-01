@@ -25,7 +25,6 @@ import {
   CheckCircle2,
   RefreshCw,
   UploadCloud,
-  Loader2,
   ChevronRight,
   ChevronLeft,
   X,
@@ -33,6 +32,7 @@ import {
   MapPin,
   AlertCircle
 } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -298,11 +298,14 @@ export default function FlashmobAuditPage() {
   if (loading) {
     return (
       <DashboardShell role="Auditor">
-        <div className="flex flex-col items-center justify-center h-[50vh] text-center space-y-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <div className="space-y-1">
-            <h3 className="text-lg font-medium text-heading">Loading Flashmob Tool</h3>
-            <p className="text-muted-text text-sm">Please wait while we set things up...</p>
+        <div className="dashboard-page-container max-w-2xl mx-auto pb-32">
+          <div className="page-header-section mb-xl">
+            <Skeleton className="h-8 w-64 mb-2" />
+            <Skeleton className="h-4 w-48" />
+          </div>
+          <div className="space-y-6">
+            <Skeleton className="h-2 w-full rounded-full" />
+            <Skeleton className="h-[300px] w-full rounded-xl" />
           </div>
         </div>
       </DashboardShell>
@@ -576,7 +579,7 @@ export default function FlashmobAuditPage() {
               >
                 {saving ? (
                   <>
-                    <Loader2 className="mr-3 h-5 w-5 animate-spin" /> ESTABLISHING LINK...
+                    <div className="mr-3 h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" /> ESTABLISHING LINK...
                   </>
                 ) : (
                   <>

@@ -27,11 +27,10 @@ import {
   CheckCircle2,
   Calendar,
   ChevronRight,
-  TrendingUp,
   Award,
-  FileText,
-  Loader2
+  FileText
 } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -113,8 +112,23 @@ export default function AuditorHistoryPage() {
   if (loading) {
     return (
       <DashboardShell role="Auditor">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="dashboard-page-container">
+          <div className="page-header-section mb-6">
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-4 w-96 mt-2" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <Skeleton className="h-[120px] rounded-xl" />
+            <Skeleton className="h-[120px] rounded-xl" />
+            <Skeleton className="h-[120px] rounded-xl" />
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-[40px] w-full" />
+            <div className="border border-border/40 rounded-xl overflow-hidden">
+               <Skeleton className="h-12 w-full rounded-none" />
+               <Skeleton className="h-64 w-full rounded-none mt-2" />
+            </div>
+          </div>
         </div>
       </DashboardShell>
     );

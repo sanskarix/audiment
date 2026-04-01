@@ -36,8 +36,10 @@ import {
   X,
   Image as ImageIcon,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  UploadCloud
 } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from '@/lib/utils';
 
 interface Question {
@@ -382,7 +384,24 @@ export default function AuditExecutionPage() {
   };
 
   if (loading) {
-    return <div className="flex h-screen items-center justify-center bg-muted/30"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+    return (
+      <div className="flex min-h-screen flex-col bg-muted/20">
+        <div className="h-20 bg-background border-b border-border/50 flex items-center px-6">
+          <Skeleton className="h-6 w-48" />
+        </div>
+        <div className="flex-1 p-6 md:p-20">
+          <div className="max-w-3xl mx-auto space-y-6">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-64 w-full rounded-xl" />
+            <div className="grid grid-cols-2 gap-4">
+              <Skeleton className="h-24 rounded-xl" />
+              <Skeleton className="h-24 rounded-xl" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const progressValue = Math.round(((currentIndex + 1) / questions.length) * 100);
@@ -423,7 +442,7 @@ export default function AuditExecutionPage() {
               disabled={saving}
               className="gap-2 font-medium  tracking-widest text-xs border-primary/20 text-primary hover:bg-primary/5 shadow-sm active:scale-95"
             >
-              {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />} Save
+              {saving ? <div className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent" /> : <CheckCircle2 className="h-4 w-4" />} Save
             </Button>
           </div>
           <div className="relative h-1.5 w-full bg-muted rounded-full overflow-hidden">
@@ -534,7 +553,7 @@ export default function AuditExecutionPage() {
                     disabled={!!uploading}
                     className="gap-2 font-medium text-xs shadow-sm bg-background active:scale-95 transition-all"
                   >
-                    {uploading ? <Loader2 className="h-4 w-4 animate-spin text-primary" /> : <Camera className="h-4 w-4 text-primary" />}
+                    {uploading ? <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" /> : <Camera className="h-4 w-4 text-primary" />}
                     Capture
                   </Button>
                   <input type="file" accept="image/*" ref={fileInputRef} className="hidden" onChange={handleFileUpload} />
@@ -601,7 +620,7 @@ export default function AuditExecutionPage() {
               disabled={!canProceed || saving}
               onClick={() => saveProgress(true)}
             >
-              {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />} Complete Audit
+              {saving ? <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" /> : <CheckCircle2 className="mr-2 h-4 w-4" />} Complete Audit
             </Button>
           ) : (
             <Button

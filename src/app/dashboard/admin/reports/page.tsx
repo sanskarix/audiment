@@ -45,9 +45,10 @@ import {
   Search, 
   Filter, 
   ArrowRight,
-  Loader2,
-  FileText
+  FileText,
+  Award
 } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
 import { format, startOfDay, endOfDay } from 'date-fns';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -138,6 +139,23 @@ export default function AdminReportsPage() {
     fetchReports();
   }, [selectedLocation]);
 
+  if (loading) {
+    return (
+      <DashboardShell role="Admin">
+        <div className="dashboard-page-container">
+          <div className="page-header-section mb-6">
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-4 w-96 mt-2" />
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-[40px] w-full" />
+            <Skeleton className="h-[400px] w-full rounded-xl" />
+          </div>
+        </div>
+      </DashboardShell>
+    );
+  }
+
   return (
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
@@ -203,13 +221,7 @@ export default function AdminReportsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {loading ? (
-                [1, 2, 3, 4, 5].map(i => (
-                  <TableRow key={i} className="animate-pulse">
-                    <TableCell colSpan={5} className="h-16 bg-muted/10" />
-                  </TableRow>
-                ))
-              ) : filteredReports.length === 0 ? (
+              {filteredReports.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="standard-table-cell py-24 text-center bg-muted/5">
                     <div className="flex flex-col items-center gap-4">

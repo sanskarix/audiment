@@ -31,7 +31,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Filter, MapPin, ArrowRight, Loader2, CheckSquare, Search } from 'lucide-react';
+import { Filter, MapPin, ArrowRight, CheckSquare, Search } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -82,6 +83,24 @@ export default function ManagerReportsPage() {
     }
     fetchInitialData();
   }, [session]);
+
+  if (loading) {
+    return (
+      <DashboardShell role="Manager">
+        <div className="dashboard-page-container">
+          <div className="page-header-section mb-6">
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-4 w-96 mt-2" />
+          </div>
+          <Skeleton className="h-[120px] w-full rounded-xl mb-6" />
+          <div className="border border-border/40 rounded-xl overflow-hidden">
+            <Skeleton className="h-12 w-full rounded-none" />
+            <Skeleton className="h-96 w-full rounded-none mt-2" />
+          </div>
+        </div>
+      </DashboardShell>
+    );
+  }
 
   const fetchReports = async (ids?: string[]) => {
     setLoading(true);

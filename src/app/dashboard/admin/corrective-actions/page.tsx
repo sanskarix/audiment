@@ -55,7 +55,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { LoaderOne } from '@/components/ui/loader';
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from '@/components/ui/button';
 
 export default function AdminCorrectiveActionsPage() {
@@ -69,6 +69,7 @@ export default function AdminCorrectiveActionsPage() {
   const [selectedManager, setSelectedManager] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [isUpdating, setIsUpdating] = useState(false);
+  const [expandedPhotoUrl, setExpandedPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -178,8 +179,22 @@ export default function AdminCorrectiveActionsPage() {
   if (loading) {
     return (
       <DashboardShell role="Admin">
-        <div className="flex h-[400px] items-center justify-center">
-          <LoaderOne size={48} className="text-primary" />
+        <div className="dashboard-page-container">
+          <div className="page-header-section mb-6">
+            <div className="flex flex-col gap-2">
+              <Skeleton className="h-[32px] w-[250px]" />
+              <Skeleton className="h-[18px] w-[350px]" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <Skeleton className="h-[120px] rounded-xl" />
+            <Skeleton className="h-[120px] rounded-xl" />
+            <Skeleton className="h-[120px] rounded-xl" />
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-[40px] w-full" />
+            <Skeleton className="h-[300px] w-full rounded-xl" />
+          </div>
         </div>
       </DashboardShell>
     );
@@ -268,9 +283,14 @@ export default function AdminCorrectiveActionsPage() {
             </TableHeader>
             <TableBody>
               {loading ? (
-                [1, 2, 3, 4, 5].map(i => (
-                  <TableRow key={i} className="animate-pulse">
-                    <TableCell colSpan={6} className="h-16 bg-white" />
+                Array.from({ length: 5 }).map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell className="py-4 px-4"><Skeleton className="h-5 w-[120px]" /></TableCell>
+                    <TableCell className="py-4 px-4"><Skeleton className="h-5 w-full" /></TableCell>
+                    <TableCell className="py-4 px-4"><Skeleton className="h-6 w-16 rounded-full" /></TableCell>
+                    <TableCell className="py-4 px-4"><Skeleton className="h-5 w-24" /></TableCell>
+                    <TableCell className="py-4 px-4"><Skeleton className="h-6 w-20 rounded-full mx-auto" /></TableCell>
+                    <TableCell className="py-4 px-4 text-right"><Skeleton className="h-8 w-16 ml-auto" /></TableCell>
                   </TableRow>
                 ))
               ) : actions.length === 0 ? (
@@ -389,13 +409,18 @@ export default function AdminCorrectiveActionsPage() {
             {resolvingCA?.resolutionPhotoUrls && resolvingCA.resolutionPhotoUrls.length > 0 && (
               <div className="space-y-2 mt-2">
                  <Label className="text-[10px] font-semibold text-muted-text uppercase tracking-wider">Evidence Photos</Label>
-                 <div className="flex gap-2 overflow-x-auto pb-2">
+                 <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
                    {resolvingCA.resolutionPhotoUrls.map((url: string, i: number) => (
-                     <div key={i} className="h-24 w-24 rounded-md border border-border/50 overflow-hidden flex-shrink-0">
+                     <div 
+                      key={i} 
+                      className="h-24 w-24 rounded-lg border border-border/50 overflow-hidden flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary/40 transition-all active:scale-95"
+                      onClick={() => setExpandedPhotoUrl(url)}
+                     >
                        <img src={url} alt="Proof" className="h-full w-full object-cover" />
                      </div>
                    ))}
                  </div>
+                 <p className="text-[10px] text-muted-text/60 italic mt-1">Click to expand evidence</p>
               </div>
             )}
           </div>
@@ -406,6 +431,21 @@ export default function AdminCorrectiveActionsPage() {
               <Button size="sm" className="bg-success text-success-foreground hover:bg-success/90" onClick={handleResolve}>Approve & Resolve</Button>
             </div>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!expandedPhotoUrl} onOpenChange={(open) => !open && setExpandedPhotoUrl(null)}>
+        <DialogContent className="sm:max-w-4xl p-0 overflow-hidden bg-transparent border-none shadow-none flex items-center justify-center">
+          <DialogTitle className="sr-only">Evidence Photo Viewer</DialogTitle>
+          <div className="relative group max-h-[90vh] w-full flex items-center justify-center">
+            {expandedPhotoUrl && (
+              <img 
+                src={expandedPhotoUrl} 
+                alt="Expanded Proof" 
+                className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl "
+              />
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </DashboardShell>

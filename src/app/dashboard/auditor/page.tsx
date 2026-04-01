@@ -26,11 +26,11 @@ import {
   TrendingUp,
   Target,
   FileCheck,
-  Loader2,
   Search,
   Filter
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Skeleton } from "@/components/ui/skeleton";
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
@@ -208,11 +208,15 @@ export default function AuditorDashboardPage() {
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center p-24 standard-card bg-muted/5 border-dashed border-2">
-              <div className="flex flex-col items-center gap-4">
-                <Loader2 className="h-10 w-10 animate-spin text-primary opacity-20" />
-                <p className="text-xl font-normal italic tracking-tighter  text-muted-text animate-pulse">Synchronizing Mission Data</p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="standard-card p-6 space-y-4">
+                  <Skeleton className="h-2 w-full" />
+                  <Skeleton className="h-6 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-20 w-full" />
+                </div>
+              ))}
             </div>
           ) : filteredAudits.length === 0 ? (
             <Card className="standard-card">

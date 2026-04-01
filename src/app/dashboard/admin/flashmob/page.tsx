@@ -25,7 +25,7 @@ import {
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { LoaderOne } from '@/components/ui/loader';
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminFlashmobPage() {
   const [flashmobs, setFlashmobs] = useState<any[]>([]);
@@ -91,8 +91,28 @@ export default function AdminFlashmobPage() {
   if (loading) {
     return (
       <DashboardShell role="Admin">
-        <div className="flex h-[400px] items-center justify-center">
-          <LoaderOne size={48} className="text-primary" />
+        <div className="dashboard-page-container">
+          <div className="page-header-section mb-6">
+            <div className="flex flex-col gap-2">
+              <Skeleton className="h-[32px] w-[200px]" />
+              <Skeleton className="h-[18px] w-[300px]" />
+            </div>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="standard-card flex flex-col gap-4 p-0 overflow-hidden">
+                <Skeleton className="aspect-video w-full rounded-none" />
+                <div className="p-6 space-y-4">
+                  <div className="space-y-2">
+                    <Skeleton className="h-5 w-[140px]" />
+                    <Skeleton className="h-4 w-[180px]" />
+                    <Skeleton className="h-4 w-[160px]" />
+                  </div>
+                  <Skeleton className="h-10 w-full rounded-lg" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </DashboardShell>
     );

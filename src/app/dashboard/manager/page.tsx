@@ -64,6 +64,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRef } from 'react';
 
 interface ManagerStats {
@@ -77,6 +78,7 @@ interface ManagerStats {
 export default function ManagerDashboardPage() {
   const [stats, setStats] = useState<ManagerStats | null>(null);
   const [correctiveActions, setCorrectiveActions] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
 
@@ -202,7 +204,22 @@ export default function ManagerDashboardPage() {
       setCorrectiveActions(snap.docs.map(d => ({ id: d.id, ...d.data() } as any)));
     });
 
-    return () => unsubscribeCA();
+    // Fetch recent notifications (real-time)
+    const notificationsQuery = query(
+      collection(db, 'notifications'),
+      where('recipientId', '==', session.uid),
+      orderBy('createdAt', 'desc'),
+      limit(10)
+    );
+
+    const unsubscribeNotifications = onSnapshot(notificationsQuery, (snap) => {
+      setNotifications(snap.docs.map(d => ({ id: d.id, ...d.data() } as any)));
+    });
+
+    return () => {
+      unsubscribeCA();
+      unsubscribeNotifications();
+    };
   }, [session]);
 
   const handleResolve = async () => {
@@ -450,7 +467,38 @@ export default function ManagerDashboardPage() {
           </Card>
         </div>
 
-        {/* Recent Audits Table Section */}
+        {/* Recent Notifications & Recent Audits Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <Card className="standard-card p-6">
+            <div className="mb-6">
+              <h3 className="section-heading">Recent Notifications</h3>
+              <p className="body-text mt-1">Latest updates and alerts</p>
+            </div>
+            <ScrollArea className="h-[350px] pr-4">
+              {notifications.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-10 opacity-40">
+                  <MessageSquare className="h-8 w-8 mb-2" />
+                  <p className="text-sm">No notifications yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {notifications.map((n) => (
+                    <div key={n.id} className={cn("p-4 rounded-xl border border-border/40 transition-all", !n.isRead && "bg-primary/5 border-primary/20")}>
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-[13px] font-semibold text-heading">{n.title}</p>
+                        <span className="text-[10px] text-muted-text/50">
+                          {n.createdAt ? format(n.createdAt.toDate(), 'MMM d, h:mm a') : 'Now'}
+                        </span>
+                      </div>
+                      <p className="text-[12px] text-body line-clamp-2">{n.message}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          </Card>
+
+        {/* Recent Audits Section */}
         <Card className="standard-card p-6">
           <div className="mb-6">
             <div className="flex items-center justify-between">
@@ -574,6 +622,7 @@ export default function ManagerDashboardPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </div>
     </DashboardShell>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { db, auth } from '@/lib/firebase';
 import {
   doc,
@@ -65,7 +66,23 @@ const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
 ];
 
 export default function AdminSettingsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [activeTab, setActiveTab] = useState<Tab>('profile');
+
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam && TABS.some(t => t.id === tabParam)) {
+      setActiveTab(tabParam as Tab);
+    }
+  }, [searchParams]);
+
+  const handleTabChange = (tabId: Tab) => {
+    setActiveTab(tabId);
+    router.replace(`?tab=${tabId}`, { scroll: false });
+  };
+
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
   const [session, setSession] = useState<{ uid: string; orgId: string } | null>(null);
@@ -338,7 +355,7 @@ export default function AdminSettingsPage() {
             {TABS.map(tab => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className={cn(
                   'flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all w-full text-left',
                   activeTab === tab.id

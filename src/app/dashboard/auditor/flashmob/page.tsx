@@ -149,12 +149,23 @@ export default function FlashmobAuditPage() {
   const startCamera = async (facingMode: 'environment' | 'user' = 'environment') => {
     try {
       if (stream) { stream.getTracks().forEach(t => t.stop()); setStream(null); }
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode },
+      const constraints = {
+        video: {
+          facingMode,
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        },
         audio: facingMode === 'environment'
-      });
+      };
+      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
       setStream(mediaStream);
-      if (videoRef.current) videoRef.current.srcObject = mediaStream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+        // On some mobile devices, we need to explicitly call play() after srcObject is set
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current?.play().catch(e => console.error("Video play failed:", e));
+        };
+      }
     } catch (err) { console.error('Camera access denied:', err); }
   };
 
@@ -388,65 +399,86 @@ export default function FlashmobAuditPage() {
                   <p className="body-text text-[12px]">Record a 20-second video of the surroundings.</p>
                 </div>
               </div>
-              {recording && (
-                <div className="flex items-center gap-2 text-[11px] font-bold text-destructive bg-destructive/10 border border-destructive/20 rounded-full px-3 py-1.5 animate-pulse">
-                  <div className="h-2 w-2 rounded-full bg-destructive" />
-                  REC
-                </div>
-              )}
             </div>
             <CardContent className="p-6 space-y-6">
               {/* Viewfinder */}
-              <div className="relative aspect-video bg-black rounded-2xl overflow-hidden border border-border/40">
-                <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
+              <div className="relative aspect-video bg-black rounded-2xl overflow-hidden border border-border/50 ring-1 ring-border/20 shadow-2xl">
+                <video
+                  ref={videoRef}
+                  className="h-full w-full object-cover"
+                  autoPlay
+                  muted
+                  playsInline
+                  onCanPlay={() => videoRef.current?.play().catch(() => { })}
+                />
 
-                {/* Countdown pill */}
-                <div className={cn(
-                  "absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-xl backdrop-blur-sm border text-sm font-bold tabular-nums transition-colors",
-                  recording
-                    ? "bg-destructive/80 border-destructive/40 text-white"
-                    : "bg-background/80 border-border/40 text-heading"
-                )}>
-                  <Clock className="h-3.5 w-3.5" />
-                  0:{countdown.toString().padStart(2, '0')}
+                {/* Overlays */}
+                <div className="absolute inset-x-0 top-0 p-4 flex justify-between items-start pointer-events-none">
+                  <div className="bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
+                    <span className="text-[10px] font-bold text-white uppercase tracking-widest leading-none">Live Feed</span>
+                  </div>
+                  
+                  <div className={cn(
+                    "flex items-center gap-2 px-3 py-1.5 rounded-lg backdrop-blur-md border text-xs font-bold tabular-nums transition-all duration-300",
+                    recording
+                      ? "bg-destructive text-white border-destructive shadow-lg shadow-destructive/20 scale-110"
+                      : "bg-black/40 border-white/10 text-white/80"
+                  )}>
+                    <Clock className={cn("h-3.5 w-3.5", recording && "animate-pulse")} />
+                    0:{countdown.toString().padStart(2, '0')}
+                  </div>
                 </div>
 
-                {/* Idle overlay hint */}
+                {/* Record Progress Ring around button? No, just keep it simple */}
                 {!recording && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[1px]">
-                    <div className="text-white text-center">
-                      <div className="h-14 w-14 mx-auto rounded-full bg-white/20 border-2 border-white/40 flex items-center justify-center mb-2">
-                        <Play className="h-6 w-6 text-white fill-current ml-1" />
-                      </div>
-                      <p className="text-[12px] font-medium opacity-80">Tap the button below to start</p>
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none transition-opacity">
+                    <div className="p-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+                       <Play className="h-8 w-8 text-white fill-white opacity-80" />
                     </div>
                   </div>
                 )}
+                
+                {/* Visual corners */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute top-4 left-4 h-4 w-4 border-t-2 border-l-2 border-white/40 rounded-tl-sm" />
+                  <div className="absolute top-4 right-4 h-4 w-4 border-t-2 border-r-2 border-white/40 rounded-tr-sm" />
+                  <div className="absolute bottom-4 left-4 h-4 w-4 border-b-2 border-l-2 border-white/40 rounded-bl-sm" />
+                  <div className="absolute bottom-4 right-4 h-4 w-4 border-b-2 border-r-2 border-white/40 rounded-br-sm" />
+                </div>
               </div>
 
               {/* Record / Stop button */}
-              <div className="flex flex-col items-center gap-3">
+              <div className="flex flex-col items-center gap-4 py-2">
                 {!recording ? (
-                  <Button
-                    size="lg"
-                    className="h-14 w-14 rounded-full bg-destructive hover:bg-destructive/90 shadow-lg shadow-destructive/30 p-0 flex items-center justify-center transition-transform active:scale-90"
+                  <button
+                    className="group relative h-20 w-20 flex items-center justify-center transition-all active:scale-95"
                     onClick={startRecording}
                   >
-                    <div className="h-5 w-5 rounded-full bg-white" />
-                  </Button>
+                    <div className="absolute inset-0 rounded-full border-4 border-muted/20 scale-100 group-hover:scale-110 transition-transform" />
+                    <div className="h-16 w-16 rounded-full bg-destructive flex items-center justify-center shadow-xl shadow-destructive/20 ring-4 ring-background">
+                       <div className="h-6 w-6 rounded-full bg-white opacity-90 group-hover:scale-110 transition-transform" />
+                    </div>
+                  </button>
                 ) : (
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="h-14 w-14 rounded-full border-2 border-destructive text-destructive hover:bg-destructive/5 p-0 flex items-center justify-center transition-transform active:scale-90"
+                  <button
+                    className="group relative h-20 w-20 flex items-center justify-center transition-all active:scale-95"
                     onClick={stopRecording}
                   >
-                    <StopCircle className="h-7 w-7 fill-destructive" />
-                  </Button>
+                    <div className="absolute inset-0 rounded-full border-4 border-destructive/20 animate-ping opacity-25" />
+                    <div className="h-16 w-16 rounded-full bg-background border-2 border-destructive flex items-center justify-center shadow-xl shadow-destructive/10 ring-4 ring-background">
+                       <StopCircle className="h-8 w-8 text-destructive fill-destructive" />
+                    </div>
+                  </button>
                 )}
-                <p className="text-[11px] text-muted-text">
-                  {recording ? `Recording... ${countdown}s` : 'Tap to start'}
-                </p>
+                <div className="flex flex-col items-center gap-1">
+                  <p className="text-[12px] font-semibold text-heading uppercase tracking-widest">
+                    {recording ? 'Stop Recording' : 'Start Recording'}
+                  </p>
+                  <p className="text-[10px] text-muted-text/60">
+                    {recording ? `Autosaves in ${countdown}s` : 'Max duration: 20 seconds'}
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -505,7 +537,14 @@ export default function FlashmobAuditPage() {
               <div className="flex flex-col items-center gap-5">
                 <div className="relative">
                   <div className="h-56 w-56 rounded-full overflow-hidden border-4 border-primary/20 shadow-xl bg-black">
-                    <video ref={videoRef} className="h-full w-full object-cover scale-x-[-1]" autoPlay muted playsInline />
+                    <video
+                      ref={videoRef}
+                      className="h-full w-full object-cover scale-x-[-1]"
+                      autoPlay
+                      muted
+                      playsInline
+                      onCanPlay={() => videoRef.current?.play().catch(() => { })}
+                    />
                   </div>
                   {/* Face guide ring */}
                   <div className="absolute inset-0 rounded-full border-2 border-dashed border-primary/30 pointer-events-none" />

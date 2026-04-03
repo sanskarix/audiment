@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { db, auth } from '@/lib/firebase';
 import { collection, query, where, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import { sendPasswordResetEmail } from 'firebase/auth';
@@ -18,6 +18,109 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { MoreHorizontal, Pencil, Trash2, Mail, UserPlus, Search, Filter } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import React from 'react';
+
+// Memoized Form Components to prevent lag
+const UserFormFields = React.memo(({ formData, setFormData, activeManagers, isEdit = false, selectedUser = null, handleResetPassword = null }: any) => {
+  return (
+    <div className="space-y-4 py-4 transition-opacity duration-150">
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="name" className="text-body font-normal">Full Name</Label>
+        <Input 
+          value={formData.name} 
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
+          required 
+          placeholder="John Doe" 
+          className="text-body h-11" 
+        />
+      </div>
+      
+      {!isEdit && (
+        <>
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-body font-normal">Email</Label>
+            <Input 
+              type="email" 
+              value={formData.email} 
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })} 
+              required 
+              placeholder="john@example.com" 
+              className="text-body h-11" 
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-body font-normal">Temporary Password</Label>
+            <Input 
+              type="password" 
+              value={formData.password} 
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })} 
+              required 
+              minLength={6} 
+              className="text-body h-11" 
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="role" className="text-body font-normal">Role</Label>
+            <Select value={formData.role} onValueChange={(val) => setFormData({ ...formData, role: val })}>
+              <SelectTrigger className="text-body h-11"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="MANAGER" className="text-body">Manager</SelectItem>
+                <SelectItem value="AUDITOR" className="text-body">Auditor</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </>
+      )}
+
+      {(formData.role === 'AUDITOR' || (isEdit && selectedUser?.role === 'AUDITOR')) && (
+        <>
+          <div className="space-y-2">
+            <Label htmlFor="managerId" className="text-body font-normal">Assigned Manager</Label>
+            <Select value={formData.managerId} onValueChange={(val) => setFormData({ ...formData, managerId: val })} required>
+              <SelectTrigger className="text-body h-11"><SelectValue placeholder="Select active manager" /></SelectTrigger>
+              <SelectContent>
+                {activeManagers.length === 0 ? (
+                  <SelectItem value="none" disabled className="text-muted-text">No active managers found</SelectItem>
+                ) : (
+                  activeManagers.map((m: any) => <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>)
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {isEdit && (
+            <div className="flex items-center justify-between p-3 border rounded-lg bg-muted/10 mt-4">
+              <div className="space-y-0.5">
+                <Label className="text-sm font-medium">Flashmob Access</Label>
+                <p className="text-xs text-muted-text">Allow auditor to record flashmob videos</p>
+              </div>
+              <Switch
+                checked={formData.hasFlashmobAccess}
+                onCheckedChange={(checked) => setFormData({ ...formData, hasFlashmobAccess: checked })}
+              />
+            </div>
+          )}
+        </>
+      )}
+
+      {isEdit && handleResetPassword && (
+        <div className="pt-4 border-t mt-6">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full text-xs gap-2 h-10"
+            onClick={() => handleResetPassword(selectedUser.email)}
+          >
+            <Mail className="h-3.5 w-3.5" />
+            Send Password Reset Email
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+});
+
+UserFormFields.displayName = 'UserFormFields';
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -103,8 +206,10 @@ export default function AdminUsersPage() {
 
   const handleToggleActive = async (userId: string, currentStatus: boolean) => {
     try {
-      await updateDoc(doc(db, 'users', userId), {
-        isActive: !currentStatus,
+      await fetch('/api/users', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid: userId, isActive: !currentStatus })
       });
     } catch (err) {
       console.error('Failed to toggle status', err);
@@ -200,34 +305,37 @@ export default function AdminUsersPage() {
 
 
 
-  // Logic: Manager must be active to appear in listener
-  const activeManagers = users.filter(
-    (u) => String(u.role ?? '').toUpperCase() === 'MANAGER' && u.isActive !== false
-  );
+  const activeManagers = useMemo(() => {
+    return users.filter(
+      (u) => String(u.role ?? '').toUpperCase() === 'MANAGER' && u.isActive !== false
+    );
+  }, [users]);
 
-  const filteredUsers = users.filter((u) => {
-    const matchesSearch = u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      u.role.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredUsers = useMemo(() => {
+    return users.filter((u) => {
+      const matchesSearch = u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        String(u.role ?? '').toLowerCase().includes(searchQuery.toLowerCase());
 
-    if (!matchesSearch) return false;
+      if (!matchesSearch) return false;
 
-    if (managerFilter !== 'all') {
-      if (u.role !== 'AUDITOR' || u.managerId !== managerFilter) return false;
-    }
+      if (managerFilter !== 'all') {
+        if (u.role !== 'AUDITOR' || u.managerId !== managerFilter) return false;
+      }
 
-    if (locationFilter !== 'all') {
-      const loc = locations.find(l => l.id === locationFilter);
-      if (!loc) return false;
-      const assignedIds = loc.assignedManagerIds || (loc.assignedManagerId ? [loc.assignedManagerId] : []);
+      if (locationFilter !== 'all') {
+        const loc = locations.find(l => l.id === locationFilter);
+        if (!loc) return false;
+        const assignedIds = loc.assignedManagerIds || (loc.assignedManagerId ? [loc.assignedManagerId] : []);
 
-      if (u.role === 'AUDITOR' && !assignedIds.includes(u.managerId)) return false;
-      if (u.role === 'MANAGER' && !assignedIds.includes(u.id)) return false;
-      if (u.role === 'ADMIN') return false;
-    }
+        if (u.role === 'AUDITOR' && !assignedIds.includes(u.managerId)) return false;
+        if (u.role === 'MANAGER' && !assignedIds.includes(u.id)) return false;
+        if (u.role === 'ADMIN') return false;
+      }
 
-    return true;
-  });
+      return true;
+    });
+  }, [users, searchQuery, managerFilter, locationFilter, locations]);
 
   return (
     <DashboardShell role="Admin">
@@ -248,50 +356,22 @@ export default function AdminUsersPage() {
                 <span>Add User</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] transition-all duration-150">
               <DialogHeader>
                 <DialogTitle className="font-semibold text-heading">Add User</DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleCreateUser} className="space-y-4 py-6">
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="name" className="text-body font-normal">Full Name</Label>
-                  <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required placeholder="John Doe" className="text-body" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-body font-normal">Email</Label>
-                  <Input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required placeholder="john@example.com" className="text-body" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-body font-normal">Temporary Password</Label>
-                  <Input type="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} required minLength={6} className="text-body" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="role" className="text-body font-normal">Role</Label>
-                  <Select value={formData.role} onValueChange={(val) => setFormData({ ...formData, role: val })}>
-                    <SelectTrigger className="text-body"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="MANAGER" className="text-body">Manager</SelectItem>
-                      <SelectItem value="AUDITOR" className="text-body">Auditor</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                {formData.role === 'AUDITOR' && (
-                  <div className="space-y-2">
-                    <Label htmlFor="managerId" className="text-body font-normal">Manager</Label>
-                    <Select value={formData.managerId} onValueChange={(val) => setFormData({ ...formData, managerId: val })} required>
-                      <SelectTrigger className="text-body"><SelectValue placeholder="Select active manager" /></SelectTrigger>
-                      <SelectContent>
-                        {activeManagers.length === 0 ? (
-                          <SelectItem value="none" disabled className="text-muted-text">No active managers found</SelectItem>
-                        ) : (
-                          activeManagers.map(m => <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>)
-                        )}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-                {error && <p className="text-sm text-destructive">{error}</p>}
-                <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Adding...' : 'Add User'}</Button></DialogFooter>
+              <form onSubmit={handleCreateUser}>
+                <UserFormFields 
+                  formData={formData} 
+                  setFormData={setFormData} 
+                  activeManagers={activeManagers} 
+                />
+                {error && <p className="text-sm text-destructive mb-4">{error}</p>}
+                <DialogFooter>
+                  <Button type="submit" disabled={loading} className="w-full h-11 font-medium transition-all active:scale-[0.98]">
+                    {loading ? 'Adding...' : 'Add User'}
+                  </Button>
+                </DialogFooter>
               </form>
             </DialogContent>
           </Dialog>
@@ -421,57 +501,28 @@ export default function AdminUsersPage() {
 
         {/* Edit Dialog */}
         <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[425px] transition-all duration-150">
             <DialogHeader>
               <DialogTitle className="font-semibold text-heading">Edit User</DialogTitle>
               <DialogDescription className="text-muted-text">Update the details for {selectedUser?.name}.</DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleEditUser} className="space-y-4">
-              <div className="space-y-2">
-                <Label className="text-body font-normal">Full Name</Label>
-                <Input value={editFormData.name} onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })} required className="text-body" />
-              </div>
-              {selectedUser?.role === 'AUDITOR' && (
-                <>
-                  <div className="space-y-2">
-                    <Label className="text-body font-normal">Assigned Manager</Label>
-                    <Select value={editFormData.managerId} onValueChange={(val) => setEditFormData({ ...editFormData, managerId: val })} required>
-                      <SelectTrigger className="text-body"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {activeManagers.map(m => <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="flex items-center justify-between p-3 border rounded-lg bg-muted/10">
-                    <div className="space-y-0.5">
-                      <Label className="text-sm font-medium">Flashmob Access</Label>
-                      <p className="text-xs text-muted-text">Allow auditor to record flashmob videos</p>
-                    </div>
-                    <Switch
-                      checked={editFormData.hasFlashmobAccess}
-                      onCheckedChange={(checked) => setEditFormData({ ...editFormData, hasFlashmobAccess: checked })}
-                    />
-                  </div>
-                </>
-              )}
-
-              <div className="pt-4 border-t">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full text-xs gap-2"
-                  onClick={() => handleResetPassword(selectedUser.email)}
-                >
-                  <Mail className="h-3.5 w-3.5" />
-                  Send Password Reset Email
-                </Button>
-              </div>
-
-              {error && <p className="text-sm text-destructive">{error}</p>}
+            <form onSubmit={handleEditUser}>
+              <UserFormFields 
+                formData={editFormData} 
+                setFormData={setEditFormData} 
+                activeManagers={activeManagers} 
+                isEdit={true}
+                selectedUser={selectedUser}
+                handleResetPassword={handleResetPassword}
+              />
+              
+              {error && <p className="text-sm text-destructive mb-4">{error}</p>}
               <DialogFooter>
                 <div className="flex w-full gap-3 pt-2">
-                  <Button type="button" variant="ghost" className="flex-1" onClick={() => setIsEditOpen(false)}>Cancel</Button>
-                  <Button type="submit" disabled={loading} className="flex-1 font-medium">{loading ? 'Updating...' : 'Save Changes'}</Button>
+                  <Button type="button" variant="ghost" className="flex-1 h-11" onClick={() => setIsEditOpen(false)}>Cancel</Button>
+                  <Button type="submit" disabled={loading} className="flex-1 h-11 font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-[0.98]">
+                    {loading ? 'Updating...' : 'Save Changes'}
+                  </Button>
                 </div>
               </DialogFooter>
             </form>

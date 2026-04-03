@@ -20,6 +20,12 @@ import {
   CardTitle,
   CardDescription
 } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -46,6 +52,7 @@ export default function AuditReportDetailPage() {
   const [responses, setResponses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const reportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -186,6 +193,26 @@ export default function AuditReportDetailPage() {
             .uppercase { text-transform: uppercase !important; }
           `;
           clonedDoc.head.appendChild(style);
+
+          // AGGRESSIVE COLOR FIX: html2canvas collapses on oklch. 
+          // We must find and replace all oklch/oklab with hex/rgb in the entire cloned DOM styles.
+          const allElements = clonedDoc.querySelectorAll('*');
+          allElements.forEach((el: any) => {
+            const style = el.style;
+            if (style) {
+              // This is a simplified approach, in a real app we'd need a more robust parser
+              // But for this project, we can target common properties
+              ['color', 'backgroundColor', 'borderColor', 'fill', 'stroke'].forEach(prop => {
+                const val = style[prop];
+                if (val && (val.includes('oklch') || val.includes('oklab'))) {
+                  // Fallback to a safe color if oklch is detected
+                  style[prop] = prop === 'color' ? '#121317' : 
+                               prop === 'backgroundColor' ? '#ffffff' : 
+                               prop === 'borderColor' ? '#E5E7EB' : val;
+                }
+              });
+            }
+          });
 
           // Also forcibly strip computed SVG styles that might have been copied inline 
           const svgs = clonedDoc.querySelectorAll('svg');
@@ -334,7 +361,11 @@ export default function AuditReportDetailPage() {
                       {resp.photoUrls && resp.photoUrls.length > 0 && (
                         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 mt-6 pt-6 border-t border-border/30">
                           {resp.photoUrls.map((url: string, pi: number) => (
-                            <div key={pi} className="group relative aspect-square rounded-lg overflow-hidden border border-border/50 bg-muted/5 transition-all hover:scale-[1.02]">
+                            <div 
+                              key={pi} 
+                              className="group relative aspect-square rounded-lg overflow-hidden border border-border/50 bg-muted/5 transition-all hover:scale-[1.02] cursor-pointer"
+                              onClick={() => setSelectedImage(url)}
+                            >
                               <img src={url} alt={`Evidence ${pi + 1}`} className="h-full w-full object-cover" />
                               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <ImageIcon className="h-6 w-6 text-white" />
@@ -361,7 +392,23 @@ export default function AuditReportDetailPage() {
             </div>
           </div>
         </div>
-      </div>
+        </div>
+
+        {/* Image Modal */}
+        <Dialog open={!!selectedImage} onOpenChange={(open) => !open && setSelectedImage(null)}>
+          <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-none bg-transparent shadow-none flex items-center justify-center">
+            <DialogTitle className="sr-only">Evidence Photo</DialogTitle>
+            <div className="relative w-full h-full flex items-center justify-center p-4">
+              {selectedImage && (
+                <img 
+                  src={selectedImage} 
+                  alt="Full-size evidence" 
+                  className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl animate-in zoom-in-95 duration-200" 
+                />
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
     </DashboardShell>
   );
 }

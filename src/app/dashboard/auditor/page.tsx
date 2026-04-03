@@ -198,53 +198,76 @@ export default function AuditorDashboardPage() {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-6">
-              {filteredAudits.map((a) => (
-                <Card key={a.id} className="standard-card bg-background border-border/40 hover:border-primary/20 transition-all duration-200 overflow-hidden">
-                  <div className="h-1 w-full bg-muted/20 relative">
-                    <div
-                      className={cn(
-                        "h-full transition-all duration-1000",
-                        a.status === 'in_progress' ? "bg-warning w-[60%]" : "bg-primary w-[20%]"
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-10">
+              {filteredAudits.map((a) => {
+                const isFuture = a.scheduledDate?.toDate() > new Date();
+                return (
+                  <Card key={a.id} className="standard-card flex flex-col h-full border-border/40 hover:border-primary/20 transition-all duration-300">
+                    <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2">
+                          {getStatusBadge(a.status)}
+                          <span className="text-[10px] font-medium text-muted-text/30 tracking-wider uppercase">ID-{a.id.substring(0, 8)}</span>
+                        </div>
+                        <CardTitle className="text-[17px] font-semibold text-heading leading-tight line-clamp-2">
+                          {a.templateTitle}
+                        </CardTitle>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="flex-1 space-y-4">
+                      <div className="space-y-2.5">
+                        <div className="flex items-center gap-2.5 text-sm text-body">
+                          <MapPin className="h-4 w-4 text-muted-text shrink-0 opacity-60" />
+                          <span className="truncate">{a.locationName}</span>
+                        </div>
+                        <div className="flex items-center gap-2.5 text-sm text-body">
+                          <FileCheck className="h-4 w-4 text-muted-text shrink-0 opacity-60" />
+                          <span className="truncate">{a.templateTitle}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/30">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-1.5 text-[10px] font-semibold text-muted-text/50 uppercase tracking-widest">
+                            <CalendarIcon className="h-3 w-3" />
+                            Scheduled
+                          </div>
+                          <div className="text-[13px] text-heading font-semibold tabular-nums">
+                            {format(a.scheduledDate?.toDate(), 'MMM d, yyyy')}
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-1.5 text-[10px] font-semibold text-muted-text/50 uppercase tracking-widest">
+                            <Clock className="h-3 w-3" />
+                            Deadline
+                          </div>
+                          <div className={cn(
+                            "text-[13px] font-semibold tabular-nums",
+                            a.deadline?.toDate() < new Date() ? "text-destructive" : "text-heading"
+                          )}>
+                            {format(a.deadline?.toDate(), 'MMM d, yyyy')}
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                    <CardFooter className="pt-4 border-t border-border/10 bg-muted/5">
+                      {isFuture ? (
+                        <Button disabled className="w-full h-11 bg-muted/50 text-muted-text/50 border-border/20 cursor-not-allowed">
+                          <Clock className="mr-2 h-4 w-4" />
+                          Early Access Locked
+                        </Button>
+                      ) : (
+                        <Button className="w-full h-11 font-semibold text-[14px] group shadow-lg shadow-primary/5 transition-all hover:translate-y-[-1px] active:translate-y-[1px]" asChild>
+                          <Link href={`/dashboard/auditor/audits/${a.id}`}>
+                            {a.status === 'in_progress' ? 'Resume Audit' : 'Start Audit'}
+                            <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                          </Link>
+                        </Button>
                       )}
-                    />
-                  </div>
-                  <div className="p-4 md:p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      {getStatusBadge(a.status)}
-                      <span className="text-[10px] font-medium text-muted-text/40 tracking-wider">ID-{a.id.substring(0, 8)}</span>
-                    </div>
-                    <h4 className="text-[15px] font-semibold text-heading leading-snug mb-1.5">
-                      {a.templateTitle}
-                    </h4>
-                    <div className="flex items-center gap-1.5 text-[12px] font-medium text-muted-text/60 mb-4">
-                      <MapPin className="h-3.5 w-3.5 shrink-0" />
-                      <span className="truncate">{a.locationName}</span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-[11px] py-3 border-y border-border/40 mb-4">
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-muted-text/60 font-medium">Scheduled</span>
-                        <span className="text-heading font-semibold">{a.scheduledDate?.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
-                      </div>
-                      <div className="flex flex-col gap-0.5 text-right">
-                        <span className="text-muted-text/60 font-medium">Deadline</span>
-                        <span className={cn(
-                          "font-semibold",
-                          a.deadline?.toDate() < new Date() ? "text-destructive" : "text-heading"
-                        )}>{a.deadline?.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
-                      </div>
-                    </div>
-
-                    <Button className="w-full h-11 font-semibold text-[13px] group" asChild>
-                      <Link href={`/dashboard/auditor/audits/${a.id}`}>
-                        {a.status === 'in_progress' ? 'Resume' : 'Start Audit'}
-                        <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                    </Button>
-                  </div>
-                </Card>
-              ))}
+                    </CardFooter>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </div>

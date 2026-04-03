@@ -16,6 +16,16 @@ import {
   Timestamp,
   limit
 } from 'firebase/firestore';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Label } from '@/components/ui/label';
@@ -71,7 +81,10 @@ export default function AuditExecutionPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
+  const [showExitDialog, setShowExitDialog] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const isDirty = Object.keys(responses).length > 0;
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -82,6 +95,17 @@ export default function AuditExecutionPage() {
       } catch (e) { }
     }
   }, []);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isDirty]);
 
   useEffect(() => {
     if (!session?.uid || !auditId) return;
@@ -419,10 +443,16 @@ export default function AuditExecutionPage() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => saveProgress(false).then(() => router.push('/dashboard/auditor'))}
+              onClick={() => {
+                if (isDirty) {
+                  setShowExitDialog(true);
+                } else {
+                  router.push('/dashboard/auditor');
+                }
+              }}
               className="gap-2 font-medium text-muted-text hover:text-destructive hover:bg-destructive/10  tracking-widest text-xs"
             >
-              <X className="h-4 w-4" /> Abort
+              <ChevronLeft className="h-4 w-4" /> Back to Dashboard
             </Button>
             <div className="text-center group cursor-default">
               <p className="text-[10px] font-normal  tracking-widest text-muted-text opacity-60 leading-none mb-1 group-hover:opacity-100 transition-opacity">
@@ -634,6 +664,39 @@ export default function AuditExecutionPage() {
           )}
         </div>
       </footer>
+
+      {/* Unsaved Changes Guard Dialog */}
+      <AlertDialog open={showExitDialog} onOpenChange={setShowExitDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-semibold text-heading">Unsaved Progress</AlertDialogTitle>
+            <AlertDialogDescription className="text-body font-normal">
+              You have completed {Object.keys(responses).length} questions. Would you like to save your progress before leaving?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2 sm:gap-0">
+            <AlertDialogCancel className="font-medium h-11">Continue Auditing</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => {
+                setShowExitDialog(false);
+                router.push('/dashboard/auditor');
+              }}
+              className="bg-muted hover:bg-muted/80 text-muted-foreground h-11 font-medium border-0"
+            >
+              Exit Without Saving
+            </AlertDialogAction>
+            <AlertDialogAction 
+              onClick={() => {
+                setShowExitDialog(false);
+                saveProgress(false).then(() => router.push('/dashboard/auditor'));
+              }}
+              className="bg-primary hover:bg-primary/90 h-11 font-medium"
+            >
+              Save and Leave
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -56,7 +56,7 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
   try {
     const body = await req.json();
-    const { uid, name, managerId, hasFlashmobAccess } = body;
+    const { uid, name, managerId, hasFlashmobAccess, isActive } = body;
 
     if (!uid) {
       return NextResponse.json({ error: 'Missing user UID' }, { status: 400 });
@@ -72,6 +72,10 @@ export async function PATCH(req: Request) {
     if (name) updateData.name = name;
     if (managerId !== undefined) updateData.managerId = managerId;
     if (hasFlashmobAccess !== undefined) updateData.hasFlashmobAccess = hasFlashmobAccess;
+    if (isActive !== undefined) {
+      updateData.isActive = isActive;
+      await adminAuth.updateUser(uid, { disabled: !isActive });
+    }
 
     await adminDb.collection('users').doc(uid).update(updateData);
 
@@ -98,11 +102,11 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: 'Cannot delete admin account' }, { status: 403 });
     }
 
-    // 1. Delete from Firebase Auth
-    await adminAuth.deleteUser(uid);
-
-    // 2. Delete from Firestore
-    await adminDb.collection('users').doc(uid).delete();
+    // Execute both delete operations in parallel
+    await Promise.all([
+      adminAuth.deleteUser(uid),
+      adminDb.collection('users').doc(uid).delete()
+    ]);
 
     return NextResponse.json({ success: true });
   } catch (err: any) {

@@ -42,6 +42,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('hygiene');
   const [questions, setQuestions] = useState<QuestionDraft[]>([]);
+  const [expandedQuestion, setExpandedQuestion] = useState<string | undefined>();
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -125,6 +126,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
       ...questions,
       { questionText: '', questionType: 'yes_no', severity: 'low', requiresPhoto: false, order: nextOrder }
     ]);
+    setExpandedQuestion(nextOrder.toString());
     scrollToQuestion(nextOrder);
   };
 
@@ -376,9 +378,11 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
             </div>
           ) : (
             <Accordion
-              type="multiple"
+              type="single"
+              collapsible
               className="w-full space-y-3"
-              defaultValue={questions.map(q => q.order.toString())}
+              value={expandedQuestion}
+              onValueChange={setExpandedQuestion}
             >
               {questions.map((q, idx) => (
                 <AccordionItem

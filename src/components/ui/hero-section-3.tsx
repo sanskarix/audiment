@@ -57,12 +57,12 @@ export function HeroSection() {
                                 </h1>
 
                                 <p className="mx-auto mt-6 max-w-5xl text-pretty text-xl text-neutral-600">
-                                    One platform for audits, evidence capture, corrective actions, and real-time compliance across every location — replacing paper checklists, WhatsApp photos, and Excel trackers for good.
+                                    One platform for audits, evidence capture, corrective actions, and real-time compliance across every location – replacing paper checklists, WhatsApp photos, and Excel trackers for good.
                                 </p>
 
                                 <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
                                     <Button asChild size="lg" className="rounded-full px-8 h-12 text-base">
-                                        <Link href="/login">Start Free</Link>
+                                        <Link href="#contact">Book a Call</Link>
                                     </Button>
                                     <Button asChild size="lg" variant="outline" className="rounded-full px-8 h-12 text-base">
                                         <Link href="#demo">See It In Action</Link>
@@ -224,16 +224,16 @@ const HeroHeader = () => {
                                     asChild
                                     size="sm"
                                     className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="/login">
-                                        <span>Start Free</span>
+                                    <Link href="#contact">
+                                        <span>Book a Call</span>
                                     </Link>
                                 </Button>
                                 <Button
                                     asChild
                                     size="sm"
                                     className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                    <Link href="/login">
-                                        <span>Start Free</span>
+                                    <Link href="#contact">
+                                        <span>Book a Call</span>
                                     </Link>
                                 </Button>
                             </div>

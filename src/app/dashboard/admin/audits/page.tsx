@@ -62,6 +62,7 @@ export default function AdminAuditsPage() {
   const [isSurprise, setIsSurprise] = useState(false);
   const [recurring, setRecurring] = useState<'none' | 'daily' | 'weekly' | 'monthly'>('none');
   const [recurringDay, setRecurringDay] = useState<number>(1);
+  const [repeatUntil, setRepeatUntil] = useState<Date>();
   const [open, setOpen] = useState(false);
   const [editingAuditId, setEditingAuditId] = useState<string | null>(null);
 
@@ -112,6 +113,9 @@ export default function AdminAuditsPage() {
 
     setLoading(true);
     try {
+      console.log('DEBUG: Publishing audit - Session UID:', session.uid);
+      console.log('DEBUG: Selected Manager UID:', selectedManager);
+
       const template = templates.find(t => t.id === selectedTemplate);
       const location = locations.find(l => l.id === selectedLocation);
 
@@ -142,7 +146,19 @@ export default function AdminAuditsPage() {
         auditData.maxPossibleScore = 0;
         auditData.scorePercentage = 0;
 
-        const occurrences = recurring === 'none' ? 1 : 5;
+        let occurrences = 1;
+        if (recurring !== 'none' && scheduledDate && repeatUntil) {
+          const diffTime = Math.abs(repeatUntil.getTime() - scheduledDate.getTime());
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          
+          if (recurring === 'daily') occurrences = diffDays + 1;
+          else if (recurring === 'weekly') occurrences = Math.floor(diffDays / 7) + 1;
+          else if (recurring === 'monthly') occurrences = Math.floor(diffDays / 30) + 1;
+          
+          // Safety cap
+          occurrences = Math.min(occurrences, 30);
+        }
+
         let currentDate = new Date(scheduledDate);
         let currentDeadline = new Date(deadline);
         const durationMs = currentDeadline.getTime() - currentDate.getTime();
@@ -199,45 +215,56 @@ export default function AdminAuditsPage() {
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'published':
-        return (
-          <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">
-            Published
-          </Badge>
-        );
-      case 'assigned':
-        return (
-          <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">
-            Assigned
-          </Badge>
-        );
-      case 'in_progress':
-        return (
-          <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">
-            Active
-          </Badge>
-        );
-      case 'completed':
-        return (
-          <Badge variant="secondary" className="h-6 rounded-full bg-success/10 text-success border-none px-2.5 text-[12px] font-normal">
-            Completed
-          </Badge>
-        );
-      case 'missed':
-        return (
-          <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[12px] font-normal">
-            Missed
-          </Badge>
-        );
-      default:
+  const getStatusBadge = (audit: any) => {
+    const now = new Date();
+    const scheduledDate = audit.scheduledDate?.toDate();
+    const deadline = audit.deadline?.toDate();
+    const isDeadlineHit = audit.status === 'missed' || (audit.status !== 'completed' && deadline && deadline < now);
+
+    if (audit.status === 'completed') {
+      return (
+        <Badge variant="secondary" className="h-6 rounded-full bg-success/10 text-success border-none px-2.5 text-[12px] font-normal">
+          Completed
+        </Badge>
+      );
+    }
+
+    if (isDeadlineHit) {
+      return (
+        <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[12px] font-normal">
+          Deadline Hit
+        </Badge>
+      );
+    }
+
+    if (audit.status === 'in_progress') {
+      return (
+        <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">
+          In Progress
+        </Badge>
+      );
+    }
+
+    if ((audit.status === 'published' || audit.status === 'assigned')) {
+      if (scheduledDate && scheduledDate > now) {
         return (
           <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-2.5 text-[12px] font-normal">
-            {status}
+            Scheduled
           </Badge>
         );
+      }
+      return (
+        <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">
+          Pending
+        </Badge>
+      );
     }
+
+    return (
+      <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-2.5 text-[12px] font-normal">
+        {audit.status}
+      </Badge>
+    );
   };
 
   const filteredAudits = audits.filter((audit) => {
@@ -446,6 +473,21 @@ export default function AdminAuditsPage() {
                               </Select>
                             </div>
                           )}
+
+                          <div className="flex flex-col gap-2 pt-3">
+                            <Label className="text-[12px] font-semibold text-muted-text/80">Repeat Until</Label>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-background", !repeatUntil && "text-muted-text")}>
+                                  <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
+                                  {repeatUntil ? format(repeatUntil, "PPP") : "Pick a date"}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
+                                <Calendar mode="single" selected={repeatUntil} onSelect={setRepeatUntil} disabled={(date: any) => scheduledDate ? date < scheduledDate : false} initialFocus />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -559,23 +601,31 @@ export default function AdminAuditsPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredAudits.map((a) => (
-                  <TableRow key={a.id} className="standard-table-row group">
-                    <TableCell className="standard-table-cell">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
-                        {a.recurring && a.recurring !== 'none' && (
-                          <div className="h-5 rounded-full bg-primary/10 text-primary px-2 flex items-center gap-1.5 w-fit text-[11px] font-normal">
-                            <Clock className="w-2.5 h-2.5" />
-                            <span className="capitalize">{a.recurring}</span>
-                          </div>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="standard-table-cell text-[14px] font-normal text-body">
-                      {a.locationName}
-                    </TableCell>
-                    <TableCell className="standard-table-cell">{getStatusBadge(a.status)}</TableCell>
+                filteredAudits.map((a) => {
+                  const now = new Date();
+                  const deadline = a.deadline?.toDate();
+                  const isDeadlineHit = a.status === 'missed' || (a.status !== 'completed' && deadline && deadline < now);
+                  
+                  return (
+                    <TableRow key={a.id} className={cn(
+                      "standard-table-row group",
+                      isDeadlineHit && "bg-destructive/5 hover:bg-destructive/10"
+                    )}>
+                      <TableCell className="standard-table-cell">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
+                          {a.recurring && a.recurring !== 'none' && (
+                            <div className="h-5 rounded-full bg-primary/10 text-primary px-2 flex items-center gap-1.5 w-fit text-[11px] font-normal">
+                              <Clock className="w-2.5 h-2.5" />
+                              <span className="capitalize">{a.recurring}</span>
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="standard-table-cell text-[14px] font-normal text-body">
+                        {a.locationName}
+                      </TableCell>
+                      <TableCell className="standard-table-cell">{getStatusBadge(a)}</TableCell>
                     <TableCell className="standard-table-cell">
                       <div className="flex flex-col gap-1.5 font-normal">
                         <span className="text-[14px] font-normal text-body">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
@@ -630,8 +680,9 @@ export default function AdminAuditsPage() {
                         </DropdownMenu>
                       )}
                     </TableCell>
-                  </TableRow>
-                ))
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </Table>

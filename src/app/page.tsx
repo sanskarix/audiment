@@ -11,6 +11,7 @@ import { Footer } from "@/components/ui/modem-animated-footer";
 import { StickyFeatureSection } from "@/components/ui/sticky-scroll-cards-section";
 import { FAQAccordion } from "@/components/ui/faq-accordion";
 import { TestimonialsSection } from "@/components/ui/testimonial-v2";
+import { ContactSection } from "@/components/ui/contact-section";
 
 // ─── How It Works Steps (7 steps per guidelines §3) ───────────────────────────
 const steps = [
@@ -27,7 +28,7 @@ const steps = [
   {
     number: "03",
     title: "Schedule or Publish",
-    desc: "Set recurring schedules or push a surprise audit — invisible to managers until the auditor is at the door.",
+    desc: "Set recurring schedules or push a surprise audit – invisible to managers until the auditor is at the door.",
   },
   {
     number: "04",
@@ -47,7 +48,7 @@ const steps = [
   {
     number: "07",
     title: "Export PDF Reports",
-    desc: "One-click PDF with all responses, photos, scores, GPS, and corrective action history — ready for FSSAI or franchise compliance reviews.",
+    desc: "One-click PDF with all responses, photos, scores, GPS, and corrective action history – ready for FSSAI or franchise compliance reviews.",
   },
 ];
 
@@ -96,7 +97,7 @@ const useCases = [
   {
     icon: Utensils,
     title: "QSR & Restaurant Chains",
-    desc: "Run daily pre-opening audits across every outlet. Freezer temperature failures trigger immediate alerts — not end-of-week reports.",
+    desc: "Run daily pre-opening audits across every outlet. Freezer temperature failures trigger immediate alerts – not end-of-week reports.",
     checks: "Kitchen hygiene, food storage temperatures, staff grooming, equipment status, FSSAI compliance.",
   },
   {
@@ -114,7 +115,7 @@ const useCases = [
   {
     icon: Warehouse,
     title: "Manufacturing & Warehousing",
-    desc: "Safety checks, fire exit clearance, and pest control on recurring schedules. Critical failures escalate instantly — not the next audit cycle.",
+    desc: "Safety checks, fire exit clearance, and pest control on recurring schedules. Critical failures escalate instantly – not the next audit cycle.",
     checks: "Fire safety, pest control, equipment maintenance, PPE compliance, loading dock organisation.",
   },
   {
@@ -201,7 +202,7 @@ export default function Home() {
               <span className="text-neutral-400">ground truth.</span>
             </h2>
             <p className="text-xl text-neutral-500 leading-relaxed">
-              Live photos, GPS location, and server-verified timestamps on every audit. Nothing can be faked — every failure becomes a task that must be closed with proof.
+              Live photos, GPS location, and server-verified timestamps on every audit. Nothing can be faked – every failure becomes a task that must be closed with proof.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -566,10 +567,10 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
             <Link
-              href="/login"
+              href="#contact"
               className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
             >
-              Start Free
+              Book a Call
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
@@ -585,6 +586,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Contact Section (§2) */}
+      <ContactSection />
 
       {/* Footer */}
       <Footer

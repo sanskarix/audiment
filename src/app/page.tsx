@@ -140,6 +140,29 @@ const techFeatures = [
   { icon: Lock, title: "Secure by design", desc: "Server-side security rules. No client-side data manipulation possible." },
 ];
 
+const problemCards = [
+  {
+    number: "01",
+    title: "Paper checklists that nobody reviews",
+    desc: "Easy to fake, impossible to verify. No photos, no proof, no follow-up.",
+  },
+  {
+    number: "02",
+    title: "No proof the auditor was actually there",
+    desc: "Without GPS verification and live evidence, you're auditing on trust.",
+  },
+  {
+    number: "03",
+    title: "Corrective actions lost in email threads",
+    desc: "A failure gets noted. An email is sent. The same issue appears next audit.",
+  },
+  {
+    number: "04",
+    title: "No visibility into patterns across locations",
+    desc: "A branch declining over 5 audits is a systemic problem. You'd never see it in a spreadsheet.",
+  },
+];
+
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-white font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
@@ -158,34 +181,17 @@ export default function Home() {
               When you ran one location, you saw everything. Now you have 5, 20, or 50 – and you rely on managers to tell you the truth.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                title: "Paper checklists that nobody reviews",
-                desc: "Easy to fake, impossible to verify. No photos, no proof, no follow-up.",
-              },
-              {
-                title: "No proof the auditor was actually there",
-                desc: "Without GPS verification and live evidence, you're auditing on trust.",
-              },
-              {
-                title: "Corrective actions lost in email threads",
-                desc: "A failure gets noted. An email is sent. The same issue appears next audit.",
-              },
-              {
-                title: "No visibility into patterns across locations",
-                desc: "A branch declining over 5 audits is a systemic problem. You'd never see it in a spreadsheet.",
-              },
-            ].map((card, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {problemCards.map((card, i) => (
               <div
                 key={i}
-                className="p-8 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/8 transition-colors duration-300"
+                className="relative p-8 rounded-2xl border border-white/8 bg-white/[0.03] hover:bg-white/[0.06] transition-all duration-300 overflow-hidden group"
               >
-                <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center mb-6">
-                  <span className="text-red-400 font-bold text-sm">!</span>
-                </div>
-                <h3 className="text-xl font-semibold text-white mb-3">{card.title}</h3>
-                <p className="text-neutral-400 leading-relaxed">{card.desc}</p>
+                {/* Subtle top accent line */}
+                <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-red-500/40 to-transparent" />
+                <span className="text-xs font-semibold tracking-[0.15em] text-red-500/60 mb-5 block">{card.number}</span>
+                <h3 className="text-[17px] font-semibold text-white mb-3 leading-snug">{card.title}</h3>
+                <p className="text-neutral-400 leading-relaxed text-[15px]">{card.desc}</p>
               </div>
             ))}
           </div>
@@ -204,7 +210,7 @@ export default function Home() {
               Live photos, GPS location, and server-verified timestamps on every audit. Nothing can be faked — every failure becomes a task that must be closed with proof.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
             {[
               {
                 icon: Camera,
@@ -224,13 +230,13 @@ export default function Home() {
             ].map((pillar, i) => (
               <div
                 key={i}
-                className="p-8 rounded-2xl bg-neutral-50 border border-neutral-100 hover:border-neutral-200 transition-colors duration-300"
+                className="p-8 rounded-2xl bg-neutral-50 border border-neutral-100 hover:border-neutral-200 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300"
               >
-                <div className="w-12 h-12 rounded-2xl bg-neutral-900 flex items-center justify-center mb-6">
-                  <pillar.icon className="w-6 h-6 text-white" />
+                <div className="w-11 h-11 rounded-xl bg-neutral-900 flex items-center justify-center mb-6 shadow-[0_2px_8px_rgba(0,0,0,0.18)]">
+                  <pillar.icon className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold text-neutral-900 mb-3">{pillar.title}</h3>
-                <p className="text-neutral-500 leading-relaxed">{pillar.desc}</p>
+                <h3 className="text-[18px] font-semibold text-neutral-900 mb-3">{pillar.title}</h3>
+                <p className="text-neutral-500 leading-relaxed text-[15px]">{pillar.desc}</p>
               </div>
             ))}
           </div>
@@ -246,17 +252,17 @@ export default function Home() {
               <span className="text-neutral-400">The Full Audit Lifecycle</span>
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {steps.map((step, i) => (
               <div
                 key={i}
-                className={`bg-white rounded-2xl p-8 border border-neutral-100 hover:border-neutral-200 hover:shadow-lg hover:shadow-neutral-200/30 transition-all duration-300 group ${i === 6 ? "md:col-span-2 lg:col-span-3 xl:col-span-1" : ""}`}
+                className={`bg-white rounded-2xl p-8 border border-neutral-100 hover:border-neutral-200 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300 group ${i === 6 ? "md:col-span-2 lg:col-span-3 xl:col-span-1" : ""}`}
               >
-                <span className="text-5xl font-bold text-neutral-100 group-hover:text-neutral-200 transition-colors duration-300 tracking-tighter block mb-4">
+                <span className="text-[3.5rem] font-bold text-neutral-100 group-hover:text-neutral-150 transition-colors duration-300 tracking-tighter block mb-4 leading-none tabular-nums">
                   {step.number}
                 </span>
-                <h3 className="text-xl font-semibold text-neutral-900 mb-3">{step.title}</h3>
-                <p className="text-neutral-500 leading-relaxed">{step.desc}</p>
+                <h3 className="text-[17px] font-semibold text-neutral-900 mb-3 leading-snug">{step.title}</h3>
+                <p className="text-neutral-500 leading-relaxed text-[15px]">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -278,7 +284,7 @@ export default function Home() {
                 icon: Crown,
                 role: "Admin",
                 subtitle: "Owner / Head Office",
-                color: "bg-neutral-900",
+                gradient: "bg-gradient-to-br from-neutral-900 to-neutral-800",
                 items: [
                   "Full visibility across all locations",
                   "Create and manage audit blueprints with scoring logic",
@@ -291,7 +297,7 @@ export default function Home() {
                 icon: Users,
                 role: "Manager",
                 subtitle: "Branch / Regional Level",
-                color: "bg-neutral-700",
+                gradient: "bg-gradient-to-br from-neutral-700 to-neutral-600",
                 items: [
                   "Receives published audits and assigns them to auditors",
                   "Responsible for fixing failed items with photo proof",
@@ -303,7 +309,7 @@ export default function Home() {
                 icon: ClipboardList,
                 role: "Auditor",
                 subtitle: "Field Level",
-                color: "bg-neutral-500",
+                gradient: "bg-gradient-to-br from-neutral-500 to-neutral-400",
                 items: [
                   "Mobile-first interface, one question at a time",
                   "Captures mandatory photos, videos, GPS, and notes",
@@ -314,20 +320,20 @@ export default function Home() {
             ].map((role, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-neutral-100 overflow-hidden hover:shadow-lg hover:shadow-neutral-200/30 transition-all duration-300"
+                className="rounded-2xl border border-neutral-100 overflow-hidden hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300"
               >
-                <div className={`${role.color} p-8`}>
-                  <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-4">
-                    <role.icon className="w-6 h-6 text-white" />
+                <div className={`${role.gradient} p-8`}>
+                  <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center mb-4">
+                    <role.icon className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-white">{role.role}</h3>
-                  <p className="text-white/60 text-sm mt-1">{role.subtitle}</p>
+                  <p className="text-white/55 text-sm mt-1">{role.subtitle}</p>
                 </div>
                 <div className="bg-white p-8">
                   <ul className="space-y-3">
                     {role.items.map((item, j) => (
-                      <li key={j} className="flex items-start gap-3 text-neutral-600 text-base leading-relaxed">
-                        <CheckCircle2 className="w-4 h-4 text-neutral-400 flex-shrink-0 mt-0.5" />
+                      <li key={j} className="flex items-start gap-3 text-neutral-600 text-[15px] leading-relaxed">
+                        <CheckCircle2 className="w-4 h-4 text-neutral-300 flex-shrink-0 mt-0.5" />
                         {item}
                       </li>
                     ))}
@@ -351,22 +357,22 @@ export default function Home() {
               <span className="text-neutral-400">Multi-Location Operation</span>
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {useCases.map((uc, i) => (
               <div
                 key={i}
-                className="bg-white rounded-2xl p-8 border border-neutral-100 hover:border-neutral-200 hover:shadow-lg hover:shadow-neutral-200/30 transition-all duration-300"
+                className="bg-white rounded-2xl p-8 border border-neutral-100 hover:border-neutral-200 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300"
               >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-neutral-900 flex items-center justify-center flex-shrink-0">
-                    <uc.icon className="w-6 h-6 text-white" />
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-neutral-900 flex items-center justify-center flex-shrink-0 shadow-[0_2px_8px_rgba(0,0,0,0.18)]">
+                    <uc.icon className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-neutral-900">{uc.title}</h3>
+                  <h3 className="text-[17px] font-semibold text-neutral-900 leading-snug">{uc.title}</h3>
                 </div>
-                <p className="text-neutral-500 leading-relaxed mb-6">{uc.desc}</p>
+                <p className="text-neutral-500 leading-relaxed mb-6 text-[15px]">{uc.desc}</p>
                 <div className="pt-5 border-t border-neutral-100">
-                  <span className="text-sm font-semibold tracking-widest text-neutral-400 block mb-2">Key Checks</span>
-                  <p className="text-sm text-neutral-600">{uc.checks}</p>
+                  <span className="text-[11px] font-semibold tracking-[0.12em] uppercase text-neutral-400 block mb-2">Key Checks</span>
+                  <p className="text-[13px] text-neutral-500 leading-relaxed">{uc.checks}</p>
                 </div>
               </div>
             ))}
@@ -387,29 +393,29 @@ export default function Home() {
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 overflow-hidden">
-            <div className="grid grid-cols-[2fr_1fr_1fr_1.5fr] bg-white/5 border-b border-white/10">
-              <div className="px-6 py-4 text-sm font-semibold text-neutral-400 tracking-widest">Capability</div>
-              <div className="px-6 py-4 text-sm font-semibold text-neutral-400 tracking-widest border-l border-white/10 text-center">Paper / Excel</div>
-              <div className="px-6 py-4 text-sm font-semibold text-neutral-400 tracking-widest border-l border-white/10 text-center">Generic Tools</div>
-              <div className="px-6 py-4 text-sm font-semibold text-emerald-400 tracking-widest border-l border-white/10 text-center">Audiment</div>
+            <div className="grid grid-cols-[2fr_1fr_1fr_1.5fr] border-b border-white/10">
+              <div className="px-6 py-4 text-[11px] font-semibold text-neutral-500 tracking-[0.12em] uppercase">Capability</div>
+              <div className="px-6 py-4 text-[11px] font-semibold text-neutral-500 tracking-[0.12em] uppercase border-l border-white/10 text-center">Paper / Excel</div>
+              <div className="px-6 py-4 text-[11px] font-semibold text-neutral-500 tracking-[0.12em] uppercase border-l border-white/10 text-center">Generic Tools</div>
+              <div className="px-6 py-4 text-[11px] font-semibold text-emerald-400 tracking-[0.12em] uppercase border-l border-white/10 text-center bg-emerald-500/[0.05]">Audiment</div>
             </div>
             {comparisonRows.map((row, i) => (
               <div
                 key={i}
-                className={`grid grid-cols-[2fr_1fr_1fr_1.5fr] border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors duration-200 ${i % 2 === 0 ? "bg-white/[0.02]" : ""}`}
+                className={`grid grid-cols-[2fr_1fr_1fr_1.5fr] border-b border-white/5 last:border-0 hover:bg-white/[0.04] transition-colors duration-200 ${i % 2 === 0 ? "bg-white/[0.02]" : ""}`}
               >
-                <div className="px-6 py-5 text-base text-neutral-300 leading-relaxed font-medium">{row.capability}</div>
+                <div className="px-6 py-5 text-[15px] text-neutral-300 leading-relaxed font-medium">{row.capability}</div>
                 <div className="px-6 py-5 text-sm text-neutral-400 border-l border-white/5 text-center">
                   <span className="block text-lg mb-1">{row.paper.icon}</span>
-                  <span className="text-sm">{row.paper.label}</span>
+                  <span className="text-[13px]">{row.paper.label}</span>
                 </div>
                 <div className="px-6 py-5 text-sm text-neutral-400 border-l border-white/5 text-center">
                   <span className="block text-lg mb-1">{row.generic.icon}</span>
-                  <span className="text-sm">{row.generic.label}</span>
+                  <span className="text-[13px]">{row.generic.label}</span>
                 </div>
-                <div className="px-6 py-5 text-sm text-emerald-400 border-l border-white/5 text-center font-semibold">
+                <div className="px-6 py-5 text-sm text-emerald-400 border-l border-white/5 text-center font-semibold bg-emerald-500/[0.03]">
                   <span className="block text-lg mb-1">{row.audiment.icon}</span>
-                  <span className="text-sm">{row.audiment.label}</span>
+                  <span className="text-[13px]">{row.audiment.label}</span>
                 </div>
               </div>
             ))}
@@ -420,8 +426,8 @@ export default function Home() {
       {/* ── Compliance / Archive Section ──────────────────────────────────── */}
       <section className="py-24 md:py-32 bg-white px-6 border-b border-neutral-100">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="w-16 h-16 rounded-2xl bg-neutral-900 flex items-center justify-center mx-auto mb-8">
-            <Database className="w-8 h-8 text-white" />
+          <div className="w-14 h-14 rounded-2xl bg-neutral-900 flex items-center justify-center mx-auto mb-8 shadow-[0_4px_16px_rgba(0,0,0,0.14)]">
+            <Database className="w-7 h-7 text-white" />
           </div>
           <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-8">
             Every audit is permanently<br />
@@ -432,8 +438,8 @@ export default function Home() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 mt-12">
             {["Nothing is deleted.", "Nothing is editable after submission.", "Fully searchable archive."].map((point, i) => (
-              <div key={i} className="flex items-center gap-2 text-neutral-600 font-medium">
-                <CheckCircle2 className="w-5 h-5 text-neutral-400 flex-shrink-0" />
+              <div key={i} className="flex items-center gap-2 text-neutral-600 font-medium text-[15px]">
+                <CheckCircle2 className="w-4 h-4 text-neutral-400 flex-shrink-0" />
                 {point}
               </div>
             ))}
@@ -450,17 +456,17 @@ export default function Home() {
               <span className="text-neutral-400">Works on any device.</span>
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
             {techFeatures.map((tech, i) => (
               <div
                 key={i}
-                className="bg-white rounded-2xl p-6 border border-neutral-100 hover:border-neutral-200 hover:shadow-lg hover:shadow-neutral-200/30 transition-all duration-300 flex flex-col items-center text-center"
+                className="bg-white rounded-2xl p-6 border border-neutral-100 hover:border-neutral-200 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300 flex flex-col"
               >
-                <div className="w-12 h-12 rounded-full bg-neutral-50 flex items-center justify-center mb-4 text-neutral-900">
-                  <tech.icon className="w-6 h-6" />
+                <div className="w-10 h-10 rounded-xl bg-neutral-900 flex items-center justify-center mb-4 shadow-[0_2px_8px_rgba(0,0,0,0.18)]">
+                  <tech.icon className="w-5 h-5 text-white" />
                 </div>
-                <h4 className="text-base font-semibold text-neutral-900 mb-2">{tech.title}</h4>
-                <p className="text-base text-neutral-500 leading-relaxed">{tech.desc}</p>
+                <h4 className="text-[15px] font-semibold text-neutral-900 mb-2 leading-snug">{tech.title}</h4>
+                <p className="text-[14px] text-neutral-500 leading-relaxed">{tech.desc}</p>
               </div>
             ))}
           </div>
@@ -478,7 +484,7 @@ export default function Home() {
             <p className="text-xl text-neutral-500 max-w-2xl mx-auto">Real numbers from live deployments across multi-location businesses.</p>
           </div>
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-neutral-200/60 pb-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-neutral-100 pb-4">
             {[
               { value: "1,240+", label: "Audits Completed on the Platform" },
               { value: "860+", label: "Corrective Actions Resolved with Proof" },
@@ -486,10 +492,10 @@ export default function Home() {
               { value: "3.2h", label: "Avg. Time from Failure to Resolution" },
             ].map((stat) => (
               <div key={stat.label} className="pt-8 md:pt-0 flex flex-col items-center">
-                <div className="text-5xl md:text-6xl font-semibold tracking-tighter text-neutral-900 mb-3">
+                <div className="text-5xl md:text-6xl font-semibold tracking-tighter text-neutral-900 mb-3 tabular-nums">
                   {stat.value}
                 </div>
-                <p className="text-neutral-500 font-medium text-base text-balance max-w-[160px]">{stat.label}</p>
+                <p className="text-neutral-400 font-medium text-[14px] text-balance max-w-[160px]">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -502,7 +508,7 @@ export default function Home() {
       {/* ── Case Study Snapshots ───────────────────────────────────────────── */}
       <section className="py-16 border-b border-neutral-100 bg-white">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
               {
                 industry: "QSR Chain",
@@ -525,14 +531,14 @@ export default function Home() {
             ].map((cs, i) => (
               <div
                 key={i}
-                className="p-8 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-neutral-700 transition-colors duration-300"
+                className="p-8 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-neutral-700 hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] transition-all duration-300"
               >
-                <span className="text-sm font-semibold tracking-widest text-neutral-400 block mb-4">{cs.industry}</span>
-                <div className="mb-4">
-                  <span className="text-5xl font-bold text-white tracking-tighter">{cs.metric}</span>
-                  <p className="text-neutral-400 text-sm mt-1">{cs.metricLabel}</p>
+                <span className="text-[11px] font-semibold tracking-[0.12em] uppercase text-neutral-500 block mb-5">{cs.industry}</span>
+                <div className="mb-5">
+                  <span className="text-[3.25rem] font-bold text-white tracking-tighter leading-none tabular-nums">{cs.metric}</span>
+                  <p className="text-neutral-500 text-[13px] mt-1.5 leading-snug">{cs.metricLabel}</p>
                 </div>
-                <p className="text-base text-neutral-300 leading-relaxed">{cs.story}</p>
+                <p className="text-[14px] text-neutral-400 leading-relaxed">{cs.story}</p>
               </div>
             ))}
           </div>
@@ -564,23 +570,23 @@ export default function Home() {
           <p className="text-xl md:text-2xl text-neutral-400 max-w-2xl mx-auto leading-relaxed">
             Set up your first audit template in minutes. Know exactly what&apos;s happening at every branch – with tamper-proof evidence.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-6">
             <Link
               href="/login"
-              className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
+              className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-50 text-neutral-900 text-[15px] font-semibold rounded-full transition-all duration-200 hover:scale-[1.02] shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_8px_30px_rgba(255,255,255,0.12)]"
             >
               Start Free
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="#demo"
-              className="inline-flex h-14 items-center gap-2 px-10 border border-white/20 hover:border-white/40 text-white text-base font-medium rounded-full transition-all duration-300"
+              className="inline-flex h-14 items-center gap-2 px-10 border border-white/15 hover:border-white/35 hover:bg-white/5 text-white text-[15px] font-medium rounded-full transition-all duration-300"
             >
               Book a Demo
             </Link>
           </div>
-          <div className="flex items-center justify-center gap-2 text-neutral-500 font-medium pt-2">
-            <CheckCircle2 className="w-5 h-5 text-neutral-600" />
+          <div className="flex items-center justify-center gap-2 text-neutral-500 font-medium pt-2 text-[14px]">
+            <CheckCircle2 className="w-4 h-4 text-neutral-600" />
             <span>No credit card required</span>
           </div>
         </div>

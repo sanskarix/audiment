@@ -1,36 +1,36 @@
 # Audiment Dashboard Design System
-### Global Style Guide — All Pages Except Landing
+### Global Style Guide – All Pages Except Landing
 
-> **Scope:** Applies to every route under `/dashboard/**` and `/login`. Does **not** apply to `/` (the landing page). This document is the single source of truth — UI decisions made here must be replicated consistently on every page.
+> **Scope:** Applies to every route under `/dashboard/**` and `/login`. Does **not** apply to `/` (the landing page). This document is the single source of truth – UI decisions made here must be replicated consistently on every page.
 
 ---
 
 ## 1. Color Tokens
 
-All colors use the **OKLCH** color space. The preset is `b1D5T6NG` — Modern Slate + Azure Indigo.
+All colors use the **OKLCH** color space. The preset is `b1D5T6NG` – Modern Slate + Azure Indigo.
 
 ### Light Mode (`:root`)
 
 | CSS Variable | Value | Description |
 |---|---|---|
-| `--background` | `oklch(1 0 0)` | Pure white — app background |
-| `--foreground` | `oklch(0.145 0 0)` | Deep charcoal — primary foreground text |
-| `--card` | `oklch(1 0 0)` | White — card and container surface |
+| `--background` | `oklch(1 0 0)` | Pure white – app background |
+| `--foreground` | `oklch(0.145 0 0)` | Deep charcoal – primary foreground text |
+| `--card` | `oklch(1 0 0)` | White – card and container surface |
 | `--card-foreground` | `oklch(0.145 0 0)` | Same as foreground |
-| `--primary` | `oklch(0.5 0.134 242.7)` | **Azure Indigo** — CTAs, active nav, focus states |
+| `--primary` | `oklch(0.5 0.134 242.7)` | **Azure Indigo** – CTAs, active nav, focus states |
 | `--primary-foreground` | `oklch(0.977 0.013 236.62)` | White text on primary backgrounds |
-| `--secondary` | `oklch(0.967 0.001 286)` | Very light cool grey — secondary button bg |
+| `--secondary` | `oklch(0.967 0.001 286)` | Very light cool grey – secondary button bg |
 | `--secondary-foreground` | `oklch(0.21 0.006 285.885)` | Dark text on secondary backgrounds |
-| `--muted` | `oklch(0.97 0 0)` | Near-white grey — soft backgrounds |
-| `--muted-foreground` | `oklch(0.556 0 0)` | Mid-grey — placeholder, disabled, helper |
-| `--accent` | `oklch(0.97 0 0)` | Same as muted — hover backgrounds |
+| `--muted` | `oklch(0.97 0 0)` | Near-white grey – soft backgrounds |
+| `--muted-foreground` | `oklch(0.556 0 0)` | Mid-grey – placeholder, disabled, helper |
+| `--accent` | `oklch(0.97 0 0)` | Same as muted – hover backgrounds |
 | `--accent-foreground` | `oklch(0.205 0 0)` | Text on hover states |
-| `--border` | `oklch(0.9 0 0)` | Light grey — borders and dividers |
+| `--border` | `oklch(0.9 0 0)` | Light grey – borders and dividers |
 | `--input` | `oklch(0.9 0 0)` | Input border color |
 | `--ring` | `oklch(0.708 0 0)` | Focus ring color |
-| `--destructive` | `oklch(0.577 0.245 27.3)` | Semantic red — danger, delete |
-| `--success` | `oklch(0.6 0.18 150)` | Green — completed, passed |
-| `--warning` | `oklch(0.8 0.12 80)` | Amber — flagged, in-progress, surprise |
+| `--destructive` | `oklch(0.577 0.245 27.3)` | Semantic red – danger, delete |
+| `--success` | `oklch(0.6 0.18 150)` | Green – completed, passed |
+| `--warning` | `oklch(0.8 0.12 80)` | Amber – flagged, in-progress, surprise |
 | `--radius` | `0.625rem` (10px) | Base border radius |
 
 ### Semantic Text Colors (Named Hex)
@@ -45,9 +45,9 @@ All colors use the **OKLCH** color space. The preset is `b1D5T6NG` — Modern Sl
 
 | Variable | Value |
 |---|---|
-| `--background` | `oklch(0.145 0 0)` — deep charcoal |
-| `--card` | `oklch(0.205 0 0)` — slightly elevated surface |
-| `--border` | `oklch(1 0 0 / 10%)` — subtle white border |
+| `--background` | `oklch(0.145 0 0)` – deep charcoal |
+| `--card` | `oklch(0.205 0 0)` – slightly elevated surface |
+| `--border` | `oklch(1 0 0 / 10%)` – subtle white border |
 | Heading | `#f4f4f5` |
 | Body | `#d1d5db` |
 | Muted | `#9ca3af` |
@@ -62,7 +62,7 @@ All colors use the **OKLCH** color space. The preset is `b1D5T6NG` — Modern Sl
 - **Monospace**: Geist Mono via `--font-geist-mono`
 - Font features: `cv02`, `cv03`, `cv04`, `cv11` for refined readability
 
-### Type Scale — Dashboard Pages
+### Type Scale – Dashboard Pages
 
 | Class / Usage | Font Size | Font Weight | Color | Tracking | Line Height |
 |---|---|---|---|---|---|
@@ -75,7 +75,7 @@ All colors use the **OKLCH** color space. The preset is `b1D5T6NG` — Modern Sl
 | **Table cell body** | `14px` | `400` | `#45474d` (body) | normal | default |
 | **Sidebar nav item** | `13px` | `400` | body color | `tracking-tight` | default |
 | **Card stat number** | `30px` (text-3xl) | `500` | varies by semantic | `tracking-tight` | none |
-| **Card stat label** | `14px` | `500` | muted, `tracking-wider` | — | default |
+| **Card stat label** | `14px` | `500` | muted, `tracking-wider` | – | default |
 
 > **Rule:** Never use raw `text-sm`, `text-xs`, etc. directly in pages. Always apply one of the semantic classes above.
 
@@ -259,7 +259,7 @@ Sits to the right of the search bar.
 | Same height as search | `h-11` |
 | Label | "Filters" |
 | Icon | `Filter` from lucide, `h-4 w-4` |
-| Badge count indicator | `Badge variant="secondary"` — `h-4`, `text-[10px]`, `px-1`, `py-0`, `rounded-sm` |
+| Badge count indicator | `Badge variant="secondary"` – `h-4`, `text-[10px]`, `px-1`, `py-0`, `rounded-sm` |
 
 ---
 
@@ -332,7 +332,7 @@ Observed on: Users (role column), Templates (category column), Audits (status co
 
 ### Category / Role Badge (standard grey bubble)
 
-Source: `/dashboard/admin/templates` — category column (e.g. "Hygiene", "Custom", "Safety")
+Source: `/dashboard/admin/templates` – category column (e.g. "Hygiene", "Custom", "Safety")
 
 | Property | Value |
 |---|---|
@@ -435,7 +435,7 @@ Used in: Status column (Users, Locations, Templates), Edit dialogs
 | Property | Value |
 |---|---|
 | Font size | `14px` (use `text-body` class) |
-| Font weight | `400` (regular — NOT bold) |
+| Font weight | `400` (regular – NOT bold) |
 | Color | `text-body` or `text-heading` |
 | Margin below | use `gap-2` in the parent flex container |
 
@@ -601,7 +601,7 @@ Used in location manager assignment grid:
 
 ---
 
-## 25. Page Anatomy — Standard List Page Template
+## 25. Page Anatomy – Standard List Page Template
 
 Every dashboard list page follows this exact structure:
 
@@ -676,7 +676,7 @@ Every dashboard list page follows this exact structure:
 
 ## 27. Dark Mode Rules
 
-- Use semantic CSS variables everywhere — NEVER hardcode hex colors in dark-mode-aware contexts
+- Use semantic CSS variables everywhere – NEVER hardcode hex colors in dark-mode-aware contexts
 - Use `text-heading`, `text-body`, `text-muted-text` utility classes which auto-swap in dark mode
 - Exception: inline `color:` properties in chart tooltips must specify OKLCH values from tokens
 - Borders in dark mode become `border/10` (10% white opacity)
@@ -685,4 +685,4 @@ Every dashboard list page follows this exact structure:
 
 ---
 
-*Last Updated: March 2026 — extracted from live screenshots of `/dashboard/admin/users`, `/dashboard/admin`, `/dashboard/admin/audits`, `/dashboard/admin/templates`*
+*Last Updated: March 2026 – extracted from live screenshots of `/dashboard/admin/users`, `/dashboard/admin`, `/dashboard/admin/audits`, `/dashboard/admin/templates`*

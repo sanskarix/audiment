@@ -26,30 +26,69 @@ import {
   RefreshCw,
   UploadCloud,
   ChevronRight,
-  ChevronLeft,
-  ArrowLeft,
-  X,
   Clock,
   MapPin,
-  AlertCircle
+  AlertCircle,
+  Play,
+  Check,
 } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
-const StepIndicator = ({ current, total }: { current: number; total: number }) => (
-  <div className="flex gap-1.5 mb-10">
-    {Array.from({ length: total }).map((_, i) => (
-      <div
-        key={i}
-        className={cn(
-          "h-1 rounded-full transition-all duration-500",
-          i < current ? "w-8 bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]" : "w-2 bg-muted-foreground/20"
-        )}
-      />
-    ))}
-  </div>
-);
+type Step = 'location' | 'video' | 'review' | 'selfie' | 'submitting' | 'success';
+
+const STEPS: { id: Step; label: string; description: string }[] = [
+  { id: 'location', label: 'Location', description: 'Select branch' },
+  { id: 'video', label: 'Video', description: 'Record video' },
+  { id: 'review', label: 'Review', description: 'Check footage' },
+  { id: 'selfie', label: 'Selfie', description: 'Take selfie' },
+  { id: 'submitting', label: 'Submit', description: 'Finalize' },
+  { id: 'success', label: 'Done', description: 'Success' },
+];
+
+const StepBreadcrumb = ({ current }: { current: Step }) => {
+  const currentIndex = STEPS.findIndex(s => s.id === current);
+  return (
+    <div className="mb-8">
+      <div className="flex items-center justify-between relative">
+        {/* Connecting line */}
+        <div className="absolute top-5 left-0 right-0 h-px bg-border/40 z-0" />
+        <div
+          className="absolute top-5 left-0 h-px bg-primary z-0 transition-all duration-700"
+          style={{ width: `${(currentIndex / (STEPS.length - 1)) * 100}%` }}
+        />
+
+        {STEPS.map((step, i) => {
+          const isDone = i < currentIndex;
+          const isActive = i === currentIndex;
+          return (
+            <div key={step.id} className="flex flex-col items-center gap-2 z-10 bg-background px-1">
+              <div className={cn(
+                "h-10 w-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 font-semibold text-sm",
+                isDone ? "bg-primary border-primary text-white" :
+                  isActive ? "bg-background border-primary text-primary shadow-md shadow-primary/20" :
+                    "bg-background border-border/40 text-muted-text/40"
+              )}>
+                {isDone ? <Check className="h-5 w-5" /> : <span>{i + 1}</span>}
+              </div>
+              <div className="text-center hidden sm:block">
+                <p className={cn(
+                  "text-[11px] font-semibold leading-tight",
+                  isActive ? "text-primary" : isDone ? "text-heading" : "text-muted-text/40"
+                )}>{step.label}</p>
+                <p className={cn(
+                  "text-[10px] leading-tight mt-0.5",
+                  isActive || isDone ? "text-muted-text" : "text-muted-text/30"
+                )}>{step.description}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 export default function FlashmobAuditPage() {
   const router = useRouter();
@@ -57,10 +96,9 @@ export default function FlashmobAuditPage() {
   const [session, setSession] = useState<{ orgId: string, uid: string, name: string } | null>(null);
   const [locations, setLocations] = useState<any[]>([]);
 
-  const [step, setStep] = useState<'location' | 'video' | 'review' | 'selfie' | 'submitting'>('location');
+  const [step, setStep] = useState<Step>('location');
   const [selectedLocation, setSelectedLocation] = useState<string>('');
 
-  // Video Recording
   const videoRef = useRef<HTMLVideoElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [recording, setRecording] = useState(false);
@@ -69,7 +107,6 @@ export default function FlashmobAuditPage() {
   const [countdown, setCountdown] = useState(20);
   const recorderRef = useRef<MediaRecorder | null>(null);
 
-  // Selfie
   const [selfieBlob, setSelfieBlob] = useState<Blob | null>(null);
   const [selfieUrl, setSelfieUrl] = useState<string | null>(null);
 
@@ -82,12 +119,8 @@ export default function FlashmobAuditPage() {
       try {
         const data = JSON.parse(decodeURIComponent(match[1]));
         setSession({ orgId: data.organizationId, uid: data.uid, name: data.name });
-      } catch (e) {
-        setLoading(false);
-      }
-    } else {
-      setLoading(false);
-    }
+      } catch (e) { setLoading(false); }
+    } else { setLoading(false); }
   }, []);
 
   useEffect(() => {
@@ -95,116 +128,70 @@ export default function FlashmobAuditPage() {
     const unsub = onSnapshot(doc(db, 'users', session.uid), (d) => {
       const data = d.data();
       setUserData(data);
-      if (d.exists() && data?.hasFlashmobAccess === false) {
-        setLoading(false);
-      }
-    }, (err) => {
-      console.error('User profile subscription error:', err);
-      setLoading(false);
-    });
+      if (d.exists() && data?.hasFlashmobAccess === false) setLoading(false);
+    }, (err) => { console.error(err); setLoading(false); });
     return () => unsub();
   }, [session]);
 
   useEffect(() => {
     if (!session?.orgId) return;
-
     async function fetchLocations() {
       try {
         const q = query(collection(db, 'locations'), where('organizationId', '==', session?.orgId));
         const snap = await getDocs(q);
-        const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        setLocations(fetched);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
+        setLocations(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (err) { console.error(err); }
+      finally { setLoading(false); }
     }
     fetchLocations();
   }, [session]);
 
-  // Handle Video Stream
   const startCamera = async (facingMode: 'environment' | 'user' = 'environment') => {
     try {
-      // Stop any existing stream first
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-        setStream(null);
-      }
+      if (stream) { stream.getTracks().forEach(t => t.stop()); setStream(null); }
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode },
         audio: facingMode === 'environment'
       });
       setStream(mediaStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
-    } catch (err) {
-      console.error('Camera access denied:', err);
-    }
+      if (videoRef.current) videoRef.current.srcObject = mediaStream;
+    } catch (err) { console.error('Camera access denied:', err); }
   };
 
   const stopCamera = () => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      setStream(null);
-    }
+    if (stream) { stream.getTracks().forEach(t => t.stop()); setStream(null); }
   };
 
-  // Ensure camera releases on unmount
-  useEffect(() => {
-    return () => {
-      stopCamera();
-    };
-  }, [stream]);
+  useEffect(() => { return () => { stopCamera(); }; }, [stream]);
 
-  // Recording Logic
   const startRecording = () => {
     if (!stream) return;
-
-    const pickRecordingMimeType = () => {
-      if (typeof MediaRecorder === 'undefined' || typeof MediaRecorder.isTypeSupported !== 'function') return undefined;
-      const candidates = [
-        // Chrome/Edge/Firefox variants
-        'video/webm;codecs=vp9,opus',
-        'video/webm;codecs=vp8,opus',
-        'video/webm;codecs=vp9',
-        'video/webm;codecs=vp8',
-        'video/webm',
-        // Some Safari builds support MediaRecorder but not WebM; mp4 support is inconsistent.
-        'video/mp4;codecs=avc1.42E01E,mp4a.40.2',
-        'video/mp4'
-      ];
-      return candidates.find((t) => MediaRecorder.isTypeSupported(t));
+    const pickMime = () => {
+      if (typeof MediaRecorder === 'undefined') return undefined;
+      const candidates = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm', 'video/mp4'];
+      return candidates.find(t => MediaRecorder.isTypeSupported(t));
     };
-
     const chunks: Blob[] = [];
-    const mimeType = pickRecordingMimeType();
+    const mimeType = pickMime();
     const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
     recorderRef.current = recorder;
-
     recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
     recorder.onstop = () => {
-      const blobType = recorder.mimeType || (mimeType ?? undefined);
-      const blob = new Blob(chunks, blobType ? { type: blobType } : undefined);
+      const blob = new Blob(chunks, mimeType ? { type: mimeType } : undefined);
       setVideoBlob(blob);
       setVideoUrl(URL.createObjectURL(blob));
       setStep('review');
     };
-
-    recorder.start(100); // collect data every 100ms for reliable chunks
+    recorder.start(100);
     setRecording(true);
     setCountdown(20);
-
     const timer = setInterval(() => {
       setCountdown(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          // Use recorderRef directly to avoid stale closure on `recording` state
-          if (recorderRef.current && recorderRef.current.state === 'recording') {
+          if (recorderRef.current?.state === 'recording') {
             recorderRef.current.stop();
             setRecording(false);
-            // Stop camera tracks
             recorderRef.current.stream?.getTracks().forEach(t => t.stop());
             setStream(null);
           }
@@ -216,7 +203,7 @@ export default function FlashmobAuditPage() {
   };
 
   const stopRecording = () => {
-    if (recorderRef.current && recorderRef.current.state === 'recording') {
+    if (recorderRef.current?.state === 'recording') {
       recorderRef.current.stop();
       setRecording(false);
       stopCamera();
@@ -225,7 +212,6 @@ export default function FlashmobAuditPage() {
 
   const takeSelfie = () => {
     if (!videoRef.current || !stream) return;
-
     const canvas = document.createElement('canvas');
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
@@ -246,9 +232,7 @@ export default function FlashmobAuditPage() {
   const handleSubmit = async () => {
     if (!videoBlob || !selfieBlob || !session || !selectedLocation) return;
     setSaving(true);
-
     try {
-      // 1. Get Location
       let latitude = 0, longitude = 0;
       try {
         const pos: any = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 5000 }));
@@ -256,14 +240,12 @@ export default function FlashmobAuditPage() {
         longitude = pos.coords.longitude;
       } catch (e) { console.warn('Geo failed'); }
 
-      // 2. Upload Video
       const videoFormData = new FormData();
       videoFormData.append('file', videoBlob, 'flashmob_video.webm');
       const vRes = await fetch('/api/upload', { method: 'POST', body: videoFormData });
       const vData = await vRes.json();
       if (!vRes.ok) throw new Error(vData.error || 'Video upload failed');
 
-      // 3. Upload Selfie
       const selfieFormData = new FormData();
       selfieFormData.append('file', selfieBlob, 'selfie.jpg');
       const sRes = await fetch('/api/upload', { method: 'POST', body: selfieFormData });
@@ -271,8 +253,6 @@ export default function FlashmobAuditPage() {
       if (!sRes.ok) throw new Error(sData.error || 'Selfie upload failed');
 
       const location = locations.find(l => l.id === selectedLocation);
-
-      // 4. Save to Firestore
       await addDoc(collection(db, 'flashmobAudits'), {
         organizationId: session.orgId,
         locationId: selectedLocation,
@@ -281,33 +261,27 @@ export default function FlashmobAuditPage() {
         auditorName: session.name || 'Anonymous',
         videoUrl: vData.url,
         selfieUrl: sData.url,
-        latitude,
-        longitude,
+        latitude, longitude,
         submittedAt: serverTimestamp(),
         visibleTo: [session.uid]
       });
-
-      router.push('/dashboard/auditor?flashmob=success');
+      setStep('success');
     } catch (err) {
       console.error('Flashmob submission failed:', err);
       alert('Submission failed. Check your connection.');
-    } finally {
-      setSaving(false);
-    }
+    } finally { setSaving(false); }
   };
+
+  const selectedLocationName = locations.find(l => l.id === selectedLocation)?.name;
 
   if (loading) {
     return (
       <DashboardShell role="Auditor">
-        <div className="dashboard-page-container max-w-2xl mx-auto pb-32">
-          <div className="page-header-section mb-xl">
-            <Skeleton className="h-8 w-64 mb-2" />
-            <Skeleton className="h-4 w-48" />
-          </div>
-          <div className="space-y-6">
-            <Skeleton className="h-2 w-full rounded-full" />
-            <Skeleton className="h-[300px] w-full rounded-xl" />
-          </div>
+        <div className="dashboard-page-container max-w-2xl mx-auto px-6 md:px-10 pb-32">
+          <Skeleton className="h-8 w-64 mb-2" />
+          <Skeleton className="h-4 w-48 mb-10" />
+          <Skeleton className="h-14 w-full rounded-xl mb-6" />
+          <Skeleton className="h-[300px] w-full rounded-xl" />
         </div>
       </DashboardShell>
     );
@@ -316,19 +290,19 @@ export default function FlashmobAuditPage() {
   if (userData && !userData.hasFlashmobAccess) {
     return (
       <DashboardShell role="Auditor">
-        <div className="max-w-md mx-auto mt-20">
-          <Card>
+        <div className="max-w-md mx-auto mt-20 px-6">
+          <Card className="standard-card">
             <CardHeader className="text-center pb-4 pt-8">
-              <div className="mx-auto bg-destructive/10 h-12 w-12 rounded-full flex items-center justify-center mb-4 border border-destructive/20 shadow-inner">
+              <div className="mx-auto bg-destructive/10 h-12 w-12 rounded-full flex items-center justify-center mb-4 border border-destructive/20">
                 <AlertCircle className="h-6 w-6 text-destructive" />
               </div>
-              <CardTitle className="text-heading font-medium">Access Denied</CardTitle>
-              <CardDescription className="text-body font-normal">
-                You do not have the required permissions for flashmob audits.
+              <CardTitle className="text-heading font-semibold">Access Restricted</CardTitle>
+              <CardDescription className="body-text font-normal mt-1">
+                You don't have permission to conduct flashmob audits. Contact your administrator.
               </CardDescription>
             </CardHeader>
             <CardContent className="pb-8 px-8">
-              <Button className="w-full" variant="outline" onClick={() => router.push('/dashboard/auditor')}>
+              <Button className="w-full" onClick={() => router.push('/dashboard/auditor')}>
                 Back to Dashboard
               </Button>
             </CardContent>
@@ -340,248 +314,320 @@ export default function FlashmobAuditPage() {
 
   return (
     <DashboardShell role="Auditor">
-      <div className="dashboard-page-container max-w-2xl mx-auto pb-32">
-        <div className="page-header-section mb-xl flex flex-col gap-2">
-          <div className="flex items-center gap-4">
-            <button onClick={() => router.back()} className="text-muted-text hover:text-primary transition-colors flex items-center">
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-            <div className="h-5 w-[1px] bg-border/80"></div>
-            <h1 className="text-xl font-semibold text-heading flex items-center gap-3">
-              <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-              Flashmob Verification
-            </h1>
+      <div className="dashboard-page-container max-w-2xl mx-auto px-6 md:px-10 pb-20">
+
+        {/* Header */}
+        <div className="page-header-section mb-8">
+          <div className="flex flex-col gap-1">
+            <h1 className="page-heading">Flash Audit</h1>
+            <p className="body-text">Record video and photo proof for location verification.</p>
           </div>
         </div>
 
-        <StepIndicator current={['location', 'video', 'review', 'selfie', 'submitting'].indexOf(step) + 1} total={5} />
+        {/* Step breadcrumb */}
+        <StepBreadcrumb current={step} />
 
+        {/* ── Step 1: Location ─────────────────────────────── */}
         {step === 'location' && (
-          <Card className="standard-card overflow-hidden">
-            <div className="bg-muted/30 p-xl border-b border-border/50">
-              <h3 className="section-heading flex items-center gap-2">
+          <Card className="standard-card border-border/40">
+            <div className="p-6 border-b border-border/40 bg-muted/5 flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                 <MapPin className="h-4 w-4 text-primary" />
-                Select Location
-              </h3>
-              <p className="body-text">Quick video and selfie verification.</p>
-            </div>
-            <CardContent className="p-xl space-y-xl bg-card">
-              <div className="space-y-sm">
-                <Label className="text-xs font-normal  tracking-widest text-muted-text">Deployment Zone</Label>
-                <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                  <SelectTrigger className="h-12 bg-background font-medium tracking-widest text-xs px-4 border-input focus:ring-primary/20 text-body">
-                    <SelectValue placeholder="Identify your location..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {locations.length === 0 ? (
-                      <SelectItem value="none" disabled className="font-normal text-xs tracking-widest text-body">No Zones Configured</SelectItem>
-                    ) : (
-                      locations.map(l => <SelectItem key={l.id} value={l.id} className="font-normal text-xs tracking-widest text-body">{l.name}</SelectItem>)
-                    )}
-                  </SelectContent>
-                </Select>
               </div>
+              <div>
+                <h3 className="section-heading">Location</h3>
+                <p className="body-text text-[12px]">Select the branch for this audit.</p>
+              </div>
+            </div>
+            <CardContent className="p-6 space-y-5">
+              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                <SelectTrigger className="h-12 bg-background border-border/50 rounded-xl text-[14px]">
+                  <SelectValue placeholder="Choose a location…" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  {locations.length === 0 ? (
+                    <SelectItem value="none" disabled>No locations configured</SelectItem>
+                  ) : (
+                    locations.map(l => (
+                      <SelectItem key={l.id} value={l.id} className="text-[14px]">
+                        {l.name}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+
+              {selectedLocation && selectedLocation !== 'none' && (
+                <div className="flex items-center gap-2 text-[12px] text-success font-medium p-3 bg-success/5 border border-success/20 rounded-xl">
+                  <CheckCircle2 className="h-4 w-4 shrink-0" />
+                  <span><strong>{selectedLocationName}</strong> selected</span>
+                </div>
+              )}
+
               <Button
-                size="lg"
-                className="w-full text-xs font-medium  tracking-widest shadow-lg shadow-primary/20 active:scale-95 transition-all"
+                className="w-full h-12 font-semibold rounded-xl"
                 disabled={!selectedLocation || selectedLocation === 'none'}
-                onClick={() => {
-                  setStep('video');
-                  startCamera('environment');
-                }}
+                onClick={() => { setStep('video'); startCamera('environment'); }}
               >
-                Start Camera <ChevronRight className="ml-2 h-4 w-4" />
+                Continue to Recording <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </CardContent>
           </Card>
         )}
 
+        {/* ── Step 2: Video ─────────────────────────────────── */}
         {step === 'video' && (
-          <Card className="standard-card overflow-hidden">
-            <div className="bg-muted/30 p-xl border-b border-border/50 flex items-center justify-between">
-              <div>
-                <h3 className="section-heading flex items-center gap-2">
+          <Card className="standard-card border-border/40">
+            <div className="p-6 border-b border-border/40 bg-muted/5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                   <Video className="h-4 w-4 text-primary" />
-                  Record Video
-                </h3>
-                <p className="body-text text-xs mt-1">Capture your surroundings clearly</p>
+                </div>
+                <div>
+                  <h3 className="section-heading">Video Recording</h3>
+                  <p className="body-text text-[12px]">Record a 20-second video of the surroundings.</p>
+                </div>
               </div>
               {recording && (
-                <div className="flex items-center gap-2 bg-destructive/10 text-destructive px-3 py-1 rounded-lg text-xs font-medium  tracking-widest animate-pulse border border-destructive/20">
-                  <div className="h-2 w-2 rounded-full bg-destructive" /> RECORDING
+                <div className="flex items-center gap-2 text-[11px] font-bold text-destructive bg-destructive/10 border border-destructive/20 rounded-full px-3 py-1.5 animate-pulse">
+                  <div className="h-2 w-2 rounded-full bg-destructive" />
+                  REC
                 </div>
               )}
             </div>
-            <CardContent className="p-xl space-y-xl bg-card">
-              <div className="relative aspect-video bg-black rounded-xl overflow-hidden shadow-inner flex items-center justify-center">
-                <video
-                  ref={videoRef}
-                  className="h-full w-full object-cover grayscale md:grayscale-0 contrast-125"
-                  autoPlay
-                  muted
-                  playsInline
-                />
+            <CardContent className="p-6 space-y-6">
+              {/* Viewfinder */}
+              <div className="relative aspect-video bg-black rounded-2xl overflow-hidden border border-border/40">
+                <video ref={videoRef} className="h-full w-full object-cover" autoPlay muted playsInline />
 
-                {/* HUD Overlay */}
-                <div className="absolute inset-0 pointer-events-none p-6 flex flex-col justify-between">
-                  <div className="flex justify-between items-start">
-                    <div className="w-8 h-8 border-t-2 border-l-2 border-primary/50" />
-                    <div className="w-8 h-8 border-t-2 border-r-2 border-primary/50" />
-                  </div>
+                {/* Countdown pill */}
+                <div className={cn(
+                  "absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-xl backdrop-blur-sm border text-sm font-bold tabular-nums transition-colors",
+                  recording
+                    ? "bg-destructive/80 border-destructive/40 text-white"
+                    : "bg-background/80 border-border/40 text-heading"
+                )}>
+                  <Clock className="h-3.5 w-3.5" />
+                  0:{countdown.toString().padStart(2, '0')}
+                </div>
 
-                  <div className="flex justify-center">
-                    <div className="bg-background/80 backdrop-blur-md px-6 py-2 rounded-xl border border-white/10 flex items-center gap-3 shadow-xl">
-                      <Clock className="h-4 w-4 text-primary animate-pulse" />
-                      <span className="text-xl font-medium italic text-heading tabular-nums tracking-tighter">00:{countdown.toString().padStart(2, '0')}</span>
+                {/* Idle overlay hint */}
+                {!recording && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[1px]">
+                    <div className="text-white text-center">
+                      <div className="h-14 w-14 mx-auto rounded-full bg-white/20 border-2 border-white/40 flex items-center justify-center mb-2">
+                        <Play className="h-6 w-6 text-white fill-current ml-1" />
+                      </div>
+                      <p className="text-[12px] font-medium opacity-80">Tap the button below to start</p>
                     </div>
                   </div>
-
-                  <div className="flex justify-between items-end">
-                    <div className="w-8 h-8 border-b-2 border-l-2 border-primary/50" />
-                    <div className="w-8 h-8 border-b-2 border-r-2 border-primary/50" />
-                  </div>
-                </div>
+                )}
               </div>
 
-              <div className="flex justify-center">
+              {/* Record / Stop button */}
+              <div className="flex flex-col items-center gap-3">
                 {!recording ? (
                   <Button
                     size="lg"
-                    className="h-20 w-20 rounded-full shadow-lg shadow-primary/30 flex items-center justify-center p-0 hover:scale-105 active:scale-95 transition-all"
+                    className="h-14 w-14 rounded-full bg-destructive hover:bg-destructive/90 shadow-lg shadow-destructive/30 p-0 flex items-center justify-center transition-transform active:scale-90"
                     onClick={startRecording}
                   >
-                    <Video className="h-8 w-8 text-primary-foreground" />
+                    <div className="h-5 w-5 rounded-full bg-white" />
                   </Button>
                 ) : (
                   <Button
                     size="lg"
-                    variant="destructive"
-                    className="h-20 w-20 rounded-full shadow-lg shadow-destructive/30 flex items-center justify-center p-0 animate-pulse hover:scale-105 active:scale-95 transition-all"
+                    variant="outline"
+                    className="h-14 w-14 rounded-full border-2 border-destructive text-destructive hover:bg-destructive/5 p-0 flex items-center justify-center transition-transform active:scale-90"
                     onClick={stopRecording}
                   >
-                    <StopCircle className="h-8 w-8 text-white" />
+                    <StopCircle className="h-7 w-7 fill-destructive" />
                   </Button>
                 )}
+                <p className="text-[11px] text-muted-text">
+                  {recording ? `Recording... ${countdown}s` : 'Tap to start'}
+                </p>
               </div>
             </CardContent>
           </Card>
         )}
 
+        {/* ── Step 3: Review ────────────────────────────────── */}
         {step === 'review' && videoUrl && (
-          <Card className="standard-card overflow-hidden">
-            <div className="bg-muted/30 p-xl border-b border-border/50">
-              <h3 className="section-heading flex items-center gap-2">
-                <RefreshCw className="h-4 w-4 text-primary" />
-                Review Video
-              </h3>
-              <p className="body-text text-xs mt-1">Make sure everything is clear before uploading</p>
-            </div>
-            <CardContent className="p-xl space-y-xl bg-card">
-              <div className="relative aspect-video bg-black rounded-xl overflow-hidden shadow-inner flex items-center justify-center">
-                <video
-                  src={videoUrl}
-                  className="h-full w-full object-cover"
-                  controls
-                  autoPlay
-                  loop
-                />
+          <Card className="standard-card border-border/40">
+            <div className="p-6 border-b border-border/40 bg-muted/5 flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                <CheckCircle2 className="h-4 w-4 text-primary" />
               </div>
-              <div className="grid grid-cols-2 gap-md">
+              <div>
+                <h3 className="section-heading">Review Video</h3>
+                <p className="body-text text-[12px]">Check the video quality before proceeding.</p>
+              </div>
+            </div>
+            <CardContent className="p-6 space-y-5">
+              <div className="relative aspect-video bg-black rounded-2xl overflow-hidden border border-border/40">
+                <video src={videoUrl} className="h-full w-full object-cover" controls autoPlay loop />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
                 <Button
                   variant="outline"
-                  className="h-14 font-medium  tracking-widest text-[10px] text-muted-text transition-all hover:bg-destructive/5 hover:text-destructive hover:border-destructive/30 active:scale-95"
-                  onClick={() => {
-                    setVideoUrl(null);
-                    setVideoBlob(null);
-                    setStep('video');
-                    startCamera('environment');
-                  }}
+                  className="h-12 font-semibold rounded-xl border-border/50 text-muted-text hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5 transition-all"
+                  onClick={() => { setVideoUrl(null); setVideoBlob(null); setStep('video'); startCamera('environment'); }}
                 >
-                  <RefreshCw className="mr-2 h-4 w-4" /> Discard
+                  <RefreshCw className="mr-2 h-4 w-4" /> Retake
                 </Button>
                 <Button
-                  className="h-14 font-medium  tracking-widest text-[10px] shadow-lg shadow-primary/20 transition-all hover:shadow-primary/30 active:scale-95 bg-primary hover:bg-primary/90"
-                  onClick={() => {
-                    setStep('selfie');
-                    startCamera('user');
-                  }}
+                  className="h-12 font-semibold rounded-xl"
+                  onClick={() => { setStep('selfie'); startCamera('user'); }}
                 >
-                  Confirm <ChevronRight className="ml-2 h-4 w-4" />
+                  Looks Good <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             </CardContent>
           </Card>
         )}
 
+        {/* ── Step 4: Selfie ────────────────────────────────── */}
         {step === 'selfie' && (
-          <Card className="standard-card overflow-hidden">
-            <div className="bg-muted/30 p-xl border-b border-border/50 text-center flex flex-col items-center">
-              <h3 className="section-heading flex items-center justify-center gap-2">
+          <Card className="standard-card border-border/40">
+            <div className="p-6 border-b border-border/40 bg-muted/5 flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                 <Camera className="h-4 w-4 text-primary" />
-                Selfie Check
-              </h3>
-              <p className="body-text text-xs mt-1">Take a quick selfie to verify your presence</p>
+              </div>
+              <div>
+                <h3 className="section-heading">Identity Verification</h3>
+                <p className="body-text text-[12px]">Take a selfie to confirm your presence.</p>
+              </div>
             </div>
-            <CardContent className="p-xl space-y-xl bg-card">
-              <div className="relative aspect-square max-w-[400px] mx-auto bg-black rounded-full overflow-hidden border-8 border-muted/30 shadow-xl">
-                <video
-                  ref={videoRef}
-                  className="h-full w-full object-cover grayscale"
-                  autoPlay
-                  muted
-                  playsInline
-                />
-                {/* Selfie Grid Ring */}
-                <div className="absolute inset-0 border-[16px] border-primary/5 rounded-full pointer-events-none" />
-                <div className="absolute inset-0 border-2 border-dashed border-primary/30 rounded-full animate-[spin_20s_linear_infinite] pointer-events-none" />
-              </div>
-
-              <div className="flex justify-center">
-                <Button
-                  size="lg"
-                  className="h-20 w-20 rounded-full bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 flex items-center justify-center p-0 transition-all hover:scale-105 active:scale-95 group"
-                  onClick={takeSelfie}
-                >
-                  <Camera className="h-8 w-8 text-primary-foreground group-hover:rotate-12 transition-transform" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {step === 'submitting' && (
-          <Card className="standard-card overflow-hidden">
-            <div className="bg-muted/30 p-12 text-center flex flex-col items-center">
-              <div className="mx-auto bg-primary/10 h-16 w-16 rounded-2xl flex items-center justify-center mb-6 rotate-12">
-                <UploadCloud className="h-8 w-8 text-primary" />
-              </div>
-              <h3 className="section-heading mb-1 text-2xl">Submit Audit</h3>
-              <p className="body-text text-xs">Upload your video and selfie to the dashboard</p>
-            </div>
-            <CardContent className="p-xl flex flex-col items-center justify-center space-y-xl bg-card">
-              {selfieUrl && (
-                <div className="h-32 w-32 rounded-full overflow-hidden border-4 border-muted shadow-lg relative group">
-                  <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <CheckCircle2 className="text-white h-8 w-8" />
+            <CardContent className="p-6 space-y-6">
+              {/* Circular viewfinder */}
+              <div className="flex flex-col items-center gap-5">
+                <div className="relative">
+                  <div className="h-56 w-56 rounded-full overflow-hidden border-4 border-primary/20 shadow-xl bg-black">
+                    <video ref={videoRef} className="h-full w-full object-cover scale-x-[-1]" autoPlay muted playsInline />
                   </div>
-                  <img src={selfieUrl} alt="Selfie preview" className="h-full w-full object-cover grayscale" />
+                  {/* Face guide ring */}
+                  <div className="absolute inset-0 rounded-full border-2 border-dashed border-primary/30 pointer-events-none" />
                 </div>
-              )}
+                <p className="text-[12px] text-muted-text text-center">Centre your face in the circle, then tap the button.</p>
+              </div>
+
               <Button
                 size="lg"
-                className="w-full h-16 font-medium  tracking-widest text-xs shadow-lg shadow-primary/30 transition-all active:scale-95"
+                className="w-full h-13 font-semibold rounded-xl shadow-lg shadow-primary/10"
+                onClick={takeSelfie}
+              >
+                <Camera className="mr-2 h-5 w-5" /> Capture Photo
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* ── Step 5: Submit ────────────────────────────────── */}
+        {step === 'submitting' && (
+          <Card className="standard-card border-border/40">
+            <div className="p-6 border-b border-border/40 bg-muted/5 flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                <UploadCloud className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <h3 className="section-heading">Final Submission</h3>
+                <p className="body-text text-[12px]">Review your details and submit the audit.</p>
+              </div>
+            </div>
+            <CardContent className="p-6 space-y-6">
+
+              {/* Summary card */}
+              <div className="rounded-xl bg-muted/5 border border-border/40 divide-y divide-border/40">
+                <div className="flex items-center justify-between px-4 py-3">
+                  <span className="text-[12px] text-muted-text font-medium flex items-center gap-2">
+                    <MapPin className="h-3.5 w-3.5 opacity-50" /> Location
+                  </span>
+                  <span className="text-[13px] font-semibold text-heading">
+                    {locations.find(l => l.id === selectedLocation)?.name || '–'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between px-4 py-3">
+                  <span className="text-[12px] text-muted-text font-medium flex items-center gap-2">
+                    <Video className="h-3.5 w-3.5 opacity-50" /> Video
+                  </span>
+                  <Badge variant="secondary" className="bg-success/10 text-success border-none text-[11px] font-semibold">
+                    <CheckCircle2 className="mr-1.5 h-3 w-3" /> Captured
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between px-4 py-3">
+                  <span className="text-[12px] text-muted-text font-medium flex items-center gap-2">
+                    <Camera className="h-3.5 w-3.5 opacity-50" /> Selfie
+                  </span>
+                  {selfieUrl ? (
+                    <div className="flex items-center gap-2">
+                      <img src={selfieUrl} alt="Selfie" className="h-8 w-8 rounded-full object-cover border border-border/40" />
+                      <Badge variant="secondary" className="bg-success/10 text-success border-none text-[11px] font-semibold">
+                        <CheckCircle2 className="mr-1.5 h-3 w-3" /> Taken
+                      </Badge>
+                    </div>
+                  ) : (
+                    <Badge variant="secondary" className="bg-warning/10 text-warning border-none text-[11px]">Missing</Badge>
+                  )}
+                </div>
+              </div>
+
+              <Button
+                size="lg"
+                className="w-full h-13 font-semibold shadow-lg shadow-primary/10 rounded-xl"
                 disabled={saving}
                 onClick={handleSubmit}
               >
                 {saving ? (
                   <>
-                    <div className="mr-3 h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" /> UPLOADING...
+                    <div className="mr-3 h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    Submitting…
                   </>
                 ) : (
                   <>
-                    <UploadCloud className="mr-3 h-5 w-5" /> SUBMIT
+                    <UploadCloud className="mr-2 h-5 w-5" /> Submit Verification
                   </>
                 )}
+              </Button>
+
+              <p className="text-[11px] text-muted-text text-center">
+                Your video and selfie will be uploaded securely and shared with admins.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+        {step === 'success' && (
+          <Card className="standard-card border-border/40 overflow-hidden">
+            <div className="p-12 text-center bg-success/5 border-b border-border/40">
+              <div className="mx-auto bg-success/10 h-20 w-20 rounded-full flex items-center justify-center mb-6 border border-success/20">
+                <Check className="h-10 w-10 text-success" />
+              </div>
+              <h3 className="text-2xl font-bold text-heading mb-2">Audit Submitted</h3>
+              <p className="body-text">Your flash audit has been successfully logged.</p>
+            </div>
+            <CardContent className="p-10 space-y-4">
+              <Button
+                size="lg"
+                className="w-full h-13 font-semibold rounded-xl"
+                onClick={() => router.push('/dashboard/auditor/history')}
+              >
+                Go to History
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full h-13 font-semibold rounded-xl"
+                onClick={() => {
+                  setSelectedLocation('');
+                  setVideoBlob(null);
+                  setVideoUrl(null);
+                  setSelfieBlob(null);
+                  setSelfieUrl(null);
+                  setStep('location');
+                }}
+              >
+                Start Another Audit
               </Button>
             </CardContent>
           </Card>

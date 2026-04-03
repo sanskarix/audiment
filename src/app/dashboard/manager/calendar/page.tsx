@@ -108,8 +108,8 @@ export default function ManagerCalendarPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <h1 className="page-heading">Mission Calendar</h1>
-            <p className="body-text">View and manage audit schedules across all active locations.</p>
+            <h1 className="page-heading">Calendar</h1>
+            <p className="body-text">View and manage audit schedules for your locations.</p>
           </div>
 
           <div className="flex items-center gap-2 bg-muted/20 p-1 rounded-lg border border-border/50 shadow-sm">
@@ -173,7 +173,7 @@ export default function ManagerCalendarPage() {
                       </span>
                       {dayEvents.length > 0 && (
                         <div className="text-[9px] font-bold text-primary/40 mr-1">
-                          {dayEvents.length} {dayEvents.length === 1 ? 'Mission' : 'Missions'}
+                          {dayEvents.length} {dayEvents.length === 1 ? 'Audit' : 'Audits'}
                         </div>
                       )}
                     </div>

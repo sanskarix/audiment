@@ -164,12 +164,12 @@ export default function PerformancePage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Total Assignments</p>
+              <p className="section-heading">Total Audits</p>
               <ClipboardList className="h-4 w-4 text-primary/40 transition-colors" />
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{stats.total}</div>
-              <p className="body-text mt-2 font-normal">Total audits assigned</p>
+              <p className="body-text mt-2 font-normal">Total assigned</p>
             </div>
           </Card>
 
@@ -180,29 +180,29 @@ export default function PerformancePage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{completionRate}%</div>
-              <p className="body-text mt-2 font-normal">Average score</p>
+              <p className="body-text mt-2 font-normal">Completion rate</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">In Progress</p>
+              <p className="section-heading">Pending</p>
               <Clock className="h-4 w-4 text-warning/40 transition-colors" />
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-warning tabular-nums leading-tight">{stats.inProgress}</div>
-              <p className="body-text mt-2 font-normal">Audits currently in progress</p>
+              <p className="body-text mt-2 font-normal">Pending audits</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">SLA Breaches</p>
+              <p className="section-heading">Missed</p>
               <AlertCircle className="h-4 w-4 text-destructive/40 transition-colors" />
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-destructive tabular-nums leading-tight">{stats.missed}</div>
-              <p className="body-text mt-2 font-normal">Audits past the deadline</p>
+              <p className="body-text mt-2 font-normal">Past deadline</p>
             </div>
           </Card>
         </div>
@@ -213,7 +213,7 @@ export default function PerformancePage() {
             <Table>
               <TableHeader className="standard-table-header">
                 <TableRow className="hover:bg-transparent border-none">
-                  <TableHead className="standard-table-head pl-6 py-5">Mission</TableHead>
+                  <TableHead className="standard-table-head pl-6 py-5">Audit</TableHead>
                   <TableHead className="standard-table-head py-5">Location</TableHead>
                   <TableHead className="standard-table-head py-5">Deadline</TableHead>
                   <TableHead className="standard-table-head py-5">Status</TableHead>
@@ -223,7 +223,7 @@ export default function PerformancePage() {
                 {audits.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={4} className="standard-table-cell h-32 text-center text-muted-text">
-                      No missions found for this auditor.
+                      No audits found for this auditor.
                     </TableCell>
                   </TableRow>
                 ) : (

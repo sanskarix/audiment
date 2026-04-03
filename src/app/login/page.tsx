@@ -48,14 +48,7 @@ export default function LoginPage() {
       <div className="w-full max-w-[420px] px-6 space-y-8 relative z-10">
         {/* Brand */}
         <div className="text-center space-y-3">
-          <div className="inline-flex w-12 h-12 rounded-2xl bg-primary items-center justify-center mb-2 shadow-lg shadow-primary/20">
-            <span className="text-primary-foreground font-medium text-xl leading-none">A</span>
-          </div>
           <h1 className="text-3xl font-semibold tracking-tighter text-heading">Audiment</h1>
-          <p className="text-[14px] text-body leading-relaxed">
-            Audit smarter. Manage better. <br />
-            Sign in to your dashboard to continue.
-          </p>
         </div>
 
         <Card className="border-border/50 shadow-xl shadow-black/[0.02] backdrop-blur-sm bg-card/80">

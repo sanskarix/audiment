@@ -202,20 +202,19 @@ export default function AdminLocationsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Node Management</h1>
-            <p className="body-text text-muted-text">Define and manage organizational locations and their respective authorities.</p>
+            <h1 className="page-heading">Locations</h1>
+            <p className="body-text text-muted-text">Manage locations and add assign managers.</p>
           </div>
 
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
               <Button size="default" className="shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2 active:scale-95 transition-all">
-                <Plus className="mr-2 h-4 w-4" /> Create Location
+                <Plus className="mr-2 h-4 w-4" /> Add Location
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle className="font-semibold text-heading">Create New Location</DialogTitle>
-                <DialogDescription className="text-muted-text">Add a new branch/outlet to your organization.</DialogDescription>
+                <DialogTitle className="font-semibold text-heading">Add Location</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleCreateLocation} className="space-y-4 py-6">
                 <div className="flex flex-col gap-2">
@@ -231,7 +230,7 @@ export default function AdminLocationsPage() {
                   <Input value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} required placeholder="Megacity" className="text-body" />
                 </div>
                 <div className="flex flex-col gap-4">
-                  <Label className="text-body font-normal">Assign Managers</Label>
+                  <Label className="text-body font-normal">Managers</Label>
                   <div className="grid grid-cols-2 gap-4 border rounded-md p-4 bg-muted/20">
                     {managers.length === 0 ? (
                       <p className="text-xs text-muted-text col-span-2">No active managers found</p>
@@ -252,7 +251,7 @@ export default function AdminLocationsPage() {
                   </div>
                 </div>
                 {error && <p className="text-sm text-destructive">{error}</p>}
-                <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Creating...' : 'Create Location'}</Button></DialogFooter>
+                <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Adding...' : 'Add Location'}</Button></DialogFooter>
               </form>
             </DialogContent>
           </Dialog>
@@ -266,7 +265,7 @@ export default function AdminLocationsPage() {
               <TableRow className="hover:bg-transparent">
                 <TableHead className="standard-table-head">Name</TableHead>
                 <TableHead className="standard-table-head">City</TableHead>
-                <TableHead className="standard-table-head">Manager</TableHead>
+                <TableHead className="standard-table-head">Managers</TableHead>
                 <TableHead className="standard-table-head">Status</TableHead>
                 <TableHead className="standard-table-head text-right w-[100px]">Actions</TableHead>
               </TableRow>

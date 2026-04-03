@@ -312,7 +312,7 @@ export default function AdminSettingsPage() {
           <Skeleton className="h-5 w-80 mb-8" />
           <div className="flex gap-8">
             <div className="w-48 space-y-2">
-              {[1,2,3,4].map(i => <Skeleton key={i} className="h-10 w-full rounded-lg" />)}
+              {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-10 w-full rounded-lg" />)}
             </div>
             <Skeleton className="flex-1 h-[500px] rounded-xl" />
           </div>
@@ -325,8 +325,9 @@ export default function AdminSettingsPage() {
     <DashboardShell role="Admin">
       <div className="dashboard-page-container">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 flex flex-col gap-2">
           <h1 className="page-heading">Settings</h1>
+          <p className="body-text text-muted-text">Manage platform preferences.</p>
         </div>
 
         {/* Layout: vertical tab rail + content */}
@@ -362,7 +363,6 @@ export default function AdminSettingsPage() {
                 <Card className="standard-card">
                   <CardHeader className="pb-4">
                     <CardTitle className="text-[15px] font-semibold">Personal Information</CardTitle>
-                    <CardDescription className="text-[13px]">Update your name, email, and profile photo.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     {/* Avatar row */}
@@ -387,10 +387,10 @@ export default function AdminSettingsPage() {
                         <p className="text-[13px] font-medium text-heading">Profile Photo</p>
                         <p className="text-[12px] text-muted-text">PNG, JPG or GIF up to 2MB</p>
                         {userDoc?.photoUrl && (
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={() => handleRemovePhoto('user')} 
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemovePhoto('user')}
                             className="h-6 px-2 mt-1 text-[11px] text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
                             Remove Logo
@@ -425,7 +425,6 @@ export default function AdminSettingsPage() {
                 <Card className="standard-card">
                   <CardHeader className="pb-4">
                     <CardTitle className="text-[15px] font-semibold">Security</CardTitle>
-                    <CardDescription className="text-[13px]">Change your account password.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid gap-1.5">
@@ -466,7 +465,6 @@ export default function AdminSettingsPage() {
               <Card className="standard-card">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-[15px] font-semibold">Organization Profile</CardTitle>
-                  <CardDescription className="text-[13px]">Manage your company name, logo, and global timezone.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Logo */}
@@ -483,16 +481,16 @@ export default function AdminSettingsPage() {
                       >
                         {uploadingPhoto ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
                       </button>
-                        <input type="file" accept="image/*" ref={orgLogoInputRef} className="hidden" onChange={e => handleFileSelect(e, 'org')} />
+                      <input type="file" accept="image/*" ref={orgLogoInputRef} className="hidden" onChange={e => handleFileSelect(e, 'org')} />
                     </div>
                     <div className="flex flex-col gap-0.5 items-start px-2">
                       <p className="text-[13px] font-medium text-heading">Company Logo</p>
                       <p className="text-[12px] text-muted-text">Displayed on reports and dashboard.</p>
                       {orgDoc?.logoUrl && (
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={() => handleRemovePhoto('org')} 
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemovePhoto('org')}
                           className="h-6 px-2 mt-1 text-[11px] text-destructive hover:text-destructive hover:bg-destructive/10"
                         >
                           Remove Logo
@@ -536,7 +534,6 @@ export default function AdminSettingsPage() {
               <Card className="standard-card">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-[15px] font-semibold">Notification Preferences</CardTitle>
-                  <CardDescription className="text-[13px]">Choose which organization-wide alerts you want to receive.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {([
@@ -581,14 +578,13 @@ export default function AdminSettingsPage() {
                     <AlertTriangle className="h-4 w-4" />
                     <CardTitle className="text-[15px] font-semibold text-destructive">Danger Zone</CardTitle>
                   </div>
-                  <CardDescription className="text-[13px] text-destructive/70">Critical actions – proceed with caution.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                      <p className="text-[13px] font-semibold text-heading">Export Organization Data</p>
+                      <p className="text-[13px] font-semibold text-heading">Export Data</p>
                       <p className="text-[12px] text-muted-text mt-0.5 max-w-sm">
-                        Download all audit data as a CSV file including title, location, auditor, score, date, and status.
+                        Download all audit data as a CSV file.
                       </p>
                     </div>
                     <Button
@@ -605,7 +601,6 @@ export default function AdminSettingsPage() {
                   <div className="pt-5 border-t border-destructive/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 opacity-50 pointer-events-none select-none">
                     <div>
                       <p className="text-[13px] font-semibold text-heading">Delete Organization</p>
-                      <p className="text-[12px] text-muted-text mt-0.5">Permanently removes all data. This cannot be undone.</p>
                     </div>
                     <Button variant="ghost" disabled className="text-destructive h-9 px-5 font-medium text-[13px]">Delete</Button>
                   </div>

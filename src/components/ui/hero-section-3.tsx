@@ -52,20 +52,20 @@ export function HeroSection() {
                             >
                                 <h1
                                     className="text-balance text-5xl font-semibold sm:text-6xl md:text-7xl tracking-tight leading-[1.1]">
-                                    Know what&apos;s really happening<br />
-                                    <span className="text-neutral-400">at every branch.</span>
+                                    Audit Management Software<br />
+                                    <span className="text-neutral-400">Built for Multi-Location Compliance</span>
                                 </h1>
 
                                 <p className="mx-auto mt-6 max-w-5xl text-pretty text-xl text-neutral-600">
-                                    Audiment is a digital audit platform for multi-outlet businesses. It replaces paper checklists with tamper-proof inspections – verified with photos, videos, GPS, and timestamps.
+                                    One platform for audits, evidence capture, corrective actions, and real-time compliance across every location — replacing paper checklists, WhatsApp photos, and Excel trackers for good.
                                 </p>
 
                                 <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
                                     <Button asChild size="lg" className="rounded-full px-8 h-12 text-base">
-                                        <Link href="/login">Start Free Trial</Link>
+                                        <Link href="/login">Start Free</Link>
                                     </Button>
                                     <Button asChild size="lg" variant="outline" className="rounded-full px-8 h-12 text-base">
-                                        <Link href="#demo">Watch Demo</Link>
+                                        <Link href="#demo">See It In Action</Link>
                                     </Button>
                                 </div>
                                 <p className="mt-6 text-sm text-neutral-500">Built for restaurant chains, retail brands, hotels, and any business running multiple locations.</p>
@@ -123,16 +123,16 @@ const AppComponent = () => {
                     <div className="space-y-1">
                         <div className="space-x-1">
                             <span className="text-foreground align-baseline text-xl font-medium">8,081</span>
-                            <span className="text-muted-text text-xs">Steps/day</span>
+                            <span className="text-muted-text text-sm">Steps/day</span>
                         </div>
-                        <div className="flex h-5 items-center rounded bg-gradient-to-l from-emerald-400 to-indigo-600 px-2 text-xs text-white">2024</div>
+                        <div className="flex h-5 items-center rounded bg-gradient-to-l from-emerald-400 to-indigo-600 px-2 text-sm text-white">2024</div>
                     </div>
                     <div className="space-y-1">
                         <div className="space-x-1">
                             <span className="text-foreground align-baseline text-xl font-medium">5,412</span>
-                            <span className="text-muted-text text-xs">Steps/day</span>
+                            <span className="text-muted-text text-sm">Steps/day</span>
                         </div>
-                        <div className="text-foreground bg-muted flex h-5 w-2/3 items-center rounded px-2 text-xs dark:bg-white/20">2023</div>
+                        <div className="text-foreground bg-muted flex h-5 w-2/3 items-center rounded px-2 text-sm dark:bg-white/20">2023</div>
                     </div>
                 </div>
             </div>
@@ -214,7 +214,6 @@ const HeroHeader = () => {
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
                                 <Button
                                     asChild
-                                    variant="outline"
                                     size="sm"
                                     className={cn(isScrolled && 'lg:hidden')}>
                                     <Link href="/login">
@@ -226,7 +225,7 @@ const HeroHeader = () => {
                                     size="sm"
                                     className={cn(isScrolled && 'lg:hidden')}>
                                     <Link href="/login">
-                                        <span>Start Free Trial</span>
+                                        <span>Start Free</span>
                                     </Link>
                                 </Button>
                                 <Button
@@ -234,7 +233,7 @@ const HeroHeader = () => {
                                     size="sm"
                                     className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
                                     <Link href="/login">
-                                        <span>Start Free Trial</span>
+                                        <span>Start Free</span>
                                     </Link>
                                 </Button>
                             </div>
@@ -252,7 +251,7 @@ const LogoCloud = () => {
             <div className="group relative m-auto max-w-7xl px-6">
                 <div className="flex flex-col items-center md:flex-row">
                     <div className="inline md:max-w-44 md:border-r md:pr-6">
-                        <p className="text-end text-sm">Powering the best teams</p>
+                        <p className="text-end text-sm">Trusted across industries</p>
                     </div>
                     <div className="relative py-6 md:w-[calc(100%-11rem)]">
                         <InfiniteSlider

@@ -16,7 +16,6 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarInset,
-  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -37,8 +36,12 @@ import {
   Calendar,
   Settings,
   Sun,
-  Moon
+  Moon,
+  Menu,
+  X,
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from './ui/button';
 
 interface DashboardShellProps {
   role: 'Admin' | 'Manager' | 'Auditor';
@@ -76,35 +79,27 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
   const { theme, setTheme } = useTheme();
   const [userState, setUserState] = useState<{ name: string; email: string; photoUrl?: string } | null>(null);
   const [hasFlashmobAccess, setHasFlashmobAccess] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
     let unsubUser: any;
-
     if (match) {
       try {
         const data = JSON.parse(decodeURIComponent(match[1]));
         setUserState({ name: data.name, email: data.email });
-
         if (data.uid) {
           unsubUser = onSnapshot(doc(db, 'users', data.uid), (snap) => {
             const uData = snap.data();
             if (uData) {
               setUserState(prev => prev ? { ...prev, ...uData } : { name: uData.name, email: uData.email, photoUrl: uData.photoUrl });
-              if (role === 'Auditor') {
-                setHasFlashmobAccess(uData.hasFlashmobAccess === true);
-              }
+              if (role === 'Auditor') setHasFlashmobAccess(uData.hasFlashmobAccess === true);
             }
           });
         }
-      } catch (e) {
-        // ignore
-      }
+      } catch (e) { /* ignore */ }
     }
-
-    return () => {
-      if (unsubUser) unsubUser();
-    };
+    return () => { if (unsubUser) unsubUser(); };
   }, [role]);
 
   async function handleLogout() {
@@ -112,107 +107,200 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
     router.push('/login');
   }
 
-  // Filter flashmob from auditor nav if they don't have access
   const baseNav = NAV_ITEMS[role] ?? [];
   const navItems = role === 'Auditor'
     ? baseNav.filter(item => item.href !== '/dashboard/auditor/flashmob' || hasFlashmobAccess)
     : baseNav;
 
+  // Bottom nav items for mobile (limit to most important)
+  const mobileNavItems = navItems.slice(0, 5);
+
   return (
-    <SidebarProvider>
-      <Sidebar collapsible="none" className="border-r border-border/50">
-        <SidebarHeader className="h-24 flex flex-row items-center justify-center">
-          <span className="font-semibold tracking-tighter text-heading leading-none" style={{ fontSize: '22px' }}>
-            Audiment
-          </span>
-        </SidebarHeader>
+    <>
+      {/* ── Desktop layout (sidebar) ─────────────────────── */}
+      <div className="hidden md:flex h-screen w-full overflow-hidden">
+        <SidebarProvider>
+          <Sidebar collapsible="none" className="border-r border-border/50 shrink-0">
+            <SidebarHeader className="h-24 flex flex-row items-center justify-center">
+              <span className="font-semibold tracking-tighter text-heading leading-none" style={{ fontSize: '22px' }}>
+                Audiment
+              </span>
+            </SidebarHeader>
 
-        <SidebarContent className="px-3">
-          <SidebarMenu className="gap-0.5">
-            {navItems.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === item.href}
-                  className="h-10 text-muted-text hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-primary/5 data-[active=true]:text-primary data-[active=true]:font-medium transition-all duration-200 px-3 rounded-lg"
-                >
-                  <Link href={item.href} className="flex items-center gap-3 w-full">
-                    <item.icon className="h-4 w-4 shrink-0" />
-                    <span className="text-[13px] font-normal tracking-tight text-body">{item.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarContent>
+            <SidebarContent className="px-3">
+              <SidebarMenu className="gap-0.5">
+                {navItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === item.href}
+                      className="h-10 text-muted-text hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-primary/5 data-[active=true]:text-primary data-[active=true]:font-medium transition-all duration-200 px-3 rounded-lg"
+                    >
+                      <Link href={item.href} className="flex items-center gap-3 w-full">
+                        <item.icon className="h-4 w-4 shrink-0" />
+                        <span className="text-[13px] font-normal tracking-tight text-body">{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarContent>
 
-        <SidebarFooter className="p-4 border-t border-border/50">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <SidebarMenuButton size="lg" className="w-full data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors rounded-lg h-12">
-                <Avatar className="h-8 w-8 rounded-full border border-border/50">
+            <SidebarFooter className="p-4 border-t border-border/50">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton size="lg" className="w-full data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors rounded-lg h-12">
+                    <Avatar className="h-8 w-8 rounded-full border border-border/50">
+                      {userState?.photoUrl ? (
+                        <img src={userState.photoUrl} alt="User" className="h-full w-full object-cover" />
+                      ) : (
+                        <AvatarFallback className="rounded-full bg-primary/10 font-medium text-primary">
+                          <User2 className="h-4 w-4" />
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
+                    <div className="flex flex-col gap-0.5 leading-none overflow-hidden text-left ml-2">
+                      <span className="font-medium truncate text-sm text-body">{userState?.name || 'Loading...'}</span>
+                      <span className="text-[10px] font-medium tracking-wider text-muted-text/50 truncate">{role}</span>
+                    </div>
+                    <ChevronUp className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="top" className="w-[--radix-dropdown-menu-trigger-width] min-w-56" align="end">
+                  <DropdownMenuLabel className="font-normal flex flex-col space-y-1">
+                    <span className="text-sm font-medium text-heading">{userState?.name}</span>
+                    <span className="text-xs text-muted-text">{userState?.email}</span>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="cursor-pointer" asChild>
+                    <Link 
+                      href={
+                        role === 'Admin' ? '/dashboard/admin/settings' : 
+                        role === 'Manager' ? '/dashboard/manager/settings' : 
+                        '/dashboard/auditor/settings'
+                      } 
+                      className="flex items-center w-full"
+                    >
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Settings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+                    <div className="relative mr-2 h-4 w-4 flex items-center justify-center">
+                      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                      <Moon className="absolute h-4 w-4 rotate-0 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                    </div>
+                    <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 cursor-pointer font-medium">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarFooter>
+          </Sidebar>
+
+          <SidebarInset className="typography-scope flex flex-col flex-1 h-screen overflow-hidden bg-background">
+            <div className="flex-1 overflow-auto">
+              <div className="mx-auto w-full max-w-[1440px] h-full">
+                {children}
+              </div>
+            </div>
+          </SidebarInset>
+        </SidebarProvider>
+      </div>
+
+      {/* ── Mobile layout ─────────────────────────────────── */}
+      <div className="flex md:hidden flex-col h-[100dvh] bg-background typography-scope">
+
+        {/* Mobile top bar */}
+        <header className="shrink-0 h-14 px-4 border-b border-border/50 flex items-center justify-between bg-background z-20">
+          <span className="font-semibold tracking-tighter text-heading" style={{ fontSize: '20px' }}>Audiment</span>
+          <div className="flex items-center gap-2">
+            {/* Avatar / profile */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="h-9 w-9 rounded-full border border-border/50 flex items-center justify-center bg-primary/10 shrink-0">
                   {userState?.photoUrl ? (
-                    <img src={userState.photoUrl} alt="User" className="h-full w-full object-cover" />
+                    <img src={userState.photoUrl} alt="User" className="h-full w-full object-cover rounded-full" />
                   ) : (
-                    <AvatarFallback className="rounded-full bg-primary/10 font-medium text-primary">
-                      <User2 className="h-4 w-4" />
-                    </AvatarFallback>
+                    <User2 className="h-4 w-4 text-primary" />
                   )}
-                </Avatar>
-                <div className="flex flex-col gap-0.5 leading-none overflow-hidden text-left ml-2">
-                  <span className="font-medium truncate text-sm text-body">{userState?.name || 'Loading...'}</span>
-                  <span className="text-[10px] font-medium  tracking-wider text-muted-text/50 truncate">
-                    {role}
-                  </span>
-                </div>
-                <ChevronUp className="ml-auto h-4 w-4 shrink-0 opacity-50" />
-              </SidebarMenuButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="top" className="w-[--radix-dropdown-menu-trigger-width] min-w-56" align="end">
-              <DropdownMenuLabel className="font-normal flex flex-col space-y-1">
-                <span className="text-sm font-medium text-heading">{userState?.name}</span>
-                <span className="text-xs text-muted-text">{userState?.email}</span>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer" asChild>
-                <Link 
-                  href={
-                    role === 'Admin' ? '/dashboard/admin/settings' : 
-                    role === 'Manager' ? '/dashboard/manager/settings' : '#'
-                  } 
-                  className="flex items-center w-full"
-                >
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-              >
-                <div className="relative mr-2 h-4 w-4 flex items-center justify-center">
-                  <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                  <Moon className="absolute h-4 w-4 rotate-0 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                </div>
-                <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 cursor-pointer font-medium">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </SidebarFooter>
-      </Sidebar>
-
-      <SidebarInset className="typography-scope flex flex-col flex-1 h-screen overflow-hidden bg-background">
-        <div className="flex-1 overflow-auto">
-          <div className="mx-auto w-full max-w-[1440px] h-full">
-            {children}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="bottom" align="end" className="min-w-52">
+                <DropdownMenuLabel className="font-normal flex flex-col space-y-0.5">
+                  <span className="text-sm font-medium text-heading">{userState?.name}</span>
+                  <span className="text-xs text-muted-text">{userState?.email}</span>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer" asChild>
+                  <Link 
+                    href={
+                      role === 'Admin' ? '/dashboard/admin/settings' : 
+                      role === 'Manager' ? '/dashboard/manager/settings' : 
+                      '/dashboard/auditor/settings'
+                    } 
+                    className="flex items-center w-full"
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+                  <div className="relative mr-2 h-4 w-4 flex items-center justify-center">
+                    <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="absolute h-4 w-4 rotate-0 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  </div>
+                  <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 cursor-pointer font-medium">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+        </header>
+
+        {/* Scrollable content */}
+        <main className="flex-1 overflow-y-auto pb-20">
+          {children}
+        </main>
+
+        {/* Bottom navigation bar */}
+        <nav className="shrink-0 fixed bottom-0 left-0 right-0 z-30 h-16 bg-background border-t border-border/50 flex items-center justify-around px-2">
+          {mobileNavItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex flex-col items-center justify-center gap-1 flex-1 h-full rounded-xl transition-colors",
+                  isActive ? "text-primary" : "text-muted-text/60 hover:text-muted-text"
+                )}
+              >
+                <div className={cn(
+                  "h-8 w-12 rounded-2xl flex items-center justify-center transition-all",
+                  isActive ? "bg-primary/10" : ""
+                )}>
+                  <item.icon className={cn("h-5 w-5 transition-all", isActive ? "text-primary" : "")} />
+                </div>
+                <span className={cn(
+                  "text-[10px] font-medium leading-none",
+                  isActive ? "text-primary" : "text-muted-text/60"
+                )}>
+                  {item.title}
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+    </>
   );
 }

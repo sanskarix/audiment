@@ -143,8 +143,8 @@ export default function AdminTemplatesPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Audit Blueprints</h1>
-            <p className="body-text text-muted-text">Create and manage standardized audit frameworks and compliance metrics.</p>
+            <h1 className="page-heading">Templates</h1>
+            <p className="body-text text-muted-text">Add or edit audit templates.</p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             {!hasFssai && (
@@ -155,12 +155,12 @@ export default function AdminTemplatesPage() {
                 disabled={loading}
                 className="h-11 px-5 text-[14px] font-medium text-success hover:text-success hover:bg-success/5 border-success/20 transition-all active:scale-95"
               >
-                <ClipboardCheck className="mr-2 h-4 w-4" /> Load FSSAI Defaults
+                <ClipboardCheck className="mr-2 h-4 w-4" /> Load Defaults
               </Button>
             )}
             <Link href="/dashboard/admin/templates/new">
               <Button size="default" className="shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2 active:scale-95 transition-all">
-                <Plus className="mr-2 h-4 w-4" /> Create Template
+                <Plus className="mr-2 h-4 w-4" /> New Template
               </Button>
             </Link>
           </div>
@@ -172,9 +172,9 @@ export default function AdminTemplatesPage() {
           <Table>
             <TableHeader className="standard-table-header">
               <TableRow className="hover:bg-transparent">
-                <TableHead className="standard-table-head">Template Title</TableHead>
+                <TableHead className="standard-table-head">Title</TableHead>
                 <TableHead className="standard-table-head">Category</TableHead>
-                <TableHead className="standard-table-head">Created</TableHead>
+                <TableHead className="standard-table-head">Date</TableHead>
                 <TableHead className="standard-table-head">Status</TableHead>
                 <TableHead className="standard-table-head text-right w-[100px]">Actions</TableHead>
               </TableRow>
@@ -185,7 +185,7 @@ export default function AdminTemplatesPage() {
                   <TableCell colSpan={5} className="standard-table-cell text-center py-12">
                     <div className="flex flex-col items-center justify-center gap-2">
                       <ClipboardCheck className="h-8 w-8 opacity-20" />
-                      <p className="text-body">No templates found. Start by loading FSSAI defaults or creating a new blueprint.</p>
+                      <p className="text-body">No templates found. Start by loading defaults or creating a new template.</p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -197,14 +197,14 @@ export default function AdminTemplatesPage() {
                         {t.title}
                         {t.isFssaiDefault && (
                           <Badge variant="secondary" className="ml-2 h-6 rounded-full bg-success/10 text-success border-none text-[12px] font-normal px-2.5">
-                            FSSAI Blueprint
+                            FSSAI
                           </Badge>
                         )}
                       </div>
                     </TableCell>
                     <TableCell className="standard-table-cell">
-                      <Badge 
-                        variant="secondary" 
+                      <Badge
+                        variant="secondary"
                         className="px-2 py-0.5 text-body bg-muted/60 text-muted-text border-none"
                         style={{ fontSize: 12, fontWeight: 400 }}
                       >
@@ -224,10 +224,10 @@ export default function AdminTemplatesPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-40">
                           <DropdownMenuItem onClick={() => router.push(`/dashboard/admin/templates/${t.id}/edit`)} className="text-body">
-                            <Settings2 className="mr-2 h-4 w-4 text-muted-text" /> Edit Blueprint
+                            <Settings2 className="mr-2 h-4 w-4 text-muted-text" /> Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => handleDeleteTemplate(t.id)}>
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete Template
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

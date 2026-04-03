@@ -431,7 +431,7 @@ export default function AuditExecutionPage() {
               <div className="flex items-center gap-2 justify-center">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                 <p className="text-sm font-normal text-heading">
-                  Module {currentIndex + 1} <span className="text-muted-text/40 text-xs">/ {questions.length}</span>
+                  Question {currentIndex + 1} <span className="text-muted-text/40 text-xs">of {questions.length}</span>
                 </p>
               </div>
             </div>
@@ -479,7 +479,7 @@ export default function AuditExecutionPage() {
                 </Badge>
                 {currentQuestion.requiresPhoto && (
                   <Badge variant="outline" className="text-[10px] font-medium text-warning border-warning/30 bg-warning/10 tracking-widest px-3 py-1">
-                    Visual Evidence Required
+                    Photo Required
                   </Badge>
                 )}
               </div>
@@ -544,7 +544,7 @@ export default function AuditExecutionPage() {
               <div className="space-y-lg pt-6 md:pt-8 border-t border-border/50">
                 <div className="flex items-center justify-between">
                   <Label className="text-xs font-normal  tracking-widest text-muted-text flex items-center gap-2">
-                    <ImageIcon className="h-4 w-4" /> Visual Evidence
+                    <ImageIcon className="h-4 w-4" /> Photos
                   </Label>
                   <Button
                     variant="outline"
@@ -563,7 +563,7 @@ export default function AuditExecutionPage() {
                   <div className="bg-destructive/5 border border-destructive/20 p-4 rounded-lg flex items-start gap-4 animate-in slide-in-from-left duration-500">
                     <AlertCircle className="h-5 w-5 text-destructive mt-0.5" />
                     <p className="text-xs font-medium text-destructive">
-                      Visual evidence is required for this module. Please capture a photo to proceed.
+                      A photo is required to continue.
                     </p>
                   </div>
                 )}
@@ -586,10 +586,10 @@ export default function AuditExecutionPage() {
               {/* Notes Area */}
               <div className="space-y-3 pt-6 md:pt-8 border-t border-border/50">
                 <Label className="text-xs font-normal  tracking-widest text-muted-text">
-                  Observations & Notes
+                  Notes
                 </Label>
                 <Textarea
-                  placeholder="Provide details for your observations..."
+                  placeholder="Add any notes or observations..."
                   value={currentResponse?.notes || ''}
                   onChange={(e) => handleNoteChange(e.target.value)}
                   className="min-h-[140px] resize-none bg-background border-input focus:border-primary/50 focus:ring-primary/20 rounded-lg text-sm transition-all text-body"

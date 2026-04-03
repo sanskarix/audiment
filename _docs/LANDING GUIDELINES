@@ -1,0 +1,141 @@
+# AUDIMENT LANDING PAGE BUILD INSTRUCTIONS
+
+## 1. Page Structure & Required Sections (Strict Order)
+
+Implement exactly 10 sections in this sequence. Use semantic HTML (H1-H3), mobile-first responsive design (Tailwind CSS recommended), and lazy-loading for images/videos.
+
+### SECTION 1: Hero
+- **H1**: "Audit Management Software Built for Multi-Location Compliance"
+- **Subhead**: "Replace paper checklists, scattered WhatsApp photos, and Excel trackers with a single platform for audits, evidence, corrective actions, and real-time compliance intelligence across every location."
+- **CTAs**: Primary button "Start Free" (links to signup); Secondary "See It In Action" (demo video embed).
+- **Social proof**: Horizontal strip with industry logos or metrics (e.g., "Trusted by 500+ locations across 50 cities").
+- **Embed semantic keywords naturally**: audit management, compliance, multi-location, distributed locations, field audit, evidence-based, corrective actions, real-time.
+
+### SECTION 2: Problem Statement
+- **H2**: "Why Multi-Location Audits Break Down"
+- **4 pain-point cards** (grid layout):
+  1. "Paper checklists that nobody reviews"
+  2. "No proof that the auditor was actually there" 
+  3. "Corrective actions that disappear into email threads"
+  4. "No way to detect patterns across locations"
+- Style as clickable cards for AI extraction on queries like "challenges of multi-location compliance audits."
+
+### SECTION 3: How Audiment Works
+- **H2**: "From Blueprint to Resolution – The Full Audit Lifecycle"
+- **Visual 7-step timeline** (icons + animations):
+  1. Create audit blueprints with scoring logic *(2-3 sentences)*
+  2. Define locations (nodes) and assign managers *(2-3 sentences)*
+  3. Schedule and assign audits to field auditors *(2-3 sentences)*
+  4. Auditors execute with mandatory photo/video evidence *(2-3 sentences)*
+  5. System auto-scores, triggers alerts, geo-tags *(2-3 sentences)*
+  6. Managers resolve corrective actions with proof *(2-3 sentences)*
+  7. Export stakeholder-ready PDF reports *(2-3 sentences)*
+- Make descriptive text high-value for AI extraction.
+
+### SECTION 4: Key Features
+- **H2**: "Everything You Need for Compliant, Auditable Operations"
+- **10 feature cards** (grid; each with H3, icon, 2-3 bullet benefits):
+
+| Feature H3 | Keywords to Hit |
+|------------|-----------------|
+| Photo & Video Evidence Enforcement | audit with photo evidence, evidence-based audit |
+| Automated Corrective Action Tracking | corrective action tracking software, CAPA |
+| Instant Low-Score & Trend Alerts | automated audit alerts, compliance monitoring |
+| Flash Verification – Prove Your Auditor Was There | auditor identity verification, geo-tagged audits |
+| Standardized Audit Blueprints | audit template builder, audit checklist creator |
+| FSSAI-Ready Compliance Templates | FSSAI audit software, food safety compliance |
+| One-Click PDF Audit Reports | audit reporting software, automated audit reports |
+| Dashboards for Admins, Managers & Auditors | audit management dashboard, compliance dashboard |
+| Mobile-First Audit Execution | mobile audit app, field audit app |
+| Pattern Detection Across Locations | compliance trend analysis, multi-location analytics |
+
+### SECTION 5: Industry Use Cases
+- **H2**: "Built for Every Multi-Location Operation"
+- **6 cards** (grid; emoji icons + 2 sentences + link to industry page):
+  - 🍔 **QSR & Restaurant Chains**
+  - 🛒 **Retail & Grocery Chains**
+  - 🏨 **Hotels & Hospitality**
+  - 🏭 **Manufacturing & Warehousing**
+  - 🏢 **Franchise Operations**
+  - 🍽️ **Food & Beverage (FSSAI)**
+
+### SECTION 6: The Three Roles
+- **H2**: "One Platform, Three Powerful Interfaces"
+- **Tabs/accordion** with 3 panels: 
+  - Admin *(3-4 capabilities)*
+  - Manager *(3-4 capabilities)*
+  - Auditor *(3-4 capabilities)*
+- Emphasize role-based differentiation.
+
+### SECTION 7: Social Proof
+- **H2**: "Why Operations Leaders Choose Audiment"
+- Include: 3-5 testimonials, 2-3 case study snapshots, metrics (e.g., "60% reduction in corrective action close time").
+
+### SECTION 8: Comparison Table
+- **H2**: "Audiment vs. The Old Way"
+- **Responsive table**:
+
+| Capability | Paper/Excel | Generic Tools | Audiment |
+|------------|-------------|---------------|----------|
+| Mandatory photo evidence | ❌ | ⚠️ Optional | ✅ Enforced per question |
+| Geo-tagged verification | ❌ | ❌ | ✅ With flash video |
+| Auto corrective actions | ❌ | ❌ | ✅ 48-hour SLA |
+| Trend detection | ❌ | ❌ | ✅ 3-audit pattern alerts |
+| FSSAI-ready templates | ❌ | ❌ | ✅ One-click load |
+| PDF reports | ❌ | ⚠️ Basic | ✅ High-fidelity export |
+
+### SECTION 9: FAQ
+- **H2**: "Frequently Asked Questions"
+- **10 Q&A pairs** (accordion; implement FAQPage schema):
+  1. What is audit management software? *[Define: Platform for creating, executing, tracking audits...]*
+  2. How does Audiment ensure auditors actually visit? *[Flash verification + geo-tagging + identity video]*
+  3. Can I customize checklists? *[Yes, Blueprint builder...]*
+  4. FSSAI support? *[Yes, one-click templates]*
+  5. Corrective action workflow? *[Auto-tasks, 48h SLA, photo proof]*
+  6. PDF exports? *[Yes, high-fidelity]*
+  7. Industries? *[QSR, retail, etc.]*
+  8. vs. iAuditor? *[Evidence enforcement, flash verify, auto CAPA, trends]*
+  9. Mobile app? *[Mobile web with save/resume]*
+  10. Low scores? *[Auto alerts + 3-audit trends]*
+
+### SECTION 10: Final CTA
+- **H2**: "Stop Auditing on Paper. Start Auditing with Proof."
+- **Dual CTAs**: "Start Free" / "Book a Demo"
+
+## 2. Technical Requirements (Mandatory)
+
+### Schema Markup (JSON-LD in <head>)
+```json
+{
+  "SoftwareApplication": {
+    "name": "Audiment",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web, Mobile",
+    "offers": {"price": "0", "priceCurrency": "USD"}
+  },
+  "FAQPage": {...},
+  "Organization": {
+    "name": "Audiment",
+    "logo": "/logo.png",
+    "url": "https://audiment.com"
+  },
+  "BreadcrumbList": {...}
+}
+```
+
+### Meta/OG/Twitter
+- Full Open Graph (title, desc, image, url, type: "website")
+- Twitter cards
+- Canonical URL
+
+### Performance
+- **Core Web Vitals**: LCP <2.5s, CLS <0.1, INP <200ms
+- **Next.js**: App Router streaming + Suspense; next/image lazy-load; SSR all text
+
+### AI Crawlability
+- Raw HTML for all content
+- **Root llms.txt**: "Audiment is audit management software for multi-location compliance with photo evidence, CAPA, FSSAI templates..."
+- **robots.txt**: Allow GPTBot, ClaudeBot, PerplexityBot, Google-Extended
+
+## Build Priority
+Hero → Problems → Lifecycle → Features → CTA. Ensure fast load, mobile optimization, A/B testable CTAs.

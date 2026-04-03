@@ -1,179 +1,139 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import {
-  ArrowRight, CheckCircle2, Globe2, Shield, Zap, LayoutTemplate,
+  ArrowRight, CheckCircle2, Globe2, Shield, Zap,
   Camera, MapPin, RefreshCw, Crown, Users, ClipboardList,
-  Utensils, ShoppingBag, Hotel, Warehouse, ChevronDown, ChevronUp,
-  Lock, Database, Smartphone, Wifi
+  Utensils, ShoppingBag, Hotel, Warehouse,
+  Lock, Database, Smartphone, Wifi, Building2, UtensilsCrossed
 } from "lucide-react";
 import { HeroSection } from "@/components/ui/hero-section-3";
 import { Footer } from "@/components/ui/modem-animated-footer";
 import { StickyFeatureSection } from "@/components/ui/sticky-scroll-cards-section";
+import { FAQAccordion } from "@/components/ui/faq-accordion";
+import { TestimonialsSection } from "@/components/ui/testimonial-v2";
 
-// ─── FAQ Data ────────────────────────────────────────────────────────────────
-const faqs = [
-  {
-    q: "Do my auditors need to download an app?",
-    a: "No. Audiment is a web app optimized for mobile browsers. Open the link, log in, and start auditing. No app store needed.",
-  },
-  {
-    q: "What happens if the auditor doesn't have internet during an audit?",
-    a: "They can complete the entire audit offline. All data – including photos and videos – syncs automatically once they're back online.",
-  },
-  {
-    q: "Can managers see surprise audits before the auditor arrives?",
-    a: "No. Surprise audits are invisible on the manager's dashboard until the auditor begins the inspection. Managers cannot prepare in advance.",
-  },
-  {
-    q: "How is this different from using Google Forms or a spreadsheet?",
-    a: "Google Forms can't verify GPS location, force live photo/video capture, auto-calculate weighted risk scores, trigger corrective actions, or escalate declining trends. Audiment is built specifically for verified, accountable audits across multiple locations.",
-  },
-  {
-    q: "Can I customize the audit templates?",
-    a: "Yes. Admins create templates from scratch. Set your own questions, choose severity levels (Low, Medium, Critical), require photos or videos on specific questions, and set recurrence schedules.",
-  },
-  {
-    q: "Who can see what?",
-    a: "Admins see all locations and all data. Managers see only their assigned locations. Auditors see only the audits assigned to them. Access is enforced at the server level.",
-  },
-  {
-    q: "Is my data secure?",
-    a: "Yes. Data is stored in Firebase with server-side security rules. Role-based access is enforced at the database level, not just the UI. No one can access data they're not authorized to see.",
-  },
-  {
-    q: "What industries is this for?",
-    a: "Any business operating multiple physical locations where consistent standards matter – restaurants, retail chains, hotels, warehouses, healthcare facilities, franchise operations, facility management companies.",
-  },
-];
-
-// ─── FAQ Item Component ───────────────────────────────────────────────────────
-function FAQItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div
-      className="border border-neutral-200 rounded-2xl overflow-hidden transition-all duration-200"
-      style={{ background: open ? "#fafafa" : "#fff" }}
-    >
-      <button
-        className="w-full flex items-center justify-between gap-4 p-6 text-left"
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-      >
-        <span className="text-lg font-semibold text-neutral-900">{q}</span>
-        {open ? (
-          <ChevronUp className="w-5 h-5 text-neutral-400 flex-shrink-0" />
-        ) : (
-          <ChevronDown className="w-5 h-5 text-neutral-400 flex-shrink-0" />
-        )}
-      </button>
-      {open && (
-        <div className="px-6 pb-6">
-          <p className="text-neutral-600 leading-relaxed">{a}</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── How It Works Steps ───────────────────────────────────────────────────────
+// ─── How It Works Steps (7 steps per guidelines §3) ───────────────────────────
 const steps = [
   {
     number: "01",
-    title: "Create",
-    desc: "Admin builds an audit template in the dashboard. Set questions, assign severity levels, add photo/video requirements.",
+    title: "Create Audit Blueprints",
+    desc: "Build templates with custom questions, severity levels (Low / Medium / Critical), weighted scoring, and mandatory photo or video requirements per question.",
   },
   {
     number: "02",
-    title: "Schedule or Publish",
-    desc: "Set it to recur (every Monday at 9 AM) or publish it as a surprise – invisible to managers until the auditor arrives.",
+    title: "Define Locations & Assign Managers",
+    desc: "Register each branch with GPS coordinates. Assign managers so they only see audits relevant to their locations.",
   },
   {
     number: "03",
-    title: "Assign",
-    desc: "Manager receives the audit and assigns it to an available auditor at the right location.",
+    title: "Schedule or Publish",
+    desc: "Set recurring schedules or push a surprise audit — invisible to managers until the auditor is at the door.",
   },
   {
     number: "04",
-    title: "Audit",
-    desc: "Auditor completes the inspection on their phone. One question at a time. Photos, videos, and notes captured in real-time. Works offline too.",
+    title: "Auditors Execute with Evidence",
+    desc: "One question at a time on mobile. Live photos, videos, and GPS captured and locked on submission. Works fully offline.",
   },
   {
     number: "05",
-    title: "Score & Flag",
-    desc: "The system calculates a weighted score instantly. Critical failures trigger automatic alerts. No manual review needed to raise a red flag.",
+    title: "System Auto-Scores & Alerts",
+    desc: "Weighted scores calculated instantly. Critical failures escalate automatically. GPS mismatches flagged without manual review.",
   },
   {
     number: "06",
-    title: "Resolve & Archive",
-    desc: "Manager fixes the issue, uploads \"after\" photos. Admin compares before vs. after and approves. The audit is permanently stored for compliance records.",
+    title: "Managers Resolve with Proof",
+    desc: "Managers upload \"after\" photos as corrective action proof. Admins review before and after. Nothing is closed without verification.",
+  },
+  {
+    number: "07",
+    title: "Export PDF Reports",
+    desc: "One-click PDF with all responses, photos, scores, GPS, and corrective action history — ready for FSSAI or franchise compliance reviews.",
   },
 ];
 
-// ─── Tamper-Proof Data ────────────────────────────────────────────────────────
-const tamperRows = [
+// ─── Comparison Table Data (§8) ───────────────────────────────────────────────
+const comparisonRows = [
   {
-    threat: "Auditor fills out the audit from home",
-    prevention: "GPS mismatch flag if >50m from registered branch location",
+    capability: "Mandatory photo evidence",
+    paper: { icon: "❌", label: "None" },
+    generic: { icon: "⚠️", label: "Optional" },
+    audiment: { icon: "✅", label: "Enforced per question" },
   },
   {
-    threat: "Auditor uploads old/staged photos",
-    prevention: "Photos and videos must be captured live inside the app. No gallery uploads.",
+    capability: "Geo-tagged verification",
+    paper: { icon: "❌", label: "None" },
+    generic: { icon: "❌", label: "None" },
+    audiment: { icon: "✅", label: "With Flash video" },
   },
   {
-    threat: "Someone else does the audit (proxy)",
-    prevention: "Selfie verification captured alongside Flashmob video recordings",
+    capability: "Auto corrective actions",
+    paper: { icon: "❌", label: "None" },
+    generic: { icon: "❌", label: "None" },
+    audiment: { icon: "✅", label: "48-hour SLA" },
   },
   {
-    threat: "Manager hides problems from owner",
-    prevention: "Critical failures auto-escalate. Admin sees everything across all locations.",
+    capability: "Trend detection & alerts",
+    paper: { icon: "❌", label: "None" },
+    generic: { icon: "❌", label: "None" },
+    audiment: { icon: "✅", label: "3-audit pattern alerts" },
   },
   {
-    threat: 'Audit gets "forgotten"',
-    prevention: "Recurring schedules auto-publish. Delay alerts fire if no auditor is assigned within 2 hours.",
+    capability: "FSSAI-ready templates",
+    paper: { icon: "❌", label: "None" },
+    generic: { icon: "❌", label: "None" },
+    audiment: { icon: "✅", label: "One-click load" },
   },
   {
-    threat: "Timestamps are manipulated",
-    prevention: "Server-side timestamps. Phone clock changes don't affect recorded times.",
-  },
-  {
-    threat: "Corrective actions are ignored",
-    prevention: "Open issues remain flagged until resolved with photo proof and admin approval.",
+    capability: "PDF reports",
+    paper: { icon: "❌", label: "None" },
+    generic: { icon: "⚠️", label: "Basic export" },
+    audiment: { icon: "✅", label: "High-fidelity export" },
   },
 ];
 
-// ─── Use Cases ────────────────────────────────────────────────────────────────
+// ─── Use Cases (6 per guidelines §5) ─────────────────────────────────────────
 const useCases = [
   {
     icon: Utensils,
-    title: "Restaurants & Café Chains",
-    desc: "A QSR chain with 20 outlets pushes a \"Pre-Opening Audit\" every morning at 8 AM. The manager confirms all equipment is on and staff is present within 30 minutes. Auditors perform freezer temperature checks – anything above 4°C triggers an immediate maintenance alert.",
+    title: "QSR & Restaurant Chains",
+    desc: "Run daily pre-opening audits across every outlet. Freezer temperature failures trigger immediate alerts — not end-of-week reports.",
     checks: "Kitchen hygiene, food storage temperatures, staff grooming, equipment status, FSSAI compliance.",
   },
   {
     icon: ShoppingBag,
-    title: "Retail Chains",
-    desc: 'A fashion brand with 50 stores runs weekly visual audits. Auditors photograph window displays to verify that the nationwide "Summer Sale" branding is consistent. If a mannequin is missing an accessory, a corrective action is created for the store decorator to fix by end of day.',
+    title: "Retail & Grocery Chains",
+    desc: "Verify nationwide branding consistency with photo evidence. Any store that breaks the standard gets an auto-assigned corrective action.",
     checks: "Store layout, branding consistency, inventory presentation, staff uniform, signage compliance.",
   },
   {
     icon: Hotel,
     title: "Hotels & Hospitality",
-    desc: "Housekeeping quality, lobby cleanliness, room readiness – all checked with photo evidence and GPS verification. Surprise audits catch the real state of operations, not the version prepared for announced inspections.",
+    desc: "Housekeeping, lobby standards, and room readiness checked with GPS-verified photo evidence. Surprise audits show the real picture.",
     checks: "Room cleanliness, amenity restocking, common area maintenance, safety equipment, guest-facing standards.",
   },
   {
     icon: Warehouse,
-    title: "Facility Management & Warehouses",
-    desc: "Safety equipment checks, fire exit clearance, pest control verification – all on recurring schedules with critical-severity scoring. A blocked fire exit doesn't get lost in a spreadsheet. It triggers an immediate escalation.",
-    checks: "Fire safety, pest control, equipment maintenance, PPE compliance, loading dock organization.",
+    title: "Manufacturing & Warehousing",
+    desc: "Safety checks, fire exit clearance, and pest control on recurring schedules. Critical failures escalate instantly — not the next audit cycle.",
+    checks: "Fire safety, pest control, equipment maintenance, PPE compliance, loading dock organisation.",
+  },
+  {
+    icon: Building2,
+    title: "Franchise Operations",
+    desc: "Enforce brand standards across every franchisee from a single dashboard. See exactly which locations are compliant and which aren't.",
+    checks: "Brand standard compliance, operational consistency, franchisee accountability, multi-location benchmarking.",
+  },
+  {
+    icon: UtensilsCrossed,
+    title: "Food & Beverage (FSSAI)",
+    desc: "Load FSSAI-ready templates with one click. Every inspection produces a GPS-tagged, timestamped record that satisfies regulatory requirements.",
+    checks: "FSSAI compliance, food storage, hygiene standards, pest control records, staff food handler certifications.",
   },
 ];
 
 // ─── Technical Features ───────────────────────────────────────────────────────
 const techFeatures = [
-  { icon: Smartphone, title: "Mobile-optimized web app", desc: "No app store download needed. Works on any phone browser. PWA-ready." },
+  { icon: Smartphone, title: "Mobile-optimised web app", desc: "No app store download needed. Works on any phone browser. PWA-ready." },
   { icon: Zap, title: "Real-time sync", desc: "Data updates instantly across all dashboards." },
   { icon: Shield, title: "Role-based access control", desc: "Auditors only see their assigned audits. Managers only see their locations. Admins see everything." },
   { icon: Wifi, title: "Offline capable", desc: "Audits sync automatically when connectivity is restored." },
@@ -186,31 +146,35 @@ export default function Home() {
       {/* Hero + Nav */}
       <HeroSection />
 
-      {/* ── Problem Section ────────────────────────────────────────────────── */}
+      {/* ── Problem Section (§2) ──────────────────────────────────────────── */}
       <section className="py-24 md:py-32 bg-neutral-950 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="max-w-3xl mb-16">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-white leading-[1.15] mb-6">
-              You can&apos;t be everywhere.<br />
-              <span className="text-neutral-400">That&apos;s the problem.</span>
+              Why Multi-Location<br />
+              <span className="text-neutral-400">Audits Break Down</span>
             </h2>
             <p className="text-xl text-neutral-400 leading-relaxed">
               When you ran one location, you saw everything. Now you have 5, 20, or 50 – and you rely on managers to tell you the truth.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
-                title: "Paper audits are worthless",
-                desc: "They're easy to fake, impossible to track, and they sit in a drawer. No photos. No proof. No accountability.",
+                title: "Paper checklists that nobody reviews",
+                desc: "Easy to fake, impossible to verify. No photos, no proof, no follow-up.",
               },
               {
-                title: "Managers filter information",
-                desc: "Not always on purpose. But by the time a problem reaches you, it's either sugarcoated or a full-blown crisis.",
+                title: "No proof the auditor was actually there",
+                desc: "Without GPS verification and live evidence, you're auditing on trust.",
               },
               {
-                title: "One branch can sink the brand",
-                desc: "A hygiene violation, a safety hazard, a terrible customer experience – it only takes one location to destroy years of reputation. And you didn't even know.",
+                title: "Corrective actions lost in email threads",
+                desc: "A failure gets noted. An email is sent. The same issue appears next audit.",
+              },
+              {
+                title: "No visibility into patterns across locations",
+                desc: "A branch declining over 5 audits is a systemic problem. You'd never see it in a spreadsheet.",
               },
             ].map((card, i) => (
               <div
@@ -237,7 +201,7 @@ export default function Home() {
               <span className="text-neutral-400">ground truth.</span>
             </h2>
             <p className="text-xl text-neutral-500 leading-relaxed">
-              Every audit is backed by live photos, videos, GPS location, and server-verified timestamps. Nothing can be faked. Nothing gets lost. Every failure becomes a task that must be resolved with proof.
+              Live photos, GPS location, and server-verified timestamps on every audit. Nothing can be faked — every failure becomes a task that must be closed with proof.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -273,20 +237,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── How It Works Section ──────────────────────────────────────────── */}
+      {/* ── How It Works Section (§3 – 7 steps) ──────────────────────────── */}
       <section id="how-it-works" className="py-24 md:py-32 bg-neutral-50 px-6 border-b border-neutral-200/60">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-20">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-6">
-              From template to resolution<br />
-              <span className="text-neutral-400">in 6 steps.</span>
+              From Blueprint to Resolution –<br />
+              <span className="text-neutral-400">The Full Audit Lifecycle</span>
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {steps.map((step, i) => (
               <div
                 key={i}
-                className="bg-white rounded-2xl p-8 border border-neutral-100 hover:border-neutral-200 hover:shadow-lg hover:shadow-neutral-200/30 transition-all duration-300 group"
+                className={`bg-white rounded-2xl p-8 border border-neutral-100 hover:border-neutral-200 hover:shadow-lg hover:shadow-neutral-200/30 transition-all duration-300 group ${i === 6 ? "md:col-span-2 lg:col-span-3 xl:col-span-1" : ""}`}
               >
                 <span className="text-5xl font-bold text-neutral-100 group-hover:text-neutral-200 transition-colors duration-300 tracking-tighter block mb-4">
                   {step.number}
@@ -299,13 +263,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Role-Based Architecture Section ──────────────────────────────── */}
+      {/* ── Role-Based Architecture Section (§6) ──────────────────────────── */}
       <section className="py-24 md:py-32 bg-white px-6 border-b border-neutral-100">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-20">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-6">
-              Three roles.<br />
-              <span className="text-neutral-400">Clear accountability.</span>
+              One Platform,<br />
+              <span className="text-neutral-400">Three Powerful Interfaces</span>
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -317,9 +281,9 @@ export default function Home() {
                 color: "bg-neutral-900",
                 items: [
                   "Full visibility across all locations",
-                  "Create and manage audit templates",
-                  "Add users, manage branches",
-                  "View trend reports and comparative performance",
+                  "Create and manage audit blueprints with scoring logic",
+                  "Add users, manage branches and team assignments",
+                  "View trend reports and comparative location performance",
                   "Approve or reject corrective action resolutions",
                 ],
               },
@@ -329,9 +293,10 @@ export default function Home() {
                 subtitle: "Branch / Regional Level",
                 color: "bg-neutral-700",
                 items: [
-                  "Receives published audits, assigns them to auditors",
+                  "Receives published audits and assigns them to auditors",
                   "Responsible for fixing failed items with photo proof",
                   "Tracks auditor progress and scores for their locations",
+                  "Resolves corrective actions within the 48-hour SLA",
                 ],
               },
               {
@@ -341,8 +306,9 @@ export default function Home() {
                 color: "bg-neutral-500",
                 items: [
                   "Mobile-first interface, one question at a time",
-                  "Captures photos, videos, GPS, and notes during audits",
-                  "Works offline – syncs automatically when back online",
+                  "Captures mandatory photos, videos, GPS, and notes",
+                  "Flash Verification for identity and location proof",
+                  "Works fully offline – syncs automatically when back online",
                 ],
               },
             ].map((role, i) => (
@@ -360,7 +326,7 @@ export default function Home() {
                 <div className="bg-white p-8">
                   <ul className="space-y-3">
                     {role.items.map((item, j) => (
-                      <li key={j} className="flex items-start gap-3 text-neutral-600 text-sm leading-relaxed">
+                      <li key={j} className="flex items-start gap-3 text-neutral-600 text-base leading-relaxed">
                         <CheckCircle2 className="w-4 h-4 text-neutral-400 flex-shrink-0 mt-0.5" />
                         {item}
                       </li>
@@ -373,19 +339,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Sticky Scroll Features Section ───────────────────────────────── */}
+      {/* ── Key Features Section (§4) ─────────────────────────────────────── */}
       <StickyFeatureSection />
 
-      {/* ── Use Cases Section ─────────────────────────────────────────────── */}
+      {/* ── Industry Use Cases Section (§5 – 6 cards) ────────────────────── */}
       <section id="use-cases" className="py-24 md:py-32 bg-neutral-50 px-6 border-y border-neutral-200/60">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-20">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-6">
-              Built for businesses that operate<br />
-              <span className="text-neutral-400">across multiple locations.</span>
+              Built for Every<br />
+              <span className="text-neutral-400">Multi-Location Operation</span>
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {useCases.map((uc, i) => (
               <div
                 key={i}
@@ -399,7 +365,7 @@ export default function Home() {
                 </div>
                 <p className="text-neutral-500 leading-relaxed mb-6">{uc.desc}</p>
                 <div className="pt-5 border-t border-neutral-100">
-                  <span className="text-xs font-semibold  tracking-widest text-neutral-400 block mb-2">Key Checks</span>
+                  <span className="text-sm font-semibold tracking-widest text-neutral-400 block mb-2">Key Checks</span>
                   <p className="text-sm text-neutral-600">{uc.checks}</p>
                 </div>
               </div>
@@ -408,34 +374,50 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Trust & Tamper-Proof Section ──────────────────────────────────── */}
+      {/* ── Comparison Table (§8) ─────────────────────────────────────────── */}
       <section className="py-24 md:py-32 bg-neutral-950 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-white mb-6">
-              Designed so no one can<br />
-              <span className="text-neutral-400">game the system.</span>
+              Audiment vs.<br />
+              <span className="text-neutral-400">The Old Way</span>
             </h2>
+            <p className="text-lg text-neutral-400">
+              See exactly what you gain by moving from paper, WhatsApp, and spreadsheets to a platform built for verified compliance.
+            </p>
           </div>
           <div className="rounded-2xl border border-white/10 overflow-hidden">
-            <div className="grid grid-cols-[1fr_1.5fr] bg-white/5 border-b border-white/10">
-              <div className="px-6 py-4 text-sm font-semibold text-neutral-400  tracking-widest">Threat</div>
-              <div className="px-6 py-4 text-sm font-semibold text-neutral-400  tracking-widest border-l border-white/10">How Audiment Prevents It</div>
+            <div className="grid grid-cols-[2fr_1fr_1fr_1.5fr] bg-white/5 border-b border-white/10">
+              <div className="px-6 py-4 text-sm font-semibold text-neutral-400 tracking-widest">Capability</div>
+              <div className="px-6 py-4 text-sm font-semibold text-neutral-400 tracking-widest border-l border-white/10 text-center">Paper / Excel</div>
+              <div className="px-6 py-4 text-sm font-semibold text-neutral-400 tracking-widest border-l border-white/10 text-center">Generic Tools</div>
+              <div className="px-6 py-4 text-sm font-semibold text-emerald-400 tracking-widest border-l border-white/10 text-center">Audiment</div>
             </div>
-            {tamperRows.map((row, i) => (
+            {comparisonRows.map((row, i) => (
               <div
                 key={i}
-                className={`grid grid-cols-[1fr_1.5fr] border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors duration-200 ${i % 2 === 0 ? "bg-white/[0.02]" : ""}`}
+                className={`grid grid-cols-[2fr_1fr_1fr_1.5fr] border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors duration-200 ${i % 2 === 0 ? "bg-white/[0.02]" : ""}`}
               >
-                <div className="px-6 py-5 text-sm text-neutral-300 leading-relaxed">{row.threat}</div>
-                <div className="px-6 py-5 text-sm text-neutral-200 leading-relaxed border-l border-white/5 font-medium">{row.prevention}</div>
+                <div className="px-6 py-5 text-base text-neutral-300 leading-relaxed font-medium">{row.capability}</div>
+                <div className="px-6 py-5 text-sm text-neutral-400 border-l border-white/5 text-center">
+                  <span className="block text-lg mb-1">{row.paper.icon}</span>
+                  <span className="text-sm">{row.paper.label}</span>
+                </div>
+                <div className="px-6 py-5 text-sm text-neutral-400 border-l border-white/5 text-center">
+                  <span className="block text-lg mb-1">{row.generic.icon}</span>
+                  <span className="text-sm">{row.generic.label}</span>
+                </div>
+                <div className="px-6 py-5 text-sm text-emerald-400 border-l border-white/5 text-center font-semibold">
+                  <span className="block text-lg mb-1">{row.audiment.icon}</span>
+                  <span className="text-sm">{row.audiment.label}</span>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Compliance Section ────────────────────────────────────────────── */}
+      {/* ── Compliance / Archive Section ──────────────────────────────────── */}
       <section className="py-24 md:py-32 bg-white px-6 border-b border-neutral-100">
         <div className="max-w-5xl mx-auto text-center">
           <div className="w-16 h-16 rounded-2xl bg-neutral-900 flex items-center justify-center mx-auto mb-8">
@@ -449,11 +431,7 @@ export default function Home() {
             Need to pull up inspection records for an FSSAI audit? An ISO review? A franchise compliance check? Every completed audit – with all photos, videos, scores, timestamps, GPS data, and corrective action history – lives in a searchable archive.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 mt-12">
-            {[
-              "Nothing is deleted.",
-              "Nothing is editable after submission.",
-              "Fully searchable archive.",
-            ].map((point, i) => (
+            {["Nothing is deleted.", "Nothing is editable after submission.", "Fully searchable archive."].map((point, i) => (
               <div key={i} className="flex items-center gap-2 text-neutral-600 font-medium">
                 <CheckCircle2 className="w-5 h-5 text-neutral-400 flex-shrink-0" />
                 {point}
@@ -482,20 +460,25 @@ export default function Home() {
                   <tech.icon className="w-6 h-6" />
                 </div>
                 <h4 className="text-base font-semibold text-neutral-900 mb-2">{tech.title}</h4>
-                <p className="text-sm text-neutral-500 leading-relaxed">{tech.desc}</p>
+                <p className="text-base text-neutral-500 leading-relaxed">{tech.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Stats Section ─────────────────────────────────────────────────── */}
+      {/* ── Social Proof Section (§7) ──────────────────────────────────────── */}
       <section className="py-24 border-b border-neutral-100 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-neutral-900">Numbers that matter.</h2>
+            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-4">
+              Why Operations Leaders<br />
+              <span className="text-neutral-400">Choose Audiment</span>
+            </h2>
+            <p className="text-xl text-neutral-500 max-w-2xl mx-auto">Real numbers from live deployments across multi-location businesses.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-neutral-200/60">
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-neutral-200/60 pb-4">
             {[
               { value: "1,240+", label: "Audits Completed on the Platform" },
               { value: "860+", label: "Corrective Actions Resolved with Proof" },
@@ -506,99 +489,92 @@ export default function Home() {
                 <div className="text-5xl md:text-6xl font-semibold tracking-tighter text-neutral-900 mb-3">
                   {stat.value}
                 </div>
-                <p className="text-neutral-500 font-medium text-base text-balance max-w-[160px]">
-                  {stat.label}
-                </p>
+                <p className="text-neutral-500 font-medium text-base text-balance max-w-[160px]">{stat.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Testimonials Section ──────────────────────────────────────────── */}
-      <section className="py-24 bg-neutral-50 border-b border-neutral-100">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* ── Animated Testimonial Columns (§7) ─────────────────────────────── */}
+      <TestimonialsSection />
+
+      {/* ── Case Study Snapshots ───────────────────────────────────────────── */}
+      <section className="py-16 border-b border-neutral-100 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                quote: "We recently integrated this system into our 50+ locations, and it's an easy quick win. By providing real-time oversight, it increases compliance and reduces operational friction.",
-                author: "Ananya S.",
-                role: "Operations Manager @BiryaniBlues",
+                industry: "QSR Chain",
+                metric: "60%",
+                metricLabel: "reduction in corrective action close time",
+                story: "A 30-outlet QSR brand replaced weekly paper audits with Audiment. Within 8 weeks, average issue resolution time dropped from 5 days to 48 hours. Critical failures now trigger instant manager alerts.",
               },
               {
-                quote: "Providing consistent quality and decision-making support is a key priority. The results of the first quarter have fully lived up to our expectations, and we have great ambitions for deploying across upcoming sites.",
-                author: "Vikram R.",
-                role: "Head of Growth @WowMomo",
+                industry: "Retail Chain",
+                metric: "4×",
+                metricLabel: "increase in audit completion rate",
+                story: "A fashion retailer with 45 stores went from completing 25% of planned audits (paper) to 100% digital completion. Managers no longer have missing reports to hide behind.",
               },
               {
-                quote: "We are at the very beginning of our journey with Audiment, yet we can already see its transformative potential in reshaping how we monitor our outlets. A true game-changer.",
-                author: "Neha K.",
-                role: "Regional Director @Theobroma",
+                industry: "Hotel Group",
+                metric: "0",
+                metricLabel: "failed FSSAI inspections since deployment",
+                story: "A hotel group used Audiment's FSSAI-ready templates to build a daily compliance routine. Twelve months later, every property passed its regulatory inspection on the first attempt.",
               },
-            ].map((testimonial, idx) => (
+            ].map((cs, i) => (
               <div
-                key={idx}
-                className="flex flex-col gap-6 p-8 rounded-3xl bg-white border border-neutral-100 hover:border-neutral-200 hover:shadow-lg hover:shadow-neutral-200/20 transition-all duration-300"
+                key={i}
+                className="p-8 rounded-2xl bg-neutral-900 border border-neutral-800 hover:border-neutral-700 transition-colors duration-300"
               >
-                <div className="flex gap-1 text-neutral-300">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                  ))}
+                <span className="text-sm font-semibold tracking-widest text-neutral-400 block mb-4">{cs.industry}</span>
+                <div className="mb-4">
+                  <span className="text-5xl font-bold text-white tracking-tighter">{cs.metric}</span>
+                  <p className="text-neutral-400 text-sm mt-1">{cs.metricLabel}</p>
                 </div>
-                <p className="text-lg text-neutral-600 leading-relaxed font-medium">
-                  &ldquo;{testimonial.quote}&rdquo;
-                </p>
-                <div className="mt-auto pt-4 flex flex-col">
-                  <span className="font-semibold text-neutral-900">{testimonial.author}</span>
-                  <span className="text-sm text-neutral-500">{testimonial.role}</span>
-                </div>
+                <p className="text-base text-neutral-300 leading-relaxed">{cs.story}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── FAQ Section ───────────────────────────────────────────────────── */}
-      <section className="py-24 md:py-32 bg-white px-6 border-b border-neutral-100">
+      {/* ── FAQ Section (§9 – 10 Q&As) ───────────────────────────────────── */}
+      <section className="py-24 md:py-32 bg-neutral-50 px-6 border-b border-neutral-100">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-6">
-              Common questions.
+              Frequently Asked Questions
             </h2>
+            <p className="text-lg text-neutral-500">Everything you need to know before getting started.</p>
           </div>
-          <div className="flex flex-col gap-3">
-            {faqs.map((faq, i) => (
-              <FAQItem key={i} q={faq.q} a={faq.a} />
-            ))}
-          </div>
+          <FAQAccordion />
         </div>
       </section>
 
-      {/* ── Final CTA Section ─────────────────────────────────────────────── */}
+      {/* ── Final CTA Section (§10) ───────────────────────────────────────── */}
       <section className="relative overflow-hidden py-32 md:py-48 px-6 bg-neutral-950 flex items-center justify-center">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-white/5 rounded-full blur-[120px]" />
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-10">
           <h2 className="text-5xl md:text-7xl font-semibold tracking-tight text-white leading-[1.1]">
-            Stop guessing.{" "}
-            <span className="text-neutral-400">Start seeing.</span>
+            Stop Auditing on Paper.{" "}
+            <span className="text-neutral-400">Start Auditing with Proof.</span>
           </h2>
           <p className="text-xl md:text-2xl text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-            Set up your first audit template in minutes. Know exactly what&apos;s happening at every branch – with proof.
+            Set up your first audit template in minutes. Know exactly what&apos;s happening at every branch – with tamper-proof evidence.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
             <Link
               href="/login"
-              className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-lg font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
+              className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
             >
-              Start Free Trial
+              Start Free
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
               href="#demo"
-              className="inline-flex h-14 items-center gap-2 px-10 border border-white/20 hover:border-white/40 text-white text-lg font-medium rounded-full transition-all duration-300"
+              className="inline-flex h-14 items-center gap-2 px-10 border border-white/20 hover:border-white/40 text-white text-base font-medium rounded-full transition-all duration-300"
             >
               Book a Demo
             </Link>

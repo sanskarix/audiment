@@ -156,8 +156,8 @@ export default function ManagerReportsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Audit Archive</h1>
-            <p className="body-text">Access and export completed audit reports for performance review.</p>
+            <h1 className="page-heading">Audit Reports</h1>
+            <p className="body-text">View and manage all completed audit reports.</p>
           </div>
         </div>
 
@@ -205,7 +205,7 @@ export default function ManagerReportsPage() {
           <Table>
             <TableHeader className="standard-table-header">
               <TableRow className="hover:bg-transparent">
-                <TableHead className="standard-table-head">Audit Template</TableHead>
+                <TableHead className="standard-table-head">Template</TableHead>
                 <TableHead className="standard-table-head">Location</TableHead>
                 <TableHead className="standard-table-head">Completed On</TableHead>
                 <TableHead className="standard-table-head text-right">Score</TableHead>

@@ -234,8 +234,8 @@ export default function AdminUsersPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Member Directory</h1>
-            <p className="body-text text-muted-text">Manage access control and organizational roles for all system users.</p>
+            <h1 className="page-heading">Users</h1>
+            <p className="body-text text-muted-text">Manage users, roles and permissions.</p>
           </div>
 
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
@@ -245,13 +245,12 @@ export default function AdminUsersPage() {
                 className="shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2"
               >
                 <UserPlus className="h-4 w-4" />
-                <span>Create User</span>
+                <span>Add User</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle className="font-semibold text-heading">Create New User</DialogTitle>
-                <DialogDescription className="text-muted-text">Add a new account to your organization.</DialogDescription>
+                <DialogTitle className="font-semibold text-heading">Add User</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleCreateUser} className="space-y-4 py-6">
                 <div className="flex flex-col gap-2">
@@ -278,7 +277,7 @@ export default function AdminUsersPage() {
                 </div>
                 {formData.role === 'AUDITOR' && (
                   <div className="space-y-2">
-                    <Label htmlFor="managerId" className="text-body font-normal">Assign to Manager</Label>
+                    <Label htmlFor="managerId" className="text-body font-normal">Manager</Label>
                     <Select value={formData.managerId} onValueChange={(val) => setFormData({ ...formData, managerId: val })} required>
                       <SelectTrigger className="text-body"><SelectValue placeholder="Select active manager" /></SelectTrigger>
                       <SelectContent>
@@ -292,7 +291,7 @@ export default function AdminUsersPage() {
                   </div>
                 )}
                 {error && <p className="text-sm text-destructive">{error}</p>}
-                <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Creating...' : 'Create User'}</Button></DialogFooter>
+                <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Adding...' : 'Add User'}</Button></DialogFooter>
               </form>
             </DialogContent>
           </Dialog>

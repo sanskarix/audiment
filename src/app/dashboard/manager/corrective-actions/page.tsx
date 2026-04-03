@@ -196,8 +196,8 @@ export default function CorrectiveActionsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Priority Resolution</h1>
-            <p className="body-text">Address and resolve identified compliance issues across your branch.</p>
+            <h1 className="page-heading">Corrective Actions</h1>
+            <p className="body-text">Track and resolve compliance issues at your locations.</p>
           </div>
         </div>
 
@@ -237,11 +237,11 @@ export default function CorrectiveActionsPage() {
                     <div className="p-6 bg-muted/5 border-b border-border/40">
                       <div className="flex justify-between items-center mb-4">
                         {ca.severity === 'high' ? (
-                          <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[12px] font-normal">High Severity</Badge>
+                          <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[12px] font-normal">High</Badge>
                         ) : ca.severity === 'medium' ? (
-                          <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">Medium Severity</Badge>
+                          <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">Medium</Badge>
                         ) : (
-                          <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">Low Severity</Badge>
+                          <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">Low</Badge>
                         )}
                         <Badge variant="outline" className="text-[11px] font-medium text-destructive border-destructive/20 bg-destructive/5 px-2 py-0.5 rounded-md">
                           Due {ca.deadline ? format(ca.deadline.toDate(), 'MMM d') : 'No Date'}
@@ -281,7 +281,7 @@ export default function CorrectiveActionsPage() {
                         className="flex-1 font-medium text-xs h-10 shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95"
                         onClick={() => setSelectedCA(ca)}
                       >
-                        Resolve Issue
+                        Resolve
                       </Button>
                     </CardFooter>
                   </Card>
@@ -312,7 +312,7 @@ export default function CorrectiveActionsPage() {
                       <p className="text-[11px] font-medium text-muted-text uppercase tracking-wider mt-2">{ca.locationName}</p>
 
                       <div className="bg-muted/5 p-4 rounded-xl border border-border/40 mt-4 relative">
-                        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-text/60 mb-2">Resolution Statement</p>
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-text/60 mb-2">Resolution Note</p>
                         <p className="body-text text-sm italic">"{ca.resolutionNote || 'No notes provided.'}"</p>
                       </div>
                     </div>
@@ -352,15 +352,15 @@ export default function CorrectiveActionsPage() {
 
           <div className="space-y-4 py-4">
             <div className="p-4 bg-primary/5 rounded-xl border border-primary/10">
-              <p className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-2">Issue Context</p>
+              <p className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-2">Context</p>
               <p className="text-sm font-medium text-heading italic leading-snug">"{selectedCA?.questionText}"</p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="note" className="text-body font-normal">Resolution Note</Label>
+              <Label htmlFor="note" className="text-body font-normal">Note</Label>
               <Textarea
                 id="note"
-                placeholder="Detail the corrective actions taken..."
+                placeholder="Explain how the issue was fixed..."
                 value={resolutionNote}
                 onChange={(e) => setResolutionNote(e.target.value)}
                 className="min-h-[120px] text-body resize-none"
@@ -368,7 +368,7 @@ export default function CorrectiveActionsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-body font-normal">Visual Evidence (Optional)</Label>
+              <Label className="text-body font-normal">Photo Evidence (Optional)</Label>
               <div className="flex flex-col gap-4">
                 <Button
                   type="button"
@@ -409,7 +409,7 @@ export default function CorrectiveActionsPage() {
               className="h-9 px-4 font-medium text-xs shadow-lg shadow-primary/10 transition-all"
             >
               {isResolving && <Loader2 className="h-3 w-3 animate-spin mr-2" />}
-              Complete Resolution
+              Resolve
             </Button>
           </DialogFooter>
         </DialogContent>

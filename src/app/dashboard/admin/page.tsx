@@ -184,8 +184,8 @@ export default function AdminDashboardPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Organization Vitals</h1>
-            <p className="body-text text-muted-text">Monitor compliance health and operational performance across all regions.</p>
+            <h1 className="page-heading">Overview</h1>
+            <p className="body-text text-muted-text">View key metrics and statistics accross your branches.</p>
           </div>
         </div>
 
@@ -193,12 +193,12 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Monthly Audits</p>
+              <p className="section-heading">Audits</p>
               <ClipboardList className="h-4 w-4 text-primary/40 transition-colors" />
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{stats?.totalAuditsThisMonth}</div>
-              <p className="body-text mt-2">Audits published this month</p>
+              <p className="body-text mt-2">This month</p>
             </div>
           </Card>
 
@@ -209,7 +209,7 @@ export default function AdminDashboardPage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{stats?.completionRate}%</div>
-              <p className="body-text mt-2">Audits completed</p>
+              <p className="body-text mt-2">Completed</p>
               <Progress value={stats?.completionRate} className="mt-4 h-1.5 bg-success/10" />
             </div>
           </Card>
@@ -217,14 +217,14 @@ export default function AdminDashboardPage() {
           <Link href="/dashboard/admin/corrective-actions" className="block group">
             <Card className="standard-card p-6 h-full group-hover:bg-destructive/5 transition-colors cursor-pointer">
               <div className="flex items-center justify-between mb-3">
-                <p className="section-heading">Open Actions</p>
+                <p className="section-heading">Actions</p>
                 <AlertCircle className="h-4 w-4 text-destructive/40 transition-colors" />
               </div>
               <div>
                 <div className="text-[32px] font-semibold tracking-tight text-destructive tabular-nums leading-tight">{stats?.openCorrectiveActions}</div>
-                <p className="body-text mt-2 text-destructive/60 font-medium">Attention required</p>
+                <p className="body-text mt-2 text-destructive/60 font-medium">Open issues</p>
                 <div className="mt-5 flex items-center gap-1.5 text-[11px] font-medium text-destructive bg-destructive/10 w-fit px-3 py-1.5 rounded-full">
-                  View Queue <TrendingUp className="h-3 w-3" />
+                  View <TrendingUp className="h-3 w-3" />
                 </div>
               </div>
             </Card>
@@ -235,8 +235,8 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 gap-6">
           <Card className="standard-card p-6">
             <div className="mb-6">
-              <h3 className="section-heading">Location Performance</h3>
-              <p className="body-text mt-1">Average score across all locations</p>
+              <h3 className="section-heading">Performance</h3>
+              <p className="body-text mt-1">Average score</p>
             </div>
             <div className="h-[400px] w-full">
               <ResponsiveContainer width="100%" height="100%">

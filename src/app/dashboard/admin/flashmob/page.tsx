@@ -128,19 +128,16 @@ export default function AdminFlashmobPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Session Logs</h1>
-            <p className="body-text text-muted-text">Review real-time visual proof and rapid deployments from the field.</p>
+            <h1 className="page-heading">Flashmob</h1>
+            <p className="body-text text-muted-text">View real-time submissions.</p>
           </div>
-          <Badge variant="secondary" className="h-7 rounded-full bg-primary/10 text-primary border-none px-4 text-[12px] font-medium">
-            {flashmobs.length} ACTIVE SESSIONS
-          </Badge>
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
-              placeholder="Search logs by location or auditor..."
+              placeholder="Search..."
               className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -158,7 +155,7 @@ export default function AdminFlashmobPage() {
               <div className="bg-muted/10 p-6 rounded-full mb-6">
                 <Video className="h-12 w-12 opacity-20" />
               </div>
-              <p className="page-heading opacity-40">No flashmob audits reported yet.</p>
+              <p className="page-heading opacity-40">No reports found.</p>
             </CardContent>
           </Card>
         ) : (
@@ -210,7 +207,7 @@ export default function AdminFlashmobPage() {
                   <div className="flex items-center gap-2 mt-auto">
                     <Link href={`/dashboard/admin/flashmob/${audit.id}`} passHref className="flex-1">
                       <Button variant="secondary" className="w-full h-10 shadow-lg shadow-black/5 active:scale-95 transition-all font-medium text-[13px]">
-                        Review Log <ChevronRight className="ml-1 h-3.5 w-3.5" />
+                        Review <ChevronRight className="ml-1 h-3.5 w-3.5" />
                       </Button>
                     </Link>
                     <Button

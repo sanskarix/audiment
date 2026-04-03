@@ -217,8 +217,8 @@ export default function AuditorsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Performance Directory</h1>
-            <p className="body-text">Track audit scores and mission completion across your field team.</p>
+            <h1 className="page-heading">Auditors</h1>
+            <p className="body-text">Manage and track the performance of your auditor team.</p>
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
@@ -228,9 +228,9 @@ export default function AuditorsPage() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle className="font-semibold text-heading">Add New Auditor</DialogTitle>
+                <DialogTitle className="font-semibold text-heading">Add Auditor</DialogTitle>
                 <DialogDescription className="text-muted-text text-sm">
-                  Invite a new auditor to your reporting team.
+                  Add a new auditor to your team.
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleAddAuditor}>
@@ -263,7 +263,7 @@ export default function AuditorsPage() {
                   <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-normal text-sm">Cancel</Button>
                   <Button type="submit" disabled={isSubmitting} className="font-normal text-sm">
                     {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
-                    Confirm Auditor
+                    Add Auditor
                   </Button>
                 </DialogFooter>
               </form>
@@ -274,18 +274,18 @@ export default function AuditorsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Reporting Team</p>
+              <p className="section-heading">Team Size</p>
               <Users className="h-4 w-4 text-primary/40 transition-colors" />
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{auditors.length}</div>
-              <p className="body-text mt-2 font-normal">Auditors on your team</p>
+              <p className="body-text mt-2 font-normal">Total auditors</p>
             </div>
           </Card>
           
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Availability</p>
+              <p className="section-heading">Compliance</p>
               <Clock className="h-4 w-4 text-success/40 transition-colors" />
             </div>
             <div>
@@ -301,7 +301,7 @@ export default function AuditorsPage() {
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-primary tabular-nums leading-tight">24</div>
-              <p className="body-text mt-2 font-normal">Audits completed per month</p>
+              <p className="body-text mt-2 font-normal">Monthly audits</p>
             </div>
           </Card>
         </div>
@@ -347,7 +347,7 @@ export default function AuditorsPage() {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">Availability Status</DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={statusFilter} onValueChange={setStatusFilter}>
-                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Personnel</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="active" className="text-body cursor-pointer">Active Only</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="inactive" className="text-body cursor-pointer">Inactive Only</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
@@ -361,10 +361,10 @@ export default function AuditorsPage() {
             <Table>
               <TableHeader className="standard-table-header">
                 <TableRow className="hover:bg-transparent border-none">
-                  <TableHead className="standard-table-head pl-6 py-5">Personnel</TableHead>
-                  <TableHead className="standard-table-head py-5">Email Address</TableHead>
-                  <TableHead className="standard-table-head text-center py-5">Account</TableHead>
-                  <TableHead className="standard-table-head text-center py-5">Flashmob</TableHead>
+                  <TableHead className="standard-table-head pl-6 py-5">Name</TableHead>
+                  <TableHead className="standard-table-head py-5">Email</TableHead>
+                  <TableHead className="standard-table-head text-center py-5">Status</TableHead>
+                  <TableHead className="standard-table-head text-center py-5">Flash Audit</TableHead>
                   <TableHead className="standard-table-head text-right pr-6 py-5 w-[80px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>

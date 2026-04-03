@@ -1,0 +1,33 @@
+# Audiment
+
+Audiment is audit management software for multi-location compliance. It enables businesses operating across multiple physical locations (restaurants, retail chains, hotels, warehouses, franchise operations) to create, execute, track, and analyse audits with mandatory photo and video evidence, GPS-based location verification, automated corrective action tracking, and real-time compliance dashboards.
+
+## Core Capabilities
+
+- **Audit Blueprint Builder**: Create fully customisable audit templates with questions, severity levels (Low, Medium, Critical), weighted scoring logic, and mandatory photo/video requirements per question.
+- **Scheduled & Surprise Audits**: Set recurring audit schedules (daily, weekly, monthly) or publish on-demand surprise audits that remain invisible to location managers until the auditor arrives.
+- **Photo & Video Evidence Enforcement**: Every audit question requires live-captured media. Gallery uploads from saved photos are blocked. Evidence is tied to the specific audit submission.
+- **Flash Verification (Flashmob Audits)**: A 20-second live video and auditor selfie recorded inside the app, with GPS coordinates, to prove auditor presence and identity. Cannot be faked or edited.
+- **GPS & Timestamp Verification**: All audit answers are geo-tagged. If an auditor is more than 50 metres from the registered branch location, a Location Mismatch flag is raised. Timestamps are server-side.
+- **Automated Corrective Action Tracking (CAPA)**: Critical failures automatically create corrective actions assigned to the branch manager. Managers must upload before/after photo proof. Admins verify before closure. 48-hour SLA enforced.
+- **Trend Detection & Escalation Alerts**: The system monitors the last 3–5 audits per location. Score drops trigger tiered escalation to branch manager, regional manager, and owner.
+- **FSSAI-Ready Compliance Templates**: One-click FSSAI audit templates for food safety compliance in India. All records satisfy regulatory audit trail requirements.
+- **One-Click PDF Reports**: High-fidelity exportable PDF reports containing all responses, photos, scores, GPS data, timestamps, and corrective action history.
+- **Role-Based Dashboards**: Three distinct interfaces – Admin (full cross-location visibility), Manager (location-level oversight), and Auditor (mobile-first field execution).
+- **Offline Mode**: Auditors can complete full audits without internet. Data and media sync automatically on reconnection.
+
+## Industries Served
+
+QSR & restaurant chains, retail & grocery chains, hotels & hospitality, manufacturing & warehousing, franchise operations, food & beverage (FSSAI compliance).
+
+## Technical
+
+- Mobile-first web application (no app store download required)
+- Built on Next.js with Firebase backend
+- Server-side role-based access control
+- Real-time data sync across all dashboards
+- Permanently stored, immutable audit records
+
+## Website
+
+https://audiment.com

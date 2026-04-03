@@ -39,11 +39,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { 
-  CalendarIcon, 
-  Plus, 
-  Search, 
-  Filter, 
+import {
+  CalendarIcon,
+  Plus,
+  Search,
+  Filter,
   ArrowRight,
   FileText,
   Award
@@ -162,8 +162,8 @@ export default function AdminReportsPage() {
         <div className="page-header-section mb-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex flex-col gap-2">
-              <h1 className="page-heading">Compliance Intelligence</h1>
-              <p className="body-text text-muted-text">Deep dive into historical data to identify trends and regional performance.</p>
+              <h1 className="page-heading">Reports</h1>
+              <p className="body-text text-muted-text">View and manage all completed audit reports.</p>
             </div>
           </div>
         </div>
@@ -172,7 +172,7 @@ export default function AdminReportsPage() {
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
-              placeholder="Search reports by template or location..."
+              placeholder="Search..."
               className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -215,9 +215,9 @@ export default function AdminReportsPage() {
           <Table>
             <TableHeader className="standard-table-header">
               <TableRow className="hover:bg-transparent">
-                <TableHead className="standard-table-head">Audit Template</TableHead>
+                <TableHead className="standard-table-head">Template</TableHead>
                 <TableHead className="standard-table-head">Location</TableHead>
-                <TableHead className="standard-table-head">Completed On</TableHead>
+                <TableHead className="standard-table-head">Date</TableHead>
                 <TableHead className="standard-table-head text-right">Score</TableHead>
                 <TableHead className="standard-table-head w-[50px]"></TableHead>
               </TableRow>

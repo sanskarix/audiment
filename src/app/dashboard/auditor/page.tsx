@@ -115,163 +115,133 @@ export default function AuditorDashboardPage() {
 
   return (
     <DashboardShell role="Auditor">
-      <div className="dashboard-page-container">
-        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="dashboard-page-container px-4 md:px-10">
+        <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
             <h1 className="page-heading">Overview</h1>
+            <p className="body-text">Manage your assigned audits and track your performance.</p>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input
-              placeholder="Search active deployments by template or location..."
-              className="pl-9 h-11 bg-background text-body"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
-        </div>
-
-        {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <Card className="standard-card">
-            <div className="p-6">
-              <p className="muted-label mb-2">Average Score</p>
-              <h3 className="text-3xl font-medium tracking-tight text-success">
-                {avgScore}%
-              </h3>
+        {/* Top Summary Cards */}
+        <div className="grid grid-cols-2 gap-4 md:gap-8 mb-6 md:mb-8">
+          <Card className="standard-card p-4 md:p-6">
+            <div className="flex items-center justify-between mb-3 md:mb-4">
+              <p className="section-heading text-[11px] md:text-[12px]">Completed</p>
+              <FileCheck className="h-3.5 w-3.5 md:h-4 md:w-4 text-primary/40 transition-colors" />
+            </div>
+            <div>
+              <div className="text-[28px] md:text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{completedAudits.length}</div>
+              <p className="body-text mt-1 text-[11px] md:text-[13px]">Finalized audits</p>
             </div>
           </Card>
 
-          <Card className="standard-card">
-            <div className="p-6">
-              <p className="muted-label mb-2">Completed Audits</p>
-              <h3 className="text-3xl font-medium tracking-tight text-primary">
-                {completedAudits.length}
-              </h3>
+          <Card className="standard-card p-4 md:p-6">
+            <div className="flex items-center justify-between mb-3 md:mb-4">
+              <p className="section-heading text-[11px] md:text-[12px]">Avg. Score</p>
+              <Target className="h-3.5 w-3.5 md:h-4 md:w-4 text-success/40 transition-colors" />
             </div>
-          </Card>
-
-          <Card className="standard-card">
-            <div className="p-6">
-              <p className="muted-label mb-2">Active Tasks</p>
-              <h3 className="text-3xl font-medium tracking-tight text-warning">
-                {activeAudits.length}
-              </h3>
+            <div>
+              <div className="text-[28px] md:text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{avgScore}%</div>
+              <p className="body-text mt-1 text-[11px] md:text-[13px]">Average score</p>
             </div>
           </Card>
         </div>
-
-        {/* Flashmob Section (Conditional) */}
-        {userData?.hasFlashmobAccess && (
-          <Card className="bg-foreground text-background border border-border/20 shadow-2xl overflow-hidden relative group rounded-3xl p-2 mb-6">
-            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-              <Play className="h-48 w-48 text-background" />
-            </div>
-            <div className="flex flex-col md:flex-row items-center gap-8 p-8 relative z-10">
-              <div className="flex-1 space-y-4">
-                <div className="flex items-center gap-3">
-                  <Badge className="bg-warning hover:bg-warning text-warning-foreground font-medium border-none text-[10px] px-3 py-1">ULTRA-PRIORITY</Badge>
-                  <Badge variant="outline" className="text-background border-background/20 text-[10px] font-medium tracking-[0.2em]  px-3 py-1">COVERT MISSION</Badge>
-                </div>
-                <CardTitle className="text-4xl font-medium italic tracking-tighter  leading-none text-background">Flashmob Intelligence</CardTitle>
-                <CardDescription className="text-background/70 font-normal text-lg tracking-tight max-w-xl">
-                  Deploy immediate compliance checks. Record a rapid 20-second visual proof of any branch for real-time verification.
-                </CardDescription>
-              </div>
-              <Button size="lg" className="h-16 px-12 font-normal  tracking-widest text-xs bg-background text-body hover:bg-background/90 shadow-2xl rounded-2xl group/btn transition-all hover:scale-105 active:scale-95" asChild>
-                <Link href="/dashboard/auditor/flashmob">
-                  Deploy Mission Control <Play className="ml-3 h-4 w-4 fill-current group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            </div>
-          </Card>
-        )}
 
         {/* Active Assignments Section */}
-        <div>
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex flex-col gap-0.5">
-              <h3 className="section-heading tracking-tight italic ">ACTIVE DEPLOYMENTS</h3>
-              <p className="body-text">Your assigned audits to complete</p>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-1">
+              <h3 className="section-heading">Active Audits</h3>
+              <p className="body-text">Assigned audits pending completion</p>
             </div>
-            <Badge variant="secondary" className="px-3 py-1 font-medium text-[10px] tracking-widest  bg-primary text-white border-none shadow-lg shadow-primary/20">
-              {filteredAudits.length} REQUIRED
+            <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-3 text-[11px] font-semibold tabular-nums">
+              {filteredAudits.length} Required
             </Badge>
           </div>
 
+          <div className="flex items-center gap-3">
+            <div className="relative flex-1 group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+              <Input
+                placeholder="Search by template or location..."
+                className="pl-9 h-11 text-body font-normal bg-background border border-border/40 placeholder:text-muted-text/60"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Button variant="outline" className="h-11 px-3 gap-2 font-medium text-[12px] border-border/40 text-muted-text hover:bg-muted/50 shrink-0 hidden md:flex">
+              <Filter className="h-4 w-4" />
+              Filters
+            </Button>
+          </div>
+
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="standard-card p-6 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="standard-card p-5 space-y-3">
                   <Skeleton className="h-2 w-full" />
-                  <Skeleton className="h-6 w-3/4" />
+                  <Skeleton className="h-5 w-3/4" />
                   <Skeleton className="h-4 w-1/2" />
-                  <Skeleton className="h-20 w-full" />
+                  <Skeleton className="h-16 w-full" />
                 </div>
               ))}
             </div>
           ) : filteredAudits.length === 0 ? (
-            <Card className="standard-card">
-              <CardContent className="flex flex-col items-center justify-center h-[300px] text-center p-12">
-                <div className="bg-muted/10 p-6 rounded-full mb-6">
-                  <FileCheck className="h-12 w-12 opacity-20" />
+            <Card className="standard-card flex items-center justify-center" style={{ minHeight: '220px' }}>
+              <CardContent className="flex flex-col items-center text-center p-8">
+                <div className="bg-muted/10 p-5 rounded-full mb-4">
+                  <FileCheck className="h-10 w-10 opacity-20" />
                 </div>
-                <p className="text-lg opacity-40 italic font-normal text-muted-text">No audits assigned to you right now.</p>
+                <p className="text-[13px] font-medium text-muted-text opacity-50">No active audits assigned.</p>
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-6">
               {filteredAudits.map((a) => (
-                <Card key={a.id} className="standard-card overflow-hidden group hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 border-muted/30">
-                  <div className="h-2 w-full bg-muted/20 relative overflow-hidden">
+                <Card key={a.id} className="standard-card bg-background border-border/40 hover:border-primary/20 transition-all duration-200 overflow-hidden">
+                  <div className="h-1 w-full bg-muted/20 relative">
                     <div
                       className={cn(
-                        "h-full transition-all duration-1000 relative z-10",
+                        "h-full transition-all duration-1000",
                         a.status === 'in_progress' ? "bg-warning w-[60%]" : "bg-primary w-[20%]"
                       )}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer" />
                   </div>
-                  <CardHeader className="pb-4 px-6 pt-6">
-                    <div className="flex items-center justify-between mb-4">
+                  <div className="p-4 md:p-6">
+                    <div className="flex items-center justify-between mb-3">
                       {getStatusBadge(a.status)}
-                      <span className="text-[10px] font-normal tabular-nums text-muted-text opacity-40  tracking-widest">{a.id.substring(0, 8)}</span>
+                      <span className="text-[10px] font-medium text-muted-text/40 tracking-wider">ID-{a.id.substring(0, 8)}</span>
                     </div>
-                    <CardTitle className="text-lg font-medium italic tracking-tighter  leading-tight group-hover:text-primary transition-colors text-heading">
+                    <h4 className="text-[15px] font-semibold text-heading leading-snug mb-1.5">
                       {a.templateTitle}
-                    </CardTitle>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                      <span className="text-[11px] font-normal  tracking-tight text-muted-text">{a.locationName}</span>
+                    </h4>
+                    <div className="flex items-center gap-1.5 text-[12px] font-medium text-muted-text/60 mb-4">
+                      <MapPin className="h-3.5 w-3.5 shrink-0" />
+                      <span className="truncate">{a.locationName}</span>
                     </div>
-                  </CardHeader>
-                  <CardContent className="pb-8 px-6 space-y-6 pt-2">
-                    <div className="flex flex-col gap-3">
-                      <div className="flex items-center gap-3 text-muted-text font-normal text-[10px]  tracking-widest">
-                        <CalendarIcon className="h-4 w-4 opacity-40" />
-                        <span>Scheduled <span className="text-body">{a.scheduledDate?.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span></span>
+
+                    <div className="flex items-center justify-between text-[11px] py-3 border-y border-border/40 mb-4">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-muted-text/60 font-medium">Scheduled</span>
+                        <span className="text-heading font-semibold">{a.scheduledDate?.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
                       </div>
-                      <div className={cn(
-                        "flex items-center gap-3 font-normal text-[10px] px-4 py-2 rounded-xl w-full justify-center  tracking-widest transition-all",
-                        a.deadline?.toDate() < new Date() ? "bg-destructive/10 text-destructive border border-destructive/20" : "bg-muted text-muted-text border border-muted-foreground/10"
-                      )}>
-                        <Clock className="h-4 w-4" />
-                        <span>Deadline: {a.deadline?.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
+                      <div className="flex flex-col gap-0.5 text-right">
+                        <span className="text-muted-text/60 font-medium">Deadline</span>
+                        <span className={cn(
+                          "font-semibold",
+                          a.deadline?.toDate() < new Date() ? "text-destructive" : "text-heading"
+                        )}>{a.deadline?.toDate().toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
                       </div>
                     </div>
-                    <Button className="w-full h-12 font-medium  tracking-[0.2em] text-[10px] shadow-xl shadow-primary/20 group-hover:scale-105 transition-all active:scale-95" asChild>
+
+                    <Button className="w-full h-11 font-semibold text-[13px] group" asChild>
                       <Link href={`/dashboard/auditor/audits/${a.id}`}>
-                        {a.status === 'in_progress' ? 'RESUME MISSION' : 'START DEPLOYMENT'}
+                        {a.status === 'in_progress' ? 'Resume' : 'Start Audit'}
+                        <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </Button>
-                  </CardContent>
+                  </div>
                 </Card>
               ))}
             </div>

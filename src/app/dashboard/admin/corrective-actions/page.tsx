@@ -205,18 +205,18 @@ export default function AdminCorrectiveActionsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Priority Actions</h1>
-            <p className="body-text text-muted-text">Resolve critical compliance failures and monitor resolution progress.</p>
+            <h1 className="page-heading">Actions</h1>
+            <p className="body-text text-muted-text">Track and resolve issues.</p>
           </div>
           <Badge variant="secondary" className="h-7 rounded-full bg-destructive/10 text-destructive border-none px-4 text-[12px] font-medium animate-pulse">
-            {actions.length} URGENT RESOLUTIONS
+            {actions.length} PENDING
           </Badge>
         </div>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
-              placeholder="Search actions by location, issue, or manager..."
+              placeholder="Search..."
               className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -232,38 +232,38 @@ export default function AdminCorrectiveActionsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
           <Card className="standard-card p-6 overflow-hidden relative">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Overdue Tasks</p>
+              <p className="section-heading">Overdue</p>
               <Clock className="h-4 w-4 text-destructive/40" />
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-destructive tabular-nums leading-tight">
                 {actions.filter(a => a.deadline?.toDate() < new Date()).length}
               </div>
-              <p className="body-text mt-2">Overdue actions</p>
+              <p className="body-text mt-2">Overdue</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6 overflow-hidden relative">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">High Severity</p>
+              <p className="section-heading">Critical</p>
               <AlertCircle className="h-4 w-4 text-warning/40" />
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-warning tabular-nums leading-tight">
                 {actions.filter(a => a.severity === 'critical').length}
               </div>
-              <p className="body-text mt-2">Critical priority actions</p>
+              <p className="body-text mt-2">Critical</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6 overflow-hidden relative">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Target Resolution</p>
+              <p className="section-heading">Upcoming</p>
               <ClipboardList className="h-4 w-4 text-primary/40" />
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">48h</div>
-              <p className="body-text mt-2">Require resolution soon</p>
+              <p className="body-text mt-2">Upcoming</p>
             </div>
           </Card>
         </div>
@@ -332,8 +332,8 @@ export default function AdminCorrectiveActionsPage() {
                     <TableCell className="px-3 py-2 text-center">
                       <Badge variant="secondary" className={cn(
                         "h-6 rounded-full border-none px-2.5 text-[11px] font-normal capitalize",
-                        action.status === 'in_progress' ? "bg-primary/10 text-primary" : 
-                        action.status === 'completed' ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
+                        action.status === 'in_progress' ? "bg-primary/10 text-primary" :
+                          action.status === 'completed' ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
                       )}>
                         {action.status.replace('_', ' ')}
                       </Badge>
@@ -341,9 +341,9 @@ export default function AdminCorrectiveActionsPage() {
                     <TableCell className="px-3 py-2 text-right">
                       <div className="flex justify-end gap-2">
                         <Button variant="outline" size="sm" className="h-8 text-xs font-medium tracking-widest" onClick={() => {
-                            setEditingCA(action);
-                            setSelectedManager(action.assignedManagerId || '');
-                            setSelectedDate(action.deadline?.toDate() ? format(action.deadline.toDate(), 'yyyy-MM-dd') : '');
+                          setEditingCA(action);
+                          setSelectedManager(action.assignedManagerId || '');
+                          setSelectedDate(action.deadline?.toDate() ? format(action.deadline.toDate(), 'yyyy-MM-dd') : '');
                         }}>Edit</Button>
                         {action.status === 'completed' && (
                           <Button size="sm" className="h-8 text-xs font-medium tracking-widest bg-success text-success-foreground hover:bg-success/90" onClick={() => setResolvingCA(action)}>Review</Button>
@@ -361,8 +361,7 @@ export default function AdminCorrectiveActionsPage() {
       <Dialog open={!!editingCA} onOpenChange={(open) => !open && setEditingCA(null)}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Assign Action</DialogTitle>
-            <DialogDescription>Assign this issue to a manager and set a deadline.</DialogDescription>
+            <DialogTitle>Assign</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
@@ -391,8 +390,7 @@ export default function AdminCorrectiveActionsPage() {
       <Dialog open={!!resolvingCA} onOpenChange={(open) => !open && setResolvingCA(null)}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Review Completion</DialogTitle>
-            <DialogDescription>Review the manager's justification and evidence before closing this issue.</DialogDescription>
+            <DialogTitle>Review</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="text-xs text-muted-text bg-muted/10 p-4 rounded-lg flex flex-col gap-2 border border-border/50">
@@ -403,24 +401,24 @@ export default function AdminCorrectiveActionsPage() {
               </div>
             </div>
             <div className="space-y-2 bg-muted/20 p-4 rounded-lg border border-border/50">
-              <Label className="text-[10px] font-semibold text-muted-text uppercase tracking-wider">Manager's Note</Label>
+              <Label className="text-[10px] font-semibold text-muted-text uppercase tracking-wider">Note</Label>
               <p className="text-sm text-body italic mt-1">"{resolvingCA?.resolutionNote || 'No note provided.'}"</p>
             </div>
             {resolvingCA?.resolutionPhotoUrls && resolvingCA.resolutionPhotoUrls.length > 0 && (
               <div className="space-y-2 mt-2">
-                 <Label className="text-[10px] font-semibold text-muted-text uppercase tracking-wider">Evidence Photos</Label>
-                 <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
-                   {resolvingCA.resolutionPhotoUrls.map((url: string, i: number) => (
-                     <div 
-                      key={i} 
+                <Label className="text-[10px] font-semibold text-muted-text uppercase tracking-wider">Photos</Label>
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
+                  {resolvingCA.resolutionPhotoUrls.map((url: string, i: number) => (
+                    <div
+                      key={i}
                       className="h-24 w-24 rounded-lg border border-border/50 overflow-hidden flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary/40 transition-all active:scale-95"
                       onClick={() => setExpandedPhotoUrl(url)}
-                     >
-                       <img src={url} alt="Proof" className="h-full w-full object-cover" />
-                     </div>
-                   ))}
-                 </div>
-                 <p className="text-[10px] text-muted-text/60 italic mt-1">Click to expand evidence</p>
+                    >
+                      <img src={url} alt="Proof" className="h-full w-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[10px] text-muted-text/60 italic mt-1">Click to expand evidence</p>
               </div>
             )}
           </div>
@@ -428,7 +426,7 @@ export default function AdminCorrectiveActionsPage() {
             <Button variant="outline" size="sm" className="border-destructive/30 text-destructive hover:bg-destructive/10" onClick={handleReject}>Reject</Button>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={() => setResolvingCA(null)}>Cancel</Button>
-              <Button size="sm" className="bg-success text-success-foreground hover:bg-success/90" onClick={handleResolve}>Approve & Resolve</Button>
+              <Button size="sm" className="bg-success text-success-foreground hover:bg-success/90" onClick={handleResolve}>Resolve</Button>
             </div>
           </DialogFooter>
         </DialogContent>
@@ -439,9 +437,9 @@ export default function AdminCorrectiveActionsPage() {
           <DialogTitle className="sr-only">Evidence Photo Viewer</DialogTitle>
           <div className="relative group max-h-[90vh] w-full flex items-center justify-center">
             {expandedPhotoUrl && (
-              <img 
-                src={expandedPhotoUrl} 
-                alt="Expanded Proof" 
+              <img
+                src={expandedPhotoUrl}
+                alt="Expanded Proof"
                 className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl "
               />
             )}

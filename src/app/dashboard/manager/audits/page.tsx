@@ -144,13 +144,13 @@ export default function ManagerAuditsPage() {
       case 'published':
         return <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">Published</Badge>;
       case 'assigned':
-        return <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">Personnel Assigned</Badge>;
+        return <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">Assigned</Badge>;
       case 'in_progress':
-        return <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">In Execution</Badge>;
+        return <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">In Progress</Badge>;
       case 'completed':
         return <Badge variant="secondary" className="h-6 rounded-full bg-success/10 text-success border-none px-2.5 text-[12px] font-normal">Completed</Badge>;
       case 'missed':
-        return <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[12px] font-normal">SLA Breached</Badge>;
+        return <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[12px] font-normal">Missed</Badge>;
       default:
         return <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-2.5 text-[12px] font-normal">{status}</Badge>;
     }
@@ -161,8 +161,8 @@ export default function ManagerAuditsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Active Audits</h1>
-            <p className="body-text">Monitor ongoing and upcoming audits across your assigned locations.</p>
+            <h1 className="page-heading">Audits</h1>
+            <p className="body-text">Manage ongoing and upcoming audits for your locations.</p>
           </div>
         </div>
 
@@ -201,7 +201,7 @@ export default function ManagerAuditsPage() {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Status</DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={statusFilter} onValueChange={setStatusFilter}>
-                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Statuses</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="published" className="text-body cursor-pointer">Published</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="assigned" className="text-body cursor-pointer">Assigned</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="in_progress" className="text-body cursor-pointer">In Progress</DropdownMenuRadioItem>
@@ -210,7 +210,7 @@ export default function ManagerAuditsPage() {
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Assignee</DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={assigneeFilter} onValueChange={setAssigneeFilter}>
-                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Team</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="unassigned" className="text-body cursor-pointer italic text-muted-text/60">Unassigned</DropdownMenuRadioItem>
                   <DropdownMenuSeparator />
                   {auditors.map(aud => (
@@ -227,7 +227,7 @@ export default function ManagerAuditsPage() {
             <Table>
               <TableHeader className="standard-table-header">
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="standard-table-head pl-6">Blueprint</TableHead>
+                  <TableHead className="standard-table-head pl-6">Template</TableHead>
                   <TableHead className="standard-table-head">Location</TableHead>
                   <TableHead className="standard-table-head">Deadline</TableHead>
                   <TableHead className="standard-table-head">Status</TableHead>
@@ -249,7 +249,7 @@ export default function ManagerAuditsPage() {
                         <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
                         {a.isSurprise && (
                           <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-warning font-medium">
-                            <span>Surprise Audit</span>
+                            <span>Surprise</span>
                           </div>
                         )}
                       </TableCell>
@@ -313,7 +313,7 @@ export default function ManagerAuditsPage() {
                                 <Button variant="outline" onClick={() => setOpen(false)} className="font-normal text-sm">Cancel</Button>
                                 <Button onClick={handleAssign} disabled={loading || !selectedAuditor} className="font-normal text-sm">
                                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                  Confirm Assignment
+                                  Assign
                                 </Button>
                               </DialogFooter>
                             </DialogContent>

@@ -112,18 +112,12 @@ export const Footer = ({
         <div
           className="bg-gradient-to-b from-foreground/20 via-foreground/10 to-transparent bg-clip-text text-transparent leading-none absolute left-1/2 -translate-x-1/2 bottom-40 md:bottom-32 font-medium tracking-tighter pointer-events-none select-none text-center px-4"
           style={{
-            fontSize: 'clamp(3rem, 12vw, 10rem)',
+            fontSize: 'clamp(3rem, 16vw, 20rem)',
             maxWidth: '95vw'
           }}
         >
           {brandName.toUpperCase()}
         </div>
-
-
-
-        {/* Bottom line */}
-        <div className="absolute bottom-32 sm:bottom-34 backdrop-blur-sm h-1 bg-gradient-to-r from-transparent via-border to-transparent w-full left-1/2 -translate-x-1/2"></div>
-
         {/* Bottom shadow */}
         <div className="bg-gradient-to-t from-background via-background/70 blur-[1em] to-background/40 absolute bottom-28 w-full h-24"></div>
       </footer>

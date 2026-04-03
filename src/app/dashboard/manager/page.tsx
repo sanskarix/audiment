@@ -271,8 +271,8 @@ export default function ManagerDashboardPage() {
       <div className="dashboard-page-container px-6 md:px-10">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Branch Performance</h1>
-            <p className="body-text">Monitoring quality and compliance across your assigned locations</p>
+            <h1 className="page-heading">Overview</h1>
+            <p className="body-text">Manage quality and compliance across your branches.</p>
           </div>
         </div>
 
@@ -280,23 +280,23 @@ export default function ManagerDashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Managed Branches</p>
+              <p className="section-heading">Locations</p>
               <MapPin className="h-4 w-4 text-primary/40 transition-colors" />
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{stats?.assignedLocations}</div>
-              <p className="body-text mt-2">Locations you manage</p>
+              <p className="body-text mt-2">Managed locations</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Reporting Auditors</p>
+              <p className="section-heading">Auditors</p>
               <Users className="h-4 w-4 text-success/40 transition-colors" />
             </div>
             <div>
               <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{stats?.activeAuditors}</div>
-              <p className="body-text mt-2">Auditors on your team</p>
+              <p className="body-text mt-2">Active auditors</p>
             </div>
           </Card>
         </div>
@@ -307,8 +307,8 @@ export default function ManagerDashboardPage() {
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex flex-col gap-1">
-                  <h3 className="section-heading">Priority Resolution</h3>
-                  <p className="text-[12px] text-muted-text">Non-compliance items requiring immediate remediation</p>
+                  <h3 className="section-heading">Corrective Actions</h3>
+                  <p className="text-[12px] text-muted-text">Issues requiring immediate attention</p>
                 </div>
                 <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-3 text-[11px] font-semibold tabular-nums">
                   {correctiveActions.length} Pending
@@ -362,8 +362,8 @@ export default function ManagerDashboardPage() {
           {/* Trend Chart */}
           <Card className="lg:col-span-4 standard-card p-6">
             <div className="mb-6">
-              <h3 className="section-heading">Score History</h3>
-              <p className="body-text mt-1">Average score across recent audits</p>
+              <h3 className="section-heading">Performance Trend</h3>
+              <p className="body-text mt-1">Score trends from recent audits</p>
             </div>
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -424,8 +424,8 @@ export default function ManagerDashboardPage() {
           {/* Activity Feed */}
           <Card className="lg:col-span-3 standard-card p-6">
             <div className="mb-6">
-              <h3 className="section-heading">Personnel Focus</h3>
-              <p className="body-text mt-1">Current team workload and activity</p>
+              <h3 className="section-heading">Auditor Activity</h3>
+              <p className="body-text mt-1">Current workload of your team</p>
             </div>
             <div className="space-y-4">
               {stats?.auditorActivity.map((aud, i) => (
@@ -455,8 +455,8 @@ export default function ManagerDashboardPage() {
           <div className="mb-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="section-heading">Operation Stream</h3>
-                <p className="body-text mt-1">Recent audits submitted by your team</p>
+                <h3 className="section-heading">Recent Audits</h3>
+                <p className="body-text mt-1">Latest audits from your team</p>
               </div>
               <TrendingUp className="h-5 w-5 text-muted-text/50" />
             </div>
@@ -511,10 +511,10 @@ export default function ManagerDashboardPage() {
 
           <div className="p-6 pt-2 space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="note" className="text-xs font-medium text-muted-text uppercase tracking-tight">Resolution Note</Label>
+              <Label htmlFor="note" className="text-xs font-medium text-muted-text uppercase tracking-tight">Note</Label>
               <Textarea
                 id="note"
-                placeholder="Describe how the issue was remediated..."
+                placeholder="Explain how the issue was fixed..."
                 value={resolutionNote}
                 onChange={(e) => setResolutionNote(e.target.value)}
                 className="min-h-[120px] text-sm bg-background border-border/50 focus-visible:ring-primary/20 text-body resize-none"
@@ -522,7 +522,7 @@ export default function ManagerDashboardPage() {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-xs font-medium text-muted-text uppercase tracking-tight">Evidence Photo (Optional)</Label>
+              <Label className="text-xs font-medium text-muted-text uppercase tracking-tight">Photo Evidence (Optional)</Label>
               <div className="flex items-center gap-4">
                 <Button
                   type="button"
@@ -537,7 +537,7 @@ export default function ManagerDashboardPage() {
                     <Camera className="h-5 w-5 text-muted-text/60 group-hover:text-primary/60 transition-colors" />
                   )}
                   <span className="text-[11px] font-medium text-muted-text group-hover:text-primary transition-colors uppercase tracking-tight">
-                    {isUploading ? 'Uploading...' : 'Click to upload proof'}
+                    {isUploading ? 'Uploading...' : 'Click to upload photo'}
                   </span>
                 </Button>
                 <input type="file" className="hidden" ref={fileInputRef} accept="image/*" onChange={handleFileUpload} />
@@ -569,7 +569,7 @@ export default function ManagerDashboardPage() {
               className="h-9 px-4 font-medium text-xs bg-success hover:bg-success/90 text-white shadow-lg shadow-success/10 transition-all active:scale-95"
             >
               {isResolving ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : <CheckCircle2 className="h-3 w-3 mr-2" />}
-              Complete Resolution
+              Resolve
             </Button>
           </DialogFooter>
         </DialogContent>

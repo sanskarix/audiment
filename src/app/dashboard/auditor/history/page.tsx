@@ -128,8 +128,8 @@ export default function AuditorHistoryPage() {
   }, [session]);
 
   const filteredHistory = history.filter(item =>
-    item.templateTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.locationName.toLowerCase().includes(searchQuery.toLowerCase())
+    item.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.locationName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const avgScore = history.length > 0

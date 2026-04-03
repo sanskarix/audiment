@@ -11,9 +11,9 @@ if (serviceAccountVar) {
   credential = admin.credential.cert(JSON.parse(serviceAccountVar));
 } else if (process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
   credential = admin.credential.cert({
-    project_id: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    client_email: process.env.FIREBASE_CLIENT_EMAIL,
-    private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
   });
 }
 
@@ -62,7 +62,7 @@ async function seedMore() {
   let count = 0;
   for (let i = 0; i < 15; i++) {
     // Randomize selection
-    const loc = locations[Math.floor(Math.random() * locations.length)];
+    const loc: any = locations[Math.floor(Math.random() * locations.length)];
     const tmpl: any = templates[Math.floor(Math.random() * templates.length)];
     
     // Select manager who owns the location, or just first manager
@@ -71,7 +71,7 @@ async function seedMore() {
     const mgrId = assignedManagerIds[0];
 
     // Find auditor for this manager (can be null/empty string)
-    const validAuditors = auditors.filter(a => a.managerId === mgrId);
+    const validAuditors = auditors.filter((a: any) => a.managerId === mgrId);
     let auditorId = '';
     let status = 'published';
 

@@ -9,6 +9,8 @@ import {
   where,
   getDocs,
   orderBy,
+  doc,
+  getDoc,
   Timestamp
 } from 'firebase/firestore';
 import {
@@ -101,11 +103,62 @@ export default function ManagerReportsPage() {
 
     async function fetchInitialData() {
       try {
-        const locationsSnap = await getDocs(query(
+        // Robust Fetch for Location IDs
+        let locationIds: string[] = [];
+        
+        // Strategy 1: Check User Document
+        const userRef = doc(db, 'users', session.uid);
+        const userSnap = await getDoc(userRef);
+        const userData = userSnap.data();
+        
+        if (userData?.assignedLocationIds || userData?.assignedLocations) {
+          locationIds = userData?.assignedLocationIds || userData?.assignedLocations || [];
+          console.log('Manager Reports - Found locations in user doc:', locationIds);
+        }
+        
+        // Strategy 2: Fallback to Locations Collection Query
+        if (locationIds.length === 0) {
+          console.log('Manager Reports - No locations in user doc, querying locations collection...');
+          const locsByArrayQuery = query(
+            collection(db, 'locations'),
+            where('organizationId', '==', session.organizationId),
+            where('assignedManagerIds', 'array-contains', session.uid)
+          );
+          const locsBySingleQuery = query(
+            collection(db, 'locations'),
+            where('organizationId', '==', session.organizationId),
+            where('assignedManagerId', '==', session.uid)
+          );
+          
+          const [snapArray, snapSingle] = await Promise.all([
+            getDocs(locsByArrayQuery),
+            getDocs(locsBySingleQuery)
+          ]);
+          
+          const foundIds = new Set<string>();
+          snapArray.docs.forEach(d => foundIds.add(d.id));
+          snapSingle.docs.forEach(d => foundIds.add(d.id));
+          locationIds = Array.from(foundIds);
+          console.log('Manager Reports - Found locations via collection query:', locationIds);
+        }
+
+        if (locationIds.length === 0) {
+           setReports([]);
+           setLocations([]);
+           setLoading(false);
+           return;
+        }
+
+        const locationsCollSnap = await getDocs(query(
           collection(db, 'locations'),
-          where('assignedManagerId', '==', session.uid)
+          where('organizationId', '==', session.organizationId)
         ));
-        const locs = locationsSnap.docs.map(d => ({ id: d.id, name: d.data().name }));
+        
+        // Filter locations locally based on assigned ids
+        const locs = locationsCollSnap.docs
+           .filter(d => locationIds.includes(d.id))
+           .map(d => ({ id: d.id, name: d.data().name }));
+           
         setLocations(locs);
 
         const locIds = locs.map(l => l.id);

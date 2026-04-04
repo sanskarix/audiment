@@ -7,7 +7,7 @@ import {
   getDoc,
   setDoc,
 } from 'firebase/firestore';
-import { updatePassword, updateEmail } from 'firebase/auth';
+import { updatePassword, updateEmail, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
 import DashboardShell from '@/components/DashboardShell';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -56,7 +56,7 @@ export default function AuditorSettingsPage() {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
 
   const [profileForm, setProfileForm] = useState({ name: '', email: '', language: 'en' });
-  const [passwordForm, setPasswordForm] = useState({ newPassword: '', confirmPassword: '' });
+  const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
   useEffect(() => {
@@ -193,13 +193,35 @@ export default function AuditorSettingsPage() {
   };
 
   const updatePasswordFlow = async () => {
-    if (!auth.currentUser || passwordForm.newPassword !== passwordForm.confirmPassword) return;
+    if (!auth.currentUser) return;
+    
+    if (passwordForm.newPassword.length < 8) {
+      alert('Password must be at least 8 characters.');
+      return;
+    }
+    
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      alert('Passwords do not match.');
+      return;
+    }
+
     setUpdating('password');
     try {
+      const credential = EmailAuthProvider.credential(
+        auth.currentUser.email!,
+        passwordForm.currentPassword
+      );
+      await reauthenticateWithCredential(auth.currentUser, credential);
       await updatePassword(auth.currentUser, passwordForm.newPassword);
-      setPasswordForm({ newPassword: '', confirmPassword: '' });
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
       flashSuccess('password');
-    } catch (err: any) { alert(err.message || 'Failed. Try re-logging in first.'); }
+    } catch (err: any) { 
+      if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        alert('Current password is incorrect.');
+      } else {
+        alert(err.message || 'Failed. Try re-logging in first.');
+      }
+    }
     finally { setUpdating(null); }
   };
 
@@ -351,6 +373,15 @@ export default function AuditorSettingsPage() {
             </CardHeader>
             <CardContent className="p-8 space-y-6">
               <div className="grid gap-2">
+                <Label className="text-[12px] font-semibold text-muted-text uppercase tracking-wider">Current Password</Label>
+                <Input 
+                  type="password" 
+                  value={passwordForm.currentPassword} 
+                  onChange={e => setPasswordForm(p => ({ ...p, currentPassword: e.target.value }))} 
+                  className="h-11 bg-background border-border/50 rounded-xl"
+                />
+              </div>
+              <div className="grid gap-2">
                 <Label className="text-[12px] font-semibold text-muted-text uppercase tracking-wider">New Password</Label>
                 <Input 
                   type="password" 
@@ -372,6 +403,11 @@ export default function AuditorSettingsPage() {
               {passwordForm.newPassword && passwordForm.newPassword !== passwordForm.confirmPassword && (
                 <div className="p-3 bg-destructive/5 border border-destructive/20 rounded-lg text-[12px] text-destructive flex items-center gap-2">
                   <Check className="h-4 w-4 rotate-45" /> Passwords do not match.
+                </div>
+              )}
+              {passwordForm.newPassword && passwordForm.newPassword.length < 8 && (
+                <div className="p-3 bg-warning/5 border border-warning/20 rounded-lg text-[12px] text-warning flex items-center gap-2">
+                  <Check className="h-4 w-4 rotate-45 text-warning" /> Password must be at least 8 characters.
                 </div>
               )}
             </CardContent>

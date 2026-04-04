@@ -91,6 +91,7 @@ interface Auditor {
 export default function AuditorsPage() {
   const router = useRouter();
   const [auditors, setAuditors] = useState<Auditor[]>([]);
+  const [teamAuditsCount, setTeamAuditsCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -129,7 +130,26 @@ export default function AuditorsPage() {
         ...doc.data()
       })) as Auditor[];
       setAuditors(fetchedAuditors);
-      setLoading(false);
+      
+      // Fetch audits for these auditors to show team stats
+      const auditorIds = fetchedAuditors.map(a => a.id).filter(id => !!id);
+      if (auditorIds.length > 0) {
+        // Simple count of audits for these auditors this month
+        const auditsQuery = query(
+          collection(db, 'audits'),
+          where('assignedAuditorId', 'in', auditorIds.slice(0, 30)) // Firestore limit
+        );
+        getDocs(auditsQuery).then(snap => {
+          setTeamAuditsCount(snap.size);
+          setLoading(false);
+        }).catch(err => {
+          console.error("Error fetching team audits:", err);
+          setLoading(false);
+        });
+      } else {
+        setTeamAuditsCount(0);
+        setLoading(false);
+      }
     }, (error) => {
       console.error("Error fetching auditors:", error);
       setLoading(false);
@@ -223,7 +243,7 @@ export default function AuditorsPage() {
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
               <Button className="h-11 px-5 gap-2 font-medium text-xs shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
-                <UserPlus className="h-4 w-4" /> Add Auditor
+                <UserPlus className="h-4 w-4" /> add auditor
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -263,7 +283,7 @@ export default function AuditorsPage() {
                   <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-normal text-sm">Cancel</Button>
                   <Button type="submit" disabled={isSubmitting} className="font-normal text-sm">
                     {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
-                    Add Auditor
+                    add auditor
                   </Button>
                 </DialogFooter>
               </form>
@@ -300,8 +320,8 @@ export default function AuditorsPage() {
               <ClipboardList className="h-4 w-4 text-primary/40 transition-colors" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-primary tabular-nums leading-tight">24</div>
-              <p className="body-text mt-2 font-normal">Monthly audits</p>
+              <div className="text-[32px] font-semibold tracking-tight text-primary tabular-nums leading-tight">{teamAuditsCount}</div>
+              <p className="body-text mt-2 font-normal">Active assignments</p>
             </div>
           </Card>
         </div>

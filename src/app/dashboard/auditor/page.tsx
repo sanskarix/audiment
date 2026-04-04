@@ -105,13 +105,7 @@ export default function AuditorDashboardPage() {
     : 0;
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'assigned': return <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 px-2 py-0.5 text-[10px] font-medium  tracking-wider">Pending Start</Badge>;
-      case 'in_progress': return <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20 px-2 py-0.5 text-[10px] font-medium  tracking-wider">In Progress</Badge>;
-      case 'completed': return <Badge variant="outline" className="bg-success/10 text-success border-success/20 px-2 py-0.5 text-[10px] font-medium  tracking-wider">Completed</Badge>;
-      case 'missed': return <Badge variant="destructive" className="px-2 py-0.5 text-[10px] font-medium  tracking-wider">Missed</Badge>;
-      default: return <Badge variant="outline" className="px-2 py-0.5 text-[10px] font-medium  tracking-wider">{status}</Badge>;
-    }
+    switch (status) { }
   };
 
   return (
@@ -198,68 +192,61 @@ export default function AuditorDashboardPage() {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-10">
+            <div className="flex flex-col gap-4 pb-10">
               {filteredAudits.map((a) => {
                 const isFuture = a.scheduledDate?.toDate() > new Date();
                 return (
-                  <Card key={a.id} className="standard-card flex flex-col h-full border-border/40 hover:border-primary/20 transition-all duration-300">
-                    <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4">
-                      <div className="space-y-1.5">
-                        <div className="flex items-center gap-2">
-                          {getStatusBadge(a.status)}
-                          <span className="text-[10px] font-medium text-muted-text/30 tracking-wider uppercase">ID-{a.id.substring(0, 8)}</span>
+                  <Card key={a.id} className="standard-card flex flex-col md:flex-row border-border/40 hover:border-primary/20 transition-all duration-300">
+                    <div className="flex-1 flex flex-col md:flex-row">
+                      <CardHeader className="flex flex-col p-6 min-w-[300px]">
+                        <div className="space-y-1.5">
+                          <CardTitle className="text-[17px] font-semibold text-heading leading-tight line-clamp-2">
+                            {a.templateTitle}
+                          </CardTitle>
                         </div>
-                        <CardTitle className="text-[17px] font-semibold text-heading leading-tight line-clamp-2">
-                          {a.templateTitle}
-                        </CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="flex-1 space-y-4">
-                      <div className="space-y-2.5">
-                        <div className="flex items-center gap-2.5 text-sm text-body">
-                          <MapPin className="h-4 w-4 text-muted-text shrink-0 opacity-60" />
-                          <span className="truncate">{a.locationName}</span>
-                        </div>
-                        <div className="flex items-center gap-2.5 text-sm text-body">
-                          <FileCheck className="h-4 w-4 text-muted-text shrink-0 opacity-60" />
-                          <span className="truncate">{a.templateTitle}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/30">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-1.5 text-[10px] font-semibold text-muted-text/50 uppercase tracking-widest">
-                            <CalendarIcon className="h-3 w-3" />
-                            Scheduled
+                      </CardHeader>
+                      <CardContent className="flex-1 p-6 pt-0 md:pt-6 space-y-4">
+                        <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+                          <div className="flex items-center gap-2.5 text-sm text-body">
+                            <MapPin className="h-4 w-4 text-muted-text shrink-0 opacity-60" />
+                            <span className="truncate">{a.locationName}</span>
                           </div>
-                          <div className="text-[13px] text-heading font-semibold tabular-nums">
-                            {format(a.scheduledDate?.toDate(), 'MMM d, yyyy')}
-                          </div>
-                        </div>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-1.5 text-[10px] font-semibold text-muted-text/50 uppercase tracking-widest">
-                            <Clock className="h-3 w-3" />
-                            Deadline
-                          </div>
-                          <div className={cn(
-                            "text-[13px] font-semibold tabular-nums",
-                            a.deadline?.toDate() < new Date() ? "text-destructive" : "text-heading"
-                          )}>
-                            {format(a.deadline?.toDate(), 'MMM d, yyyy')}
+                          <div className="flex items-center gap-6">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-1.5 text-[10px] font-semibold text-muted-text/50 uppercase tracking-widest">
+                                <CalendarIcon className="h-3 w-3" />
+                                Scheduled
+                              </div>
+                              <div className="text-[13px] text-heading font-semibold tabular-nums">
+                                {format(a.scheduledDate?.toDate(), 'MMM d, yyyy')}
+                              </div>
+                            </div>
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-1.5 text-[10px] font-semibold text-muted-text/50 uppercase tracking-widest">
+                                <Clock className="h-3 w-3" />
+                                Deadline
+                              </div>
+                              <div className={cn(
+                                "text-[13px] font-semibold tabular-nums",
+                                a.deadline?.toDate() < new Date() ? "text-destructive" : "text-heading"
+                              )}>
+                                {format(a.deadline?.toDate(), 'MMM d, yyyy')}
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="pt-4 border-t border-border/10 bg-muted/5">
+                      </CardContent>
+                    </div>
+                    <CardFooter className="p-6 pt-2 md:pt-6 border-t md:border-t-0 md:border-l border-border/10 bg-muted/5 md:bg-transparent min-w-[200px] flex items-center">
                       {isFuture ? (
                         <Button disabled className="w-full h-11 bg-muted/50 text-muted-text/50 border-border/20 cursor-not-allowed">
                           <Clock className="mr-2 h-4 w-4" />
-                          Early Access Locked
+                          Locked
                         </Button>
                       ) : (
                         <Button className="w-full h-11 font-semibold text-[14px] group shadow-lg shadow-primary/5 transition-all hover:translate-y-[-1px] active:translate-y-[1px]" asChild>
                           <Link href={`/dashboard/auditor/audits/${a.id}`}>
-                            {a.status === 'in_progress' ? 'Resume Audit' : 'Start Audit'}
+                            {a.status === 'in_progress' ? 'Resume' : 'Start Audit'}
                             <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                           </Link>
                         </Button>

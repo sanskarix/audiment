@@ -237,14 +237,14 @@ export default function CorrectiveActionsPage() {
                     <div className="p-6 bg-muted/5 border-b border-border/40">
                       <div className="flex justify-between items-center mb-4">
                         {ca.severity === 'high' ? (
-                          <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[12px] font-normal">High</Badge>
+                          <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[12px] font-normal lowercase">high</Badge>
                         ) : ca.severity === 'medium' ? (
-                          <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">Medium</Badge>
+                          <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal lowercase">medium</Badge>
                         ) : (
-                          <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">Low</Badge>
+                          <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal lowercase">low</Badge>
                         )}
-                        <Badge variant="outline" className="text-[11px] font-medium text-destructive border-destructive/20 bg-destructive/5 px-2 py-0.5 rounded-md">
-                          Due {ca.deadline ? format(ca.deadline.toDate(), 'MMM d') : 'No Date'}
+                        <Badge variant="outline" className="text-[11px] font-medium text-destructive border-destructive/20 bg-destructive/5 px-2 py-0.5 rounded-md lowercase">
+                          due {ca.deadline ? format(ca.deadline.toDate(), 'MMM d') : 'no date'}
                         </Badge>
                       </div>
                       <h4 className="font-semibold text-heading leading-snug group-hover:text-primary transition-colors">
@@ -274,14 +274,14 @@ export default function CorrectiveActionsPage() {
                           className="flex-1 font-medium text-xs h-10 border-border/50 text-muted-text hover:text-primary transition-all"
                           onClick={() => handleMarkOngoing(ca.id)}
                         >
-                          Mark Ongoing
+                          mark ongoing
                         </Button>
                       )}
                       <Button
                         className="flex-1 font-medium text-xs h-10 shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95"
                         onClick={() => setSelectedCA(ca)}
                       >
-                        Resolve
+                        resolve
                       </Button>
                     </CardFooter>
                   </Card>
@@ -301,8 +301,8 @@ export default function CorrectiveActionsPage() {
                   <Card key={ca.id} className="standard-card flex flex-col overflow-hidden hover:border-success/30 transition-all duration-200 group">
                     <div className="p-6 border-b border-border/40 bg-background flex-1">
                       <div className="flex items-center justify-between mb-4">
-                        <Badge variant="secondary" className="h-6 rounded-full bg-success/10 text-success border-none px-2.5 text-[12px] font-normal">
-                          {ca.status === 'resolved' ? 'Resolved by Admin' : 'Completed'}
+                        <Badge variant="secondary" className="h-6 rounded-full bg-success/10 text-success border-none px-2.5 text-[12px] font-normal lowercase">
+                          {ca.status === 'resolved' ? 'resolved by admin' : 'completed'}
                         </Badge>
                         <span className="text-[11px] text-muted-text opacity-40 tabular-nums">
                           ID: {ca.id.substring(0, 8)}

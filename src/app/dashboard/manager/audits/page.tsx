@@ -10,6 +10,9 @@ import {
   doc,
   updateDoc,
   getDocs,
+  orderBy,
+  getDoc,
+  Timestamp,
   serverTimestamp,
   addDoc
 } from 'firebase/firestore';
@@ -45,6 +48,9 @@ export default function ManagerAuditsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [assigneeFilter, setAssigneeFilter] = useState('all');
+  const [selectedAuditIds, setSelectedAuditIds] = useState<string[]>([]);
+  const [bulkDialogOpen, setBulkDialogOpen] = useState(false);
+  const [bulkAuditor, setBulkAuditor] = useState('');
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -57,35 +63,63 @@ export default function ManagerAuditsPage() {
   }, []);
 
   useEffect(() => {
-    if (!session?.orgId || !session?.uid) return;
+    async function fetchAuditsData() {
+      if (!session) return;
+      // 1. Fetch locations I manage
+      const qLoc = query(
+        collection(db, 'locations'),
+        where('organizationId', '==', session.orgId),
+        where('assignedManagerIds', 'array-contains', session.uid)
+      );
+      const locSnap = await getDocs(qLoc);
+      const managedLocationIds = locSnap.docs.map(d => d.id);
 
-    // Fetch Audits assigned to this manager's locations
-    const qAudits = query(
-      collection(db, 'audits'),
-      where('organizationId', '==', session.orgId),
-      where('assignedManagerId', '==', session.uid)
-    );
+      // 2. Fetch Audits
+      // We'll fetch audits where EITHER my id is the manager OR the location is managed by me.
+      // Easiest is to fetch by locations we just found.
+      let fetchedAudits: any[] = [];
+      
+      if (managedLocationIds.length > 0) {
+        const qAudits = query(
+          collection(db, 'audits'),
+          where('organizationId', '==', session.orgId),
+          where('locationId', 'in', managedLocationIds.slice(0, 30))
+        );
+        const auditSnap = await getDocs(qAudits);
+        fetchedAudits = auditSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+      } else {
+        // Fallback: search by assignedManagerId just in case
+        const qFallback = query(
+          collection(db, 'audits'),
+          where('organizationId', '==', session.orgId),
+          where('assignedManagerId', '==', session.uid)
+        );
+        const fallbackSnap = await getDocs(qFallback);
+        fetchedAudits = fallbackSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+      }
 
-    const unsubAudits = onSnapshot(qAudits, (snap) => {
-      const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
-      fetched.sort((a, b: any) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
-      setAudits(fetched);
-    });
+      fetchedAudits.sort((a, b: any) => {
+        const dateA = a.scheduledDate?.toMillis() || 0;
+        const dateB = b.scheduledDate?.toMillis() || 0;
+        return dateA - dateB; // earliest first
+      });
+      setAudits(fetchedAudits);
 
-    // Fetch Auditors reporting to this manager
-    const qAuditors = query(
-      collection(db, 'users'),
-      where('organizationId', '==', session.orgId),
-      where('role', '==', 'AUDITOR'),
-      where('managerId', '==', session.uid),
-      where('isActive', '==', true)
-    );
+      // Fetch Auditors reporting to this manager
+      const qAuditors = query(
+        collection(db, 'users'),
+        where('organizationId', '==', session.orgId),
+        where('role', '==', 'AUDITOR'),
+        where('managerId', '==', session.uid),
+        where('isActive', '==', true)
+      );
 
-    getDocs(qAuditors).then(snap => {
-      setAuditors(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    });
+      getDocs(qAuditors).then(snap => {
+        setAuditors(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      });
+    }
 
-    return () => unsubAudits();
+    fetchAuditsData();
   }, [session]);
 
   const filteredAudits = audits.filter((audit) => {
@@ -103,7 +137,6 @@ export default function ManagerAuditsPage() {
 
   const handleAssign = async () => {
     if (!selectedAudit || !selectedAuditor || !session) return;
-
     setLoading(true);
     try {
       const auditor = auditors.find(a => a.id === selectedAuditor);
@@ -115,14 +148,13 @@ export default function ManagerAuditsPage() {
         status: 'assigned'
       });
 
-      // Create notification for Auditor
       await addDoc(collection(db, 'notifications'), {
         organizationId: session.orgId,
         recipientId: selectedAuditor,
         recipientRole: 'auditor',
         type: selectedAudit.isSurprise ? 'surprise_audit' : 'audit_assigned',
         title: `New Audit Assigned: ${selectedAudit.templateTitle}`,
-        message: `You have been assigned a new audit at ${selectedAudit.locationName}. Deadline: ${selectedAudit.deadline?.toDate().toLocaleDateString()}.`,
+        message: `You have been assigned a new audit at ${selectedAudit.locationName}.`,
         relatedId: selectedAudit.id,
         isRead: false,
         createdAt: serverTimestamp()
@@ -134,6 +166,49 @@ export default function ManagerAuditsPage() {
     } catch (e) {
       console.error(e);
       alert('Failed to assign auditor');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBulkAssign = async () => {
+    if (!bulkAuditor || selectedAuditIds.length === 0 || !session) return;
+    setLoading(true);
+    try {
+      const auditor = auditors.find(a => a.id === bulkAuditor);
+      if (!auditor) throw new Error('Auditor not found');
+
+      const batch = [];
+      for (const auditId of selectedAuditIds) {
+        const audit = audits.find(a => a.id === auditId);
+        if (!audit || audit.status !== 'published') continue;
+
+        const auditRef = doc(db, 'audits', auditId);
+        batch.push(updateDoc(auditRef, {
+          assignedAuditorId: bulkAuditor,
+          status: 'assigned'
+        }));
+
+        batch.push(addDoc(collection(db, 'notifications'), {
+          organizationId: session.orgId,
+          recipientId: bulkAuditor,
+          recipientRole: 'auditor',
+          type: audit.isSurprise ? 'surprise_audit' : 'audit_assigned',
+          title: `New Audit Assigned: ${audit.templateTitle}`,
+          message: `You have been assigned a new audit at ${audit.locationName}.`,
+          relatedId: auditId,
+          isRead: false,
+          createdAt: serverTimestamp()
+        }));
+      }
+
+      await Promise.all(batch);
+      setBulkDialogOpen(false);
+      setSelectedAuditIds([]);
+      setBulkAuditor('');
+    } catch (e) {
+      console.error(e);
+      alert('Failed to batch assign');
     } finally {
       setLoading(false);
     }
@@ -178,6 +253,16 @@ export default function ManagerAuditsPage() {
             />
           </div>
           <div className="flex items-center gap-2">
+            {selectedAuditIds.length > 0 && (
+              <Button 
+                variant="default" 
+                size="sm"
+                className="h-11 px-4 gap-2 font-medium text-xs bg-primary text-white shadow-lg shadow-primary/20 hover:scale-105 transition-all"
+                onClick={() => setBulkDialogOpen(true)}
+              >
+                <UserPlus className="h-4 w-4" /> Bulk Assign ({selectedAuditIds.length})
+              </Button>
+            )}
             {(statusFilter !== 'all' || assigneeFilter !== 'all') && (
               <Button 
                 variant="ghost" 
@@ -227,7 +312,21 @@ export default function ManagerAuditsPage() {
             <Table>
               <TableHeader className="standard-table-header">
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="standard-table-head pl-6">Template</TableHead>
+                  <TableHead className="w-[50px] pl-6">
+                    <input 
+                      type="checkbox" 
+                      className="h-4 w-4 rounded border-border"
+                      checked={selectedAuditIds.length === filteredAudits.filter(a => a.status === 'published').length && filteredAudits.length > 0}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedAuditIds(filteredAudits.filter(a => a.status === 'published').map(a => a.id));
+                        } else {
+                          setSelectedAuditIds([]);
+                        }
+                      }}
+                    />
+                  </TableHead>
+                  <TableHead className="standard-table-head">Template</TableHead>
                   <TableHead className="standard-table-head">Location</TableHead>
                   <TableHead className="standard-table-head">Deadline</TableHead>
                   <TableHead className="standard-table-head">Status</TableHead>
@@ -244,9 +343,31 @@ export default function ManagerAuditsPage() {
                   </TableRow>
                 ) : (
                   filteredAudits.map((a) => (
-                    <TableRow key={a.id} className="standard-table-row group">
-                      <TableCell className="standard-table-cell pl-6">
-                        <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
+                    <TableRow key={a.id} className={cn("standard-table-row group", selectedAuditIds.includes(a.id) && "bg-primary/5")}>
+                      <TableCell className="pl-6">
+                        <input 
+                          type="checkbox" 
+                          className="h-4 w-4 rounded border-border"
+                          checked={selectedAuditIds.includes(a.id)}
+                          disabled={a.status !== 'published'}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedAuditIds(prev => [...prev, a.id]);
+                            } else {
+                              setSelectedAuditIds(prev => prev.filter(id => id !== a.id));
+                            }
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell className="standard-table-cell">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
+                          {a.recurring && a.recurring !== 'none' && (
+                            <div className="h-5 rounded-full bg-primary/10 text-primary px-2 flex items-center gap-1 w-fit text-[11px] font-normal capitalize shrink-0">
+                              <span>{a.recurring}</span>
+                            </div>
+                          )}
+                        </div>
                         {a.isSurprise && (
                           <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-warning font-medium">
                             <span>Surprise</span>
@@ -332,6 +453,39 @@ export default function ManagerAuditsPage() {
             </Table>
           </div>
         </Card>
+        {/* Bulk Assign Dialog */}
+        <Dialog open={bulkDialogOpen} onOpenChange={setBulkDialogOpen}>
+          <DialogContent className="sm:max-w-[450px]">
+            <DialogHeader>
+              <DialogTitle className="font-semibold text-heading">Bulk Assign Audits</DialogTitle>
+              <DialogDescription className="text-muted-text text-sm">
+                Assign <strong className="text-heading font-medium">{selectedAuditIds.length}</strong> audits to a single auditor.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label className="text-body font-normal">Select Auditor</Label>
+                <Select value={bulkAuditor} onValueChange={setBulkAuditor}>
+                  <SelectTrigger className="h-10 text-body bg-background border-border/50">
+                    <SelectValue placeholder="Choose an auditor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {auditors.map(aud => (
+                      <SelectItem key={aud.id} value={aud.id}>{aud.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setBulkDialogOpen(false)} className="font-normal text-sm">Cancel</Button>
+              <Button onClick={handleBulkAssign} disabled={loading || !bulkAuditor} className="font-normal text-sm">
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Bulk Assign
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardShell>
   );

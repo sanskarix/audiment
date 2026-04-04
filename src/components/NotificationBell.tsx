@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { db } from '@/lib/firebase';
 import {
   collection,
@@ -21,7 +23,8 @@ import {
   AlertTriangle,
   Zap,
   FileText,
-  Clock
+  Clock,
+  X
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -37,10 +40,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 
-export default function NotificationBell({ variant }: { variant?: 'default' | 'trigger-only' | 'sidebar-item' | 'sidebar-card' }) {
+export default function NotificationBell({ variant, userRole }: { variant?: 'default' | 'trigger-only' | 'sidebar-item' | 'sidebar-card', userRole?: string }) {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [session, setSession] = useState<{ uid: string } | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const match = document.cookie.match(/audiment_session=([^;]+)/);
@@ -72,14 +76,23 @@ export default function NotificationBell({ variant }: { variant?: 'default' | 't
   }, [session]);
 
   const markAsRead = async (id: string) => {
+    // Optimistic UI update
+    setNotifications(prev => prev.filter(n => n.id !== id));
+    setUnreadCount(prev => Math.max(0, prev - 1));
+    
     try {
       await updateDoc(doc(db, 'notifications', id), { isRead: true });
     } catch (e) {
       console.error(e);
+      // Revert if failed? (Optional, but user asked for immediate removal)
     }
   };
 
   const markAllAsRead = async () => {
+    // Optimistic UI update
+    setUnreadCount(0);
+    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+    
     try {
       const batch = writeBatch(db);
       notifications.filter(n => !n.isRead).forEach(n => {
@@ -88,6 +101,56 @@ export default function NotificationBell({ variant }: { variant?: 'default' | 't
       await batch.commit();
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const handleNavigate = (n: any) => {
+    if (!n) return;
+    markAsRead(n.id);
+    
+    // Always respect the current user's role dashboard prefix
+    const rolePrefix = (userRole || n.recipientRole)?.toLowerCase() || 'auditor';
+    
+    // Map notification types to specific dashboard routes based on recipient role
+    switch (n.type) {
+      case 'audit_assigned':
+      case 'audit_published':
+      case 'surprise_audit':
+        if (rolePrefix === 'auditor') {
+          router.push(`/dashboard/auditor/audits/${n.relatedId}`);
+        } else {
+          router.push(`/dashboard/${rolePrefix}/audits`);
+        }
+        break;
+      case 'audit_missed':
+        if (rolePrefix === 'admin') {
+          router.push('/dashboard/admin/audits');
+        } else {
+          router.push(`/dashboard/${rolePrefix}/audits`);
+        }
+        break;
+      case 'low_score':
+      case 'trend_alert':
+        if (rolePrefix === 'admin') {
+          router.push('/dashboard/admin/reports');
+        } else if (rolePrefix === 'manager') {
+          router.push('/dashboard/manager/reports');
+        } else {
+          router.push(`/dashboard/${rolePrefix}`);
+        }
+        break;
+      case 'corrective_action':
+        if (rolePrefix === 'manager') {
+          router.push('/dashboard/manager/corrective-actions');
+        } else if (rolePrefix === 'admin') {
+          router.push('/dashboard/admin/corrective-actions');
+        } else {
+          router.push(`/dashboard/${rolePrefix}`);
+        }
+        break;
+      default:
+        // General fallback
+        router.push(`/dashboard/${rolePrefix}`);
     }
   };
 
@@ -148,7 +211,7 @@ export default function NotificationBell({ variant }: { variant?: 'default' | 't
                   !n.isRead && "bg-primary/5 border-l-2 border-l-primary",
                   n.type === 'surprise_audit' && "bg-amber-500/5 hover:bg-amber-500/10"
                 )}
-                onClick={() => markAsRead(n.id)}
+                onClick={() => handleNavigate(n)}
               >
                 <div className={cn(
                   "h-10 w-10 shrink-0 rounded-xl flex items-center justify-center bg-background border border-border bg-card shadow-sm transition-transform group-hover:scale-105",
@@ -160,7 +223,7 @@ export default function NotificationBell({ variant }: { variant?: 'default' | 't
                   <div className="flex items-start justify-between gap-2">
                     <p className={cn("text-sm leading-none truncate flex items-center gap-2", !n.isRead ? "text-heading font-medium" : "text-muted-text font-normal")}>
                       {n.type === 'surprise_audit' && (
-                        <Badge className="bg-amber-500 hover:bg-amber-600 h-3.5 px-1 py-0 text-[8px] font-medium  text-white animate-pulse">URGENT</Badge>
+                        <Badge className="bg-amber-500 hover:bg-amber-600 h-3.5 px-1 py-0 text-[8px] font-medium  text-white animate-pulse lowercase">urgent</Badge>
                       )}
                       {n.title}
                     </p>
@@ -187,38 +250,71 @@ export default function NotificationBell({ variant }: { variant?: 'default' | 't
   );
 
   if (variant === 'sidebar-card') {
+    const unreadNotifications = notifications.filter(n => !n.isRead);
+    const displayNotes = unreadNotifications.slice(0, 3);
+
+    if (displayNotes.length === 0) return null;
+
     return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <div className="mx-3 mt-auto mb-4 bg-muted/30 border border-border/50 rounded-xl p-4 cursor-pointer hover:bg-muted/40 transition-all group relative overflow-hidden">
-            {unreadCount > 0 && (
-              <div className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary animate-pulse" />
-            )}
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-2">
-                 <div className="h-5 w-5 rounded bg-primary/10 flex items-center justify-center">
-                    <Bell className="h-3 w-3 text-primary" />
-                 </div>
-                 <span className="text-sm font-semibold text-heading">Latest Alerts</span>
-              </div>
-              <p className="text-[11px] text-muted-text leading-relaxed mt-1">
-                {unreadCount > 0 
-                  ? `You have ${unreadCount} unread notifications. Tap to review.` 
-                  : "All caught up! Check back later for new updates."}
-              </p>
-            </div>
+      <div className="mx-3 mt-auto mb-10 relative h-[100px] flex flex-col justify-end">
+        <AnimatePresence mode="popLayout">
+          {displayNotes.slice().reverse().map((n, idx) => {
+            const stackIdx = displayNotes.length - 1 - idx;
+            const isTop = stackIdx === 0;
             
-            <div className="mt-3 aspect-[16/9] w-full bg-background border border-border/50 rounded-lg flex flex-col items-center justify-center gap-2 overflow-hidden group-hover:border-primary/30 transition-colors bg-gradient-to-br from-background to-muted/20">
-               <div className="h-8 w-8 bg-[#ff6600] rounded flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-[#ff6600]/20">Y</div>
-               <div className="flex flex-col items-center -gap-1">
-                 <span className="text-[10px] text-heading font-bold tracking-tight">Make something people want.</span>
-                 <span className="text-[8px] text-muted-text/50 uppercase tracking-widest font-medium">YC W24 Batch</span>
-               </div>
-            </div>
-          </div>
-        </DropdownMenuTrigger>
-        <NotificationContent />
-      </DropdownMenu>
+            return (
+              <motion.div
+                key={n.id}
+                layout
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ 
+                  opacity: 1, 
+                  y: -stackIdx * 8, 
+                  scale: 1 - stackIdx * 0.05,
+                  zIndex: 10 - stackIdx,
+                  filter: stackIdx > 0 ? 'blur(0.5px)' : 'none'
+                }}
+                exit={{ opacity: 0, x: 50, scale: 0.9, transition: { duration: 0.2 } }}
+                transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                className={cn(
+                  "absolute inset-x-0 bottom-0 bg-card border border-border/60 rounded-xl p-4 shadow-xl cursor-pointer select-none group",
+                  isTop ? "hover:border-primary/40 ring-1 ring-transparent hover:ring-primary/10 transition-all" : "pointer-events-none opacity-80"
+                )}
+                onClick={() => isTop && handleNavigate(n)}
+              >
+                {isTop && (
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      markAsRead(n.id);
+                    }}
+                    className="absolute top-2 right-2 p-1.5 rounded-full hover:bg-muted/50 text-muted-text/30 hover:text-destructive transition-colors z-20"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                )}
+                
+                <div className="flex flex-col gap-1 pr-6">
+                  <div className="flex items-center gap-2">
+                     <div className="h-5 w-5 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        {getIcon(n.type)}
+                     </div>
+                     <span className="text-[13px] font-bold text-heading truncate leading-none tracking-tight">
+                       {n.title}
+                     </span>
+                  </div>
+                  <p className="text-[11px] text-muted-text leading-tight line-clamp-2 mt-1 font-medium">
+                    {n.message}
+                  </p>
+                  <span className="text-[9px] text-muted-text/30 mt-1.5 font-bold uppercase tracking-widest">
+                     {n.createdAt ? formatDistanceToNow(n.createdAt.toDate(), { addSuffix: true }) : 'Just now'}
+                  </span>
+                </div>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </div>
     );
   }
 
@@ -226,7 +322,7 @@ export default function NotificationBell({ variant }: { variant?: 'default' | 't
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex items-center justify-between w-full h-10 px-3 rounded-lg text-muted-text hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all duration-200 group">
+          <button className="flex items-center justify-between w-full h-10 px-3 rounded-lg text-muted-text hover:bg-accent hover:text-accent-foreground cursor-pointer transition-all duration-200 group border-none outline-none ring-0 bg-transparent">
             <div className="flex items-center gap-3">
               <Bell className="h-4 w-4 shrink-0 transition-transform group-hover:rotate-12" />
               <span className="text-[13px] font-normal tracking-tight text-body">Notifications</span>
@@ -236,7 +332,7 @@ export default function NotificationBell({ variant }: { variant?: 'default' | 't
                 {unreadCount > 9 ? '9+' : unreadCount}
               </Badge>
             )}
-          </div>
+          </button>
         </DropdownMenuTrigger>
         <NotificationContent />
       </DropdownMenu>

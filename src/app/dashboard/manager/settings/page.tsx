@@ -7,7 +7,7 @@ import {
   getDoc,
   setDoc,
 } from 'firebase/firestore';
-import { updatePassword, updateEmail } from 'firebase/auth';
+import { updatePassword, updateEmail, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
 import DashboardShell from '@/components/DashboardShell';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -53,7 +53,7 @@ export default function ManagerSettingsPage() {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
 
   const [profileForm, setProfileForm] = useState({ name: '', email: '' });
-  const [passwordForm, setPasswordForm] = useState({ newPassword: '', confirmPassword: '' });
+  const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
   useEffect(() => {
@@ -186,13 +186,35 @@ export default function ManagerSettingsPage() {
   };
 
   const updatePasswordFlow = async () => {
-    if (!auth.currentUser || passwordForm.newPassword !== passwordForm.confirmPassword) return;
+    if (!auth.currentUser) return;
+    
+    if (passwordForm.newPassword.length < 8) {
+      alert('Password must be at least 8 characters.');
+      return;
+    }
+    
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      alert('Passwords do not match.');
+      return;
+    }
+
     setUpdating('password');
     try {
+      const credential = EmailAuthProvider.credential(
+        auth.currentUser.email!,
+        passwordForm.currentPassword
+      );
+      await reauthenticateWithCredential(auth.currentUser, credential);
       await updatePassword(auth.currentUser, passwordForm.newPassword);
-      setPasswordForm({ newPassword: '', confirmPassword: '' });
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
       flashSuccess('password');
-    } catch (err: any) { alert(err.message || 'Failed. Try re-logging in first.'); }
+    } catch (err: any) { 
+      if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        alert('Current password is incorrect.');
+      } else {
+        alert(err.message || 'Failed. Try re-logging in first.');
+      }
+    }
     finally { setUpdating(null); }
   };
 
@@ -320,6 +342,13 @@ export default function ManagerSettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid gap-1.5">
+                    <Label className="text-[11px] font-semibold text-muted-text uppercase tracking-wider">Current Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text/50" />
+                      <Input type="password" value={passwordForm.currentPassword} onChange={e => setPasswordForm(p => ({ ...p, currentPassword: e.target.value }))} className="h-10 pl-9 shadow-sm" />
+                    </div>
+                  </div>
+                  <div className="grid gap-1.5">
                     <Label className="text-[11px] font-semibold text-muted-text uppercase tracking-wider">New Password</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text/50" />
@@ -335,6 +364,9 @@ export default function ManagerSettingsPage() {
                   </div>
                   {passwordForm.newPassword && passwordForm.newPassword !== passwordForm.confirmPassword && (
                     <p className="text-[12px] text-destructive">Passwords do not match.</p>
+                  )}
+                  {passwordForm.newPassword && passwordForm.newPassword.length < 8 && (
+                    <p className="text-[12px] text-warning">Password must be at least 8 characters.</p>
                   )}
                 </CardContent>
                 <CardFooter className="bg-muted/5 border-t border-border/30 py-3 px-6 justify-end">

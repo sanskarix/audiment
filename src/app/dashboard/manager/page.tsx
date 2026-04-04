@@ -13,6 +13,7 @@ import {
   onSnapshot,
   updateDoc,
   doc,
+  getDoc,
   serverTimestamp
 } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
@@ -81,6 +82,7 @@ export default function ManagerDashboardPage() {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
+  const [managerExtraStats, setManagerExtraStats] = useState<{ unassigned: any[], nearDeadlines: any[] }>({ unassigned: [], nearDeadlines: [] });
 
   // Resolution state
   const [selectedCA, setSelectedCA] = useState<any>(null);
@@ -108,16 +110,101 @@ export default function ManagerDashboardPage() {
         console.log('Manager Dashboard - UID:', session.uid);
         console.log('Manager Dashboard - OrganizationId:', session.organizationId);
 
-        // 1. Fetch assigned locations
-        const locationsQuery = query(
-          collection(db, 'locations'),
-          where('organizationId', '==', session.organizationId),
-          where('assignedManagerId', '==', session.uid)
-        );
-        const locationsSnap = await getDocs(locationsQuery);
-        console.log('Manager Dashboard - Locations found:', locationsSnap.size);
-        const locationIds = locationsSnap.docs.map(d => d.id);
-        const assignedLocationsCount = locationsSnap.size;
+        // Robust Fetch for Location IDs
+        let locationIds: string[] = [];
+        
+        // Strategy 1: Check User Document (Multi-Manager Update)
+        const userRef = doc(db, 'users', session.uid);
+        const userSnap = await getDoc(userRef);
+        const userData = userSnap.data();
+        
+        if (userData?.assignedLocationIds || userData?.assignedLocations) {
+          locationIds = userData?.assignedLocationIds || userData?.assignedLocations || [];
+          console.log('Manager Dashboard - Found locations in user doc:', locationIds);
+        }
+        
+        // Strategy 2: Fallback to Locations Collection Query (Legacy or Alternate Store)
+        if (locationIds.length === 0) {
+          console.log('Manager Dashboard - No locations in user doc, querying locations collection...');
+          const locsByArrayQuery = query(
+            collection(db, 'locations'),
+            where('organizationId', '==', session.organizationId),
+            where('assignedManagerIds', 'array-contains', session.uid)
+          );
+          const locsBySingleQuery = query(
+            collection(db, 'locations'),
+            where('organizationId', '==', session.organizationId),
+            where('assignedManagerId', '==', session.uid)
+          );
+          
+          const [snapArray, snapSingle] = await Promise.all([
+            getDocs(locsByArrayQuery),
+            getDocs(locsBySingleQuery)
+          ]);
+          
+          const foundIds = new Set<string>();
+          snapArray.docs.forEach(d => foundIds.add(d.id));
+          snapSingle.docs.forEach(d => foundIds.add(d.id));
+          locationIds = Array.from(foundIds);
+          console.log('Manager Dashboard - Found locations via collection query:', locationIds);
+        }
+
+        const assignedLocationsCount = locationIds.length;
+        
+        // Fetch unassigned audits and audits near deadlines
+        let unassignedAudits: any[] = [];
+        let upcomingAudits: any[] = [];
+        
+        if (locationIds.length > 0) {
+          const unassignedQuery = query(
+            collection(db, 'audits'),
+            where('organizationId', '==', session.organizationId),
+            where('locationId', 'in', locationIds.slice(0, 30)),
+            where('status', 'in', ['published', 'assigned']),
+            limit(5)
+          );
+          const unassignedSnap = await getDocs(unassignedQuery);
+          unassignedAudits = unassignedSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+          const deadlineQuery = query(
+            collection(db, 'audits'),
+            where('organizationId', '==', session.organizationId),
+            where('locationId', 'in', locationIds.slice(0, 30)),
+            where('status', 'in', ['published', 'assigned', 'in_progress']),
+            orderBy('deadline', 'asc'),
+            limit(5)
+          );
+          const deadlineSnap = await getDocs(deadlineQuery);
+          upcomingAudits = deadlineSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+          
+          // Original Queries from ManagerDashboardPage
+          // 4. Fetch corrective actions for manager's locations
+          const caQuery = query(
+            collection(db, 'corrective_actions'),
+            where('organizationId', '==', session.organizationId),
+            where('locationId', 'in', locationIds.slice(0, 10)),
+            orderBy('deadline', 'asc'),
+            limit(20)
+          );
+          const caSnap = await getDocs(caQuery);
+          setCorrectiveActions(caSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+          
+          // 5. Fetch completed audits for report summary
+          const auditsSummaryQuery = query(
+            collection(db, 'audits'),
+            where('organizationId', '==', session.organizationId),
+            where('locationId', 'in', locationIds.slice(0, 10)),
+            where('status', '==', 'completed'),
+            limit(20)
+          );
+          const auditsSummarySnap = await getDocs(auditsSummaryQuery);
+          // Note: Assuming setRecentAudits is defined or handled via stats
+        }
+
+        setManagerExtraStats({
+          unassigned: unassignedAudits,
+          nearDeadlines: upcomingAudits
+        });
 
         // 2. Fetch auditors reporting to this manager
         const auditorsSnap = await getDocs(query(
@@ -132,13 +219,22 @@ export default function ManagerDashboardPage() {
         // 3. Fetch recent audits for these locations
         if (locationIds.length === 0) {
           console.warn('Manager Dashboard - No locations assigned to check for audits');
+          
+          const idleActivity = auditors.map((aud: any) => ({
+            id: aud.id,
+            name: aud.name,
+            completed: 0,
+            pending: 0
+          }));
+
           setStats({
             assignedLocations: 0,
             activeAuditors: auditors.length,
             recentAuditScores: [],
-            auditorActivity: [],
+            auditorActivity: idleActivity,
             recentAudits: []
           });
+          setLoading(false);
           return;
         }
 
@@ -327,8 +423,8 @@ export default function ManagerDashboardPage() {
                   <h3 className="section-heading">Corrective Actions</h3>
                   <p className="text-[12px] text-muted-text">Issues requiring immediate attention</p>
                 </div>
-                <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-3 text-[11px] font-semibold tabular-nums">
-                  {correctiveActions.length} Pending
+                <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-3 text-[11px] font-semibold tabular-nums lowercase">
+                  {correctiveActions.length} pending
                 </Badge>
               </div>
 
@@ -338,7 +434,7 @@ export default function ManagerDashboardPage() {
                     <div className="p-5">
                       <div className="flex items-center justify-between mb-4">
                         <Badge variant="secondary" className={cn(
-                          "h-5 rounded-full border-none px-2 text-[10px] font-medium uppercase tracking-tight",
+                          "h-5 rounded-full border-none px-2 text-[10px] font-medium lowercase tracking-tight",
                           ca.severity === 'critical' ? "bg-destructive/10 text-destructive" : "bg-warning/10 text-warning"
                         )}>
                           {ca.severity}
@@ -400,7 +496,7 @@ export default function ManagerDashboardPage() {
                     tickLine={false} 
                     fontWeight={500} 
                     tick={{ dy: 10 }}
-                    tickFormatter={(val) => val.toUpperCase()}
+                    tickFormatter={(val) => val.toLowerCase()}
                   />
                   <YAxis 
                     stroke="oklch(var(--muted-text))" 
@@ -452,17 +548,87 @@ export default function ManagerDashboardPage() {
                       <p className="font-semibold text-[13px] text-heading hover:text-primary transition-colors cursor-pointer">{aud.name}</p>
                     </Link>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-[10px] font-medium tracking-widest text-success border-success/30 bg-success/5 px-2 py-0.5">
-                        {aud.completed} Completed
+                      <Badge variant="outline" className="text-[10px] font-medium text-success border-success/30 bg-success/5 px-2 py-0.5 lowercase">
+                        {aud.completed} completed
                       </Badge>
-                      <Badge variant="outline" className="text-[10px] font-medium tracking-widest text-muted-text border-border px-2 py-0.5">
-                        {aud.pending} In Progress
+                      <Badge variant="outline" className="text-[10px] font-medium text-muted-text border-border px-2 py-0.5 lowercase">
+                        {aud.pending} in progress
                       </Badge>
                     </div>
                   </div>
                   <CheckCircle2 className={aud.pending === 0 ? "text-success h-5 w-5 opacity-80" : "text-muted-text/30 h-5 w-5"} />
                 </div>
               ))}
+            </div>
+          </Card>
+        </div>
+
+        {/* Manager Tasks: Unassigned Auddits & Near Deadlines */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Unassigned Audits */}
+          <Card className="standard-card p-6">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h3 className="section-heading">Unassigned Audits</h3>
+                <p className="body-text mt-1">Audits waiting for an auditor</p>
+              </div>
+              <Badge variant="secondary" className="bg-primary/10 text-primary lowercase px-3">{managerExtraStats.unassigned.length} pending</Badge>
+            </div>
+            <div className="space-y-3">
+              {managerExtraStats.unassigned.length === 0 ? (
+                <div className="py-10 text-center border-2 border-dashed border-border/40 rounded-xl">
+                  <p className="text-sm text-body">No unassigned audits.</p>
+                </div>
+              ) : (
+                managerExtraStats.unassigned.map((audit) => (
+                  <div key={audit.id} className="flex items-center justify-between p-4 rounded-xl border border-border/40 hover:bg-muted/30 transition-all">
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-heading">{audit.templateTitle}</p>
+                      <p className="text-[11px] text-muted-text flex items-center gap-1.5 lowercase">
+                        <MapPin className="h-3 w-3" /> {audit.locationName}
+                      </p>
+                    </div>
+                    <Link href="/dashboard/manager/audits">
+                      <Button size="sm" variant="outline" className="h-8 text-xs lowercase">Assign</Button>
+                    </Link>
+                  </div>
+                ))
+              )}
+            </div>
+          </Card>
+
+          {/* Near Deadlines */}
+          <Card className="standard-card p-6">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h3 className="section-heading">Near Deadlines</h3>
+                <p className="body-text mt-1">Upcoming audit deadlines</p>
+              </div>
+              <AlertTriangle className="h-5 w-5 text-warning opacity-50" />
+            </div>
+            <div className="space-y-3">
+              {managerExtraStats.nearDeadlines.length === 0 ? (
+                <div className="py-10 text-center border-2 border-dashed border-border/40 rounded-xl">
+                  <p className="text-sm text-body">No upcoming deadlines.</p>
+                </div>
+              ) : (
+                managerExtraStats.nearDeadlines.map((audit) => (
+                  <div key={audit.id} className="flex items-center justify-between p-4 rounded-xl border border-border/40 hover:bg-muted/30 transition-all">
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-heading">{audit.templateTitle}</p>
+                      <p className="text-[11px] text-muted-text flex items-center gap-1.5 lowercase">
+                        <Clock className="h-3 w-3" /> {audit.deadline ? format(audit.deadline.toDate(), 'MMM d, yyyy') : 'No date'}
+                      </p>
+                    </div>
+                    <Badge variant="outline" className={cn(
+                      "text-[10px] lowercase",
+                      audit.status === 'in_progress' ? "text-primary border-primary/20" : "text-muted-text border-border"
+                    )}>
+                      {audit.status}
+                    </Badge>
+                  </div>
+                ))
+              )}
             </div>
           </Card>
         </div>
@@ -528,13 +694,13 @@ export default function ManagerDashboardPage() {
                 <div className="text-right shrink-0">
                   {audit.status === 'completed' ? (
                     <Badge className={cn(
-                      "text-[10px] font-semibold tracking-widest px-2.5 py-1 uppercase",
+                      "text-[10px] font-semibold px-2.5 py-1 lowercase",
                       audit.scorePercentage >= 90 ? "bg-success text-success-foreground" : audit.scorePercentage >= 70 ? "bg-primary text-primary-foreground" : "bg-warning text-warning-foreground"
                     )}>
                       {audit.scorePercentage}%
                     </Badge>
                   ) : (
-                    <Badge variant="outline" className="text-[10px] font-semibold tracking-widest text-muted-text bg-muted/20 uppercase px-2.5 py-1">
+                    <Badge variant="outline" className="text-[10px] font-semibold text-muted-text bg-muted/20 lowercase px-2.5 py-1">
                       {audit.status}
                     </Badge>
                   )}
@@ -559,7 +725,7 @@ export default function ManagerDashboardPage() {
 
           <div className="p-6 pt-2 space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="note" className="text-xs font-medium text-muted-text uppercase tracking-tight">Note</Label>
+              <Label htmlFor="note" className="text-xs font-medium text-muted-text tracking-tight uppercase">Note</Label>
               <Textarea
                 id="note"
                 placeholder="Explain how the issue was fixed..."
@@ -584,7 +750,7 @@ export default function ManagerDashboardPage() {
                   ) : (
                     <Camera className="h-5 w-5 text-muted-text/60 group-hover:text-primary/60 transition-colors" />
                   )}
-                  <span className="text-[11px] font-medium text-muted-text group-hover:text-primary transition-colors uppercase tracking-tight">
+                  <span className="text-[11px] font-medium text-muted-text group-hover:text-primary transition-colors tracking-tight">
                     {isUploading ? 'Uploading...' : 'Click to upload photo'}
                   </span>
                 </Button>

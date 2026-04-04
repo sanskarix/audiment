@@ -99,10 +99,10 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
             const uData = snap.data();
             if (uData) {
               if (uData.isActive === false) {
-                 logoutUser().then(() => {
-                   router.push('/login?error=' + encodeURIComponent('Your account has been deactivated. Contact your administrator.'));
-                 });
-                 return;
+                logoutUser().then(() => {
+                  router.push('/login?error=' + encodeURIComponent('Your account has been deactivated. Contact your administrator.'));
+                });
+                return;
               }
               setUserState(prev => prev ? { ...prev, ...uData } : { name: uData.name, email: uData.email, photoUrl: uData.photoUrl });
               if (role === 'Auditor') setHasFlashmobAccess(uData.hasFlashmobAccess === true);
@@ -157,7 +157,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                 ))}
               </SidebarMenu>
               <div className="mt-auto">
-                <NotificationBell variant="sidebar-card" />
+                <NotificationBell variant="sidebar-card" userRole={role} />
               </div>
             </SidebarContent>
 
@@ -190,12 +190,12 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem className="cursor-pointer" asChild>
-                        <Link 
+                        <Link
                           href={
-                            role === 'Admin' ? '/dashboard/admin/settings' : 
-                            role === 'Manager' ? '/dashboard/manager/settings' : 
-                            '/dashboard/auditor/settings'
-                          } 
+                            role === 'Admin' ? '/dashboard/admin/settings' :
+                              role === 'Manager' ? '/dashboard/manager/settings' :
+                                '/dashboard/auditor/settings'
+                          }
                           className="flex items-center w-full"
                         >
                           <Settings className="mr-2 h-4 w-4" />
@@ -220,10 +220,10 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
               </SidebarMenu>
             </SidebarFooter>
           </Sidebar>
-          
+
           <SidebarInset className="flex flex-col flex-1 h-screen overflow-hidden bg-background">
             <div className="flex-1 overflow-auto">
-              <div className="mx-auto w-full max-w-[1440px] h-full p-8 px-4 sm:px-6 lg:px-8">
+              <div className="mx-auto w-full max-w-[1440px] h-full">
                 {children}
               </div>
             </div>
@@ -257,12 +257,12 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer" asChild>
-                  <Link 
+                  <Link
                     href={
-                      role === 'Admin' ? '/dashboard/admin/settings' : 
-                      role === 'Manager' ? '/dashboard/manager/settings' : 
-                      '/dashboard/auditor/settings'
-                    } 
+                      role === 'Admin' ? '/dashboard/admin/settings' :
+                        role === 'Manager' ? '/dashboard/manager/settings' :
+                          '/dashboard/auditor/settings'
+                    }
                     className="flex items-center w-full"
                   >
                     <Settings className="mr-2 h-4 w-4" />
@@ -295,15 +295,15 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
         <nav className="shrink-0 fixed bottom-0 left-0 right-0 z-30 h-16 bg-background border-t border-border/50 flex items-center justify-around px-2">
           {mobileNavItems.map((item: any) => {
             const isActive = pathname === item.href;
-            
+
             if (item.component) {
               const Comp = item.component;
               return (
                 <div key={item.title} className="flex flex-col items-center justify-center gap-1 flex-1 h-full rounded-xl transition-colors text-muted-text/60">
-                   <div className="h-10 w-12 flex items-center justify-center">
-                      <Comp />
-                   </div>
-                   <span className="text-[10px] font-medium leading-none">{item.title}</span>
+                  <div className="h-10 w-12 flex items-center justify-center">
+                    <Comp variant="sidebar-item" userRole={role} />
+                  </div>
+                  <span className="text-[10px] font-medium leading-none">{item.title}</span>
                 </div>
               );
             }

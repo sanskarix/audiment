@@ -269,7 +269,6 @@ export default function AuditorHistoryPage() {
                               <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[10px] h-4 px-1.5 font-bold uppercase">Flashmob</Badge>
                             )}
                           </div>
-                          <span className="text-[11px] text-muted-text/60">ID-{item.id.substring(0, 8)}</span>
                         </div>
                       </TableCell>
                       <TableCell className="px-6 py-4">

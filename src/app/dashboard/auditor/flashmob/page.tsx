@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import {
@@ -99,13 +99,15 @@ export default function FlashmobAuditPage() {
   const [step, setStep] = useState<Step>('location');
   const [selectedLocation, setSelectedLocation] = useState<string>('');
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [stream, setStream] = useState<MediaStream | null>(null);
+  const recordingStreamRef = useRef<MediaStream | null>(null);
+  const selfieStreamRef = useRef<MediaStream | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+
   const [recording, setRecording] = useState(false);
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(20);
-  const recorderRef = useRef<MediaRecorder | null>(null);
 
   const [selfieBlob, setSelfieBlob] = useState<Blob | null>(null);
   const [selfieUrl, setSelfieUrl] = useState<string | null>(null);
@@ -146,65 +148,123 @@ export default function FlashmobAuditPage() {
     fetchLocations();
   }, [session]);
 
-  const startCamera = async (facingMode: 'environment' | 'user' = 'environment') => {
-    try {
-      if (stream) { stream.getTracks().forEach(t => t.stop()); setStream(null); }
-      const constraints = {
-        video: {
-          facingMode,
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        },
-        audio: facingMode === 'environment'
-      };
-      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-      setStream(mediaStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-        // On some mobile devices, we need to explicitly call play() after srcObject is set
-        videoRef.current.onloadedmetadata = () => {
-          videoRef.current?.play().catch(e => console.error("Video play failed:", e));
-        };
+  // Cleanup all streams on unmount
+  useEffect(() => {
+    return () => {
+      recordingStreamRef.current?.getTracks().forEach(t => t.stop());
+      selfieStreamRef.current?.getTracks().forEach(t => t.stop());
+    };
+  }, []);
+
+  // Callback ref: fires the instant the recording video element mounts into the DOM
+  const recordingVideoCallbackRef = useCallback((videoEl: HTMLVideoElement | null) => {
+    if (!videoEl) return;
+    // Get stream (or acquire it first)
+    const attachStream = async () => {
+      try {
+        if (!recordingStreamRef.current) {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+            audio: false
+          });
+          recordingStreamRef.current = stream;
+        }
+        videoEl.srcObject = recordingStreamRef.current;
+        // Catch and handle the potential AbortError if the play request is interrupted
+        try {
+          await videoEl.play();
+        } catch (playErr: any) {
+          if (playErr.name !== 'AbortError') {
+            console.error('Video play error:', playErr);
+          }
+        }
+      } catch (err) {
+        console.error('Recording camera error:', err);
+        alert('Could not access camera. Please allow camera permissions and try again.');
       }
-    } catch (err) { console.error('Camera access denied:', err); }
-  };
+    };
+    attachStream();
+  }, []);
 
-  const stopCamera = () => {
-    if (stream) { stream.getTracks().forEach(t => t.stop()); setStream(null); }
-  };
+  // Callback ref: fires the instant the selfie video element mounts into the DOM
+  const selfieVideoCallbackRef = useCallback((videoEl: HTMLVideoElement | null) => {
+    if (!videoEl) return;
+    const attachStream = async () => {
+      try {
+        // Stop recording stream first
+        recordingStreamRef.current?.getTracks().forEach(t => t.stop());
+        recordingStreamRef.current = null;
 
-  useEffect(() => { return () => { stopCamera(); }; }, [stream]);
+        if (!selfieStreamRef.current) {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: 'user' } },
+            audio: false
+          });
+          selfieStreamRef.current = stream;
+        }
+        videoEl.srcObject = selfieStreamRef.current;
+        // Catch and handle the potential AbortError if the play request is interrupted
+        try {
+          await videoEl.play();
+        } catch (playErr: any) {
+          if (playErr.name !== 'AbortError') {
+            console.error('Selfie play error:', playErr);
+          }
+        }
+      } catch (err) {
+        console.error('Selfie camera error:', err);
+      }
+    };
+    attachStream();
+  }, []);
+
+  const stopRecordingCamera = () => {
+    recordingStreamRef.current?.getTracks().forEach(track => track.stop());
+    recordingStreamRef.current = null;
+  };
 
   const startRecording = () => {
-    if (!stream) return;
+    if (!recordingStreamRef.current) {
+      alert('Camera is not ready yet. Please wait a moment and try again.');
+      return;
+    }
+
     const pickMime = () => {
       if (typeof MediaRecorder === 'undefined') return undefined;
       const candidates = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm', 'video/mp4'];
       return candidates.find(t => MediaRecorder.isTypeSupported(t));
     };
-    const chunks: Blob[] = [];
+
+    chunksRef.current = [];
     const mimeType = pickMime();
-    const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
-    recorderRef.current = recorder;
-    recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+    const recorder = mimeType
+      ? new MediaRecorder(recordingStreamRef.current, { mimeType })
+      : new MediaRecorder(recordingStreamRef.current);
+    mediaRecorderRef.current = recorder;
+
+    recorder.ondataavailable = (e) => {
+      if (e.data.size > 0) chunksRef.current.push(e.data);
+    };
+
     recorder.onstop = () => {
-      const blob = new Blob(chunks, mimeType ? { type: mimeType } : undefined);
+      const blob = new Blob(chunksRef.current, mimeType ? { type: mimeType } : undefined);
       setVideoBlob(blob);
       setVideoUrl(URL.createObjectURL(blob));
       setStep('review');
     };
+
     recorder.start(100);
     setRecording(true);
     setCountdown(20);
+
     const timer = setInterval(() => {
       setCountdown(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          if (recorderRef.current?.state === 'recording') {
-            recorderRef.current.stop();
+          if (mediaRecorderRef.current?.state === 'recording') {
+            mediaRecorderRef.current.stop();
             setRecording(false);
-            recorderRef.current.stream?.getTracks().forEach(t => t.stop());
-            setStream(null);
+            stopRecordingCamera();
           }
           return 0;
         }
@@ -214,31 +274,34 @@ export default function FlashmobAuditPage() {
   };
 
   const stopRecording = () => {
-    if (recorderRef.current?.state === 'recording') {
-      recorderRef.current.stop();
+    if (mediaRecorderRef.current?.state === 'recording') {
+      mediaRecorderRef.current.stop();
       setRecording(false);
-      stopCamera();
+      stopRecordingCamera();
     }
   };
 
   const takeSelfie = () => {
-    if (!videoRef.current || !stream) return;
+    const videoEl = document.querySelector<HTMLVideoElement>('#selfie-video-el');
+    if (!videoEl || !selfieStreamRef.current) return;
     const canvas = document.createElement('canvas');
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
+    canvas.width = videoEl.videoWidth;
+    canvas.height = videoEl.videoHeight;
     const ctx = canvas.getContext('2d');
     if (ctx) {
-      ctx.drawImage(videoRef.current, 0, 0);
+      ctx.drawImage(videoEl, 0, 0);
       canvas.toBlob((blob) => {
         if (blob) {
           setSelfieBlob(blob);
           setSelfieUrl(URL.createObjectURL(blob));
-          stopCamera();
+          selfieStreamRef.current?.getTracks().forEach(track => track.stop());
+          selfieStreamRef.current = null;
           setStep('submitting');
         }
       }, 'image/jpeg');
     }
   };
+
 
   const handleSubmit = async () => {
     if (!videoBlob || !selfieBlob || !session || !selectedLocation) return;
@@ -378,7 +441,9 @@ export default function FlashmobAuditPage() {
               <Button
                 className="w-full h-12 font-semibold rounded-xl"
                 disabled={!selectedLocation || selectedLocation === 'none'}
-                onClick={() => { setStep('video'); startCamera('environment'); }}
+                onClick={() => { 
+                  setStep('video'); 
+                }}
               >
                 Continue to Recording <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
@@ -401,15 +466,14 @@ export default function FlashmobAuditPage() {
               </div>
             </div>
             <CardContent className="p-6 space-y-6">
-              {/* Viewfinder */}
+              {/* Viewfinder — callback ref attaches stream the moment this element mounts */}
               <div className="relative aspect-video bg-black rounded-2xl overflow-hidden border border-border/50 ring-1 ring-border/20 shadow-2xl">
                 <video
-                  ref={videoRef}
-                  className="h-full w-full object-cover"
-                  autoPlay
+                  ref={recordingVideoCallbackRef}
                   muted
                   playsInline
-                  onCanPlay={() => videoRef.current?.play().catch(() => { })}
+                  controls={false}
+                  className="w-full h-full object-cover rounded-lg"
                 />
 
                 {/* Overlays */}
@@ -430,16 +494,6 @@ export default function FlashmobAuditPage() {
                   </div>
                 </div>
 
-                {/* Record Progress Ring around button? No, just keep it simple */}
-                {!recording && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none transition-opacity">
-                    <div className="p-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-                       <Play className="h-8 w-8 text-white fill-white opacity-80" />
-                    </div>
-                  </div>
-                )}
-                
-                {/* Visual corners */}
                 <div className="absolute inset-0 pointer-events-none">
                   <div className="absolute top-4 left-4 h-4 w-4 border-t-2 border-l-2 border-white/40 rounded-tl-sm" />
                   <div className="absolute top-4 right-4 h-4 w-4 border-t-2 border-r-2 border-white/40 rounded-tr-sm" />
@@ -505,13 +559,19 @@ export default function FlashmobAuditPage() {
                 <Button
                   variant="outline"
                   className="h-12 font-semibold rounded-xl border-border/50 text-muted-text hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5 transition-all"
-                  onClick={() => { setVideoUrl(null); setVideoBlob(null); setStep('video'); startCamera('environment'); }}
+                  onClick={() => { 
+                    setVideoUrl(null); 
+                    setVideoBlob(null); 
+                    setStep('video'); 
+                  }}
                 >
                   <RefreshCw className="mr-2 h-4 w-4" /> Retake
                 </Button>
                 <Button
                   className="h-12 font-semibold rounded-xl"
-                  onClick={() => { setStep('selfie'); startCamera('user'); }}
+                  onClick={() => { 
+                    setStep('selfie'); 
+                  }}
                 >
                   Looks Good <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -533,17 +593,17 @@ export default function FlashmobAuditPage() {
               </div>
             </div>
             <CardContent className="p-6 space-y-6">
-              {/* Circular viewfinder */}
+              {/* Circular viewfinder — callback ref attaches stream the moment this element mounts */}
               <div className="flex flex-col items-center gap-5">
                 <div className="relative">
                   <div className="h-56 w-56 rounded-full overflow-hidden border-4 border-primary/20 shadow-xl bg-black">
                     <video
-                      ref={videoRef}
-                      className="h-full w-full object-cover scale-x-[-1]"
-                      autoPlay
+                      id="selfie-video-el"
+                      ref={selfieVideoCallbackRef}
                       muted
                       playsInline
-                      onCanPlay={() => videoRef.current?.play().catch(() => { })}
+                      controls={false}
+                      className="h-full w-full object-cover scale-x-[-1]"
                     />
                   </div>
                   {/* Face guide ring */}

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import DashboardShell from '@/components/DashboardShell';
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, getDocs, onSnapshot, limit, doc, getDoc } from 'firebase/firestore';
 import { Card, CardContent } from '@/components/ui/card';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday, startOfWeek, endOfWeek, addMonths, subMonths } from 'date-fns';
 import { ChevronLeft, ChevronRight, MapPin, User } from 'lucide-react';
@@ -33,13 +33,44 @@ export default function ManagerCalendarPage() {
 
     async function fetchCalendarData() {
       try {
-        const locationsQuery = query(
-          collection(db, 'locations'),
-          where('organizationId', '==', session.organizationId),
-          where('assignedManagerId', '==', session.uid)
-        );
-        const locationsSnap = await getDocs(locationsQuery);
-        const locationIds = locationsSnap.docs.map(d => d.id);
+        // Robust Fetch for Location IDs
+        let locationIds: string[] = [];
+        
+        // Strategy 1: Check User Document
+        const userRef = doc(db, 'users', session.uid);
+        const userSnap = await getDoc(userRef);
+        const userData = userSnap.data();
+        
+        if (userData?.assignedLocationIds || userData?.assignedLocations) {
+          locationIds = userData?.assignedLocationIds || userData?.assignedLocations || [];
+          console.log('Manager Calendar - Found locations in user doc:', locationIds);
+        }
+        
+        // Strategy 2: Fallback to Locations Collection Query
+        if (locationIds.length === 0) {
+          console.log('Manager Calendar - No locations in user doc, querying locations collection...');
+          const locsByArrayQuery = query(
+            collection(db, 'locations'),
+            where('organizationId', '==', session.organizationId),
+            where('assignedManagerIds', 'array-contains', session.uid)
+          );
+          const locsBySingleQuery = query(
+            collection(db, 'locations'),
+            where('organizationId', '==', session.organizationId),
+            where('assignedManagerId', '==', session.uid)
+          );
+          
+          const [snapArray, snapSingle] = await Promise.all([
+            getDocs(locsByArrayQuery),
+            getDocs(locsBySingleQuery)
+          ]);
+          
+          const foundIds = new Set<string>();
+          snapArray.docs.forEach(d => foundIds.add(d.id));
+          snapSingle.docs.forEach(d => foundIds.add(d.id));
+          locationIds = Array.from(foundIds);
+          console.log('Manager Calendar - Found locations via collection query:', locationIds);
+        }
 
         if (locationIds.length === 0) {
           setLoading(false);
@@ -53,7 +84,7 @@ export default function ManagerCalendarPage() {
         const auditsQuery = query(
           collection(db, 'audits'),
           where('organizationId', '==', session.organizationId),
-          where('locationId', 'in', locationIds)
+          where('locationId', 'in', locationIds.slice(0, 30))
         );
 
         unsubscribe = onSnapshot(auditsQuery, (snap) => {
@@ -122,7 +153,7 @@ export default function ManagerCalendarPage() {
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <div className="px-4 min-w-[140px] text-center">
-              <h2 className="text-[12px] font-semibold tracking-widest text-muted-text uppercase">
+              <h2 className="text-[12px] font-semibold tracking-widest text-muted-text lowercase">
                 {format(currentMonth, 'MMMM yyyy')}
               </h2>
             </div>
@@ -141,7 +172,7 @@ export default function ManagerCalendarPage() {
           <CardContent className="p-0 overflow-hidden">
             <div className="grid grid-cols-7 border-b border-border/50 bg-muted/10">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                <div key={day} className="py-3 text-center text-[10px] font-bold tracking-widest text-muted-text uppercase">
+                <div key={day} className="py-3 text-center text-[10px] font-bold tracking-widest text-muted-text lowercase">
                   {day}
                 </div>
               ))}
@@ -226,7 +257,7 @@ export default function ManagerCalendarPage() {
                                 </div>
                                 <div className="flex items-center gap-1 mt-1">
                                   <div className={cn(
-                                    "text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider",
+                                    "text-[9px] px-1.5 py-0.5 rounded-md font-bold lowercase tracking-wider",
                                     event.status === 'in_progress' ? "bg-primary/10 text-primary" : "bg-muted/10 text-muted-text"
                                   )}>
                                     {event.status.replace('_', ' ')}

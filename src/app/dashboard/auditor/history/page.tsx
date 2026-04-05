@@ -7,7 +7,7 @@ import {
   collection,
   query,
   where,
-  onSnapshot,
+  getDocs,
   orderBy,
   limit
 } from 'firebase/firestore';
@@ -111,20 +111,24 @@ export default function AuditorHistoryPage() {
       setLoading(false);
     };
 
-    const unsubAudits = onSnapshot(qAudits, (snap) => {
-      auditsData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      updateHistory();
-    });
-
-    const unsubFlashmob = onSnapshot(qFlashmob, (snap) => {
-      flashmobData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      updateHistory();
-    });
-
-    return () => {
-      unsubAudits();
-      unsubFlashmob();
+    const fetchHistory = async () => {
+      try {
+        const [auditsSnap, flashmobSnap] = await Promise.all([
+          getDocs(qAudits),
+          getDocs(qFlashmob)
+        ]);
+        
+        auditsData = auditsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        flashmobData = flashmobSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        
+        updateHistory();
+      } catch (err) {
+        console.error('Error fetching history:', err);
+        setLoading(false);
+      }
     };
+
+    fetchHistory();
   }, [session]);
 
   const filteredHistory = history.filter(item =>

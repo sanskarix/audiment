@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { db, auth } from '@/lib/firebase';
-import { collection, query, where, onSnapshot, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import DashboardShell from '@/components/DashboardShell';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -128,7 +128,7 @@ export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [managerFilter, setManagerFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('all');
-  const [locations, setLocations] = useState<any[]>([]);
+  const [orgLocations, setOrgLocations] = useState<any[]>([]);
 
   // Form states
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -169,39 +169,36 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     if (!session?.orgId) return;
+    const fetchData = async () => {
+      try {
+        const q = query(
+          collection(db, 'users'),
+          where('organizationId', '==', session.orgId)
+        );
+        const usersSnap = await getDocs(q);
+        const fetchedUsers: any[] = [];
+        usersSnap.forEach((doc) => {
+          fetchedUsers.push({ id: doc.id, ...doc.data() });
+        });
+        fetchedUsers.sort((a, b) => a.name.localeCompare(b.name));
+        setUsers(fetchedUsers);
 
-    const q = query(
-      collection(db, 'users'),
-      where('organizationId', '==', session.orgId)
-    );
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetchedUsers: any[] = [];
-      snapshot.forEach((doc) => {
-        fetchedUsers.push({ id: doc.id, ...doc.data() });
-      });
-      fetchedUsers.sort((a, b) => a.name.localeCompare(b.name));
-      setUsers(fetchedUsers);
-    });
-
-    const qLoc = query(
-      collection(db, 'locations'),
-      where('organizationId', '==', session.orgId)
-    );
-
-    const unsubscribeLoc = onSnapshot(qLoc, (snapshot) => {
-      const fetchedLocations: any[] = [];
-      snapshot.forEach((doc) => {
-        fetchedLocations.push({ id: doc.id, ...doc.data() });
-      });
-      fetchedLocations.sort((a, b) => a.name.localeCompare(b.name));
-      setLocations(fetchedLocations);
-    });
-
-    return () => {
-      unsubscribe();
-      unsubscribeLoc();
+        const qLoc = query(
+          collection(db, 'locations'),
+          where('organizationId', '==', session.orgId)
+        );
+        const locationsSnap = await getDocs(qLoc);
+        const fetchedLocations: any[] = [];
+        locationsSnap.forEach((doc) => {
+          fetchedLocations.push({ id: doc.id, ...doc.data() });
+        });
+        fetchedLocations.sort((a, b) => a.name.localeCompare(b.name));
+        setOrgLocations(fetchedLocations);
+      } catch (err) {
+        console.error('Error fetching users/locations:', err);
+      }
     };
+    fetchData();
   }, [session]);
 
   const handleToggleActive = async (userId: string, currentStatus: boolean) => {
@@ -324,7 +321,7 @@ export default function AdminUsersPage() {
       }
 
       if (locationFilter !== 'all') {
-        const loc = locations.find(l => l.id === locationFilter);
+        const loc = orgLocations.find(l => l.id === locationFilter);
         if (!loc) return false;
         const assignedIds = loc.assignedManagerIds || (loc.assignedManagerId ? [loc.assignedManagerId] : []);
 
@@ -335,7 +332,7 @@ export default function AdminUsersPage() {
 
       return true;
     });
-  }, [users, searchQuery, managerFilter, locationFilter, locations]);
+  }, [users, searchQuery, managerFilter, locationFilter, orgLocations]);
 
   return (
     <DashboardShell role="Admin">
@@ -413,7 +410,7 @@ export default function AdminUsersPage() {
               <DropdownMenuLabel>Filter by Location</DropdownMenuLabel>
               <DropdownMenuRadioGroup value={locationFilter} onValueChange={(val) => { setLocationFilter(val); setManagerFilter('all'); }}>
                 <DropdownMenuRadioItem value="all">All Locations</DropdownMenuRadioItem>
-                {locations.map(loc => (
+                {orgLocations.map((loc: any) => (
                   <DropdownMenuRadioItem key={loc.id} value={loc.id}>{loc.name}</DropdownMenuRadioItem>
                 ))}
               </DropdownMenuRadioGroup>

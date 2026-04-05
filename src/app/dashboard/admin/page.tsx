@@ -93,15 +93,8 @@ export default function AdminDashboardPage() {
         const completed = audits.filter(a => a.status === 'completed').length;
         const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-        // 2. Fetch Open Corrective Actions
-        const caRef = collection(db, 'correctiveActions');
-        const caSnap = await getDocs(query(
-          caRef,
-          where('organizationId', '==', session.organizationId),
-          where('status', '==', 'open')
-        ));
-        console.log('Admin Dashboard - Open corrective actions:', caSnap.size);
-        const openCA = caSnap.size;
+        // 2. Fetch Open Corrective Actions (Now handled by real-time listener below)
+        const openCA = 0;
 
         // 3. Fetch Location Scores
         const completedAuditsQuery = query(

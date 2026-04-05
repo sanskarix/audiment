@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { db } from '@/lib/firebase';
 import {
@@ -366,7 +367,7 @@ export default function AuditReportDetailPage() {
                               className="group relative aspect-square rounded-lg overflow-hidden border border-border/50 bg-muted/5 transition-all hover:scale-[1.02] cursor-pointer"
                               onClick={() => setSelectedImage(url)}
                             >
-                              <img src={url} alt={`Evidence ${pi + 1}`} className="h-full w-full object-cover" />
+                              <Image src={url} alt={`Evidence ${pi + 1}`} width={150} height={150} className="h-full w-full object-cover" unoptimized />
                               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <ImageIcon className="h-6 w-6 text-white" />
                               </div>
@@ -400,10 +401,13 @@ export default function AuditReportDetailPage() {
             <DialogTitle className="sr-only">Evidence Photo</DialogTitle>
             <div className="relative w-full h-full flex items-center justify-center p-4">
               {selectedImage && (
-                <img 
+                <Image 
                   src={selectedImage} 
                   alt="Full-size evidence" 
+                  width={1200}
+                  height={800}
                   className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl animate-in zoom-in-95 duration-200" 
+                  unoptimized
                 />
               )}
             </div>

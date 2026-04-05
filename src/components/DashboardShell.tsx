@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import { logoutUser } from '@/lib/auth';
 import { db } from '@/lib/firebase';
@@ -167,9 +168,16 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <SidebarMenuButton size="lg" className="w-full data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors rounded-lg h-12 px-2">
-                        <Avatar className="h-8 w-8 rounded-full border border-border/50 overflow-hidden">
+                        <Avatar className="h-8 w-8 rounded-full border border-border/50 overflow-hidden relative">
                           {userState?.photoUrl ? (
-                            <img src={userState.photoUrl} alt="User" className="h-full w-full object-cover" />
+                            <Image
+                              src={userState.photoUrl}
+                              alt="User"
+                              width={32}
+                              height={32}
+                              priority={false}
+                              className="h-full w-full object-cover"
+                            />
                           ) : (
                             <AvatarFallback className="rounded-full bg-primary/10 font-medium text-primary">
                               <User2 className="h-4 w-4" />
@@ -242,9 +250,16 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
             {/* Avatar / profile */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="h-9 w-9 rounded-full border border-border/50 flex items-center justify-center bg-primary/10 shrink-0 overflow-hidden">
+                <button className="h-9 w-9 rounded-full border border-border/50 flex items-center justify-center bg-primary/10 shrink-0 overflow-hidden relative">
                   {userState?.photoUrl ? (
-                    <img src={userState.photoUrl} alt="User" className="h-full w-full object-cover rounded-full" />
+                    <Image
+                      src={userState.photoUrl}
+                      alt="User"
+                      width={32}
+                      height={32}
+                      priority={false}
+                      className="h-full w-full object-cover rounded-full"
+                    />
                   ) : (
                     <User2 className="h-4 w-4 text-primary" />
                   )}

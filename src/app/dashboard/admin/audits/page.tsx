@@ -86,31 +86,37 @@ export default function AdminAuditsPage() {
   useEffect(() => {
     if (!session?.orgId) return;
 
-    // Fetch Audits
-    const qAudits = query(collection(db, 'audits'), where('organizationId', '==', session.orgId));
-    const unsubAudits = onSnapshot(qAudits, (snap) => {
-      const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
-      
-      const toDate = (val: any): Date => {
-        if (!val) return new Date(0);
-        if (typeof val.toDate === 'function') return val.toDate();
-        return new Date(val);
-      };
+    const fetchData = async () => {
+      try {
+        const qAudits = query(collection(db, 'audits'), where('organizationId', '==', session.orgId));
+        const snap = await getDocs(qAudits);
+        const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+        
+        const toDate = (val: any): Date => {
+          if (!val) return new Date(0);
+          if (typeof val.toDate === 'function') return val.toDate();
+          return new Date(val);
+        };
 
-      fetched.sort((a, b) => {
-        // 1. Deadline (closest first)
-        const deadA = toDate(a.deadline).getTime();
-        const deadB = toDate(b.deadline).getTime();
-        if (deadA !== deadB) return deadA - deadB;
+        fetched.sort((a, b) => {
+          // 1. Deadline (closest first)
+          const deadA = toDate(a.deadline).getTime();
+          const deadB = toDate(b.deadline).getTime();
+          if (deadA !== deadB) return deadA - deadB;
 
-        // 2. Status (Pending/Missed first)
-        const statusMap: any = { missed: 0, published: 1, assigned: 1, in_progress: 2, completed: 3 };
-        const statusA = statusMap[a.status] ?? 99;
-        const statusB = statusMap[b.status] ?? 99;
-        return statusA - statusB;
-      });
-      setAudits(fetched);
-    });
+          // 2. Status (Pending/Missed first)
+          const statusMap: any = { missed: 0, published: 1, assigned: 1, in_progress: 2, completed: 3 };
+          const statusA = statusMap[a.status] ?? 99;
+          const statusB = statusMap[b.status] ?? 99;
+          return statusA - statusB;
+        });
+        setAudits(fetched);
+      } catch (err) {
+        console.error('Error fetching audits:', err);
+      }
+    };
+
+    fetchData();
 
     // Fetch Templates
     const qTemplates = query(collection(db, 'auditTemplates'), where('organizationId', '==', session.orgId), where('isActive', '==', true));
@@ -130,7 +136,7 @@ export default function AdminAuditsPage() {
       setManagers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
 
-    return () => unsubAudits();
+    // Removed real-time listener cleanup
   }, [session]);
 
   const handlePublish = async () => {

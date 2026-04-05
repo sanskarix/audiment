@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { db } from '@/lib/firebase';
 import {
@@ -756,7 +757,7 @@ export default function ManagerDashboardPage() {
                 <div className="flex gap-2 overflow-x-auto py-2 no-scrollbar">
                   {resolutionPhotos.map((url, i) => (
                     <div key={i} className="relative h-16 w-16 rounded-lg overflow-hidden border border-border/40 shrink-0 shadow-sm group">
-                      <img src={url} alt="Evidence" className="h-full w-full object-cover" />
+                      <Image src={url} alt="Evidence" width={64} height={64} className="h-full w-full object-cover" />
                       <button
                         className="absolute top-1 right-1 bg-destructive text-white rounded-md p-1 opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive/80"
                         onClick={() => setResolutionPhotos(prev => prev.filter(p => p !== url))}

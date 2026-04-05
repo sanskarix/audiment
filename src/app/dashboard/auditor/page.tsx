@@ -9,7 +9,8 @@ import {
   onSnapshot,
   Timestamp,
   orderBy,
-  doc
+  doc,
+  getDoc
 } from 'firebase/firestore';
 import DashboardShell from '@/components/DashboardShell';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -62,10 +63,11 @@ export default function AuditorDashboardPage() {
 
   useEffect(() => {
     if (!session?.uid) return;
-    const unsub = onSnapshot(doc(db, 'users', session.uid), (d) => {
+    const fetchUserData = async () => {
+      const d = await getDoc(doc(db, 'users', session.uid));
       setUserData(d.data());
-    });
-    return () => unsub();
+    };
+    fetchUserData();
   }, [session]);
 
   useEffect(() => {

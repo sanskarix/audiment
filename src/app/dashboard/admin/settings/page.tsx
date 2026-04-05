@@ -15,6 +15,7 @@ import {
   orderBy
 } from 'firebase/firestore';
 import { updatePassword, updateEmail, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -172,7 +173,7 @@ function SettingsContent() {
 
   const createImage = (url: string) =>
     new Promise<HTMLImageElement>((resolve, reject) => {
-      const image = new Image();
+      const image = new window.Image();
       image.addEventListener('load', () => resolve(image));
       image.addEventListener('error', error => reject(error));
       image.setAttribute('crossOrigin', 'anonymous');
@@ -520,7 +521,7 @@ function SettingsContent() {
                   <div className="flex items-center gap-5 pb-5 border-b border-border/50">
                     <div className="relative group h-16 w-24 rounded-lg border border-border/50 bg-muted/10 overflow-hidden flex items-center justify-center">
                       {orgDoc?.logoUrl
-                        ? <img src={orgDoc.logoUrl} alt="Logo" className="max-h-full max-w-full object-contain" />
+                        ? <Image src={orgDoc.logoUrl} alt="Logo" width={96} height={64} className="max-h-full max-w-full object-contain" unoptimized />
                         : <Building2 className="h-7 w-7 text-muted-text/30" />
                       }
                       <button

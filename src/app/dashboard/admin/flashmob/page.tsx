@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, query, where, onSnapshot, orderBy, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
+import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -53,22 +54,24 @@ export default function AdminFlashmobPage() {
   useEffect(() => {
     if (!session?.orgId) return;
 
-    const q = query(
-      collection(db, 'flashmobAudits'),
-      where('organizationId', '==', session.orgId),
-      orderBy('submittedAt', 'desc')
-    );
+    const fetchFlashmobs = async () => {
+      try {
+        const q = query(
+          collection(db, 'flashmobAudits'),
+          where('organizationId', '==', session.orgId),
+          orderBy('submittedAt', 'desc')
+        );
+        const snap = await getDocs(q);
+        const fetched = snap.docs.map((d: any) => ({ id: d.id, ...d.data() }));
+        setFlashmobs(fetched);
+        setLoading(false);
+      } catch (err) {
+        console.error('Flashmob fetch error:', err);
+        setLoading(false);
+      }
+    };
 
-    const unsubscribe = onSnapshot(q, (snap) => {
-      const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      setFlashmobs(fetched);
-      setLoading(false);
-    }, (err) => {
-      console.error('Firestore subscription error:', err);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    fetchFlashmobs();
   }, [session]);
 
   const handleDelete = async (id: string) => {
@@ -175,8 +178,8 @@ export default function AdminFlashmobPage() {
                     }}
                   />
                   <div className="absolute top-4 right-4 z-10">
-                    <div className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-muted shadow-lg ring-4 ring-primary/5">
-                      <img src={audit.selfieUrl} alt="Selfie" className="h-full w-full object-cover" />
+                    <div className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-muted shadow-lg ring-4 ring-primary/5 relative">
+                      <Image src={audit.selfieUrl} alt="Selfie" width={40} height={40} className="h-full w-full object-cover" />
                     </div>
                   </div>
                   <div className="absolute bottom-4 left-4 z-10">

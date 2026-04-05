@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { db } from '@/lib/firebase';
 import {
   doc,
@@ -732,7 +733,7 @@ export default function AuditExecutionPage() {
               <div className="flex flex-wrap gap-3">
                 {currentResponse?.photoUrls.map((url, i) => (
                   <div key={i} className="group relative w-20 h-20 rounded-xl overflow-hidden border border-border/50 bg-muted/30">
-                    <img src={url} alt="Evidence" className="h-full w-full object-cover" />
+                    <Image src={url} alt="Evidence" width={80} height={80} className="h-full w-full object-cover" unoptimized />
                     <button
                       onClick={() => removePhoto(url)}
                       className="absolute right-1 top-1 rounded-full bg-destructive shadow-lg p-1 text-white opacity-0 group-hover:opacity-100 transition-opacity"

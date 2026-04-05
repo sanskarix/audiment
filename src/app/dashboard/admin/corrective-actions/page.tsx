@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { db } from '@/lib/firebase';
 import {
@@ -439,7 +440,7 @@ export default function AdminCorrectiveActionsPage() {
                       className="h-24 w-24 rounded-lg border border-border/50 overflow-hidden flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary/40 transition-all active:scale-95"
                       onClick={() => setExpandedPhotoUrl(url)}
                     >
-                      <img src={url} alt="Proof" className="h-full w-full object-cover" />
+                      <Image src={url} alt="Proof" width={96} height={96} className="h-full w-full object-cover" />
                     </div>
                   ))}
                 </div>
@@ -462,9 +463,11 @@ export default function AdminCorrectiveActionsPage() {
           <DialogTitle className="sr-only">Evidence Photo Viewer</DialogTitle>
           <div className="relative group max-h-[90vh] w-full flex items-center justify-center">
             {expandedPhotoUrl && (
-              <img
+              <Image
                 src={expandedPhotoUrl}
                 alt="Expanded Proof"
+                width={800}
+                height={600}
                 className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl "
               />
             )}

@@ -87,21 +87,19 @@ export default function ManagerCalendarPage() {
           where('locationId', 'in', locationIds.slice(0, 30))
         );
 
-        unsubscribe = onSnapshot(auditsQuery, (snap) => {
-          const fetchedAudits = snap.docs.map(doc => {
-            const data = doc.data();
-            return {
-              id: doc.id,
-              ...data,
-              auditorName: data.assignedAuditorId ? usersMap.get(data.assignedAuditorId) : 'Unassigned',
-              parsedDate: data.scheduledDate ? data.scheduledDate.toDate() : null
-            } as any;
-          }).filter((a: any) => !a.isSurprise && a.parsedDate && ['published', 'assigned', 'in_progress'].includes(a.status));
+        const snap = await getDocs(auditsQuery);
+        const fetchedAudits = snap.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            auditorName: data.assignedAuditorId ? usersMap.get(data.assignedAuditorId) : 'Unassigned',
+            parsedDate: data.scheduledDate ? data.scheduledDate.toDate() : null
+          } as any;
+        }).filter((a: any) => !a.isSurprise && a.parsedDate && ['published', 'assigned', 'in_progress'].includes(a.status));
 
-          setAudits(fetchedAudits);
-          setLoading(false);
-        });
-
+        setAudits(fetchedAudits);
+        setLoading(false);
       } catch (e) {
         console.error("Error fetching calendar data:", e);
         setLoading(false);
@@ -109,7 +107,6 @@ export default function ManagerCalendarPage() {
     }
 
     fetchCalendarData();
-    return () => unsubscribe();
   }, [session]);
 
   const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));

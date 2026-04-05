@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, query, where, onSnapshot, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import DashboardShell from '@/components/DashboardShell';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -61,44 +61,43 @@ export default function AdminLocationsPage() {
   useEffect(() => {
     if (!session?.orgId) return;
 
-    // Fetch Locations
-    const locationsQuery = query(
-      collection(db, 'locations'),
-      where('organizationId', '==', session.orgId)
-    );
+    const fetchData = async () => {
+      try {
+        // Fetch Locations
+        const locationsQuery = query(
+          collection(db, 'locations'),
+          where('organizationId', '==', session.orgId)
+        );
+        const locationsSnap = await getDocs(locationsQuery);
+        const fetchedLocations: any[] = [];
+        locationsSnap.forEach((doc) => {
+          fetchedLocations.push({ id: doc.id, ...doc.data() });
+        });
+        fetchedLocations.sort((a, b) => a.name.localeCompare(b.name));
+        setLocations(fetchedLocations);
 
-    const unsbuscribeLocations = onSnapshot(locationsQuery, (snapshot) => {
-      const fetchedLocations: any[] = [];
-      snapshot.forEach((doc) => {
-        fetchedLocations.push({ id: doc.id, ...doc.data() });
-      });
-      fetchedLocations.sort((a, b) => a.name.localeCompare(b.name));
-      setLocations(fetchedLocations);
-    });
-
-    // Fetch Managers for the assignment dropdown
-    const usersQuery = query(
-      collection(db, 'users'),
-      where('organizationId', '==', session.orgId),
-      where('role', '==', 'MANAGER')
-    );
-
-    const unsubscribeUsers = onSnapshot(usersQuery, (snapshot) => {
-      const fetchedManagers: any[] = [];
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        if (data.isActive !== false) { // Only active managers
-          fetchedManagers.push({ id: doc.id, ...data });
-        }
-      });
-      fetchedManagers.sort((a, b) => a.name.localeCompare(b.name));
-      setManagers(fetchedManagers);
-    });
-
-    return () => {
-      unsbuscribeLocations();
-      unsubscribeUsers();
+        // Fetch Managers
+        const usersQuery = query(
+          collection(db, 'users'),
+          where('organizationId', '==', session.orgId),
+          where('role', '==', 'MANAGER')
+        );
+        const usersSnap = await getDocs(usersQuery);
+        const fetchedManagers: any[] = [];
+        usersSnap.forEach((doc) => {
+          const data = doc.data();
+          if (data.isActive !== false) {
+            fetchedManagers.push({ id: doc.id, ...data });
+          }
+        });
+        fetchedManagers.sort((a, b) => a.name.localeCompare(b.name));
+        setManagers(fetchedManagers);
+      } catch (err) {
+        console.error('Error fetching locations/managers:', err);
+      }
     };
+
+    fetchData();
   }, [session]);
 
 

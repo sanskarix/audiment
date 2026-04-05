@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, query, where, onSnapshot, doc, updateDoc, addDoc, getDocs, writeBatch, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, doc, updateDoc, addDoc, getDocs, writeBatch, serverTimestamp } from 'firebase/firestore';
 import DashboardShell from '@/components/DashboardShell';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,28 @@ import { MoreHorizontal, Plus, ClipboardCheck, Settings2, Trash2 } from 'lucide-
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+
+const washroomQuestions = [
+  { questionText: "Are washrooms completely separated from the food preparation area?", questionType: "yes_no", severity: "critical", requiresPhoto: false, order: 1 },
+  { questionText: "Rate the availability of liquid soap and hand sanitizers.", questionType: "rating", severity: "medium", requiresPhoto: true, order: 2 },
+  { questionText: "Are proper hand drying facilities (paper towels/air dryers) functioning?", questionType: "yes_no", severity: "medium", requiresPhoto: false, order: 3 },
+  { questionText: "Is there continuous supply of clean water in the washrooms?", questionType: "yes_no", severity: "critical", requiresPhoto: false, order: 4 },
+  { questionText: "Rate the general cleanliness and odor control of the washroom.", questionType: "rating", severity: "low", requiresPhoto: true, order: 5 },
+  { questionText: "Are garbage bins adequately covered and foot-operated?", questionType: "yes_no", severity: "medium", requiresPhoto: true, order: 6 },
+  { questionText: "Are cleaning schedules displayed and signed by housekeeping?", questionType: "yes_no", severity: "low", requiresPhoto: true, order: 7 },
+  { questionText: "Are the washroom floors dry and slip-free?", questionType: "yes_no", severity: "medium", requiresPhoto: false, order: 8 },
+];
+
+const kitchenQuestions = [
+  { questionText: "Are all raw and cooked foods stored separately?", questionType: "yes_no", severity: "critical", requiresPhoto: true, order: 1 },
+  { questionText: "Are refrigerators maintained at ≤ 5°C and freezers at ≤ -18°C?", questionType: "yes_no", severity: "critical", requiresPhoto: true, order: 2 },
+  { questionText: "Is pest control mechanism intact and effective?", questionType: "yes_no", severity: "critical", requiresPhoto: true, order: 3 },
+  { questionText: "Are food handlers wearing clean uniforms, aprons, hairnets, and gloves?", questionType: "rating", severity: "medium", requiresPhoto: false, order: 4 },
+  { questionText: "Are chopping boards color-coded and free from deep cuts?", questionType: "yes_no", severity: "medium", requiresPhoto: true, order: 5 },
+  { questionText: "Rate the cleanliness of floors, walls, and ceilings in the food prep area.", questionType: "rating", severity: "medium", requiresPhoto: true, order: 6 },
+  { questionText: "Is there a proper waste segregation and disposal system in place?", questionType: "yes_no", severity: "low", requiresPhoto: false, order: 7 },
+  { questionText: "Are food grade containers used for storing prepared items?", questionType: "yes_no", severity: "medium", requiresPhoto: false, order: 8 },
+];
 
 export default function AdminTemplatesPage() {
   const router = useRouter();
@@ -41,41 +63,24 @@ export default function AdminTemplatesPage() {
 
   useEffect(() => {
     if (!session?.orgId) return;
-    const q = query(collection(db, 'auditTemplates'), where('organizationId', '==', session.orgId));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetched: any[] = [];
-      snapshot.forEach(d => fetched.push({ id: d.id, ...d.data() }));
-      fetched.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis() || 0);
-      setTemplates(fetched);
-    });
-    return () => unsubscribe();
+    const fetchTemplates = async () => {
+      try {
+        const q = query(collection(db, 'auditTemplates'), where('organizationId', '==', session.orgId));
+        const snapshot = await getDocs(q);
+        const fetched: any[] = [];
+        snapshot.forEach(d => fetched.push({ id: d.id, ...d.data() }));
+        fetched.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis() || 0);
+        setTemplates(fetched);
+      } catch (err) {
+        console.error('Error fetching templates:', err);
+      }
+    };
+    fetchTemplates();
   }, [session]);
 
   const loadFssaiDefaults = async () => {
     if (!session?.orgId || !session?.uid) return;
     setLoading(true);
-
-    const washroomQuestions = [
-      { questionText: "Are washrooms completely separated from the food preparation area?", questionType: "yes_no", severity: "critical", requiresPhoto: false, order: 1 },
-      { questionText: "Rate the availability of liquid soap and hand sanitizers.", questionType: "rating", severity: "medium", requiresPhoto: true, order: 2 },
-      { questionText: "Are proper hand drying facilities (paper towels/air dryers) functioning?", questionType: "yes_no", severity: "medium", requiresPhoto: false, order: 3 },
-      { questionText: "Is there continuous supply of clean water in the washrooms?", questionType: "yes_no", severity: "critical", requiresPhoto: false, order: 4 },
-      { questionText: "Rate the general cleanliness and odor control of the washroom.", questionType: "rating", severity: "low", requiresPhoto: true, order: 5 },
-      { questionText: "Are garbage bins adequately covered and foot-operated?", questionType: "yes_no", severity: "medium", requiresPhoto: true, order: 6 },
-      { questionText: "Are cleaning schedules displayed and signed by housekeeping?", questionType: "yes_no", severity: "low", requiresPhoto: true, order: 7 },
-      { questionText: "Are the washroom floors dry and slip-free?", questionType: "yes_no", severity: "medium", requiresPhoto: false, order: 8 },
-    ];
-
-    const kitchenQuestions = [
-      { questionText: "Are all raw and cooked foods stored separately?", questionType: "yes_no", severity: "critical", requiresPhoto: true, order: 1 },
-      { questionText: "Are refrigerators maintained at ≤ 5°C and freezers at ≤ -18°C?", questionType: "yes_no", severity: "critical", requiresPhoto: true, order: 2 },
-      { questionText: "Is pest control mechanism intact and effective?", questionType: "yes_no", severity: "critical", requiresPhoto: true, order: 3 },
-      { questionText: "Are food handlers wearing clean uniforms, aprons, hairnets, and gloves?", questionType: "rating", severity: "medium", requiresPhoto: false, order: 4 },
-      { questionText: "Are chopping boards color-coded and free from deep cuts?", questionType: "yes_no", severity: "medium", requiresPhoto: true, order: 5 },
-      { questionText: "Rate the cleanliness of floors, walls, and ceilings in the food prep area.", questionType: "rating", severity: "medium", requiresPhoto: true, order: 6 },
-      { questionText: "Is there a proper waste segregation and disposal system in place?", questionType: "yes_no", severity: "low", requiresPhoto: false, order: 7 },
-      { questionText: "Are food grade containers used for storing prepared items?", questionType: "yes_no", severity: "medium", requiresPhoto: false, order: 8 },
-    ];
 
     try {
       const batch = writeBatch(db);

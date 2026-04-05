@@ -11,8 +11,9 @@ import {
   addDoc,
   serverTimestamp,
   doc,
-  onSnapshot
+  getDoc
 } from 'firebase/firestore';
+import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -127,12 +128,20 @@ export default function FlashmobAuditPage() {
 
   useEffect(() => {
     if (!session?.uid) return;
-    const unsub = onSnapshot(doc(db, 'users', session.uid), (d) => {
-      const data = d.data();
-      setUserData(data);
-      if (d.exists() && data?.hasFlashmobAccess === false) setLoading(false);
-    }, (err) => { console.error(err); setLoading(false); });
-    return () => unsub();
+    const fetchUserData = async () => {
+      try {
+        const d = await getDoc(doc(db, 'users', session.uid));
+        if (d.exists()) {
+          const data = d.data();
+          setUserData(data);
+          if (data?.hasFlashmobAccess === false) setLoading(false);
+        }
+      } catch (err) {
+        console.error(err);
+        setLoading(false);
+      }
+    };
+    fetchUserData();
   }, [session]);
 
   useEffect(() => {
@@ -661,7 +670,7 @@ export default function FlashmobAuditPage() {
                   </span>
                   {selfieUrl ? (
                     <div className="flex items-center gap-2">
-                      <img src={selfieUrl} alt="Selfie" className="h-8 w-8 rounded-full object-cover border border-border/40" />
+                      <Image src={selfieUrl} alt="Selfie" width={32} height={32} className="h-8 w-8 rounded-full object-cover border border-border/40" />
                       <Badge variant="secondary" className="bg-success/10 text-success border-none text-[11px] font-semibold">
                         <CheckCircle2 className="mr-1.5 h-3 w-3" /> Taken
                       </Badge>

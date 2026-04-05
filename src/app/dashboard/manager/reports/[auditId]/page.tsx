@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { db } from '@/lib/firebase';
 import {
@@ -340,7 +341,7 @@ export default function ManagerReportDetailPage() {
                         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 mt-6 pt-6 border-t border-border/30">
                           {resp.photoUrls.map((url: string, pi: number) => (
                             <div key={pi} className="group relative aspect-square rounded-lg overflow-hidden border border-border/50 bg-muted/5 transition-all hover:scale-[1.02]">
-                              <img src={url} alt={`Evidence ${pi + 1}`} className="h-full w-full object-cover" />
+                              <Image src={url} alt={`Evidence ${pi + 1}`} width={150} height={150} className="h-full w-full object-cover" unoptimized />
                               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <ImageIcon className="h-6 w-6 text-white" />
                               </div>

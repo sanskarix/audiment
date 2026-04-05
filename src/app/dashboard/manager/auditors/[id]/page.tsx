@@ -10,6 +10,7 @@ import {
   collection,
   query,
   where,
+  getDocs,
   getDoc,
   doc,
   onSnapshot,
@@ -79,25 +80,33 @@ export default function PerformancePage() {
       }
     };
 
+    const fetchAudits = async () => {
+      try {
+        const q = query(
+          collection(db, 'audits'),
+          where('assignedAuditorId', '==', auditorId)
+        );
+        const snapshot = await getDocs(q);
+        const fetched = snapshot.docs.map((d: any) => ({
+          id: d.id,
+          ...d.data()
+        })) as Audit[];
+
+        fetched.sort((a, b: any) => {
+          const timeA = a.createdAt?.toMillis() || 0;
+          const timeB = b.createdAt?.toMillis() || 0;
+          return timeB - timeA;
+        });
+        setAudits(fetched);
+        setLoading(false);
+      } catch (e) {
+        console.error("Error fetching auditor audits:", e);
+        setLoading(false);
+      }
+    };
+
     fetchAuditor();
-
-    const q = query(
-      collection(db, 'audits'),
-      where('assignedAuditorId', '==', auditorId)
-    );
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetched = snapshot.docs.map(d => ({
-        id: d.id,
-        ...d.data()
-      })) as Audit[];
-
-      fetched.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
-      setAudits(fetched);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    fetchAudits();
   }, [auditorId]);
 
   const stats = {

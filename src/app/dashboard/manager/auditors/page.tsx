@@ -117,45 +117,41 @@ export default function AuditorsPage() {
   useEffect(() => {
     if (!session?.uid || !session?.organizationId) return;
 
-    const q = query(
-      collection(db, 'users'),
-      where('organizationId', '==', session.organizationId),
-      where('managerId', '==', session.uid),
-      where('role', '==', 'AUDITOR')
-    );
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetchedAuditors = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Auditor[];
-      setAuditors(fetchedAuditors);
-      
-      // Fetch audits for these auditors to show team stats
-      const auditorIds = fetchedAuditors.map(a => a.id).filter(id => !!id);
-      if (auditorIds.length > 0) {
-        // Simple count of audits for these auditors this month
-        const auditsQuery = query(
-          collection(db, 'audits'),
-          where('assignedAuditorId', 'in', auditorIds.slice(0, 30)) // Firestore limit
+    const fetchData = async () => {
+      try {
+        const q = query(
+          collection(db, 'users'),
+          where('organizationId', '==', session.organizationId),
+          where('managerId', '==', session.uid),
+          where('role', '==', 'AUDITOR')
         );
-        getDocs(auditsQuery).then(snap => {
+        const snapshot = await getDocs(q);
+        const fetchedAuditors = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Auditor[];
+        setAuditors(fetchedAuditors);
+        
+        const auditorIds = fetchedAuditors.map(a => a.id).filter(id => !!id);
+        if (auditorIds.length > 0) {
+          const auditsQuery = query(
+            collection(db, 'audits'),
+            where('assignedAuditorId', 'in', auditorIds.slice(0, 30))
+          );
+          const snap = await getDocs(auditsQuery);
           setTeamAuditsCount(snap.size);
           setLoading(false);
-        }).catch(err => {
-          console.error("Error fetching team audits:", err);
+        } else {
+          setTeamAuditsCount(0);
           setLoading(false);
-        });
-      } else {
-        setTeamAuditsCount(0);
+        }
+      } catch (err) {
+        console.error("Error fetching auditors:", err);
         setLoading(false);
       }
-    }, (error) => {
-      console.error("Error fetching auditors:", error);
-      setLoading(false);
-    });
+    };
 
-    return () => unsubscribe();
+    fetchData();
   }, [session]);
 
   const toggleField = async (auditorId: string, field: string, currentValue: boolean) => {

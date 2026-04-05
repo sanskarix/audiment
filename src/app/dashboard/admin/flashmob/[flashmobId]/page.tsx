@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -165,8 +166,8 @@ export default function FlashmobAuditDetailsPage() {
                <div className="bg-muted/5 border-b border-border/40 px-8 py-4">
                  <h2 className="text-[13px] font-semibold text-heading uppercase tracking-wider">Auditor ID</h2>
                </div>
-               <CardContent className="p-0 aspect-[3/4] bg-muted relative group">
-                 <img src={audit.selfieUrl} alt="Auditor Selfie" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+               <CardContent className="p-0 aspect-[3/4] bg-muted relative group overflow-hidden">
+                 <Image src={audit.selfieUrl} alt="Auditor Selfie" width={400} height={533} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                </CardContent>
             </Card>

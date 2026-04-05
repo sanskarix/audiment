@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { db } from '@/lib/firebase';
 import {
@@ -355,9 +356,9 @@ export default function ManagerCorrectiveActionsPage() {
                             <p className="text-[10px] font-bold text-muted-text/50 uppercase tracking-tight mb-1 text-center md:text-left">Proof of resolution</p>
                             <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                                {ca.resolutionPhotoUrls.map((url, i) => (
-                                 <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="h-16 w-16 md:h-12 md:w-12 rounded-lg border border-border shadow-sm overflow-hidden bg-muted hover:scale-105 transition-transform">
-                                   <img src={url} alt="Proof" className="h-full w-full object-cover" />
-                                 </a>
+                                 <div key={i} className="h-16 w-16 md:h-12 md:w-12 rounded-lg border border-border shadow-sm overflow-hidden bg-muted group rotate-0 hover:scale-105 transition-transform relative">
+                                   <Image src={url} alt="Proof" width={64} height={64} className="h-full w-full object-cover" />
+                                 </div>
                                ))}
                             </div>
                           </div>
@@ -400,7 +401,7 @@ export default function ManagerCorrectiveActionsPage() {
               <div className="grid grid-cols-4 gap-3">
                 {resolutionPhotos.map((url, i) => (
                   <div key={i} className="relative aspect-square rounded-lg border border-border overflow-hidden bg-muted group">
-                    <img src={url} alt="Proof" className="h-full w-full object-cover" />
+                    <Image src={url} alt="Proof" width={100} height={100} className="h-full w-full object-cover" />
                     <button 
                       onClick={() => setResolutionPhotos(prev => prev.filter((_, idx) => idx !== i))}
                       className="absolute top-1 right-1 h-5 w-5 bg-black/50 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"

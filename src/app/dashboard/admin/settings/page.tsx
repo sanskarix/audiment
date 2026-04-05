@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { db, auth } from '@/lib/firebase';
 import {
@@ -65,7 +65,7 @@ const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
   { id: 'danger', label: 'Danger Zone', icon: ShieldAlert },
 ];
 
-export default function AdminSettingsPage() {
+function SettingsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -687,5 +687,26 @@ export default function AdminSettingsPage() {
         </DialogContent>
       </Dialog>
     </DashboardShell>
+  );
+}
+
+export default function AdminSettingsPage() {
+  return (
+    <Suspense fallback={
+      <DashboardShell role="Admin">
+        <div className="dashboard-page-container">
+          <Skeleton className="h-9 w-40 mb-2" />
+          <Skeleton className="h-5 w-80 mb-8" />
+          <div className="flex gap-8">
+            <div className="w-48 space-y-2">
+              {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-10 w-full rounded-lg" />)}
+            </div>
+            <Skeleton className="flex-1 h-[500px] rounded-xl" />
+          </div>
+        </div>
+      </DashboardShell>
+    }>
+      <SettingsContent />
+    </Suspense>
   );
 }

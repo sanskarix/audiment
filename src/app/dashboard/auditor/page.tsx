@@ -82,10 +82,23 @@ export default function AuditorDashboardPage() {
     const unsubscribe = onSnapshot(q, (snap) => {
       console.log('Auditor Dashboard - Docs found in snapshot:', snap.size);
       const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+      const toDate = (val: any): Date => {
+        if (!val) return new Date(0);
+        if (typeof val.toDate === 'function') return val.toDate();
+        return new Date(val);
+      };
+
       fetched.sort((a, b) => {
-        const dateA = a.scheduledDate?.toMillis() || 0;
-        const dateB = b.scheduledDate?.toMillis() || 0;
-        return dateA - dateB;
+        // 1. Deadline (closest first)
+        const deadA = toDate(a.deadline).getTime();
+        const deadB = toDate(b.deadline).getTime();
+        if (deadA !== deadB) return deadA - deadB;
+
+        // 2. Status (Pending/Missed first)
+        const statusMap: any = { missed: 0, published: 1, assigned: 1, in_progress: 2, completed: 3 };
+        const statusA = statusMap[a.status] ?? 99;
+        const statusB = statusMap[b.status] ?? 99;
+        return statusA - statusB;
       });
       setAudits(fetched);
       setLoading(false);
@@ -133,7 +146,7 @@ export default function AuditorDashboardPage() {
 
           <Card className="standard-card p-4 md:p-6">
             <div className="flex items-center justify-between mb-3 md:mb-4">
-              <p className="section-heading text-[11px] md:text-[12px]">Avg. Score</p>
+              <p className="section-heading text-[11px] md:text-[12px]">Avg. score</p>
               <Target className="h-3.5 w-3.5 md:h-4 md:w-4 text-success/40 transition-colors" />
             </div>
             <div>
@@ -147,7 +160,7 @@ export default function AuditorDashboardPage() {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-1">
-              <h3 className="section-heading">Active Audits</h3>
+              <h3 className="section-heading">Active audits</h3>
               <p className="body-text">Assigned audits pending completion</p>
             </div>
             <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-3 text-[11px] font-semibold tabular-nums">
@@ -192,66 +205,66 @@ export default function AuditorDashboardPage() {
               </CardContent>
             </Card>
           ) : (
-            <div className="flex flex-col gap-4 pb-10">
+            <div className="flex flex-col gap-3">
               {filteredAudits.map((a) => {
                 const isFuture = a.scheduledDate?.toDate() > new Date();
+                const deadline = a.deadline?.toDate();
+                const isOverdue = deadline && deadline < new Date();
+                
                 return (
-                  <Card key={a.id} className="standard-card flex flex-col md:flex-row border-border/40 hover:border-primary/20 transition-all duration-300">
-                    <div className="flex-1 flex flex-col md:flex-row">
-                      <CardHeader className="flex flex-col p-6 min-w-[300px]">
-                        <div className="space-y-1.5">
-                          <CardTitle className="text-[17px] font-semibold text-heading leading-tight line-clamp-2">
-                            {a.templateTitle}
-                          </CardTitle>
+                  <Card key={a.id} className="standard-card border-border/40 hover:border-primary/20 hover:shadow-md transition-all duration-300 group overflow-hidden">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between p-4 md:p-5 gap-4">
+                      {/* Left: Title and Location */}
+                      <div className="flex-1 space-y-1.5 min-w-0">
+                        <h3 className="text-[14px] md:text-[15px] font-semibold text-heading leading-tight group-hover:text-primary transition-colors truncate">
+                          {a.templateTitle}
+                        </h3>
+                        <div className="flex items-center gap-2 text-[12px] text-muted-text">
+                          <MapPin className="h-3.5 w-3.5 opacity-40 shrink-0" />
+                          <span className="truncate">{a.locationName}</span>
                         </div>
-                      </CardHeader>
-                      <CardContent className="flex-1 p-6 pt-0 md:pt-6 space-y-4">
-                        <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
-                          <div className="flex items-center gap-2.5 text-sm text-body">
-                            <MapPin className="h-4 w-4 text-muted-text shrink-0 opacity-60" />
-                            <span className="truncate">{a.locationName}</span>
+                      </div>
+
+                      {/* Middle: Conditional Dates */}
+                      <div className="flex items-center gap-8 md:gap-12 shrink-0 border-t md:border-t-0 pt-3 md:pt-0">
+                        {isFuture ? (
+                          <div className="flex flex-col gap-0.5 md:items-end">
+                            <span className="text-[12px] font-medium text-heading tabular-nums">
+                              {format(a.scheduledDate?.toDate(), 'MMM d, yyyy')}
+                            </span>
                           </div>
-                          <div className="flex items-center gap-6">
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-1.5 text-[10px] font-semibold text-muted-text/50 uppercase tracking-widest">
-                                <CalendarIcon className="h-3 w-3" />
-                                Scheduled
-                              </div>
-                              <div className="text-[13px] text-heading font-semibold tabular-nums">
-                                {format(a.scheduledDate?.toDate(), 'MMM d, yyyy')}
-                              </div>
-                            </div>
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-1.5 text-[10px] font-semibold text-muted-text/50 uppercase tracking-widest">
-                                <Clock className="h-3 w-3" />
-                                Deadline
-                              </div>
-                              <div className={cn(
-                                "text-[13px] font-semibold tabular-nums",
-                                a.deadline?.toDate() < new Date() ? "text-destructive" : "text-heading"
-                              )}>
-                                {format(a.deadline?.toDate(), 'MMM d, yyyy')}
-                              </div>
-                            </div>
+                        ) : (
+                          <div className="flex flex-col gap-0.5 md:items-end">
+                            <span className={cn("text-[10px] font-medium tracking-tight", isOverdue ? "text-destructive" : "text-muted-text/50")}>
+                              Deadline
+                            </span>
+                            <span className={cn(
+                              "text-[12px] font-semibold tabular-nums",
+                              isOverdue ? "text-destructive" : "text-heading"
+                            )}>
+                              {format(deadline, 'MMM d, yyyy')}
+                            </span>
                           </div>
-                        </div>
-                      </CardContent>
+                        )}
+                      </div>
+
+                      {/* Right: Actions */}
+                      <div className="shrink-0 flex items-center pt-1 md:pt-0">
+                        {isFuture ? (
+                          <div className="flex items-center gap-2 px-3 py-2 bg-muted/10 rounded-lg opacity-60">
+                             <Clock className="h-3.5 w-3.5 text-muted-text" />
+                             <span className="text-[11px] font-medium text-muted-text">Locked</span>
+                          </div>
+                        ) : (
+                          <Button size="sm" className="h-9 px-5 font-semibold text-[13px] shadow-lg shadow-primary/10 active:scale-95 transition-all" asChild>
+                            <Link href={`/dashboard/auditor/audits/${a.id}`}>
+                              {a.status === 'in_progress' ? 'Resume' : 'Start audit'}
+                              <ChevronRight className="ml-1.5 h-3.5 w-3.5" />
+                            </Link>
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                    <CardFooter className="p-6 pt-2 md:pt-6 border-t md:border-t-0 md:border-l border-border/10 bg-muted/5 md:bg-transparent min-w-[200px] flex items-center">
-                      {isFuture ? (
-                        <Button disabled className="w-full h-11 bg-muted/50 text-muted-text/50 border-border/20 cursor-not-allowed">
-                          <Clock className="mr-2 h-4 w-4" />
-                          Locked
-                        </Button>
-                      ) : (
-                        <Button className="w-full h-11 font-semibold text-[14px] group shadow-lg shadow-primary/5 transition-all hover:translate-y-[-1px] active:translate-y-[1px]" asChild>
-                          <Link href={`/dashboard/auditor/audits/${a.id}`}>
-                            {a.status === 'in_progress' ? 'Resume' : 'Start Audit'}
-                            <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                          </Link>
-                        </Button>
-                      )}
-                    </CardFooter>
                   </Card>
                 );
               })}

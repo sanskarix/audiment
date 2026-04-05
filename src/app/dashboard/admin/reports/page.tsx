@@ -191,10 +191,10 @@ export default function AdminReportsPage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">Filter by Location</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">Filter by location</DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={selectedLocation} onValueChange={setSelectedLocation}>
                   <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">
-                    All Locations
+                    All locations
                   </DropdownMenuRadioItem>
                   <DropdownMenuSeparator />
                   {locations.map(loc => (

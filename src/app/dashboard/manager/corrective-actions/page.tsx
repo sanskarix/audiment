@@ -8,61 +8,56 @@ import {
   query,
   where,
   onSnapshot,
-  doc,
   updateDoc,
+  doc,
   serverTimestamp,
   orderBy
 } from 'firebase/firestore';
-import { cn } from '@/lib/utils';
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter
 } from '@/components/ui/card';
 import {
-  AlertTriangle,
-  CheckCircle,
-  Clock,
   MapPin,
-  Camera,
-  X,
-  Loader2,
-  Search,
-  Filter,
+  Clock,
   CheckCircle2,
+  AlertTriangle,
+  Loader2,
   Calendar,
-  ChevronRight,
-  ClipboardList
+  X,
+  Camera,
+  MessageSquare,
+  AlertCircle,
+  TrendingDown,
+  Wrench,
+  Zap,
+  ArrowRight
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+  DialogDescription,
+  DialogFooter
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 interface CorrectiveAction {
   id: string;
-  organizationId: string;
-  assignedManagerId: string;
-  status: 'open' | 'in_progress' | 'completed' | 'resolved';
-  severity: 'high' | 'medium' | 'low';
+  auditId: string;
+  locationId: string;
+  locationName: string;
   questionText: string;
   description: string;
-  locationName: string;
-  locationId: string;
+  severity: 'high' | 'medium' | 'low';
+  status: 'open' | 'in_progress' | 'completed' | 'resolved';
   deadline: any;
   createdAt: any;
   completedAt?: any;
@@ -71,12 +66,12 @@ interface CorrectiveAction {
   resolutionPhotoUrls?: string[];
 }
 
-export default function CorrectiveActionsPage() {
+export default function ManagerCorrectiveActionsPage() {
   const [actions, setActions] = useState<CorrectiveAction[]>([]);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
 
-  // Resolution Dialog State
+  // Resolution state
   const [selectedCA, setSelectedCA] = useState<CorrectiveAction | null>(null);
   const [resolutionNote, setResolutionNote] = useState('');
   const [resolutionPhotos, setResolutionPhotos] = useState<string[]>([]);
@@ -96,12 +91,9 @@ export default function CorrectiveActionsPage() {
   useEffect(() => {
     if (!session?.uid || !session?.organizationId) return;
 
-    // Real-time listener for corrective actions assigned to this manager
     const q = query(
       collection(db, 'correctiveActions'),
-      where('organizationId', '==', session.organizationId),
-      where('assignedManagerId', '==', session.uid),
-      orderBy('createdAt', 'desc')
+      where('organizationId', '==', session.organizationId)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -109,7 +101,16 @@ export default function CorrectiveActionsPage() {
         id: doc.id,
         ...doc.data()
       })) as CorrectiveAction[];
-      setActions(fetchedActions);
+      
+      // Filter for specific manager's locations if needed, 
+      // but usually the query covers it. Let's filter client-side 
+      // to ensure strictly assigned manager actions if that's the logic 
+      // (Wait, the query was filtering by assignedManagerId in previous version)
+      // Actually, if we want ALL actions for the org that this manager leads?
+      // BUG 3 says "assigned to this manager".
+      
+      const managerActions = fetchedActions.filter(ca => (ca as any).assignedManagerId === session.uid);
+      setActions(managerActions);
       setLoading(false);
     }, (error) => {
       console.error("Error fetching corrective actions:", error);
@@ -171,15 +172,26 @@ export default function CorrectiveActionsPage() {
 
   const getSeverityBadge = (severity: string) => {
     switch (severity) {
-      case 'high': return <Badge variant="destructive" className=" text-[10px] font-medium">High</Badge>;
-      case 'medium': return <Badge variant="secondary" className="bg-warning/10 text-warning border-none  text-[10px] font-medium">Medium</Badge>;
-      case 'low': return <Badge variant="secondary" className="bg-primary/10 text-primary border-none  text-[10px] font-medium">Low</Badge>;
-      default: return null;
+      case 'high': return <Badge className="bg-destructive/10 text-destructive border-none px-2.5 py-0.5 rounded-full text-[10px] font-semibold">High</Badge>;
+      case 'medium': return <Badge className="bg-amber-500/10 text-amber-600 border-none px-2.5 py-0.5 rounded-full text-[10px] font-semibold">Medium</Badge>;
+      default: return <Badge className="bg-primary/10 text-primary border-none px-2.5 py-0.5 rounded-full text-[10px] font-semibold">Low</Badge>;
     }
   };
 
-  const openActions = actions.filter(ca => ca.status === 'open' || ca.status === 'in_progress');
-  const completedActions = actions.filter(ca => ca.status === 'completed' || ca.status === 'resolved');
+  const activeActions = actions
+    .filter(ca => ca.status === 'open' || ca.status === 'in_progress')
+    .sort((a, b) => {
+      const timeA = a.deadline?.toDate ? a.deadline.toDate().getTime() : 0;
+      const timeB = b.deadline?.toDate ? b.deadline.toDate().getTime() : 0;
+      return timeA - timeB;
+    });
+  const historyActions = actions
+    .filter(ca => ca.status === 'completed' || ca.status === 'resolved')
+    .sort((a, b) => {
+      const timeA = a.completedAt?.toDate ? a.completedAt.toDate().getTime() : (a.resolvedAt?.toDate ? a.resolvedAt.toDate().getTime() : 0);
+      const timeB = b.completedAt?.toDate ? b.completedAt.toDate().getTime() : (b.resolvedAt?.toDate ? b.resolvedAt.toDate().getTime() : 0);
+      return timeB - timeA;
+    });
 
   if (loading) {
     return (
@@ -196,143 +208,161 @@ export default function CorrectiveActionsPage() {
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Corrective Actions</h1>
-            <p className="body-text">Track and resolve compliance issues at your locations.</p>
+            <h1 className="page-heading">Corrective actions</h1>
+            <p className="body-text">Track and resolve compliance issues across your assigned locations.</p>
           </div>
         </div>
 
+        <Tabs defaultValue="active" className="space-y-6">
+          <TabsList className="bg-muted/30 border border-border/40 p-1 rounded-lg h-10 w-fit">
+            <TabsTrigger value="active" className="px-5 py-1.5 text-xs font-medium data-[state=active]:bg-background data-[state=active]:text-heading data-[state=active]:shadow-sm">
+              Active ({activeActions.length})
+            </TabsTrigger>
+            <TabsTrigger value="history" className="px-5 py-1.5 text-xs font-medium data-[state=active]:bg-background data-[state=active]:text-heading data-[state=active]:shadow-sm">
+              History ({historyActions.length})
+            </TabsTrigger>
+          </TabsList>
 
-
-        <Tabs defaultValue="open" className="space-y-6">
-          <div className="flex justify-start">
-            <TabsList className="h-10 items-center justify-center rounded-lg bg-muted/30 p-1 text-muted-text border border-border/50">
-              <TabsTrigger 
-                value="open" 
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-5 py-1.5 text-xs font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-heading data-[state=active]:shadow-sm"
-              >
-                Active ({openActions.length})
-              </TabsTrigger>
-              <TabsTrigger 
-                value="resolved" 
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-5 py-1.5 text-xs font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-heading data-[state=active]:shadow-sm"
-              >
-                History ({completedActions.length})
-              </TabsTrigger>
-            </TabsList>
-          </div>
-
-          <TabsContent value="open" className="mt-0 focus-visible:outline-none">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
-              {openActions.length === 0 ? (
-                <div className="col-span-full py-24 border-dashed border-2 border-border/40 flex flex-col items-center justify-center text-muted-text bg-muted/5 rounded-2xl">
+          <TabsContent value="active" className="focus-visible:outline-none">
+            <div className="flex flex-col gap-4 max-w-5xl">
+              {activeActions.length === 0 ? (
+                <div className="py-24 border-dashed border-2 border-border/40 flex flex-col items-center justify-center text-muted-text bg-muted/5 rounded-2xl">
                   <div className="bg-success/5 p-4 rounded-full mb-4">
                     <CheckCircle2 className="h-10 w-10 text-success opacity-40" />
                   </div>
-                  <p className="font-semibold text-heading">No Pending Issues</p>
-                  <p className="body-text text-sm mt-1">All your locations are compliant.</p>
+                  <p className="font-semibold text-heading">No pending actions</p>
+                  <p className="body-text text-sm mt-1 text-center">All your locations are currently following compliance standards.</p>
                 </div>
               ) : (
-                openActions.map((ca) => (
-                  <Card key={ca.id} className="standard-card flex flex-col h-full group hover:border-primary/20 transition-all duration-200">
-                    <div className="p-6 bg-muted/5 border-b border-border/40">
-                      <div className="flex justify-between items-center mb-4">
-                        {ca.severity === 'high' ? (
-                          <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[12px] font-normal lowercase">high</Badge>
-                        ) : ca.severity === 'medium' ? (
-                          <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal lowercase">medium</Badge>
-                        ) : (
-                          <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal lowercase">low</Badge>
-                        )}
-                        <Badge variant="outline" className="text-[11px] font-medium text-destructive border-destructive/20 bg-destructive/5 px-2 py-0.5 rounded-md lowercase">
-                          due {ca.deadline ? format(ca.deadline.toDate(), 'MMM d') : 'no date'}
-                        </Badge>
-                      </div>
-                      <h4 className="font-semibold text-heading leading-snug group-hover:text-primary transition-colors">
-                        {ca.questionText}
-                      </h4>
-                    </div>
-                    <CardContent className="p-6 space-y-4 flex-grow">
-                      <div className="relative pl-4 border-l-2 border-primary/20">
-                        <p className="body-text text-sm italic line-clamp-3">
-                          "{ca.description}"
-                        </p>
-                      </div>
-                      <div className="flex flex-col gap-2 pt-2">
-                        <div className="flex items-center gap-2 text-[12px] text-body">
-                          <span>{ca.locationName}</span>
+                activeActions.map((ca) => {
+                  const now = new Date();
+                  const deadline = ca.deadline?.toDate();
+                  const isOverdue = deadline && deadline < now;
+                  
+                  return (
+                    <Card key={ca.id} className="p-0 border border-border/50 overflow-hidden hover:border-primary/30 shadow-sm hover:shadow-md transition-all group bg-background">
+                      <div className="flex flex-col md:flex-row md:items-stretch">
+                        <div className="flex-1 p-5 space-y-4">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                {getSeverityBadge(ca.severity)}
+                                {ca.status === 'in_progress' ? (
+                                  <Badge className="bg-amber-500/10 text-amber-600 border-none px-2 py-0.5 rounded-full text-[10px] font-semibold">In progress</Badge>
+                                ) : (
+                                  <Badge className={cn("px-2 py-0.5 rounded-full text-[10px] font-semibold border-none", isOverdue ? "bg-destructive/10 text-destructive" : "bg-muted/30 text-muted-text")}>
+                                    {isOverdue ? 'Overdue' : 'Open'}
+                                  </Badge>
+                                )}
+                              </div>
+                              <h3 className="text-lg font-semibold text-heading leading-tight group-hover:text-primary transition-colors">
+                                {ca.questionText}
+                              </h3>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1 border-b border-border/20 pb-4">
+                            <div className="flex items-center gap-2 text-sm text-body">
+                              <MapPin className="h-4 w-4 text-primary/40 shrink-0" />
+                              <span>{ca.locationName}</span>
+                            </div>
+                            <div className={cn("flex items-center gap-2 text-sm font-medium", isOverdue ? "text-destructive" : "text-body")}>
+                              <Clock className="h-4 w-4 opacity-40 shrink-0" />
+                              <span>Due {deadline ? format(deadline, 'MMM d, yyyy') : 'No deadline'}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-muted-text ml-auto md:ml-0">
+                               <Calendar className="h-4 w-4 opacity-30 shrink-0" />
+                               <span>Raised {ca.createdAt ? format(ca.createdAt.toDate(), 'MMM d') : 'N/A'}</span>
+                            </div>
+                          </div>
+                          
+                          {ca.description && (
+                            <div className="bg-muted/5 rounded-lg p-3 border border-border/20">
+                              <p className="text-[13px] text-muted-text leading-relaxed italic">"{ca.description}"</p>
+                            </div>
+                          )}
                         </div>
-                        <div className="flex items-center gap-2 text-[11px] text-muted-text">
-                          <Clock className="h-3.5 w-3.5 opacity-40" />
-                          <span>Identified {ca.createdAt ? format(ca.createdAt.toDate(), 'MMM d, h:mm a') : 'N/A'}</span>
+
+                        <div className="md:w-64 bg-muted/5 md:border-l border-t md:border-t-0 border-border/50 flex flex-col items-center justify-center p-5 gap-3">
+                          <Button
+                            className="w-full h-11 shadow-lg shadow-primary/20 font-semibold text-sm active:scale-95 transition-all"
+                            onClick={() => setSelectedCA(ca)}
+                          >
+                            Resolve issue
+                          </Button>
+                          {ca.status === 'open' && (
+                            <Button
+                              variant="outline"
+                              className="w-full h-11 border-border/50 text-muted-text hover:text-primary hover:bg-primary/5 text-[12px] font-medium"
+                              onClick={() => handleMarkOngoing(ca.id)}
+                            >
+                              Mark ongoing
+                            </Button>
+                          )}
                         </div>
                       </div>
-                    </CardContent>
-                    <CardFooter className="p-6 pt-0 mt-auto flex gap-3">
-                       {ca.status === 'open' && (
-                        <Button
-                          variant="outline"
-                          className="flex-1 font-medium text-xs h-10 border-border/50 text-muted-text hover:text-primary transition-all"
-                          onClick={() => handleMarkOngoing(ca.id)}
-                        >
-                          mark ongoing
-                        </Button>
-                      )}
-                      <Button
-                        className="flex-1 font-medium text-xs h-10 shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95"
-                        onClick={() => setSelectedCA(ca)}
-                      >
-                        resolve
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))
+                    </Card>
+                  );
+                })
               )}
             </div>
           </TabsContent>
 
-          <TabsContent value="resolved" className="mt-0 focus-visible:outline-none">
-            <div className="grid gap-6 lg:grid-cols-2">
-              {completedActions.length === 0 ? (
-                <div className="col-span-full py-24 border-dashed border-2 border-border/40 flex flex-col items-center justify-center text-muted-text bg-muted/5 rounded-2xl">
-                  <p className="font-semibold text-heading opacity-40">History Empty</p>
+          <TabsContent value="history" className="focus-visible:outline-none">
+             <div className="flex flex-col gap-4 max-w-5xl">
+              {historyActions.length === 0 ? (
+                <div className="py-24 border-dashed border-2 border-border/40 flex flex-col items-center justify-center text-muted-text bg-muted/5 rounded-2xl">
+                  <p className="font-semibold text-heading opacity-40">No history found</p>
                 </div>
               ) : (
-                completedActions.map((ca) => (
-                  <Card key={ca.id} className="standard-card flex flex-col overflow-hidden hover:border-success/30 transition-all duration-200 group">
-                    <div className="p-6 border-b border-border/40 bg-background flex-1">
-                      <div className="flex items-center justify-between mb-4">
-                        <Badge variant="secondary" className="h-6 rounded-full bg-success/10 text-success border-none px-2.5 text-[12px] font-normal lowercase">
-                          {ca.status === 'resolved' ? 'resolved by admin' : 'completed'}
-                        </Badge>
-                        <span className="text-[11px] text-muted-text opacity-40 tabular-nums">
-                          ID: {ca.id.substring(0, 8)}
-                        </span>
-                      </div>
-                      <h4 className="font-semibold text-heading leading-snug group-hover:text-success transition-colors">{ca.questionText}</h4>
-                      <p className="text-[11px] font-medium text-muted-text uppercase tracking-wider mt-2">{ca.locationName}</p>
+                historyActions.map((ca) => (
+                  <Card key={ca.id} className="p-0 border border-border/50 overflow-hidden hover:border-success/20 shadow-sm transition-all bg-background group">
+                     <div className="flex flex-col md:flex-row md:items-stretch">
+                        <div className="flex-1 p-5 space-y-4">
+                           <div className="flex items-start justify-between gap-4">
+                              <div className="space-y-1">
+                                 <div className="flex items-center gap-2 mb-1">
+                                    <Badge className="bg-success/10 text-success border-none px-2.5 py-0.5 rounded-full text-[10px] font-semibold">
+                                       {ca.status === 'resolved' ? 'Resolved' : 'Completed'}
+                                    </Badge>
+                                    <span className="text-[10px] text-muted-text/40 tabular-nums">ID: {ca.id.slice(0, 8)}</span>
+                                 </div>
+                                 <h3 className="text-lg font-semibold text-heading leading-tight group-hover:text-success transition-colors">
+                                    {ca.questionText}
+                                 </h3>
+                              </div>
+                           </div>
 
-                      <div className="bg-muted/5 p-4 rounded-xl border border-border/40 mt-4 relative">
-                        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-text/60 mb-2">Resolution Note</p>
-                        <p className="body-text text-sm italic">"{ca.resolutionNote || 'No notes provided.'}"</p>
-                      </div>
-                    </div>
-                    <div className="p-6 bg-muted/5 flex flex-col gap-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-col gap-0.5">
-                          <p className="text-[10px] font-semibold text-muted-text uppercase tracking-wider">Closed On</p>
-                          <p className="text-xs font-normal text-body">{ca.completedAt ? format(ca.completedAt.toDate(), 'MMM d, yyyy') : (ca.resolvedAt ? format(ca.resolvedAt.toDate(), 'MMM d, yyyy') : 'N/A')}</p>
+                           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1 border-b border-border/20 pb-4">
+                              <div className="flex items-center gap-2 text-sm text-body">
+                                 <MapPin className="h-4 w-4 text-primary/40 shrink-0" />
+                                 <span>{ca.locationName}</span>
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-muted-text">
+                                 <CheckCircle2 className="h-4 w-4 text-success/40 shrink-0" />
+                                 <span>Closed {ca.completedAt ? format(ca.completedAt.toDate(), 'MMM d, yyyy') : (ca.resolvedAt ? format(ca.resolvedAt.toDate(), 'MMM d, yyyy') : 'N/A')}</span>
+                              </div>
+                           </div>
+
+                           <div className="bg-muted/5 rounded-lg p-4 border border-border/20 space-y-2">
+                              <p className="text-[10px] font-bold text-muted-text/50 uppercase tracking-tight">Resolution note</p>
+                              <p className="text-sm text-body italic leading-relaxed">"{ca.resolutionNote || 'No notes provided.'}"</p>
+                           </div>
                         </div>
+
                         {ca.resolutionPhotoUrls && ca.resolutionPhotoUrls.length > 0 && (
-                          <div className="flex -space-x-2">
-                             {ca.resolutionPhotoUrls.map((url, i) => (
-                               <div key={i} className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-muted shadow-sm transition-transform hover:scale-110 active:scale-95 cursor-pointer">
-                                 <img src={url} alt="Proof" className="h-full w-full object-cover" />
-                               </div>
-                             ))}
+                          <div className="md:w-64 bg-muted/5 md:border-l border-t md:border-t-0 border-border/50 p-5 flex flex-col justify-center gap-2">
+                            <p className="text-[10px] font-bold text-muted-text/50 uppercase tracking-tight mb-1 text-center md:text-left">Proof of resolution</p>
+                            <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                               {ca.resolutionPhotoUrls.map((url, i) => (
+                                 <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="h-16 w-16 md:h-12 md:w-12 rounded-lg border border-border shadow-sm overflow-hidden bg-muted hover:scale-105 transition-transform">
+                                   <img src={url} alt="Proof" className="h-full w-full object-cover" />
+                                 </a>
+                               ))}
+                            </div>
                           </div>
                         )}
-                      </div>
-                    </div>
+                     </div>
                   </Card>
                 ))
               )}
@@ -342,74 +372,77 @@ export default function CorrectiveActionsPage() {
       </div>
 
       <Dialog open={!!selectedCA} onOpenChange={(open) => !open && setSelectedCA(null)}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle className="font-semibold text-heading">Resolve Issue</DialogTitle>
+        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden border-none shadow-2xl">
+          <DialogHeader className="p-6 pb-4">
+            <DialogTitle className="font-semibold text-heading text-xl">Resolve issue</DialogTitle>
             <DialogDescription className="text-muted-text text-sm">
               Provide evidence and steps taken to remediate this non-compliance.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
-            <div className="p-4 bg-primary/5 rounded-xl border border-primary/10">
-              <p className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-2">Context</p>
-              <p className="text-sm font-medium text-heading italic leading-snug">"{selectedCA?.questionText}"</p>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="note" className="text-body font-normal">Note</Label>
+          <div className="p-6 pt-0 space-y-6">
+            <div className="space-y-3">
+              <Label className="text-[13px] font-semibold text-heading">Resolution note</Label>
               <Textarea
-                id="note"
-                placeholder="Explain how the issue was fixed..."
+                placeholder="Describe how the issue was fixed..."
+                className="min-h-[120px] bg-muted/5 border-border/50 resize-none focus:ring-primary/20 text-body"
                 value={resolutionNote}
-                onChange={(e) => setResolutionNote(e.target.value)}
-                className="min-h-[120px] text-body resize-none"
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setResolutionNote(e.target.value)}
               />
             </div>
 
-            <div className="space-y-2">
-              <Label className="text-body font-normal">Photo Evidence (Optional)</Label>
-              <div className="flex flex-col gap-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-10 px-4 w-fit border-dashed border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all text-muted-text flex items-center gap-2"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploading}
-                >
-                  {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
-                  <span className="text-[12px] font-medium">Attach Proof</span>
-                </Button>
-                <input type="file" className="hidden" ref={fileInputRef} accept="image/*" onChange={handleFileUpload} />
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-[13px] font-semibold text-heading">Upload proof</Label>
+                <span className="text-[10px] text-muted-text/50">{resolutionPhotos.length} photos</span>
               </div>
-
-              {resolutionPhotos.length > 0 && (
-                <div className="flex gap-2 overflow-x-auto py-2">
-                  {resolutionPhotos.map((url, i) => (
-                    <div key={i} className="relative h-16 w-16 rounded-lg overflow-hidden border border-border/40 shadow-sm flex-shrink-0 group">
-                      <img src={url} alt="Evidence" className="h-full w-full object-cover" />
-                      <button
-                        className="absolute top-1 right-1 bg-destructive/90 text-white p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => setResolutionPhotos(prev => prev.filter(p => p !== url))}
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              
+              <div className="grid grid-cols-4 gap-3">
+                {resolutionPhotos.map((url, i) => (
+                  <div key={i} className="relative aspect-square rounded-lg border border-border overflow-hidden bg-muted group">
+                    <img src={url} alt="Proof" className="h-full w-full object-cover" />
+                    <button 
+                      onClick={() => setResolutionPhotos(prev => prev.filter((_, idx) => idx !== i))}
+                      className="absolute top-1 right-1 h-5 w-5 bg-black/50 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+                {(resolutionPhotos.length < 4) && (
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="aspect-square rounded-lg border-2 border-dashed border-border/50 flex flex-col items-center justify-center gap-1.5 hover:bg-muted/10 hover:border-primary/30 transition-all text-muted-text/40 hover:text-primary"
+                    disabled={isUploading}
+                  >
+                    {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
+                      <>
+                        <Camera className="h-5 w-5" />
+                        <span className="text-[10px] font-medium">Add photo</span>
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleFileUpload}
+              />
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setSelectedCA(null)} className="h-9 px-4 font-normal text-xs">Cancel</Button>
+          <DialogFooter className="p-6 pt-2 bg-muted/5 border-t border-border/50 gap-3">
+            <Button variant="outline" onClick={() => setSelectedCA(null)} className="font-medium">Cancel</Button>
             <Button
+              className="font-semibold shadow-lg shadow-primary/20 px-6 active:scale-95 transition-all"
               onClick={handleComplete}
               disabled={isResolving || !resolutionNote}
-              className="h-9 px-4 font-medium text-xs shadow-lg shadow-primary/10 transition-all"
             >
-              {isResolving && <Loader2 className="h-3 w-3 animate-spin mr-2" />}
-              Resolve
+              {isResolving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Submit resolution
             </Button>
           </DialogFooter>
         </DialogContent>

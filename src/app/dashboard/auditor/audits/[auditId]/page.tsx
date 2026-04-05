@@ -125,6 +125,16 @@ export default function AuditExecutionPage() {
           return;
         }
         const auditData = auditSnap.data();
+        
+        // BUG 6: Auditor schedule lock
+        const now = new Date();
+        const sched = auditData.scheduledDate?.toDate() || new Date(0);
+        if (now < sched) {
+          alert(`Locked until ${sched.toLocaleDateString()}`);
+          router.push('/dashboard/auditor');
+          return;
+        }
+
         setAudit({ id: auditSnap.id, ...auditData });
 
         const qParams = query(
@@ -409,9 +419,7 @@ export default function AuditExecutionPage() {
           );
 
           if (isFailed) {
-            console.log(`[AuditSubmission] Creating corrective action for question: ${qId}`);
-            const caRef = doc(collection(db, 'correctiveActions'));
-            batch.set(caRef, {
+            const caData = {
               auditId,
               questionId: qId,
               questionText: q.questionText,
@@ -422,9 +430,12 @@ export default function AuditExecutionPage() {
               description: r.notes || `Failed critical question: ${q.questionText}`,
               severity: q.severity,
               status: 'open',
+              reminderSent: false,
               deadline: Timestamp.fromDate(new Date(Date.now() + 48 * 60 * 60 * 1000)),
               createdAt: serverTimestamp()
-            });
+            };
+            const caRef = doc(collection(db, 'correctiveActions'));
+            batch.set(caRef, caData);
           }
         }
       });

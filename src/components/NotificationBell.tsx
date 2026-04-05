@@ -10,6 +10,7 @@ import {
   where,
   onSnapshot,
   doc,
+  getDoc,
   updateDoc,
   serverTimestamp,
   orderBy,
@@ -19,11 +20,12 @@ import {
 import {
   Bell,
   CheckCheck,
-  CheckSquare,
-  AlertTriangle,
+  ClipboardList,
+  AlertCircle,
+  TrendingDown,
+  BarChart2,
+  Wrench,
   Zap,
-  FileText,
-  Clock,
   X
 } from 'lucide-react';
 import {
@@ -38,7 +40,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 
 export default function NotificationBell({ variant, userRole }: { variant?: 'default' | 'trigger-only' | 'sidebar-item' | 'sidebar-card', userRole?: string }) {
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -104,7 +106,7 @@ export default function NotificationBell({ variant, userRole }: { variant?: 'def
     }
   };
 
-  const handleNavigate = (n: any) => {
+  const handleNavigate = async (n: any) => {
     if (!n) return;
     markAsRead(n.id);
     
@@ -117,6 +119,18 @@ export default function NotificationBell({ variant, userRole }: { variant?: 'def
       case 'audit_published':
       case 'surprise_audit':
         if (rolePrefix === 'auditor') {
+          try {
+            const auditSnap = await getDoc(doc(db, 'audits', n.relatedId));
+            if (auditSnap.exists()) {
+              const auditData = auditSnap.data();
+              const now = new Date();
+              const sched = auditData.scheduledDate?.toDate() || new Date(0);
+              if (now < sched) {
+                alert(`Audit is locked until ${format(sched, 'MMM d, h:mm a')}`);
+                return;
+              }
+            }
+          } catch(e) { }
           router.push(`/dashboard/auditor/audits/${n.relatedId}`);
         } else {
           router.push(`/dashboard/${rolePrefix}/audits`);
@@ -156,13 +170,14 @@ export default function NotificationBell({ variant, userRole }: { variant?: 'def
 
   const getIcon = (type: string) => {
     switch (type) {
-      case 'audit_assigned': return <CheckSquare className="h-4 w-4 text-primary" />;
-      case 'audit_missed': return <Clock className="h-4 w-4 text-destructive" />;
-      case 'surprise_audit': return <Zap className="h-4 w-4 text-amber-500 dark:text-amber-400" />;
-      case 'low_score': return <AlertTriangle className="h-4 w-4 text-destructive" />;
-      case 'trend_alert': return <AlertTriangle className="h-4 w-4 text-orange-500" />;
-      case 'corrective_action': return <FileText className="h-4 w-4 text-indigo-500" />;
-      default: return <Bell className="h-4 w-4 text-muted-text" />;
+      case 'audit_assigned': return <ClipboardList className="w-3.5 h-3.5 text-foreground" />;
+      case 'audit_missed': return <AlertCircle className="w-3.5 h-3.5 text-red-500" />;
+      case 'low_score': return <TrendingDown className="w-3.5 h-3.5 text-amber-500" />;
+      case 'trend_alert': return <BarChart2 className="w-3.5 h-3.5 text-amber-600" />;
+      case 'corrective_action': return <Wrench className="w-3.5 h-3.5 text-orange-500" />;
+      case 'surprise_audit': return <Zap className="w-3.5 h-3.5 text-purple-500" />;
+      case 'audit_published': return <Bell className="w-3.5 h-3.5 text-foreground" />;
+      default: return <Bell className="w-3.5 h-3.5 text-muted-foreground" />;
     }
   };
 
@@ -183,7 +198,7 @@ export default function NotificationBell({ variant, userRole }: { variant?: 'def
       <div className="flex items-center justify-between p-4 bg-muted/20">
         <div className="flex flex-col">
           <span className="font-medium text-sm tracking-tight text-heading">Notifications</span>
-          <span className="muted-label">{unreadCount} Unread Alerts</span>
+          <span className="muted-label">{unreadCount} unread alerts</span>
         </div>
         {unreadCount > 0 && (
           <Button variant="ghost" size="sm" onClick={markAllAsRead} className="h-7 text-[10px]  font-medium text-primary hover:text-primary hover:bg-primary/10 transition-colors">
@@ -204,36 +219,37 @@ export default function NotificationBell({ variant, userRole }: { variant?: 'def
         ) : (
           <div className="flex flex-col">
             {notifications.map((n) => (
-              <div
-                key={n.id}
-                className={cn(
-                  "relative flex gap-4 p-4 transition-all border-b border-border/30 last:border-0 hover:bg-muted/30 cursor-pointer overflow-hidden group",
-                  !n.isRead && "bg-primary/5 border-l-2 border-l-primary",
-                  n.type === 'surprise_audit' && "bg-amber-500/5 hover:bg-amber-500/10"
-                )}
-                onClick={() => handleNavigate(n)}
-              >
-                <div className={cn(
-                  "h-10 w-10 shrink-0 rounded-xl flex items-center justify-center bg-background border border-border bg-card shadow-sm transition-transform group-hover:scale-105",
-                  !n.isRead && "ring-2 ring-primary/10"
-                )}>
-                  {getIcon(n.type)}
-                </div>
-                <div className="flex-1 space-y-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2">
-                    <p className={cn("text-sm leading-none truncate flex items-center gap-2", !n.isRead ? "text-heading font-medium" : "text-muted-text font-normal")}>
-                      {n.type === 'surprise_audit' && (
-                        <Badge className="bg-amber-500 hover:bg-amber-600 h-3.5 px-1 py-0 text-[8px] font-medium  text-white animate-pulse lowercase">urgent</Badge>
-                      )}
+              <div key={n.id} className="p-1 last:border-0 border-b border-border/30">
+                <div 
+                  className={cn(
+                    "flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors",
+                    !n.isRead && "bg-primary/5"
+                  )}
+                  onClick={() => handleNavigate(n)}
+                >
+                  {/* Left: colored icon based on type */}
+                  <div className="mt-0.5 p-1.5 rounded-full bg-muted flex-shrink-0">
+                    {getIcon(n.type)}
+                  </div>
+                  
+                  {/* Middle: content */}
+                  <div className="flex-1 min-w-0">
+                    <p className={cn("text-sm leading-tight text-foreground", !n.isRead ? "font-semibold" : "font-medium")}>
                       {n.title}
                     </p>
-                    <span className="text-[10px] text-muted-text/60 shrink-0 whitespace-nowrap mt-0.5 font-normal">
+                    <p className="text-xs text-muted-foreground mt-0.5 leading-snug">{n.message}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
                       {n.createdAt ? formatDistanceToNow(n.createdAt.toDate(), { addSuffix: true }) : 'Just now'}
-                    </span>
+                    </p>
                   </div>
-                  <p className="text-xs text-body line-clamp-2 leading-relaxed font-normal">
-                    {n.message}
-                  </p>
+
+                  {/* Right: dismiss button */}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); markAsRead(n.id); }}
+                    className="flex-shrink-0 text-muted-foreground hover:text-foreground mt-0.5 p-1 hover:bg-muted rounded-md transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
             ))}
@@ -242,8 +258,8 @@ export default function NotificationBell({ variant, userRole }: { variant?: 'def
       </ScrollArea>
       <DropdownMenuSeparator className="m-0 bg-border/50" />
       <div className="p-2 bg-muted/5">
-        <Button variant="ghost" className="w-full h-9 text-xs font-medium  tracking-wider text-muted-text hover:text-heading hover:bg-muted/50 transition-colors">
-          View All Notifications
+        <Button variant="ghost" className="w-full h-9 text-xs font-medium text-muted-text hover:text-heading hover:bg-muted/50 transition-colors">
+          View all notifications
         </Button>
       </div>
     </DropdownMenuContent>
@@ -306,7 +322,7 @@ export default function NotificationBell({ variant, userRole }: { variant?: 'def
                   <p className="text-[11px] text-muted-text leading-tight line-clamp-2 mt-1 font-medium">
                     {n.message}
                   </p>
-                  <span className="text-[9px] text-muted-text/30 mt-1.5 font-bold uppercase tracking-widest">
+                  <span className="text-[9px] text-muted-text/30 mt-1.5 font-bold">
                      {n.createdAt ? formatDistanceToNow(n.createdAt.toDate(), { addSuffix: true }) : 'Just now'}
                   </span>
                 </div>

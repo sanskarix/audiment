@@ -83,8 +83,8 @@ export async function GET(request: Request) {
 
     for (const doc of caSnap.docs) {
       const ca = doc.data();
-      // Only send if we haven't sent a deadline reminder recently
-      if (ca.lastDeadlineReminderSentAt) {
+      // Only send if we haven't sent a deadline reminder
+      if (ca.reminderSent === true) {
         continue;
       }
 
@@ -94,8 +94,8 @@ export async function GET(request: Request) {
         recipientId: ca.assignedManagerId,
         recipientRole: 'manager',
         type: 'corrective_action',
-        title: `Deadline Approaching: Corrective Action`,
-        message: `The corrective action for ${ca.locationName} ("${ca.questionText}") is due in less than 6 hours.`,
+        title: 'Corrective Action Due Soon',
+        message: `${ca.questionText} at ${ca.locationName} is due in less than 6 hours.`,
         relatedId: ca.auditId,
         isRead: false,
         createdAt: FieldValue.serverTimestamp()
@@ -103,7 +103,7 @@ export async function GET(request: Request) {
 
       // Mark as reminded
       await doc.ref.update({
-        lastDeadlineReminderSentAt: FieldValue.serverTimestamp()
+        reminderSent: true
       });
       summary.caRemindersSent++;
     }

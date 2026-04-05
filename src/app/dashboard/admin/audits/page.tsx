@@ -54,15 +54,22 @@ export default function AdminAuditsPage() {
   const [managerFilter, setManagerFilter] = useState('all');
 
   // Form state
-  const [selectedTemplate, setSelectedTemplate] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('');
-  const [selectedManager, setSelectedManager] = useState('');
-  const [scheduledDate, setScheduledDate] = useState<Date>();
-  const [deadline, setDeadline] = useState<Date>();
-  const [isSurprise, setIsSurprise] = useState(false);
-  const [recurring, setRecurring] = useState<'none' | 'daily' | 'weekly' | 'monthly'>('none');
-  const [recurringDay, setRecurringDay] = useState<number>(1);
-  const [repeatUntil, setRepeatUntil] = useState<Date>();
+  const [formData, setFormData] = useState({
+    templateId: '',
+    locationId: '',
+    managerId: '',
+    scheduledDate: undefined as Date | undefined,
+    deadline: undefined as Date | undefined,
+    isSurprise: false,
+    recurring: 'none' as 'none' | 'daily' | 'weekly' | 'monthly',
+    recurringDay: 1,
+    repeatUntil: undefined as Date | undefined,
+  });
+
+  const updateFormField = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const [open, setOpen] = useState(false);
   const [editingAuditId, setEditingAuditId] = useState<string | null>(null);
 
@@ -83,7 +90,25 @@ export default function AdminAuditsPage() {
     const qAudits = query(collection(db, 'audits'), where('organizationId', '==', session.orgId));
     const unsubAudits = onSnapshot(qAudits, (snap) => {
       const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
-      fetched.sort((a, b: any) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
+      
+      const toDate = (val: any): Date => {
+        if (!val) return new Date(0);
+        if (typeof val.toDate === 'function') return val.toDate();
+        return new Date(val);
+      };
+
+      fetched.sort((a, b) => {
+        // 1. Deadline (closest first)
+        const deadA = toDate(a.deadline).getTime();
+        const deadB = toDate(b.deadline).getTime();
+        if (deadA !== deadB) return deadA - deadB;
+
+        // 2. Status (Pending/Missed first)
+        const statusMap: any = { missed: 0, published: 1, assigned: 1, in_progress: 2, completed: 3 };
+        const statusA = statusMap[a.status] ?? 99;
+        const statusB = statusMap[b.status] ?? 99;
+        return statusA - statusB;
+      });
       setAudits(fetched);
     });
 
@@ -109,30 +134,27 @@ export default function AdminAuditsPage() {
   }, [session]);
 
   const handlePublish = async () => {
-    if (!selectedTemplate || !selectedLocation || !selectedManager || !scheduledDate || !deadline || !session) return;
+    if (!formData.templateId || !formData.locationId || !formData.managerId || !formData.scheduledDate || !formData.deadline || !session) return;
 
     setLoading(true);
     try {
-      console.log('DEBUG: Publishing audit - Session UID:', session.uid);
-      console.log('DEBUG: Selected Manager UID:', selectedManager);
-
-      const template = templates.find(t => t.id === selectedTemplate);
-      const location = locations.find(l => l.id === selectedLocation);
+      const template = templates.find(t => t.id === formData.templateId);
+      const location = locations.find(l => l.id === formData.locationId);
 
       if (!template || !location) throw new Error('Invalid template or location');
 
       const auditData: any = {
         organizationId: session.orgId,
-        templateId: selectedTemplate,
+        templateId: formData.templateId,
         templateTitle: template.title,
-        locationId: selectedLocation,
+        locationId: formData.locationId,
         locationName: location.name,
-        assignedManagerId: selectedManager,
-        isSurprise,
-        recurring,
-        recurringDay: recurring !== 'none' ? recurringDay : null,
-        scheduledDate: Timestamp.fromDate(scheduledDate),
-        deadline: Timestamp.fromDate(deadline),
+        assignedManagerId: formData.managerId,
+        isSurprise: formData.isSurprise,
+        recurring: formData.recurring,
+        recurringDay: formData.recurring !== 'none' ? formData.recurringDay : null,
+        scheduledDate: Timestamp.fromDate(formData.scheduledDate),
+        deadline: Timestamp.fromDate(formData.deadline),
       };
 
       if (editingAuditId) {
@@ -147,20 +169,20 @@ export default function AdminAuditsPage() {
         auditData.scorePercentage = 0;
 
         let occurrences = 1;
-        if (recurring !== 'none' && scheduledDate && repeatUntil) {
-          const diffTime = Math.abs(repeatUntil.getTime() - scheduledDate.getTime());
+        if (formData.recurring !== 'none' && formData.scheduledDate && formData.repeatUntil) {
+          const diffTime = Math.abs(formData.repeatUntil.getTime() - formData.scheduledDate.getTime());
           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
           
-          if (recurring === 'daily') occurrences = diffDays + 1;
-          else if (recurring === 'weekly') occurrences = Math.floor(diffDays / 7) + 1;
-          else if (recurring === 'monthly') occurrences = Math.floor(diffDays / 30) + 1;
+          if (formData.recurring === 'daily') occurrences = diffDays + 1;
+          else if (formData.recurring === 'weekly') occurrences = Math.floor(diffDays / 7) + 1;
+          else if (formData.recurring === 'monthly') occurrences = Math.floor(diffDays / 30) + 1;
           
           // Safety cap
           occurrences = Math.min(occurrences, 30);
         }
 
-        let currentDate = new Date(scheduledDate);
-        let currentDeadline = new Date(deadline);
+        let currentDate = new Date(formData.scheduledDate);
+        let currentDeadline = new Date(formData.deadline);
         const durationMs = currentDeadline.getTime() - currentDate.getTime();
 
         for (let i = 0; i < occurrences; i++) {
@@ -174,10 +196,10 @@ export default function AdminAuditsPage() {
             // Create notification for Manager only for the first occurrence
             await addDoc(collection(db, 'notifications'), {
               organizationId: session.orgId,
-              recipientId: selectedManager,
+              recipientId: formData.managerId,
               recipientRole: 'manager',
-              type: isSurprise ? 'surprise_audit' : 'audit_assigned',
-              title: `New Audit Published: ${template.title}`,
+              type: formData.isSurprise ? 'surprise_audit' : 'audit_assigned',
+              title: `New audit published: ${template.title}`,
               message: `A new audit has been published for ${location.name}. Please assign an auditor.`,
               relatedId: docRef.id,
               isRead: false,
@@ -186,11 +208,11 @@ export default function AdminAuditsPage() {
           }
 
           // Advance date for next iteration
-          if (recurring === 'daily') {
+          if (formData.recurring === 'daily') {
             currentDate.setDate(currentDate.getDate() + 1);
-          } else if (recurring === 'weekly') {
+          } else if (formData.recurring === 'weekly') {
             currentDate.setDate(currentDate.getDate() + 7);
-          } else if (recurring === 'monthly') {
+          } else if (formData.recurring === 'monthly') {
             currentDate.setMonth(currentDate.getMonth() + 1);
           }
         }
@@ -199,14 +221,17 @@ export default function AdminAuditsPage() {
       setOpen(false);
       // Reset form
       setEditingAuditId(null);
-      setSelectedTemplate('');
-      setSelectedLocation('');
-      setSelectedManager('');
-      setScheduledDate(undefined);
-      setDeadline(undefined);
-      setIsSurprise(false);
-      setRecurring('none');
-      setRecurringDay(1);
+      setFormData({
+        templateId: '',
+        locationId: '',
+        managerId: '',
+        scheduledDate: undefined,
+        deadline: undefined,
+        isSurprise: false,
+        recurring: 'none',
+        recurringDay: 1,
+        repeatUntil: undefined,
+      });
     } catch (e) {
       console.error(e);
       alert('Failed to save audit');
@@ -232,7 +257,7 @@ export default function AdminAuditsPage() {
     if (isDeadlineHit) {
       return (
         <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[12px] font-normal">
-          Deadline Hit
+          Deadline hit
         </Badge>
       );
     }
@@ -240,7 +265,7 @@ export default function AdminAuditsPage() {
     if (audit.status === 'in_progress') {
       return (
         <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">
-          In Progress
+          In progress
         </Badge>
       );
     }
@@ -294,34 +319,36 @@ export default function AdminAuditsPage() {
               setOpen(val);
               if (!val) {
                 setEditingAuditId(null);
-                setSelectedTemplate('');
-                setSelectedLocation('');
-                setSelectedManager('');
-                setScheduledDate(undefined);
-                setDeadline(undefined);
-                setIsSurprise(false);
-                setRecurring('none');
-                setRecurringDay(1);
+                setFormData({
+                  templateId: '',
+                  locationId: '',
+                  managerId: '',
+                  scheduledDate: undefined,
+                  deadline: undefined,
+                  isSurprise: false,
+                  recurring: 'none',
+                  recurringDay: 1,
+                  repeatUntil: undefined,
+                });
               }
             }}>
               <DialogTrigger asChild>
                 <Button size="default" className="shadow-lg shadow-primary/20 h-11 px-5 text-[14px] font-medium gap-2 active:scale-95 transition-all">
-                  <Plus className="mr-2 h-4 w-4" /> New Audit
+                  <Plus className="mr-2 h-4 w-4" /> New audit
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden border-none shadow-2xl">
-                <DialogHeader className="px-6 pt-6 pb-4 bg-background">
+              <DialogContent className="sm:max-w-lg p-6">
+                <DialogHeader>
                   <DialogTitle className="text-xl font-semibold text-heading">
-                    {editingAuditId ? 'Edit Audit' : 'New Audit'}
+                    {editingAuditId ? 'Edit audit' : 'New audit'}
                   </DialogTitle>
                 </DialogHeader>
 
-                <div className="px-6 py-4 space-y-6 max-h-[70vh] overflow-y-auto no-scrollbar">
-                  {/* Primary Assignment Section */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div className="flex flex-col gap-2 md:col-span-2">
-                      <Label htmlFor="template" className="text-[13px] font-medium text-heading pl-0.5">Template</Label>
-                      <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
+                <div className="space-y-4 py-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="template" className="text-xs text-muted-foreground">Template</Label>
+                      <Select value={formData.templateId} onValueChange={(val) => updateFormField('templateId', val)}>
                         <SelectTrigger id="template" className="h-10 text-body bg-muted/5 border-border/50">
                           <SelectValue placeholder="Select template" />
                         </SelectTrigger>
@@ -334,10 +361,10 @@ export default function AdminAuditsPage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label htmlFor="location" className="text-[13px] font-medium text-heading pl-0.5">Location</Label>
-                      <Select value={selectedLocation} onValueChange={(val) => {
-                        setSelectedLocation(val);
-                        setSelectedManager('');
+                      <Label htmlFor="location" className="text-xs text-muted-foreground">Location</Label>
+                      <Select value={formData.locationId} onValueChange={(val) => {
+                        updateFormField('locationId', val);
+                        updateFormField('managerId', '');
                       }}>
                         <SelectTrigger id="location" className="h-10 text-body bg-muted/5 border-border/50">
                           <SelectValue placeholder="Select location" />
@@ -349,162 +376,144 @@ export default function AdminAuditsPage() {
                         </SelectContent>
                       </Select>
                     </div>
+                  </div>
 
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="manager" className="text-xs text-muted-foreground">Manager</Label>
+                    <Select value={formData.managerId} onValueChange={(val) => updateFormField('managerId', val)}>
+                      <SelectTrigger id="manager" className="h-10 text-body bg-muted/5 border-border/50">
+                        <SelectValue placeholder="Select manager" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {managers.map(m => (
+                          <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-2">
-                      <Label htmlFor="manager" className="text-[13px] font-medium text-heading pl-0.5">Manager</Label>
-                      <Select value={selectedManager} onValueChange={setSelectedManager}>
-                        <SelectTrigger id="manager" className="h-10 text-body bg-muted/5 border-border/50">
-                          <SelectValue placeholder="Select manager" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {managers.map(m => (
-                            <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Label className="text-xs text-muted-foreground">Scheduled date</Label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.scheduledDate && "text-muted-text")}>
+                            <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
+                            {formData.scheduledDate ? format(formData.scheduledDate, "PPP") : "Pick a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
+                          <Calendar mode="single" selected={formData.scheduledDate} onSelect={(date: any) => {
+                            updateFormField('scheduledDate', date);
+                            if (date && (!formData.deadline || date > formData.deadline)) {
+                              const newDeadline = new Date(date);
+                              newDeadline.setHours(23, 59, 59);
+                              updateFormField('deadline', newDeadline);
+                            }
+                          }} initialFocus />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label className="text-xs text-muted-foreground">Deadline</Label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.deadline && "text-muted-text")}>
+                            <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
+                            {formData.deadline ? format(formData.deadline, "PPP") : "Pick a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="end">
+                          <Calendar mode="single" selected={formData.deadline} onSelect={(date) => updateFormField('deadline', date)} disabled={(date: any) => formData.scheduledDate ? date < formData.scheduledDate : false} initialFocus />
+                        </PopoverContent>
+                      </Popover>
                     </div>
                   </div>
 
-                  {/* Scheduling Section */}
-                  <div className="pt-2">
-                    <p className="text-[11px] font-bold text-muted-text uppercase tracking-widest mb-3 pl-0.5 opacity-50">Schedule</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="recurring" className="text-xs text-muted-foreground">Frequency</Label>
+                    <Select value={formData.recurring} onValueChange={(val: any) => updateFormField('recurring', val)}>
+                      <SelectTrigger id="recurring" className="h-10 text-body bg-muted/5 border-border/50">
+                        <SelectValue placeholder="Frequency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">One-time</SelectItem>
+                        <SelectItem value="daily">Daily</SelectItem>
+                        <SelectItem value="weekly">Weekly</SelectItem>
+                        <SelectItem value="monthly">Monthly</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {formData.recurring !== 'none' && (
+                    <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-1">
+                      {formData.recurring === 'weekly' && (
+                        <div className="flex flex-col gap-2">
+                          <Label className="text-xs text-muted-foreground">Repeat on day</Label>
+                          <Select value={formData.recurringDay.toString()} onValueChange={(val) => updateFormField('recurringDay', parseInt(val))}>
+                            <SelectTrigger className="h-10 text-body bg-background border-border/50">
+                              <SelectValue placeholder="Select day" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="0">Sunday</SelectItem>
+                              <SelectItem value="1">Monday</SelectItem>
+                              <SelectItem value="2">Tuesday</SelectItem>
+                              <SelectItem value="3">Wednesday</SelectItem>
+                              <SelectItem value="4">Thursday</SelectItem>
+                              <SelectItem value="5">Friday</SelectItem>
+                              <SelectItem value="6">Saturday</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+
+                      {formData.recurring === 'monthly' && (
+                        <div className="flex flex-col gap-2">
+                          <Label className="text-xs text-muted-foreground">Repeat on date</Label>
+                          <Select value={formData.recurringDay.toString()} onValueChange={(val) => updateFormField('recurringDay', parseInt(val))}>
+                            <SelectTrigger className="h-10 text-body bg-background border-border/50">
+                              <SelectValue placeholder="Select date" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                                <SelectItem key={day} value={day.toString()}>Day {day}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
+
                       <div className="flex flex-col gap-2">
-                        <Label className="text-[13px] font-medium text-heading pl-0.5">Start Date</Label>
+                        <Label className="text-xs text-muted-foreground">Repeat until</Label>
                         <Popover>
                           <PopoverTrigger asChild>
-                            <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !scheduledDate && "text-muted-text")}>
+                            <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-background", !formData.repeatUntil && "text-muted-text")}>
                               <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
-                              {scheduledDate ? format(scheduledDate, "PPP") : "Pick a date"}
+                              {formData.repeatUntil ? format(formData.repeatUntil, "PPP") : "Pick a date"}
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
-                            <Calendar mode="single" selected={scheduledDate} onSelect={(date: any) => {
-                              setScheduledDate(date);
-                              if (date && (!deadline || date > deadline)) {
-                                const newDeadline = new Date(date);
-                                newDeadline.setHours(23, 59, 59);
-                                setDeadline(newDeadline);
-                              }
-                            }} initialFocus />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <Label className="text-[13px] font-medium text-heading pl-0.5">Deadline</Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !deadline && "text-muted-text")}>
-                              <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
-                              {deadline ? format(deadline, "PPP") : "Pick a date"}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="end">
-                            <Calendar mode="single" selected={deadline} onSelect={setDeadline} disabled={(date: any) => scheduledDate ? date < scheduledDate : false} initialFocus />
+                            <Calendar mode="single" selected={formData.repeatUntil} onSelect={(date) => updateFormField('repeatUntil', date)} disabled={(date: any) => formData.scheduledDate ? date < formData.scheduledDate : false} initialFocus />
                           </PopoverContent>
                         </Popover>
                       </div>
                     </div>
-                  </div>
+                  )}
 
-                  {/* Configuration Section */}
-                  <div className="grid grid-cols-1 gap-3">
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-muted/5 border border-border/40 group hover:border-primary/20 transition-colors">
-                      <div className="flex flex-col gap-1">
-                        <Label className="text-[14px] font-semibold text-heading">Surprise Audit</Label>
-                        <p className="text-[12px] text-muted-text/70 font-normal leading-tight">Branch won't be notified until the start date.</p>
-                      </div>
-                      <Switch checked={isSurprise} onCheckedChange={setIsSurprise} />
-                    </div>
-
-                    <div className="p-4 rounded-xl bg-muted/5 border border-border/40 space-y-4 group hover:border-primary/20 transition-colors">
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-col gap-1">
-                          <Label className="text-[14px] font-semibold text-heading">Automated Recurring</Label>
-                          <p className="text-[12px] text-muted-text/70 font-normal leading-tight">Regenerate instances automatically.</p>
-                        </div>
-                        <Select value={recurring} onValueChange={(val: any) => setRecurring(val)}>
-                          <SelectTrigger className="h-9 w-[150px] text-[13px] bg-background border-border/50">
-                            <SelectValue placeholder="Frequency" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="none">One-time</SelectItem>
-                            <SelectItem value="daily">Daily</SelectItem>
-                            <SelectItem value="weekly">Weekly</SelectItem>
-                            <SelectItem value="monthly">Monthly</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      {recurring !== 'none' && (
-                        <div className="pt-3 border-t border-border/30 animate-in fade-in slide-in-from-top-1">
-                          {recurring === 'weekly' && (
-                            <div className="flex flex-col gap-2">
-                              <Label className="text-[12px] font-semibold text-muted-text/80">Repeat on Day</Label>
-                              <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
-                                <SelectTrigger className="h-10 text-body bg-background border-border/50">
-                                  <SelectValue placeholder="Select day" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="0">Sunday</SelectItem>
-                                  <SelectItem value="1">Monday</SelectItem>
-                                  <SelectItem value="2">Tuesday</SelectItem>
-                                  <SelectItem value="3">Wednesday</SelectItem>
-                                  <SelectItem value="4">Thursday</SelectItem>
-                                  <SelectItem value="5">Friday</SelectItem>
-                                  <SelectItem value="6">Saturday</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          )}
-
-                          {recurring === 'monthly' && (
-                            <div className="flex flex-col gap-2">
-                              <Label className="text-[12px] font-semibold text-muted-text/80">Repeat on Date</Label>
-                              <Select value={recurringDay.toString()} onValueChange={(val) => setRecurringDay(parseInt(val))}>
-                                <SelectTrigger className="h-10 text-body bg-background border-border/50">
-                                  <SelectValue placeholder="Select date" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
-                                    <SelectItem key={day} value={day.toString()}>Day {day}</SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          )}
-
-                          <div className="flex flex-col gap-2 pt-3">
-                            <Label className="text-[12px] font-semibold text-muted-text/80">Repeat Until</Label>
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-background", !repeatUntil && "text-muted-text")}>
-                                  <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
-                                  {repeatUntil ? format(repeatUntil, "PPP") : "Pick a date"}
-                                </Button>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
-                                <Calendar mode="single" selected={repeatUntil} onSelect={setRepeatUntil} disabled={(date: any) => scheduledDate ? date < scheduledDate : false} initialFocus />
-                              </PopoverContent>
-                            </Popover>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                  <div className="flex items-center justify-between py-2 border-t border-border/50">
+                    <Label htmlFor="isSurprise" className="text-sm font-medium">Surprise audit</Label>
+                    <Switch id="isSurprise" checked={formData.isSurprise} onCheckedChange={(val) => updateFormField('isSurprise', val)} />
                   </div>
                 </div>
 
-                <DialogFooter className="px-6 py-4 bg-muted/10 border-t border-border/50 gap-3">
-                  <Button variant="ghost" onClick={() => setOpen(false)} className="font-medium h-10 px-4 text-muted-text hover:text-heading">
-                    Cancel
-                  </Button>
+                <DialogFooter className="gap-2">
+                  <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
                   <Button
                     onClick={handlePublish}
-                    disabled={loading || !selectedTemplate || !selectedLocation || !selectedManager || !scheduledDate || !deadline}
-                    className="font-semibold h-10 px-6 gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-all text-[14px]"
+                    disabled={loading || !formData.templateId || !formData.locationId || !formData.managerId || !formData.scheduledDate || !formData.deadline}
                   >
-                    {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-                    {editingAuditId ? 'Save Changes' : 'Publish Audit'}
+                    {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                    {editingAuditId ? 'Save changes' : 'Publish audit'}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -663,14 +672,17 @@ export default function AdminAuditsPage() {
                               className="rounded-lg h-10 font-medium cursor-pointer focus:bg-primary/5 focus:text-primary transition-all text-body"
                               onClick={() => {
                                 setEditingAuditId(a.id);
-                                setSelectedTemplate(a.templateId);
-                                setSelectedLocation(a.locationId);
-                                setSelectedManager(a.assignedManagerId || '');
-                                setScheduledDate(a.scheduledDate?.toDate());
-                                setDeadline(a.deadline?.toDate());
-                                setIsSurprise(a.isSurprise || false);
-                                setRecurring(a.recurring || 'none');
-                                setRecurringDay(a.recurringDay || 1);
+                                setFormData({
+                                  templateId: a.templateId,
+                                  locationId: a.locationId,
+                                  managerId: a.assignedManagerId || '',
+                                  scheduledDate: a.scheduledDate?.toDate(),
+                                  deadline: a.deadline?.toDate(),
+                                  isSurprise: a.isSurprise || false,
+                                  recurring: a.recurring || 'none',
+                                  recurringDay: a.recurringDay || 1,
+                                  repeatUntil: a.repeatUntil?.toDate() || undefined,
+                                });
                                 setOpen(true);
                               }}
                             >

@@ -100,6 +100,12 @@ export default function AdminCorrectiveActionsPage() {
       // Re-reading DATABASE.md: assignedManagerId is there, but not managerName.
       // I'll fetch manager names for better UX.
 
+      const toDate = (val: any): Date => {
+        if (!val) return new Date(0);
+        if (typeof val.toDate === 'function') return val.toDate();
+        return new Date(val);
+      };
+
       const actionsWithExtras = await Promise.all(fetched.map(async (action: any) => {
         if (!action.assignedManagerId) return action;
         const managerSnap = await getDoc(doc(db, 'users', action.assignedManagerId));
@@ -108,6 +114,25 @@ export default function AdminCorrectiveActionsPage() {
           managerName: managerSnap.exists() ? managerSnap.data().name : 'Unknown Manager'
         };
       }));
+
+      actionsWithExtras.sort((a, b) => {
+        // 1. Deadline (closest first)
+        const deadA = toDate(a.deadline).getTime();
+        const deadB = toDate(b.deadline).getTime();
+        if (deadA !== deadB) return deadA - deadB;
+
+        // 2. Priority (Critical first)
+        const prioMap: any = { critical: 0, medium: 1, low: 2 };
+        const prioA = prioMap[a.severity] ?? 99;
+        const prioB = prioMap[b.severity] ?? 99;
+        if (prioA !== prioB) return prioA - prioB;
+
+        // 3. Status (Open first)
+        const statusMap: any = { open: 0, in_progress: 1, completed: 2, resolved: 3 };
+        const statusA = statusMap[a.status] ?? 99;
+        const statusB = statusMap[b.status] ?? 99;
+        return statusA - statusB;
+      });
 
       setActions(actionsWithExtras);
       setLoading(false);

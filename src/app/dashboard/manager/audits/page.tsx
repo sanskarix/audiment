@@ -98,10 +98,23 @@ export default function ManagerAuditsPage() {
         fetchedAudits = fallbackSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
       }
 
+      const toDate = (val: any): Date => {
+        if (!val) return new Date(0);
+        if (typeof val.toDate === 'function') return val.toDate();
+        return new Date(val);
+      };
+
       fetchedAudits.sort((a, b: any) => {
-        const dateA = a.scheduledDate?.toMillis() || 0;
-        const dateB = b.scheduledDate?.toMillis() || 0;
-        return dateA - dateB; // earliest first
+        // 1. Deadline (closest first)
+        const deadA = toDate(a.deadline).getTime();
+        const deadB = toDate(b.deadline).getTime();
+        if (deadA !== deadB) return deadA - deadB;
+
+        // 2. Status (Pending/Missed first)
+        const statusMap: any = { missed: 0, published: 1, assigned: 1, in_progress: 2, completed: 3 };
+        const statusA = statusMap[a.status] ?? 99;
+        const statusB = statusMap[b.status] ?? 99;
+        return statusA - statusB;
       });
       setAudits(fetchedAudits);
 
@@ -221,7 +234,7 @@ export default function ManagerAuditsPage() {
       case 'assigned':
         return <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">Assigned</Badge>;
       case 'in_progress':
-        return <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">In Progress</Badge>;
+        return <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">In progress</Badge>;
       case 'completed':
         return <Badge variant="secondary" className="h-6 rounded-full bg-success/10 text-success border-none px-2.5 text-[12px] font-normal">Completed</Badge>;
       case 'missed':
@@ -260,7 +273,7 @@ export default function ManagerAuditsPage() {
                 className="h-11 px-4 gap-2 font-medium text-xs bg-primary text-white shadow-lg shadow-primary/20 hover:scale-105 transition-all"
                 onClick={() => setBulkDialogOpen(true)}
               >
-                <UserPlus className="h-4 w-4" /> Bulk Assign ({selectedAuditIds.length})
+                <UserPlus className="h-4 w-4" /> Bulk assign ({selectedAuditIds.length})
               </Button>
             )}
             {(statusFilter !== 'all' || assigneeFilter !== 'all') && (
@@ -284,16 +297,16 @@ export default function ManagerAuditsPage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Status</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By status</DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={statusFilter} onValueChange={setStatusFilter}>
                   <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="published" className="text-body cursor-pointer">Published</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="assigned" className="text-body cursor-pointer">Assigned</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="in_progress" className="text-body cursor-pointer">In Progress</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="in_progress" className="text-body cursor-pointer">In progress</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="completed" className="text-body cursor-pointer">Completed</DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Assignee</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By assignee</DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={assigneeFilter} onValueChange={setAssigneeFilter}>
                   <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="unassigned" className="text-body cursor-pointer italic text-muted-text/60">Unassigned</DropdownMenuRadioItem>
@@ -401,23 +414,23 @@ export default function ManagerAuditsPage() {
                             }
                           }}>
                             <DialogTrigger asChild>
-                              <Button variant="outline" size="sm" className="h-8 text-xs font-normal border-border/50 text-muted-text hover:text-primary transition-all" onClick={() => {
+                              <Button variant="default" size="sm" className="h-8 text-xs font-medium shadow-sm transition-all" onClick={() => {
                                 setSelectedAudit(a);
                                 setOpen(true);
                               }}>
-                                <UserPlus className="h-3.5 w-3.5 mr-1" /> Assign
+                                <UserPlus className="h-3.5 w-3.5 mr-1.5" /> Assign auditor
                               </Button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[450px]">
                               <DialogHeader>
-                                <DialogTitle className="font-semibold text-heading">Assign Auditor</DialogTitle>
+                                <DialogTitle className="font-semibold text-heading">Assign auditor</DialogTitle>
                                 <DialogDescription className="text-muted-text text-sm">
                                   Assigning <strong className="text-heading font-medium">{a.templateTitle}</strong> to {a.locationName}
                                 </DialogDescription>
                               </DialogHeader>
                               <div className="space-y-4 py-4">
                                 <div className="space-y-2">
-                                  <Label className="text-body font-normal">Select Auditor</Label>
+                                  <Label className="text-body font-normal">Select auditor</Label>
                                   <Select value={selectedAuditor} onValueChange={setSelectedAuditor}>
                                     <SelectTrigger className="h-10 text-body bg-background border-border/50">
                                       <SelectValue placeholder="Choose an auditor" />
@@ -442,7 +455,7 @@ export default function ManagerAuditsPage() {
                         )}
                         {a.status === 'completed' && (
                           <Button size="sm" variant="ghost" className="h-8 text-[11px] font-normal text-muted-text hover:text-primary">
-                            Review Report
+                            Review report
                           </Button>
                         )}
                       </TableCell>
@@ -457,14 +470,14 @@ export default function ManagerAuditsPage() {
         <Dialog open={bulkDialogOpen} onOpenChange={setBulkDialogOpen}>
           <DialogContent className="sm:max-w-[450px]">
             <DialogHeader>
-              <DialogTitle className="font-semibold text-heading">Bulk Assign Audits</DialogTitle>
+              <DialogTitle className="font-semibold text-heading">Bulk assign audits</DialogTitle>
               <DialogDescription className="text-muted-text text-sm">
                 Assign <strong className="text-heading font-medium">{selectedAuditIds.length}</strong> audits to a single auditor.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label className="text-body font-normal">Select Auditor</Label>
+                <Label className="text-body font-normal">Select auditor</Label>
                 <Select value={bulkAuditor} onValueChange={setBulkAuditor}>
                   <SelectTrigger className="h-10 text-body bg-background border-border/50">
                     <SelectValue placeholder="Choose an auditor" />
@@ -481,7 +494,7 @@ export default function ManagerAuditsPage() {
               <Button variant="outline" onClick={() => setBulkDialogOpen(false)} className="font-normal text-sm">Cancel</Button>
               <Button onClick={handleBulkAssign} disabled={loading || !bulkAuditor} className="font-normal text-sm">
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Bulk Assign
+                Bulk assign
               </Button>
             </DialogFooter>
           </DialogContent>

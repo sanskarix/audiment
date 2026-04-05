@@ -153,7 +153,7 @@ export default function ManagerCalendarPage() {
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <div className="px-4 min-w-[140px] text-center">
-              <h2 className="text-[12px] font-semibold tracking-widest text-muted-text lowercase">
+              <h2 className="text-[14px] font-semibold text-heading">
                 {format(currentMonth, 'MMMM yyyy')}
               </h2>
             </div>
@@ -172,7 +172,7 @@ export default function ManagerCalendarPage() {
           <CardContent className="p-0 overflow-hidden">
             <div className="grid grid-cols-7 border-b border-border/50 bg-muted/10">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                <div key={day} className="py-3 text-center text-[10px] font-bold tracking-widest text-muted-text lowercase">
+                <div key={day} className="py-3 text-center text-[11px] font-medium text-muted-text">
                   {day}
                 </div>
               ))}
@@ -257,10 +257,10 @@ export default function ManagerCalendarPage() {
                                 </div>
                                 <div className="flex items-center gap-1 mt-1">
                                   <div className={cn(
-                                    "text-[9px] px-1.5 py-0.5 rounded-md font-bold lowercase tracking-wider",
+                                    "text-[9px] px-1.5 py-0.5 rounded-md font-bold",
                                     event.status === 'in_progress' ? "bg-primary/10 text-primary" : "bg-muted/10 text-muted-text"
                                   )}>
-                                    {event.status.replace('_', ' ')}
+                                    {event.status === 'in_progress' ? 'In progress' : event.status.charAt(0).toUpperCase() + event.status.slice(1).replace('_', ' ')}
                                   </div>
                                 </div>
                               </div>

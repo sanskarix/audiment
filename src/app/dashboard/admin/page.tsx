@@ -11,7 +11,9 @@ import {
   orderBy,
   limit,
   Timestamp,
-  onSnapshot
+  onSnapshot,
+  doc,
+  updateDoc
 } from 'firebase/firestore';
 import Link from 'next/link';
 import {
@@ -28,7 +30,8 @@ import {
   ClipboardList,
   TrendingUp,
   MapPin,
-  Clock
+  Clock,
+  X
 } from 'lucide-react';
 import {
   BarChart,
@@ -55,6 +58,7 @@ interface DashboardStats {
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [trendAlerts, setTrendAlerts] = useState<any[]>([]);
 
   useEffect(() => {
     async function fetchDashboardData() {
@@ -142,21 +146,46 @@ export default function AdminDashboardPage() {
 
     fetchDashboardData();
 
-    // Block 9: Real-time corrective context
+    // Trend Alerts and Corrective Actions Real-time Listeners
     const match = document.cookie.match(/audiment_session=([^;]+)/);
-    const session = match ? JSON.parse(decodeURIComponent(match[1])) : null;
-    if (session?.organizationId) {
-      const q = query(
+    const sessionDoc = match ? JSON.parse(decodeURIComponent(match[1])) : null;
+    
+    if (sessionDoc?.organizationId) {
+      // Corrective Actions count
+      const caQuery = query(
         collection(db, 'correctiveActions'),
-        where('organizationId', '==', session.organizationId),
+        where('organizationId', '==', sessionDoc.organizationId),
         where('status', 'in', ['open', 'in_progress'])
       );
-      const unsubscribe = onSnapshot(q, (snap) => {
+      const unsubscribeCA = onSnapshot(caQuery, (snap) => {
         setStats(prev => prev ? { ...prev, openCorrectiveActions: snap.size } : prev);
       });
-      return () => unsubscribe();
+
+      // Trend Alerts
+      const trendQuery = query(
+        collection(db, 'notifications'),
+        where('organizationId', '==', sessionDoc.organizationId),
+        where('type', '==', 'trend_alert'),
+        where('isRead', '==', false)
+      );
+      const unsubscribeTrend = onSnapshot(trendQuery, (snap) => {
+        setTrendAlerts(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      });
+
+      return () => {
+        unsubscribeCA();
+        unsubscribeTrend();
+      };
     }
   }, []);
+
+  const handleDismissAlert = async (id: string) => {
+    try {
+      await updateDoc(doc(db, 'notifications', id), { isRead: true });
+    } catch (error) {
+      console.error('Error dismissing trend alert:', error);
+    }
+  };
 
   if (loading) {
     return (
@@ -185,9 +214,42 @@ export default function AdminDashboardPage() {
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
             <h1 className="page-heading">Overview</h1>
-            <p className="body-text text-muted-text">View key metrics and statistics accross your branches.</p>
+            <p className="body-text text-muted-text">View key metrics and statistics across your branches.</p>
           </div>
         </div>
+
+        {/* Trend Alert Banners */}
+        {trendAlerts.length > 0 && (
+          <div className="flex flex-col gap-3 mb-6">
+            {trendAlerts.map((alert) => (
+              <div 
+                key={alert.id}
+                className="flex items-center justify-between p-4 rounded-lg border bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-200 transition-all animate-in fade-in slide-in-from-top-4"
+              >
+                <div className="flex items-center gap-3">
+                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium">
+                    Performance Alert — {alert.locationName || 'Location'} has scored below threshold on 3 consecutive audits.
+                  </span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Link 
+                    href="/dashboard/admin/reports" 
+                    className="text-sm font-semibold hover:underline"
+                  >
+                    View reports
+                  </Link>
+                  <button 
+                    onClick={() => handleDismissAlert(alert.id)}
+                    className="p-1 hover:bg-amber-200/50 dark:hover:bg-amber-800/50 rounded-md transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -204,7 +266,7 @@ export default function AdminDashboardPage() {
 
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Completion Rate</p>
+              <p className="section-heading">Completion rate</p>
               <CheckCircle2 className="h-4 w-4 text-success/40 transition-colors" />
             </div>
             <div>

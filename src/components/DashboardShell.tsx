@@ -65,11 +65,11 @@ const NAV_ITEMS = {
     { title: 'Audits', icon: CheckSquare, href: '/dashboard/manager/audits' },
     { title: 'Calendar', icon: Calendar, href: '/dashboard/manager/calendar' },
     { title: 'Auditors', icon: Users, href: '/dashboard/manager/auditors' },
-    { title: 'Corrective Actions', icon: ClipboardList, href: '/dashboard/manager/corrective-actions' },
+    { title: 'Corrective actions', icon: ClipboardList, href: '/dashboard/manager/corrective-actions' },
     { title: 'Reports', icon: BarChart, href: '/dashboard/manager/reports' },
   ],
   Auditor: [
-    { title: 'My Audits', icon: CheckSquare, href: '/dashboard/auditor' },
+    { title: 'My audits', icon: CheckSquare, href: '/dashboard/auditor' },
     { title: 'History', icon: HistoryIcon, href: '/dashboard/auditor/history' },
     { title: 'Flashmob', icon: Video, href: '/dashboard/auditor/flashmob' },
   ],
@@ -178,7 +178,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                         </Avatar>
                         <div className="flex flex-col gap-0.5 leading-none overflow-hidden text-left ml-2">
                           <span className="font-medium truncate text-sm text-body">{userState?.name || 'Loading...'}</span>
-                          <span className="text-[10px] font-medium tracking-wider text-muted-text/50 truncate">{role}</span>
+                          <span className="text-[10px] font-medium text-muted-text/50 truncate">{role}</span>
                         </div>
                         <ChevronUp className="ml-auto h-4 w-4 shrink-0 opacity-50" />
                       </SidebarMenuButton>
@@ -207,7 +207,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                           <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                           <Moon className="absolute h-4 w-4 rotate-0 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                         </div>
-                        <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+                        <span>{theme === 'light' ? 'Dark mode' : 'Light mode'}</span>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 cursor-pointer font-medium">
@@ -274,7 +274,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                     <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                     <Moon className="absolute h-4 w-4 rotate-0 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                   </div>
-                  <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+                  <span>{theme === 'light' ? 'Dark mode' : 'Light mode'}</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 cursor-pointer font-medium">

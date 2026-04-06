@@ -450,8 +450,8 @@ export default function FlashmobAuditPage() {
               <Button
                 className="w-full h-12 font-semibold rounded-xl"
                 disabled={!selectedLocation || selectedLocation === 'none'}
-                onClick={() => { 
-                  setStep('video'); 
+                onClick={() => {
+                  setStep('video');
                 }}
               >
                 Continue to Recording <ChevronRight className="ml-2 h-4 w-4" />
@@ -475,7 +475,7 @@ export default function FlashmobAuditPage() {
               </div>
             </div>
             <CardContent className="p-6 space-y-6">
-              {/* Viewfinder — callback ref attaches stream the moment this element mounts */}
+              {/* Viewfinder – callback ref attaches stream the moment this element mounts */}
               <div className="relative aspect-video bg-black rounded-2xl overflow-hidden border border-border/50 ring-1 ring-border/20 shadow-2xl">
                 <video
                   ref={recordingVideoCallbackRef}
@@ -491,7 +491,7 @@ export default function FlashmobAuditPage() {
                     <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
                     <span className="text-[10px] font-bold text-white uppercase tracking-widest leading-none">Live Feed</span>
                   </div>
-                  
+
                   <div className={cn(
                     "flex items-center gap-2 px-3 py-1.5 rounded-lg backdrop-blur-md border text-xs font-bold tabular-nums transition-all duration-300",
                     recording
@@ -520,7 +520,7 @@ export default function FlashmobAuditPage() {
                   >
                     <div className="absolute inset-0 rounded-full border-4 border-muted/20 scale-100 group-hover:scale-110 transition-transform" />
                     <div className="h-16 w-16 rounded-full bg-destructive flex items-center justify-center shadow-xl shadow-destructive/20 ring-4 ring-background">
-                       <div className="h-6 w-6 rounded-full bg-white opacity-90 group-hover:scale-110 transition-transform" />
+                      <div className="h-6 w-6 rounded-full bg-white opacity-90 group-hover:scale-110 transition-transform" />
                     </div>
                   </button>
                 ) : (
@@ -530,7 +530,7 @@ export default function FlashmobAuditPage() {
                   >
                     <div className="absolute inset-0 rounded-full border-4 border-destructive/20 animate-ping opacity-25" />
                     <div className="h-16 w-16 rounded-full bg-background border-2 border-destructive flex items-center justify-center shadow-xl shadow-destructive/10 ring-4 ring-background">
-                       <StopCircle className="h-8 w-8 text-destructive fill-destructive" />
+                      <StopCircle className="h-8 w-8 text-destructive fill-destructive" />
                     </div>
                   </button>
                 )}
@@ -568,18 +568,18 @@ export default function FlashmobAuditPage() {
                 <Button
                   variant="outline"
                   className="h-12 font-semibold rounded-xl border-border/50 text-muted-text hover:text-destructive hover:border-destructive/30 hover:bg-destructive/5 transition-all"
-                  onClick={() => { 
-                    setVideoUrl(null); 
-                    setVideoBlob(null); 
-                    setStep('video'); 
+                  onClick={() => {
+                    setVideoUrl(null);
+                    setVideoBlob(null);
+                    setStep('video');
                   }}
                 >
                   <RefreshCw className="mr-2 h-4 w-4" /> Retake
                 </Button>
                 <Button
                   className="h-12 font-semibold rounded-xl"
-                  onClick={() => { 
-                    setStep('selfie'); 
+                  onClick={() => {
+                    setStep('selfie');
                   }}
                 >
                   Looks Good <ChevronRight className="ml-2 h-4 w-4" />
@@ -602,7 +602,7 @@ export default function FlashmobAuditPage() {
               </div>
             </div>
             <CardContent className="p-6 space-y-6">
-              {/* Circular viewfinder — callback ref attaches stream the moment this element mounts */}
+              {/* Circular viewfinder – callback ref attaches stream the moment this element mounts */}
               <div className="flex flex-col items-center gap-5">
                 <div className="relative">
                   <div className="h-56 w-56 rounded-full overflow-hidden border-4 border-primary/20 shadow-xl bg-black">

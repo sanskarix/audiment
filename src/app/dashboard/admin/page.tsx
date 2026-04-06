@@ -142,7 +142,7 @@ export default function AdminDashboardPage() {
     // Trend Alerts and Corrective Actions Real-time Listeners
     const match = document.cookie.match(/audiment_session=([^;]+)/);
     const sessionDoc = match ? JSON.parse(decodeURIComponent(match[1])) : null;
-    
+
     if (sessionDoc?.organizationId) {
       // Corrective Actions count
       const caQuery = query(
@@ -215,24 +215,24 @@ export default function AdminDashboardPage() {
         {trendAlerts.length > 0 && (
           <div className="flex flex-col gap-3 mb-6">
             {trendAlerts.map((alert) => (
-              <div 
+              <div
                 key={alert.id}
                 className="flex items-center justify-between p-4 rounded-lg border bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-200 transition-all animate-in fade-in slide-in-from-top-4"
               >
                 <div className="flex items-center gap-3">
                   <AlertCircle className="w-5 h-5 flex-shrink-0" />
                   <span className="text-sm font-medium">
-                    Performance Alert — {alert.locationName || 'Location'} has scored below threshold on 3 consecutive audits.
+                    Performance Alert – {alert.locationName || 'Location'} has scored below threshold on 3 consecutive audits.
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <Link 
-                    href="/dashboard/admin/reports" 
+                  <Link
+                    href="/dashboard/admin/reports"
                     className="text-sm font-semibold hover:underline"
                   >
                     View reports
                   </Link>
-                  <button 
+                  <button
                     onClick={() => handleDismissAlert(alert.id)}
                     className="p-1 hover:bg-amber-200/50 dark:hover:bg-amber-800/50 rounded-md transition-colors"
                   >

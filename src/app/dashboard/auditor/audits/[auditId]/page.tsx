@@ -126,7 +126,7 @@ export default function AuditExecutionPage() {
           return;
         }
         const auditData = auditSnap.data();
-        
+
         // BUG 6: Auditor schedule lock
         const now = new Date();
         const sched = auditData.scheduledDate?.toDate() || new Date(0);
@@ -259,7 +259,7 @@ export default function AuditExecutionPage() {
   }, []);
 
   const cameraVideoCallbackRef = useCallback((videoEl: HTMLVideoElement | null) => {
-    // Always keep cameraVideoRef in sync — capturePhoto reads from it
+    // Always keep cameraVideoRef in sync – capturePhoto reads from it
     cameraVideoRef.current = videoEl;
     if (!videoEl) return;
     const attach = async () => {
@@ -357,7 +357,7 @@ export default function AuditExecutionPage() {
         resolve({ latitude: 0, longitude: 0, locationCaptured: false });
         return;
       }
-      
+
       const timeout = setTimeout(() => {
         resolve({ latitude: 0, longitude: 0, locationCaptured: false });
       }, 8000);
@@ -470,7 +470,7 @@ export default function AuditExecutionPage() {
 
         // New geolocation logic
         const location = await getLocation();
-        
+
         updateData.latitude = location.latitude;
         updateData.longitude = location.longitude;
         updateData.locationCaptured = location.locationCaptured;
@@ -805,7 +805,7 @@ export default function AuditExecutionPage() {
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 sm:gap-0">
             <AlertDialogCancel className="font-medium h-11">Continue Auditing</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={() => {
                 setShowExitDialog(false);
                 router.push('/dashboard/auditor');
@@ -814,7 +814,7 @@ export default function AuditExecutionPage() {
             >
               Exit Without Saving
             </AlertDialogAction>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={() => {
                 setShowExitDialog(false);
                 saveProgress(false).then(() => router.push('/dashboard/auditor'));

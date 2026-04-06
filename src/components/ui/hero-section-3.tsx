@@ -35,7 +35,7 @@ export function HeroSection() {
             <HeroHeader />
 
             <main className="overflow-hidden">
-                <section>
+                <section id="hero">
                     <div className="relative mx-auto max-w-7xl px-6 pt-32 lg:pb-16 lg:pt-48">
                         <div className="relative z-10 mx-auto max-w-6xl text-center">
                             <AnimatedGroup
@@ -53,23 +53,23 @@ export function HeroSection() {
                             >
                                 <h1
                                     className="text-balance text-5xl font-semibold sm:text-6xl md:text-7xl tracking-tight leading-[1.1]">
-                                    Audit Management Software<br />
-                                    <span className="text-neutral-400">Built for Multi-Location Compliance</span>
+                                    Audit management software<br />
+                                    <span className="text-neutral-400">for every location you run</span>
                                 </h1>
 
-                                <p className="mx-auto mt-6 max-w-5xl text-pretty text-xl text-neutral-600">
-                                    One platform for audits, evidence capture, corrective actions, and real-time compliance across every location – replacing paper checklists, WhatsApp photos, and Excel trackers for good.
+                                <p className="mx-auto mt-6 max-w-5xl text-pretty text-lg text-neutral-600">
+                                    Run audits across every branch. Enforce photo evidence, track corrective actions, and monitor scores – all in one place.
                                 </p>
 
                                 <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
                                     <Button asChild size="lg" className="rounded-full px-8 h-12 text-base">
-                                        <Link href="#contact">Book a Call</Link>
+                                        <Link href="#contact">Book a call</Link>
                                     </Button>
                                     <Button asChild size="lg" variant="outline" className="rounded-full px-8 h-12 text-base">
-                                        <Link href="#demo">See It In Action</Link>
+                                        <Link href="#contact">See it in action</Link>
                                     </Button>
                                 </div>
-                                <p className="mt-6 text-sm text-neutral-500">Built for restaurant chains, retail brands, hotels, and any business running multiple locations.</p>
+                                <span className="sr-only">Built for restaurant chains, retail brands, hotel groups, franchise operations, and multi-location businesses across India and globally.</span>
 
                                 <div
                                     aria-hidden
@@ -143,8 +143,8 @@ const AppComponent = () => {
 
 const menuItems = [
     { name: 'Features', href: '#features' },
-    { name: 'How It Works', href: '#how-it-works' },
-    { name: 'Use Cases', href: '#use-cases' },
+    { name: 'How it works', href: '#how-it-works' },
+    { name: 'Use cases', href: '#use-cases' },
     { name: 'Pricing', href: '#pricing' },
 ]
 
@@ -226,7 +226,7 @@ const HeroHeader = () => {
                                     size="sm"
                                     className={cn(isScrolled && 'lg:hidden')}>
                                     <Link href="#contact">
-                                        <span>Book a Call</span>
+                                        <span>Book a call</span>
                                     </Link>
                                 </Button>
                                 <Button
@@ -234,7 +234,7 @@ const HeroHeader = () => {
                                     size="sm"
                                     className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
                                     <Link href="#contact">
-                                        <span>Book a Call</span>
+                                        <span>Book a call</span>
                                     </Link>
                                 </Button>
                             </div>

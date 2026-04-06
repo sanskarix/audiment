@@ -160,7 +160,7 @@ Status: NOT STARTED
 ---
 
 ## Block 13 – Landing Page
-Status: NOT STARTED
+Status: COMPLETE
 
 - Public marketing page for Audiment
 - Sections: hero, problem, solution, features, pricing, CTA

@@ -167,12 +167,6 @@ const TestimonialsSection = () => {
         className="container px-4 z-10 mx-auto"
       >
         <div className="flex flex-col items-center justify-center max-w-[540px] mx-auto mb-16">
-          <div className="flex justify-center">
-            <div className="border border-neutral-200 py-1 px-4 rounded-full text-xs font-semibold tracking-wide uppercase text-neutral-500 bg-neutral-50 transition-colors">
-              Client Testimonials
-            </div>
-          </div>
-
           <h2 id="testimonials-heading" className="text-4xl md:text-5xl font-semibold tracking-tight mt-6 text-center text-neutral-900 transition-colors">
             Operations leaders
             <span className="text-neutral-400"> trust Audiment</span>

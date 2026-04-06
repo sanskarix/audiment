@@ -24,12 +24,9 @@ const OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: {
-    default: "Audiment – Audit Management Software for Multi-Location Compliance",
-    template: "%s | Audiment",
-  },
+  title: "Audiment – Audit Management Software for Multi-Location Compliance",
   description:
-    "Replace paper checklists and Excel trackers with a single platform for audits, evidence, corrective actions, and real-time compliance intelligence across every location.",
+    "Audiment is an enterprise-grade audit management platform for distributed locations. Photo evidence enforcement, automated corrective action workflows, geo-tagged field verification, real-time scoring and alerts, and role-based dashboards for admins, managers, and field auditors.",
   keywords: [
     "audit management software",
     "multi-location compliance",
@@ -49,7 +46,7 @@ export const metadata: Metadata = {
     siteName: "Audiment",
     title: "Audiment – Audit Management Software for Multi-Location Compliance",
     description:
-      "Replace paper checklists, scattered WhatsApp photos, and Excel trackers with a single platform for audits, evidence, corrective actions, and real-time compliance intelligence across every location.",
+      "Audiment is an enterprise-grade audit management platform for distributed locations. Photo evidence enforcement, automated corrective action workflows, geo-tagged field verification, real-time scoring and alerts, and role-based dashboards for admins, managers, and field auditors.",
     images: [
       {
         url: OG_IMAGE,
@@ -63,7 +60,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Audiment – Audit Management Software for Multi-Location Compliance",
     description:
-      "Replace paper checklists and Excel trackers with a single platform for audits, evidence, corrective actions, and real-time compliance intelligence.",
+      "Audiment is an enterprise-grade audit management platform for distributed locations. Photo evidence enforcement, automated corrective action workflows, geo-tagged field verification, real-time scoring and alerts, and role-based dashboards for admins, managers, and field auditors.",
     images: [OG_IMAGE],
   },
   robots: {
@@ -72,140 +69,40 @@ export const metadata: Metadata = {
   },
 };
 
-const schemaJsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "SoftwareApplication",
-      name: "Audiment",
-      applicationCategory: "BusinessApplication",
-      operatingSystem: "Web, Mobile",
-      url: SITE_URL,
-      description:
-        "Audit management software for multi-location compliance with mandatory photo evidence, corrective action tracking, FSSAI templates, geo-tagged verification, and real-time dashboards.",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-      },
-      featureList: [
-        "Photo & Video Evidence Enforcement",
-        "Automated Corrective Action Tracking",
-        "Flash Verification – Geo-tagged Audits",
-        "FSSAI-Ready Compliance Templates",
-        "One-Click PDF Audit Reports",
-        "Dashboards for Admins, Managers & Auditors",
-        "Mobile-First Audit Execution",
-        "Pattern Detection Across Locations",
-        "Scheduled & Surprise Audits",
-        "Offline Mode with Auto-Sync",
-      ],
-    },
-    {
-      "@type": "Organization",
-      name: "Audiment",
-      url: SITE_URL,
-      logo: `${SITE_URL}/logo.png`,
-      sameAs: [],
-    },
-    {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: SITE_URL,
-        },
-      ],
-    },
-    {
-      "@type": "FAQPage",
-      mainEntity: [
-        {
-          "@type": "Question",
-          name: "What is audit management software?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Audit management software is a platform for creating, executing, tracking, and analysing audits across locations. It replaces paper checklists and Excel sheets with digital workflows that enforce evidence collection, auto-calculate scores, trigger corrective actions, and generate reports.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How does Audiment ensure auditors actually visit the location?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Audiment uses Flash Verification – a mandatory 20-second live video recorded inside the app – combined with GPS geo-tagging. If the auditor is more than 50 metres from the registered branch, the audit is flagged. A selfie is also captured to prevent proxy auditing.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can I customize audit checklists?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. Admins create templates from scratch using the Blueprint builder. Set your own questions, choose severity levels (Low, Medium, Critical), require photos or videos on specific questions, and set recurrence schedules.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Does Audiment support FSSAI compliance?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. Audiment includes FSSAI-ready audit templates that can be loaded instantly. All audit records – with photos, GPS, timestamps, and corrective actions – are stored permanently for regulatory review.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How does the corrective action workflow work?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "When a question is failed, the system auto-creates a corrective action and alerts the manager. The manager must fix the issue and upload before/after photo proof within a 48-hour SLA. The admin reviews and approves or rejects before the action is closed.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Can I export audit reports as PDF?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Yes. Audiment generates high-fidelity, one-click PDF reports that include all question responses, photos, scores, corrective actions, and timestamps. Suitable for stakeholder presentations and regulatory submissions.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What industries does Audiment support?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Audiment is built for any multi-location operation: QSR & restaurant chains, retail & grocery chains, hotels & hospitality, manufacturing & warehousing, franchise operations, and food & beverage businesses requiring FSSAI compliance.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "How is Audiment different from iAuditor or generic tools?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Unlike generic tools, Audiment enforces mandatory photo evidence per question, includes Flash Verification with live geo-tagged video to confirm auditor presence, automatically creates corrective actions with a 48-hour SLA, detects declining trends across the last 3 audits, and includes FSSAI-ready templates out of the box.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "Does Audiment have a mobile app?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Audiment is a mobile-first web app – no app store download required. Open the link in any phone browser, log in, and start auditing. It also supports offline mode: complete the entire audit without internet and it syncs automatically when reconnected.",
-          },
-        },
-        {
-          "@type": "Question",
-          name: "What happens when an audit score is low?",
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: "Critical failures auto-escalate immediately and corrective actions are created. The system also monitors trends – if a location's score drops 10% or more across the last 3 audits, a tiered escalation alert is sent to the branch manager, regional manager, and owner.",
-          },
-        },
-      ],
-    },
-  ],
-};
+const schemaJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Audiment",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "description": "Enterprise-grade audit management platform for multi-location businesses with photo evidence enforcement, automated corrective actions, and real-time compliance intelligence.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Audiment",
+    "url": "https://audiment.com",
+    "description": "Audit management software for multi-location compliance"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What is audit management software?", "acceptedAnswer": { "@type": "Answer", "text": "Audit management software is a digital platform that enables businesses to create, assign, execute, and track compliance and operational audits. It replaces paper checklists with structured digital workflows that include photo evidence, scoring, corrective action tracking, and real-time reporting." } },
+      { "@type": "Question", "name": "How does Audiment ensure auditors actually visit the location?", "acceptedAnswer": { "@type": "Answer", "text": "Audiment uses Flash Verification – auditors record a 20-second video from the field combined with a geo-tagged selfie. Every audit submission is automatically stamped with GPS coordinates and a timestamp, creating tamper-proof proof of presence." } },
+      { "@type": "Question", "name": "Can I customize audit checklists for my industry?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Audiment includes a Blueprint Builder that lets admins create fully custom audit templates with questions, scoring logic, and severity levels. FSSAI-ready compliance templates are also available with one click." } },
+      { "@type": "Question", "name": "Does Audiment support FSSAI compliance audits?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Audiment includes pre-built FSSAI compliance audit templates that can be loaded with one click. Every question supports mandatory photo evidence enforcement, creating a complete audit trail for FSSAI inspections." } },
+      { "@type": "Question", "name": "How does the corrective action workflow work?", "acceptedAnswer": { "@type": "Answer", "text": "When an auditor fails a critical severity question, Audiment automatically generates a corrective action task assigned to the location manager with a 48-hour SLA. The manager must submit a resolution note and photo proof before the action can be closed." } },
+      { "@type": "Question", "name": "Can I export audit reports as PDF?", "acceptedAnswer": { "@type": "Answer", "text": "Every completed audit in Audiment can be exported as a high-fidelity PDF report that includes all questions, answers, photo evidence, scores, and corrective action status." } },
+      { "@type": "Question", "name": "What industries is Audiment built for?", "acceptedAnswer": { "@type": "Answer", "text": "Audiment is built for QSR and restaurant chains, retail chains, hotels and hospitality, franchise operations, food and beverage companies, manufacturing facilities, and facility management companies." } },
+      { "@type": "Question", "name": "How is Audiment different from iAuditor or SafetyCulture?", "acceptedAnswer": { "@type": "Answer", "text": "Audiment differentiates through mandatory photo and video evidence enforcement per question, Flash Verification with geo-tagged identity video, automated corrective action loops with 48-hour SLA, trend detection after three consecutive poor audits, and FSSAI-ready templates built for the Indian market." } },
+      { "@type": "Question", "name": "Is there a mobile app for field auditors?", "acceptedAnswer": { "@type": "Answer", "text": "Audiment is fully mobile-optimised as a progressive web application. Auditors access it through any phone browser with no installation required. The interface supports offline execution with automatic sync when connectivity returns." } },
+      { "@type": "Question", "name": "What happens when an audit score is too low?", "acceptedAnswer": { "@type": "Answer", "text": "Audiment automatically sends instant alerts to the relevant manager and admin when an audit score falls below the configured threshold. If a location scores poorly on three consecutive audits, a trend alert is triggered flagging the location as consistently underperforming." } }
+    ]
+  }
+];
 
 export default function RootLayout({
   children,

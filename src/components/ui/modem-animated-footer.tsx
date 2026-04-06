@@ -39,7 +39,7 @@ export const Footer = ({
   className,
 }: FooterProps) => {
   return (
-    <section className={cn("relative w-full mt-0 overflow-hidden", className)}>
+    <section id="footer" className={cn("relative w-full mt-0 overflow-hidden", className)}>
       <footer className="border-t bg-background mt-20 relative">
         <div className="max-w-7xl flex flex-col justify-between mx-auto min-h-[30rem] sm:min-h-[35rem] md:min-h-[40rem] relative p-4 py-10">
           <div className="flex flex-col mb-12 sm:mb-20 md:mb-0 w-full">
@@ -50,9 +50,6 @@ export const Footer = ({
                     {brandName}
                   </span>
                 </div>
-                <p className="text-muted-text font-normal text-center w-full max-w-sm sm:w-96 px-4 sm:px-0">
-                  {brandDescription}
-                </p>
               </div>
 
               {socialLinks.length > 0 && (
@@ -90,21 +87,10 @@ export const Footer = ({
             </div>
           </div>
 
-          <div className="mt-20 md:mt-24 flex flex-col gap-2 md:gap-1 items-center justify-center md:flex-row md:items-center md:justify-between px-4 md:px-0">
-            <p className="text-base font-normal text-muted-text text-center md:text-left">
-              ©{new Date().getFullYear()} {brandName}. All rights reserved.
+          <div className="mt-20 md:mt-24 flex flex-col gap-2 md:gap-1 items-center justify-center md:flex-row md:items-center md:justify-end px-4 md:px-0">
+            <p className="text-xs font-normal text-muted-text text-center md:text-right">
+              © 2026 {brandName}. All rights reserved.
             </p>
-            {creatorName && creatorUrl && (
-              <nav className="flex gap-4">
-                <Link
-                  href={creatorUrl}
-                  target="_blank"
-                  className="text-base font-normal text-muted-text hover:text-heading transition-colors duration-300 hover:font-medium"
-                >
-                  Crafted by {creatorName}
-                </Link>
-              </nav>
-            )}
           </div>
         </div>
 

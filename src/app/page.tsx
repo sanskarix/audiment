@@ -338,7 +338,7 @@ export default function Home() {
       </section>
 
       {/* ── Role-Based Architecture Section (§6) ──────────────────────────── */}
-      <section className="py-24 md:py-32 bg-white px-6 border-b border-neutral-100">
+      <section className="py-24 md:pt-32 bg-white px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-20">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-6">

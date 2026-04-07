@@ -100,19 +100,19 @@ const AnimatedHeader = () => {
   const [h2Ref, h2In] = useInView();
   const [pRef, pIn] = useInView();
   return (
-    <div className="text-center max-w-3xl mx-auto mb-20 px-6">
+    <div className="text-center max-w-4xl mx-auto mb-24 px-6">
       <h2
         ref={h2Ref}
-        className={`text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900
-          transition-all duration-700 ease-out
+        className={`text-5xl md:text-7xl font-bold tracking-tight text-neutral-950 leading-[1.05]
+          transition-all duration-700 ease-out delay-100
           ${h2In ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
       >
         Everything you need for<br />
-        <span className="text-neutral-400">compliant, auditable operations</span>
+        <span className="bg-gradient-to-r from-neutral-400 via-neutral-500 to-neutral-400 bg-clip-text text-transparent">compliant operations</span>
       </h2>
       <p
         ref={pRef}
-        className={`text-lg text-neutral-500 mt-6 transition-all duration-700 ease-out delay-150
+        className={`text-lg md:text-xl text-neutral-500/80 mt-8 transition-all duration-700 ease-out delay-200 max-w-2xl mx-auto leading-relaxed
           ${pIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
       >
         Built specifically for multi-branch businesses, every feature addresses a real gap
@@ -161,69 +161,82 @@ const FeatureCard = React.forwardRef<HTMLDivElement, FeatureCardProps>(
     return (
       <div
         ref={setRefs}
-        className="sticky rounded-3xl overflow-hidden border border-neutral-200 bg-white opacity-100 translate-y-0"
+        className="sticky rounded-[2.5rem] overflow-hidden border border-white/20 bg-white/80 backdrop-blur-2xl opacity-100 translate-y-0"
         style={{
           top: `${getStickyTop(index)}px`,
           transform: `scale(${scale})`,
           transformOrigin: 'top center',
           boxShadow: depth > 0
-            ? `0 -8px 24px rgba(0,0,0,${shadowOpacity.toFixed(3)}), 0 -1px 0 rgba(0,0,0,0.06)`
-            : 'none',
-          transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease, opacity 0.7s ease',
+            ? `0 -12px 40px -10px rgba(0,0,0,${(shadowOpacity * 1.5).toFixed(3)}), 0 -1px 0 rgba(0,0,0,0.05)`
+            : '0 20px 50px -12px rgba(0,0,0,0.05)',
+          transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.5s ease, opacity 0.7s ease',
           willChange: 'transform',
         }}
       >
         {/* Depth overlay */}
         <div
-          className="absolute inset-0 bg-neutral-900 pointer-events-none z-10 rounded-3xl"
-          style={{ opacity: overlayOpacity, transition: 'opacity 0.4s ease' }}
+          className="absolute inset-0 bg-neutral-950 pointer-events-none z-10 rounded-[2.5rem]"
+          style={{ opacity: overlayOpacity, transition: 'opacity 0.5s ease' }}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 min-h-[420px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 min-h-[460px]">
 
           {/* ── Text column ── */}
-          <div className="flex flex-col justify-center px-10 py-12 md:py-14 relative z-0">
+          <div className="flex flex-col justify-center px-12 py-14 md:py-16 relative z-0">
             <div
-              className="flex items-center gap-2.5 mb-6 transition-all duration-500 ease-out delay-100 opacity-100 translate-y-0"
+              className="flex items-center gap-3 mb-8 transition-all duration-500 ease-out delay-100 opacity-100 translate-y-0"
             >
-              <Icon className="w-4 h-4 text-neutral-400" strokeWidth={1.75} />
-              <span className="text-xs font-semibold tracking-[0.14em] uppercase text-neutral-400">
+              <div className="w-8 h-8 rounded-full bg-neutral-900/5 flex items-center justify-center border border-neutral-900/5">
+                <Icon className="w-3.5 h-3.5 text-neutral-500" strokeWidth={2} />
+              </div>
+              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-neutral-400/90 py-1 px-3 bg-neutral-900/5 rounded-full border border-neutral-900/5">
                 {feature.category}
               </span>
             </div>
 
             <h3
-              className="text-2xl md:text-3xl font-semibold text-neutral-900 tracking-tight leading-snug mb-3 transition-all duration-500 ease-out delay-150 opacity-100 translate-y-0"
+              className="text-3xl md:text-4xl font-semibold text-neutral-900 tracking-tight leading-[1.15] mb-4 transition-all duration-500 ease-out delay-150 opacity-100 translate-y-0"
             >
               {feature.title}
             </h3>
 
             <p
-              className="text-sm font-medium text-neutral-400 italic mb-5 leading-relaxed transition-all duration-500 ease-out delay-200 opacity-100 translate-y-0"
+              className="text-sm font-medium text-neutral-400 italic mb-6 leading-relaxed transition-all duration-500 ease-out delay-200 opacity-100 translate-y-0"
             >
               {feature.heading}
             </p>
 
             <p
-              className={`text-base text-neutral-500 leading-relaxed max-w-[42ch] transition-all duration-500 ease-out delay-[250ms] opacity-100 translate-y-0`}
+              className={`text-base md:text-lg text-neutral-500/90 leading-relaxed max-w-[38ch] transition-all duration-500 ease-out delay-[250ms] opacity-100 translate-y-0 font-normal`}
             >
               {feature.description}
             </p>
           </div>
 
           {/* ── Image column ── */}
-          <div
-            className="relative min-h-[260px] md:min-h-full transition-all duration-700 ease-out delay-100 opacity-100 scale-100"
-          >
-            <Image
-              src={feature.imageUrl}
-              alt={feature.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover transition-transform duration-700 hover:scale-[1.03]"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 ring-1 ring-inset ring-black/5 pointer-events-none" />
+          <div className="p-4 md:p-6 lg:p-8">
+            <div
+              className="relative h-full min-h-[300px] md:min-h-full rounded-2xl overflow-hidden transition-all duration-700 ease-out delay-100 opacity-100 scale-100 border border-neutral-200/60 bg-neutral-50 shadow-2xl shadow-neutral-900/5 group"
+            >
+              {/* Mockup Toolbar */}
+              <div className="absolute top-0 left-0 right-0 h-8 bg-neutral-100/80 backdrop-blur-md border-b border-neutral-200/60 z-20 flex items-center px-4 gap-1.5 grayscale opacity-40 group-hover:opacity-100 transition-opacity">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+              </div>
+
+              <div className="pt-8 h-full">
+                <Image
+                  src={feature.imageUrl}
+                  alt={feature.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 ring-1 ring-inset ring-black/5 pointer-events-none" />
+              </div>
+            </div>
           </div>
 
         </div>

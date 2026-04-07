@@ -444,7 +444,7 @@ H4: "Legal"
 Links: Privacy Policy / Terms of Service / Contact
 
 Bottom strip – subtle border-t:
-- Right aligned: "© 2026 Audiment. All rights reserved." in text-xs text-muted-foreground
+- Right aligned: "© copyright 2026 Audiment. All rights reserved." in text-xs text-muted-foreground
 
 Keep the large faded watermark "Audiment" text at very bottom exactly as is.
 Remove globe SVG entirely.

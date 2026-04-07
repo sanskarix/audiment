@@ -1,9 +1,6 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import {
-  NotepadTextDashed
-} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FooterLink {
@@ -29,31 +26,27 @@ interface FooterProps {
 }
 
 export const Footer = ({
-  brandName = "YourBrand",
-  brandDescription = "Your description here",
+  brandName = "Audiment",
+  brandDescription = "High-trust audit software for multi-location operations. Enforce truth and stop pencil-whipping with photo evidence and flash verification.",
   socialLinks = [],
   navLinks = [],
-  creatorName,
-  creatorUrl,
-  brandIcon,
   className,
 }: FooterProps) => {
   return (
-    <section id="footer" className={cn("relative w-full mt-0 overflow-hidden", className)}>
-      <footer className="border-t bg-background mt-20 relative">
-        <div className="max-w-7xl flex flex-col justify-between mx-auto min-h-[30rem] sm:min-h-[35rem] md:min-h-[40rem] relative p-4 py-10">
-          <div className="flex flex-col mb-12 sm:mb-20 md:mb-0 w-full">
-            <div className="w-full flex flex-col items-center">
-              <div className="space-y-2 flex flex-col items-center flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-heading text-3xl font-medium">
-                    {brandName}
-                  </span>
-                </div>
-              </div>
-
+    <section id="footer" className={cn("relative w-full overflow-hidden bg-background", className)}>
+      <footer className="border-t border-border relative pt-20 pb-12 md:pt-32 md:pb-16">
+        <div className="max-w-7xl mx-auto relative px-8 z-10 flex flex-col gap-16">
+          <div className="flex flex-row justify-between items-start text-sm text-neutral-500 w-full mb-16">
+            {/* Brand Column */}
+            <div className="flex flex-col gap-6 max-w-xs">
+              <span className="text-heading text-3xl md:text-4xl font-semibold tracking-tighter">
+                {brandName}
+              </span>
+              <p className="text-muted-text text-sm font-medium">
+                © {new Date().getFullYear()} {brandName}. All rights reserved.
+              </p>
               {socialLinks.length > 0 && (
-                <div className="flex mb-8 mt-3 gap-4">
+                <div className="flex gap-4 pt-2">
                   {socialLinks.map((link, index) => (
                     <Link
                       key={index}
@@ -62,7 +55,7 @@ export const Footer = ({
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <div className="w-6 h-6 hover:scale-110 duration-300">
+                      <div className="w-5 h-5 hover:scale-110 duration-200">
                         {link.icon}
                       </div>
                       <span className="sr-only">{link.label}</span>
@@ -70,42 +63,53 @@ export const Footer = ({
                   ))}
                 </div>
               )}
+            </div>
 
-              {navLinks.length > 0 && (
-                <div className="flex flex-wrap justify-center gap-4 text-sm font-normal text-muted-text max-w-full px-4">
-                  {navLinks.map((link, index) => (
-                    <Link
-                      key={index}
-                      className="hover:text-heading duration-300"
-                      href={link.href}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
+            {/* Links Columns */}
+            <div className="flex flex-row gap-16 md:gap-24">
+              <div className="flex flex-col gap-4">
+                <h3 className="font-medium text-heading mb-2">Platform</h3>
+                {navLinks.filter(n => ['Features', 'How it works', 'Use cases'].includes(n.label)).map((link, index) => (
+                  <Link key={index} className="hover:text-heading transition-colors duration-200" href={link.href}>
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+              <div className="flex flex-col gap-4">
+                <h3 className="font-medium text-heading mb-2">Company</h3>
+                {navLinks.filter(n => ['Blog', 'Contact'].includes(n.label)).map((link, index) => (
+                  <Link key={index} className="hover:text-heading transition-colors duration-200" href={link.href}>
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+              <div className="flex flex-col gap-4">
+                <h3 className="font-medium text-heading mb-2">Legal</h3>
+                {navLinks.filter(n => ['Privacy policy', 'Terms of service'].includes(n.label)).map((link, index) => (
+                  <Link key={index} className="hover:text-heading transition-colors duration-200" href={link.href}>
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
+        </div>
 
-          <div className="mt-20 md:mt-24 flex flex-col gap-2 md:gap-1 items-center justify-center md:flex-row md:items-center md:justify-end px-4 md:px-0">
-            <p className="text-xs font-normal text-muted-text text-center md:text-right">
-              © 2026 {brandName}. All rights reserved.
-            </p>
+        {/* Large background text */}
+        <div className="w-full flex justify-center overflow-hidden">
+          <div
+            className="bg-gradient-to-t from-foreground/20 via-foreground/10 to-transparent bg-clip-text text-transparent leading-none font-medium tracking-tighter pointer-events-none select-none text-center px-4"
+            style={{
+              fontSize: 'clamp(3rem, 16vw, 20rem)',
+              maxWidth: '95vw'
+            }}
+          >
+            {brandName.toUpperCase()}
           </div>
         </div>
 
-        {/* Large background text - FIXED */}
-        <div
-          className="bg-gradient-to-b from-foreground/20 via-foreground/10 to-transparent bg-clip-text text-transparent leading-none absolute left-1/2 -translate-x-1/2 bottom-40 md:bottom-32 font-medium tracking-tighter pointer-events-none select-none text-center px-4"
-          style={{
-            fontSize: 'clamp(3rem, 16vw, 20rem)',
-            maxWidth: '95vw'
-          }}
-        >
-          {brandName.toUpperCase()}
-        </div>
-        {/* Bottom shadow */}
-        <div className="bg-gradient-to-t from-background via-background/70 blur-[1em] to-background/40 absolute bottom-28 w-full h-24"></div>
+        {/* Bottom shadow base */}
+        <div className="bg-gradient-to-t from-background via-background/70 blur-[1em] to-background/40 absolute bottom-0 w-full h-24 z-0 pointer-events-none"></div>
       </footer>
     </section>
   );

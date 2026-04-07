@@ -1,17 +1,7 @@
 import type { NextConfig } from "next";
 import createMDX from '@next/mdx';
-import remarkGfm from 'remark-gfm';
-import remarkFrontmatter from 'remark-frontmatter';
-import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
-import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
-const withMDX = createMDX({
-  options: {
-    remarkPlugins: [remarkGfm, remarkFrontmatter, remarkMdxFrontmatter],
-    rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
-  },
-});
+const withMDX = createMDX({});
 
 const nextConfig: NextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],

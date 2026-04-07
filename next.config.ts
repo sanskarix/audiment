@@ -33,6 +33,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion', '@radix-ui/react-icons', 'recharts'],
+    mdxRs: true,
   },
 };
 

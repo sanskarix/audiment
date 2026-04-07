@@ -103,7 +103,7 @@ const AnimatedHeader = () => {
     <div className="text-center max-w-4xl mx-auto mb-24 px-6">
       <h2
         ref={h2Ref}
-        className={`text-5xl md:text-7xl font-bold tracking-tight text-neutral-950 leading-[1.05]
+        className={`text-5xl md:text-7xl font-semibold tracking-tight text-neutral-950 leading-[1.05]
           transition-all duration-700 ease-out delay-100
           ${h2In ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
       >

@@ -29,7 +29,7 @@ const transitionVariants = {
     },
 }
 
-export function HeroSection() {
+export function HeroRestaurant() {
     return (
         <>
             <HeroHeader />
@@ -53,23 +53,23 @@ export function HeroSection() {
                             >
                                 <h1
                                     className="text-balance text-5xl font-semibold sm:text-6xl md:text-7xl tracking-tight leading-[1.1]">
-                                    Audit management software<br />
-                                    <span className="text-neutral-400">for every location you run</span>
+                                    Restaurant audit software<br />
+                                    <span className="text-neutral-400">that actually proves they were there.</span>
                                 </h1>
 
                                 <p className="mx-auto mt-6 max-w-5xl text-pretty text-lg text-neutral-600">
-                                    Enforce photo evidence, verify auditor presence, and turn failed checks into automated actions across every branch.
+                                    Stop relying on pencil-whipped paper checklists. Get ground-truth visibility across every QSR location with mandatory photo evidence, geo-tagged selfies, and automated corrective actions.
                                 </p>
 
                                 <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
                                     <Button asChild size="lg" className="rounded-full px-8 h-12 text-base">
-                                        <Link href="#contact">Book a call</Link>
+                                        <Link href="/login">Start Free</Link>
                                     </Button>
                                     <Button asChild size="lg" variant="outline" className="rounded-full px-8 h-12 text-base">
-                                        <Link href="#contact">See it in action</Link>
+                                        <Link href="#contact">See a Flash Audit in Action</Link>
                                     </Button>
                                 </div>
-                                <span className="sr-only">Built for restaurant chains, retail brands, hotel groups, franchise operations, and multi-location businesses across India and globally.</span>
+                                <span className="sr-only">Restaurant audit software for QSRs and multi-unit food brands.</span>
 
                                 <div
                                     aria-hidden

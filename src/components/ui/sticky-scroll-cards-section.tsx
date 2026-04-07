@@ -161,8 +161,7 @@ const FeatureCard = React.forwardRef<HTMLDivElement, FeatureCardProps>(
     return (
       <div
         ref={setRefs}
-        className={`sticky rounded-3xl overflow-hidden border border-neutral-200 bg-white
-          ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        className="sticky rounded-3xl overflow-hidden border border-neutral-200 bg-white opacity-100 translate-y-0"
         style={{
           top: `${getStickyTop(index)}px`,
           transform: `scale(${scale})`,
@@ -185,8 +184,7 @@ const FeatureCard = React.forwardRef<HTMLDivElement, FeatureCardProps>(
           {/* ── Text column ── */}
           <div className="flex flex-col justify-center px-10 py-12 md:py-14 relative z-0">
             <div
-              className={`flex items-center gap-2.5 mb-6 transition-all duration-500 ease-out delay-100
-                ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              className="flex items-center gap-2.5 mb-6 transition-all duration-500 ease-out delay-100 opacity-100 translate-y-0"
             >
               <Icon className="w-4 h-4 text-neutral-400" strokeWidth={1.75} />
               <span className="text-xs font-semibold tracking-[0.14em] uppercase text-neutral-400">
@@ -195,25 +193,19 @@ const FeatureCard = React.forwardRef<HTMLDivElement, FeatureCardProps>(
             </div>
 
             <h3
-              className={`text-2xl md:text-3xl font-semibold text-neutral-900 tracking-tight leading-snug mb-3
-                transition-all duration-500 ease-out delay-150
-                ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              className="text-2xl md:text-3xl font-semibold text-neutral-900 tracking-tight leading-snug mb-3 transition-all duration-500 ease-out delay-150 opacity-100 translate-y-0"
             >
               {feature.title}
             </h3>
 
             <p
-              className={`text-sm font-medium text-neutral-400 italic mb-5 leading-relaxed
-                transition-all duration-500 ease-out delay-200
-                ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              className="text-sm font-medium text-neutral-400 italic mb-5 leading-relaxed transition-all duration-500 ease-out delay-200 opacity-100 translate-y-0"
             >
               {feature.heading}
             </p>
 
             <p
-              className={`text-base text-neutral-500 leading-relaxed max-w-[42ch]
-                transition-all duration-500 ease-out delay-[250ms]
-                ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              className={`text-base text-neutral-500 leading-relaxed max-w-[42ch] transition-all duration-500 ease-out delay-[250ms] opacity-100 translate-y-0`}
             >
               {feature.description}
             </p>
@@ -221,8 +213,7 @@ const FeatureCard = React.forwardRef<HTMLDivElement, FeatureCardProps>(
 
           {/* ── Image column ── */}
           <div
-            className={`relative min-h-[260px] md:min-h-full transition-all duration-700 ease-out delay-100
-              ${inView ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.02]'}`}
+            className="relative min-h-[260px] md:min-h-full transition-all duration-700 ease-out delay-100 opacity-100 scale-100"
           >
             <Image
               src={feature.imageUrl}

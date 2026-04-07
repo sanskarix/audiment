@@ -1,4 +1,6 @@
 import React from "react";
+import Script from "next/script";
+import { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight, CheckCircle2, Globe2, Shield, Zap, RefreshCw, Crown, Users, ClipboardList,
@@ -11,6 +13,77 @@ import { StickyFeatureSection } from "@/components/ui/sticky-scroll-cards-sectio
 import { FAQAccordion } from "@/components/ui/faq-accordion";
 import { TestimonialsSection } from "@/components/ui/testimonial-v2";
 import { ContactSection } from "@/components/ui/contact-section";
+
+export const metadata: Metadata = {
+  title: 'Audiment | High-Trust Audit Software for Multi-Location Operations',
+  description: 'Stop pencil-whipping. Audiment is the operations and audit platform that enforces photo evidence, verifies auditor locations, and turns failures into automated corrective actions.',
+  keywords: ['audit management software', 'restaurant brand standard audit app', 'software to prevent fake audits', 'franchise quality control software', 'CAPA software'],
+  openGraph: {
+    title: 'Audiment | Ground-Truth Visibility for Franchises',
+    description: 'Enforce photo evidence, track corrective actions, and monitor scores across every location.',
+    url: 'https://audiment.com',
+    siteName: 'Audiment',
+    type: 'website',
+  },
+};
+
+function StructuredData() {
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Audiment",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web, Mobile",
+        "description": "High-trust audit and operations platform for multi-unit franchises, featuring Flash Verification, photo evidence enforcement, and automated corrective actions.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "Organization",
+        "name": "Audiment",
+        "url": "https://audiment.com",
+        "logo": "https://audiment.com/logo.png",
+        "sameAs": [
+          "https://www.linkedin.com/company/audiment"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How does Audiment prevent fake field audits?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Audiment uses Flash Verification, which requires auditors to capture a geo-tagged, 20-second environmental video and a verified selfie to prove they are physically on-site."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How are corrective actions handled?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "When a critical standard fails, Audiment automatically generates a corrective action task for the location manager with a mandatory 48-hour SLA and requires photo proof of the resolution."
+            }
+          }
+        ]
+      }
+    ]
+  };
+
+  return (
+    <Script
+      id="structured-data"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+    />
+  );
+}
 
 // ─── How It Works Steps (6 steps per user request) ───────────────────────────
 const steps = [
@@ -145,6 +218,7 @@ const techFeatures = [
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-white font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
+      <StructuredData />
       {/* Hero + Nav */}
       <HeroSection />
 
@@ -567,7 +641,7 @@ export default function Home() {
       </section>
 
       {/* ── Final CTA Section (§10) ───────────────────────────────────────── */}
-      <section id="contact" className="relative overflow-hidden py-32 md:py-48 px-6 bg-neutral-950 flex items-center justify-center">
+      <section id="final-cta" className="relative overflow-hidden py-32 md:py-48 px-6 bg-neutral-950 flex items-center justify-center">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-white/5 rounded-full blur-[120px]" />
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-10">
@@ -611,6 +685,7 @@ export default function Home() {
           { label: "Features", href: "#features" },
           { label: "How it works", href: "#how-it-works" },
           { label: "Use cases", href: "#use-cases" },
+          { label: "Blog", href: "/blog" },
           { label: "Contact", href: "#contact" },
           { label: "Privacy policy", href: "#" },
           { label: "Terms of service", href: "#" },

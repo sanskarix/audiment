@@ -51,11 +51,11 @@ export function ContactSection() {
         <section id="contact" className="py-24 md:py-32 bg-white px-6">
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-6 underline decoration-neutral-200 decoration-4 underline-offset-8">
+                    <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-6 decoration-neutral-200 decoration-4 underline-offset-8">
                         Get in touch
                     </h2>
                     <p className="text-xl text-neutral-500 max-w-2xl mx-auto">
-                        Ready to scale your audits? Fill out the form below and we'll help you get started.
+                        Ready to scale your audits? Let's get in touch.
                     </p>
                 </div>
 
@@ -69,9 +69,9 @@ export function ContactSection() {
                             <p className="text-neutral-500 text-lg">
                                 Thanks! We will be in touch within 24 hours.
                             </p>
-                            <Button 
-                                variant="outline" 
-                                className="mt-8 rounded-full px-8" 
+                            <Button
+                                variant="outline"
+                                className="mt-8 rounded-full px-8"
                                 onClick={() => setSuccess(false)}
                             >
                                 Send another message
@@ -82,24 +82,24 @@ export function ContactSection() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="fullName" className="text-sm font-medium ml-1">Full name</Label>
-                                    <Input 
-                                        id="fullName" 
-                                        placeholder="John Doe" 
-                                        required 
+                                    <Input
+                                        id="fullName"
+                                        placeholder="John Doe"
+                                        required
                                         className="h-12 bg-white rounded-xl border-neutral-200"
                                         value={formData.fullName}
-                                        onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                                     />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="companyName" className="text-sm font-medium ml-1">Company name</Label>
-                                    <Input 
-                                        id="companyName" 
-                                        placeholder="Acme Inc." 
-                                        required 
+                                    <Input
+                                        id="companyName"
+                                        placeholder="Acme Inc."
+                                        required
                                         className="h-12 bg-white rounded-xl border-neutral-200"
                                         value={formData.companyName}
-                                        onChange={(e) => setFormData({...formData, companyName: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                                     />
                                 </div>
                             </div>
@@ -107,58 +107,58 @@ export function ContactSection() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="email" className="text-sm font-medium ml-1">Email address</Label>
-                                    <Input 
-                                        id="email" 
-                                        type="email" 
-                                        placeholder="john@example.com" 
-                                        required 
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        placeholder="john@example.com"
+                                        required
                                         className="h-12 bg-white rounded-xl border-neutral-200"
                                         value={formData.email}
-                                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="phone" className="text-sm font-medium ml-1">Phone number</Label>
-                                    <Input 
-                                        id="phone" 
-                                        type="tel" 
-                                        placeholder="+1 (555) 000-0000" 
-                                        required 
+                                    <Input
+                                        id="phone"
+                                        type="tel"
+                                        placeholder="+1 (555) 000-0000"
+                                        required
                                         className="h-12 bg-white rounded-xl border-neutral-200"
                                         value={formData.phone}
-                                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="outlets" className="text-sm font-medium ml-1">Number of outlets</Label>
-                                <Input 
-                                    id="outlets" 
-                                    type="number" 
-                                    placeholder="5" 
-                                    required 
+                                <Input
+                                    id="outlets"
+                                    type="number"
+                                    placeholder="5"
+                                    required
                                     min="1"
                                     className="h-12 bg-white rounded-xl border-neutral-200"
                                     value={formData.outlets}
-                                    onChange={(e) => setFormData({...formData, outlets: e.target.value})}
+                                    onChange={(e) => setFormData({ ...formData, outlets: e.target.value })}
                                 />
                             </div>
 
                             <div className="space-y-2">
                                 <Label htmlFor="message" className="text-sm font-medium ml-1">Message</Label>
-                                <Textarea 
-                                    id="message" 
-                                    placeholder="Tell us about your auditing needs..." 
-                                    required 
+                                <Textarea
+                                    id="message"
+                                    placeholder="Tell us about your auditing needs..."
+                                    required
                                     className="min-h-[120px] bg-white rounded-xl border-neutral-200 resize-none"
                                     value={formData.message}
-                                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                 />
                             </div>
 
-                            <Button 
-                                type="submit" 
+                            <Button
+                                type="submit"
                                 className="w-full h-14 rounded-full text-lg font-semibold bg-neutral-900 hover:bg-neutral-800 shadow-xl shadow-neutral-900/10 transition-all active:scale-[0.98]"
                                 disabled={loading}
                             >

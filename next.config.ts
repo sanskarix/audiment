@@ -1,10 +1,7 @@
 import type { NextConfig } from "next";
-import createMDX from '@next/mdx';
-
-const withMDX = createMDX({});
 
 const nextConfig: NextConfig = {
-  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
   images: {
     remotePatterns: [
       {
@@ -23,8 +20,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion', '@radix-ui/react-icons', 'recharts'],
-    mdxRs: true,
   },
 };
 
-export default withMDX(nextConfig);
+export default nextConfig;

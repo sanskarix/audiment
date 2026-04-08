@@ -36,8 +36,8 @@ const features = [
     icon: Video,
     category: "Verification",
     title: "Flash verification – prove your auditor was there",
-    heading: "20 seconds of uneditable truth.",
-    description: "Auditors record a 20-second geo-tagged video and verified selfie from the field. Tamper-proof proof of presence at every location.",
+    heading: "1 minute of uneditable truth.",
+    description: "Auditors record a 1-minute geo-tagged video and verified selfie from the field. Tamper-proof proof of presence at every location.",
     imageUrl: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=2070&auto=format&fit=crop",
   },
   {
@@ -112,7 +112,7 @@ const AnimatedHeader = () => {
       </h2>
       <p
         ref={pRef}
-        className={`text-lg md:text-xl text-neutral-500/80 mt-8 transition-all duration-700 ease-out delay-200 max-w-2xl mx-auto leading-relaxed
+        className={`text-lg md:text-lg text-neutral-500/80 mt-8 transition-all duration-700 ease-out delay-200 max-w-2xl mx-auto leading-relaxed
           ${pIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
       >
         Built specifically for multi-branch businesses, every feature addresses a real gap
@@ -183,17 +183,6 @@ const FeatureCard = React.forwardRef<HTMLDivElement, FeatureCardProps>(
 
           {/* ── Text column ── */}
           <div className="flex flex-col justify-center px-12 py-14 md:py-16 relative z-0">
-            <div
-              className="flex items-center gap-3 mb-8 transition-all duration-500 ease-out delay-100 opacity-100 translate-y-0"
-            >
-              <div className="w-8 h-8 rounded-full bg-neutral-900/5 flex items-center justify-center border border-neutral-900/5">
-                <Icon className="w-3.5 h-3.5 text-neutral-500" strokeWidth={2} />
-              </div>
-              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-neutral-400/90 py-1 px-3 bg-neutral-900/5 rounded-full border border-neutral-900/5">
-                {feature.category}
-              </span>
-            </div>
-
             <h3
               className="text-3xl md:text-4xl font-semibold text-neutral-900 tracking-tight leading-[1.15] mb-4 transition-all duration-500 ease-out delay-150 opacity-100 translate-y-0"
             >

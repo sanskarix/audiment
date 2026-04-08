@@ -60,7 +60,7 @@ function StructuredData() {
             "name": "How does Audiment prevent fake field audits?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Audiment uses Flash Verification, which requires auditors to capture a geo-tagged, 20-second environmental video and a verified selfie to prove they are physically on-site."
+              "text": "Audiment uses Flash Verification, which requires auditors to capture a geo-tagged, 1-minute environmental video and a verified selfie to prove they are physically on-site."
             }
           },
           {
@@ -274,7 +274,7 @@ export default function Home() {
               Audiment gives you<br />
               <span className="text-neutral-400">ground truth.</span>
             </h2>
-            <p className="text-xl text-neutral-500 leading-relaxed">
+            <p className="text-lg text-neutral-500 leading-relaxed">
               Live photos, GPS location, and server-verified timestamps on every audit. Nothing can be faked – every failure becomes a task that must be closed with proof.
             </p>
           </div>
@@ -545,7 +545,7 @@ export default function Home() {
                 <div className="w-12 h-12 rounded-full bg-neutral-50 flex items-center justify-center mb-4 text-neutral-900">
                   <tech.icon className="w-6 h-6" />
                 </div>
-                <h4 className="text-base font-semibold text-neutral-900 mb-2">{tech.title}</h4>
+                <h4 className="text-lg font-semibold text-neutral-900 mb-2">{tech.title}</h4>
                 <p className="text-base text-neutral-500 leading-relaxed">{tech.desc}</p>
               </div>
             ))}

@@ -171,7 +171,7 @@ const TestimonialsSection = () => {
             Operations leaders
             <span className="text-neutral-400"> trust Audiment</span>
           </h2>
-          <p className="text-center mt-5 text-neutral-500 text-lg leading-relaxed max-w-sm transition-colors">
+          <p className="text-center mt-5 text-neutral-500 text-lg leading-relaxed transition-colors">
             Real feedback from QSR chains, retail groups, hotels, and franchise operators who run audits daily on the platform.
           </p>
         </div>

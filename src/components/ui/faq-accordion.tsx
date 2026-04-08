@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: "How does Audiment ensure auditors actually visit the location?",
-    a: "Audiment uses Flash Verification – a mandatory 20-second live video recorded inside the app – combined with GPS geo-tagging. If the auditor is more than 50 metres from the registered branch location, the audit is flagged with a Location Mismatch warning. A selfie is also captured simultaneously to prevent proxy auditing.",
+    a: "Audiment uses Flash Verification – a mandatory 1-minute live video recorded inside the app – combined with GPS geo-tagging. If the auditor is more than 50 metres from the registered branch location, the audit is flagged with a Location Mismatch warning. A selfie is also captured simultaneously to prevent proxy auditing.",
   },
   {
     q: "Can I customise the audit templates?",

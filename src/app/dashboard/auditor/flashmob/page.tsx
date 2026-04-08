@@ -108,7 +108,7 @@ export default function FlashmobAuditPage() {
   const [recording, setRecording] = useState(false);
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState(20);
+  const [countdown, setCountdown] = useState(60);
 
   const [selfieBlob, setSelfieBlob] = useState<Blob | null>(null);
   const [selfieUrl, setSelfieUrl] = useState<string | null>(null);
@@ -264,7 +264,7 @@ export default function FlashmobAuditPage() {
 
     recorder.start(100);
     setRecording(true);
-    setCountdown(20);
+    setCountdown(60);
 
     const timer = setInterval(() => {
       setCountdown(prev => {
@@ -470,7 +470,7 @@ export default function FlashmobAuditPage() {
                 </div>
                 <div>
                   <h3 className="section-heading">Video Recording</h3>
-                  <p className="body-text text-[12px]">Record a 20-second video of the surroundings.</p>
+                  <p className="body-text text-[12px]">Record a 1-minute video of the surroundings.</p>
                 </div>
               </div>
             </div>
@@ -499,7 +499,7 @@ export default function FlashmobAuditPage() {
                       : "bg-black/40 border-white/10 text-white/80"
                   )}>
                     <Clock className={cn("h-3.5 w-3.5", recording && "animate-pulse")} />
-                    0:{countdown.toString().padStart(2, '0')}
+                    {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')}
                   </div>
                 </div>
 
@@ -539,7 +539,7 @@ export default function FlashmobAuditPage() {
                     {recording ? 'Stop Recording' : 'Start Recording'}
                   </p>
                   <p className="text-[10px] text-muted-text/60">
-                    {recording ? `Autosaves in ${countdown}s` : 'Max duration: 20 seconds'}
+                    {recording ? `Autosaves in ${countdown}s` : 'Max duration: 1 minute'}
                   </p>
                 </div>
               </div>

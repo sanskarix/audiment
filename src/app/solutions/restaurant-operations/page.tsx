@@ -46,7 +46,7 @@ function StructuredData() {
         name: "How do you stop fake restaurant audits?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Audiment stops fake audits (pencil-whipping) using Flash Verification, which requires the auditor to upload a geo-tagged selfie and a 20-second video of the restaurant environment before starting.",
+          text: "Audiment stops fake audits (pencil-whipping) using Flash Verification, which requires the auditor to upload a geo-tagged selfie and a 1-minute video of the restaurant environment before starting.",
         },
       },
     ],
@@ -157,7 +157,7 @@ export default function RestaurantOperationsPage() {
               {
                 icon: CameraIcon,
                 title: "Flash Verification",
-                desc: "Require a 20-second environmental video and verified selfie to prove the auditor is physically inside the kitchen before starting.",
+                desc: "Require a 1-minute environmental video and verified selfie to prove the auditor is physically inside the kitchen before starting.",
               },
               {
                 icon: FileCheck2,

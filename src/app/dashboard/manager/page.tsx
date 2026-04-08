@@ -479,14 +479,14 @@ export default function ManagerDashboardPage() {
                 <AreaChart data={stats?.recentAuditScores} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="oklch(var(--primary))" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="oklch(var(--primary))" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="oklch(var(--border))" vertical={false} strokeOpacity={0.5} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} strokeOpacity={0.5} />
                   <XAxis 
                     dataKey="date" 
-                    stroke="oklch(var(--muted-text))" 
+                    stroke="var(--muted-text)" 
                     fontSize={10} 
                     axisLine={false} 
                     tickLine={false} 
@@ -494,7 +494,7 @@ export default function ManagerDashboardPage() {
                     tick={{ dy: 10 }}
                   />
                   <YAxis 
-                    stroke="oklch(var(--muted-text))" 
+                    stroke="var(--muted-text)" 
                     fontSize={10} 
                     axisLine={false} 
                     tickLine={false} 
@@ -505,25 +505,25 @@ export default function ManagerDashboardPage() {
                   <Tooltip
                     contentStyle={{ 
                       borderRadius: '12px', 
-                      border: '1px solid oklch(var(--border) / 0.5)', 
-                      backgroundColor: 'oklch(var(--background))', 
-                      color: 'oklch(var(--heading))', 
+                      border: '1px solid var(--border)', 
+                      backgroundColor: 'var(--background)', 
+                      color: 'var(--heading)', 
                       fontSize: '11px',
                       fontWeight: '600',
                       boxShadow: '0 15px 30px rgba(0,0,0,0.15)',
                       padding: '12px'
                     }}
-                    cursor={{ stroke: 'oklch(var(--primary))', strokeWidth: 1, strokeDasharray: '4 4' }}
+                    cursor={{ stroke: 'var(--primary)', strokeWidth: 1, strokeDasharray: '4 4' }}
                   />
                   <Area
                     type="monotone"
                     dataKey="score"
-                    stroke="oklch(var(--primary))"
+                    stroke="var(--primary)"
                     strokeWidth={3}
                     fillOpacity={1}
                     fill="url(#colorScore)"
                     dot={false}
-                    activeDot={{ r: 5, strokeWidth: 0, fill: 'oklch(var(--primary))' }}
+                    activeDot={{ r: 5, strokeWidth: 0, fill: 'var(--primary)' }}
                   />
                 </AreaChart>
               </ResponsiveContainer>

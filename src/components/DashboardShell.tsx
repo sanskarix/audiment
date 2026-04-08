@@ -133,7 +133,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
       {/* ── Desktop layout (sidebar) ─────────────────────── */}
       <div className="hidden md:flex h-screen w-full overflow-hidden">
         <SidebarProvider>
-          <Sidebar collapsible="none" className="border-r border-border/50 shrink-0">
+          <Sidebar collapsible="none" className="border-r border-border/80 shrink-0">
             <SidebarHeader className="h-24 flex flex-row items-center justify-center">
               <span className="font-semibold tracking-tighter text-heading leading-none" style={{ fontSize: '22px' }}>
                 Audiment
@@ -162,7 +162,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
               </div>
             </SidebarContent>
 
-            <SidebarFooter className="border-t border-border/50 p-3 bg-muted/5">
+            <SidebarFooter className="border-t border-border/80 p-3 bg-muted/5">
               <SidebarMenu>
                 <SidebarMenuItem>
                   <DropdownMenu>
@@ -243,7 +243,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
       <div className="flex md:hidden flex-col h-[100dvh] bg-background typography-scope">
 
         {/* Mobile top bar */}
-        <header className="shrink-0 h-14 px-4 border-b border-border/50 flex items-center justify-between bg-background z-20">
+        <header className="shrink-0 h-14 px-4 border-b border-border/80 flex items-center justify-between bg-background z-20">
           <span className="font-semibold tracking-tighter text-heading" style={{ fontSize: '20px' }}>Audiment</span>
           <div className="flex items-center gap-2">
             {/* Removed mobile top bar notification bell */}
@@ -307,7 +307,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
         </main>
 
         {/* Bottom navigation bar */}
-        <nav className="shrink-0 fixed bottom-0 left-0 right-0 z-30 h-16 bg-background border-t border-border/50 flex items-center justify-around px-2">
+        <nav className="shrink-0 fixed bottom-0 left-0 right-0 z-30 h-16 bg-background border-t border-border/80 flex items-center justify-around px-2">
           {mobileNavItems.map((item: any) => {
             const isActive = pathname === item.href;
 

@@ -299,7 +299,7 @@ export default function AdminDashboardPage() {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.1} />
                   <XAxis
                     dataKey="name"
-                    stroke="oklch(var(--muted-text))"
+                    stroke="var(--muted-text)"
                     fontSize={11}
                     fontWeight={500}
                     tickLine={false}
@@ -307,7 +307,7 @@ export default function AdminDashboardPage() {
                     tick={{ dy: 10 }}
                   />
                   <YAxis
-                    stroke="oklch(var(--muted-text))"
+                    stroke="var(--muted-text)"
                     fontSize={11}
                     fontWeight={500}
                     tickLine={false}
@@ -316,15 +316,15 @@ export default function AdminDashboardPage() {
                     domain={[0, 100]}
                   />
                   <Tooltip
-                    cursor={{ fill: 'oklch(var(--muted))', opacity: 0.4 }}
+                    cursor={{ fill: 'var(--muted)', opacity: 0.4 }}
                     contentStyle={{
-                      backgroundColor: 'oklch(var(--background))',
+                      backgroundColor: 'var(--background)',
                       borderRadius: '12px',
-                      border: '1px solid oklch(var(--border))',
+                      border: '1px solid var(--border)',
                       boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
                       fontSize: '12px',
                       fontWeight: '500',
-                      color: 'oklch(var(--heading))'
+                      color: 'var(--heading)'
                     }}
                   />
                   <Bar dataKey="score" radius={[6, 6, 0, 0]} barSize={40}>

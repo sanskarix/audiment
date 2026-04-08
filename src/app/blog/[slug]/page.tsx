@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { BlogCard } from '@/components/blog/BlogCard'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/ui/modem-animated-footer'
+import { MDXRemote } from 'next-mdx-remote/rsc'
 
 export async function generateStaticParams() {
   const posts = getAllPosts()
@@ -53,15 +54,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     .filter(p => p.slug !== post.slug)
     .slice(0, 3)
 
-  let MDXContent;
-  try {
-    const mod = await import(`../../../../content/blog/${resolvedParams.slug}.mdx`);
-    MDXContent = mod.default;
-  } catch (e) {
-    console.error(e);
-    notFound();
-  }
-
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Navbar />
@@ -108,7 +100,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </header>
 
               <article className="prose prose-neutral dark:prose-invert prose-lg prose-headings:text-foreground prose-headings:font-bold prose-headings:tracking-tight prose-p:text-muted-foreground prose-p:leading-relaxed prose-strong:text-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-code:text-primary prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-sm prose-code:font-medium prose-blockquote:border-l-primary prose-blockquote:bg-primary/5 prose-blockquote:text-muted-foreground prose-blockquote:font-medium prose-blockquote:not-italic prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:rounded-r-2xl prose-table:w-full prose-table:border-collapse prose-table:my-8 prose-th:bg-muted/50 prose-th:text-foreground prose-th:font-semibold prose-th:p-4 prose-th:text-left prose-th:border-b prose-th:border-border hover:prose-tr:bg-muted/30 prose-tr:transition-colors prose-td:p-4 prose-td:border-b prose-td:border-border prose-td:text-muted-foreground prose-hr:border-border prose-hr:my-12 prose-img:rounded-2xl prose-img:border prose-img:border-border prose-img:shadow-xl max-w-none">
-                <MDXContent />
+                <MDXRemote source={post.content} />
               </article>
 
               {/* CTA Box */}

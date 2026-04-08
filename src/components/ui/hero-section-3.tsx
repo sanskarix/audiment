@@ -29,10 +29,10 @@ const transitionVariants = {
     },
 }
 
-export function HeroSection() {
+export function HeroSection({ userRole }: { userRole?: string | null }) {
     return (
         <>
-            <HeroHeader />
+            <HeroHeader userRole={userRole} />
 
             <main className="overflow-hidden">
                 <section id="hero">
@@ -62,9 +62,19 @@ export function HeroSection() {
                                 </p>
 
                                 <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-                                    <Button asChild size="lg" className="rounded-full px-8 h-12 text-base">
-                                        <Link href="#contact">Book a call</Link>
-                                    </Button>
+                                    {userRole ? (
+                                        <Button asChild size="lg" className="rounded-full px-8 h-12 text-base">
+                                            <Link href={
+                                                userRole === 'admin' ? '/dashboard/admin' :
+                                                userRole === 'manager' ? '/dashboard/manager' :
+                                                userRole === 'auditor' ? '/dashboard/auditor' : '/login'
+                                            }>Go to app</Link>
+                                        </Button>
+                                    ) : (
+                                        <Button asChild size="lg" className="rounded-full px-8 h-12 text-base">
+                                            <Link href="#contact">Book a call</Link>
+                                        </Button>
+                                    )}
                                     <Button asChild size="lg" variant="outline" className="rounded-full px-8 h-12 text-base">
                                         <Link href="#contact">See it in action</Link>
                                     </Button>
@@ -148,7 +158,7 @@ const menuItems = [
     { name: 'Blog', href: '/blog' },
 ]
 
-const HeroHeader = () => {
+const HeroHeader = ({ userRole }: { userRole?: string | null }) => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
 
@@ -213,30 +223,44 @@ const HeroHeader = () => {
                                 </ul>
                             </div>
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="/login">
-                                        <span>Login</span>
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="#contact">
-                                        <span>Book a call</span>
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                    <Link href="#contact">
-                                        <span>Book a call</span>
-                                    </Link>
-                                </Button>
+                                {userRole ? (
+                                    <Button asChild size="sm" className={cn(!isScrolled && 'lg:inline-flex')}>
+                                        <Link href={
+                                            userRole === 'admin' ? '/dashboard/admin' :
+                                            userRole === 'manager' ? '/dashboard/manager' :
+                                            userRole === 'auditor' ? '/dashboard/auditor' : '/login'
+                                        }>
+                                            <span>Go to app</span>
+                                        </Link>
+                                    </Button>
+                                ) : (
+                                    <>
+                                        <Button
+                                            asChild
+                                            size="sm"
+                                            className={cn(isScrolled && 'lg:hidden')}>
+                                            <Link href="/login">
+                                                <span>Login</span>
+                                            </Link>
+                                        </Button>
+                                        <Button
+                                            asChild
+                                            size="sm"
+                                            className={cn(isScrolled && 'lg:hidden')}>
+                                            <Link href="#contact">
+                                                <span>Book a call</span>
+                                            </Link>
+                                        </Button>
+                                        <Button
+                                            asChild
+                                            size="sm"
+                                            className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
+                                            <Link href="#contact">
+                                                <span>Book a call</span>
+                                            </Link>
+                                        </Button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

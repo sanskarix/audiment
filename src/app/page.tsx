@@ -2,6 +2,8 @@ import React from "react";
 import Script from "next/script";
 import { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { getSessionFromCookie } from "@/lib/auth";
 import {
   ArrowRight, CheckCircle2, Globe2, Shield, Zap, RefreshCw, Crown, Users, ClipboardList,
   Lock, Database, Smartphone, Wifi, Building2, UtensilsCrossed,
@@ -215,12 +217,17 @@ const techFeatures = [
   { icon: Smartphone, title: "Any device", desc: "Works on any phone or desktop browser. No app installation required for your field auditors." },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get('audiment_session')?.value;
+  const session = sessionCookie ? getSessionFromCookie(`audiment_session=${sessionCookie}`) : null;
+  const userRole = session?.role || null;
+
   return (
     <div className="relative min-h-screen bg-white font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
       <StructuredData />
       {/* Hero + Nav */}
-      <HeroSection />
+      <HeroSection userRole={userRole} />
 
       {/* ── Problem Section (§2) ──────────────────────────────────────────── */}
       <section id="problem" className="py-24 md:py-32 bg-neutral-950 px-6">
@@ -653,13 +660,27 @@ export default function Home() {
             Set up your first audit template in minutes. Know exactly what&apos;s happening at every branch – with tamper-proof evidence.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
-            <Link
-              href="#contact"
-              className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
-            >
-              Book a Call
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+            {userRole ? (
+                <Link
+                  href={
+                      userRole === 'admin' ? '/dashboard/admin' :
+                      userRole === 'manager' ? '/dashboard/manager' :
+                      userRole === 'auditor' ? '/dashboard/auditor' : '/login'
+                  }
+                  className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
+                >
+                  Go to app
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+            ) : (
+                <Link
+                  href="#contact"
+                  className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
+                >
+                  Book a Call
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+            )}
             <Link
               href="#contact"
               className="inline-flex h-14 items-center gap-2 px-10 border border-white/20 hover:border-white/40 text-white text-base font-medium rounded-full transition-all duration-300"

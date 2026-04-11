@@ -17,15 +17,21 @@ import { TestimonialsSection } from "@/components/ui/testimonial-v2";
 import { ContactSection } from "@/components/ui/contact-section";
 
 export const metadata: Metadata = {
-  title: 'Audiment | High-Trust Audit Software for Multi-Location Operations',
-  description: 'Stop pencil-whipping. Audiment is the operations and audit platform that enforces photo evidence, verifies auditor locations, and turns failures into automated corrective actions.',
+  title: 'Audiment — verified audit software for multi-location ops',
+  description: 'Stop pencil-whipping across your locations. Audiment enforces photo evidence, verifies auditor presence, and delivers ground-truth visibility.',
   keywords: ['audit management software', 'restaurant brand standard audit app', 'software to prevent fake audits', 'franchise quality control software', 'CAPA software'],
+  alternates: { canonical: 'https://audiment.com' },
   openGraph: {
-    title: 'Audiment | Ground-Truth Visibility for Franchises',
-    description: 'Enforce photo evidence, track corrective actions, and monitor scores across every location.',
+    title: 'Audiment — verified audit software for multi-location ops',
+    description: 'Stop pencil-whipping across your locations. Audiment enforces photo evidence, verifies auditor presence, and delivers ground-truth visibility.',
     url: 'https://audiment.com',
     siteName: 'Audiment',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Audiment — verified audit software for multi-location ops',
+    description: 'Stop pencil-whipping across your locations. Audiment enforces photo evidence, verifies auditor presence, and delivers ground-truth visibility.',
   },
 };
 
@@ -43,6 +49,19 @@ function StructuredData() {
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "name": "Audiment",
+        "url": "https://audiment.com",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://audiment.com/blog?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
         }
       },
       {
@@ -224,7 +243,7 @@ export default async function Home() {
   const userRole = session?.role || null;
 
   return (
-    <div className="relative min-h-screen bg-white font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
+    <main id="main-content" className="relative min-h-screen bg-white font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
       <StructuredData />
       {/* Hero + Nav */}
       <HeroSection userRole={userRole} />
@@ -708,10 +727,10 @@ export default async function Home() {
           { label: "Use cases", href: "#use-cases" },
           { label: "Blog", href: "/blog" },
           { label: "Contact", href: "#contact" },
-          { label: "Privacy policy", href: "#" },
-          { label: "Terms of service", href: "#" },
+          { label: "Privacy policy", href: "/privacy-policy" },
+          { label: "Terms of service", href: "/terms-of-service" },
         ]}
       />
-    </div>
+    </main>
   );
 }

@@ -19,3 +19,16 @@ Unlike legacy paper checklists or generic tools like GoAudits, iAuditor (SafetyC
 ## Official Links
 - Website: https://audiment.com
 - Application Category: BusinessApplication / SoftwareApplication
+
+## Solutions
+- https://audiment.com/solutions/restaurant-operations
+- https://audiment.com/solutions/retail-operations
+- https://audiment.com/solutions/franchise-operations
+
+## Blog
+- https://audiment.com/blog/fssai-compliance-guide
+- https://audiment.com/blog/capa-management-guide
+- https://audiment.com/blog/audit-management-guide
+- https://audiment.com/blog/flash-verification-in-audits
+- https://audiment.com/blog/multi-location-compliance-guide
+- https://audiment.com/blog/restaurant-audit-guide

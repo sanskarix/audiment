@@ -19,14 +19,24 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!post) return {}
   
   return {
-    title: `${post.title} | Audiment Blog`,
+    title: `${post.title.slice(0, 47)} | Audiment`,
     description: post.description,
+    alternates: { 
+      canonical: `https://audiment.com/blog/${resolvedParams.slug}` 
+    },
     openGraph: {
       title: post.title,
       description: post.description,
+      url: `https://audiment.com/blog/${resolvedParams.slug}`,
       type: 'article',
-      publishedTime: post.date,
+      images: [{ url: 'https://audiment.com/opengraph-image', width: 1200, height: 630 }],
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description,
+    },
+    keywords: post.tags,
   }
 }
 
@@ -55,7 +65,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     .slice(0, 3)
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+    <main id="main-content" className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 pt-32 pb-24">
         <Link href="/blog" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-12 group font-medium">
@@ -66,7 +76,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {/* Table of Contents - Desktop Sidebar */}
           <aside className="hidden lg:block w-64 shrink-0 sticky top-32">
             <div className="bg-card border border-border rounded-2xl p-6 shadow-xl shadow-primary/5">
-              <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-6">Contents</h3>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-6">Contents</p>
               <nav className="flex flex-col gap-4">
                 {toc.map(item => (
                   <a key={item.id} href={`#${item.id}`} className="text-sm text-muted-foreground hover:text-primary transition-colors leading-snug font-medium">
@@ -139,8 +149,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           { label: "Use cases", href: "/#use-cases" },
           { label: "Blog", href: "/blog" },
           { label: "Contact", href: "/#contact" },
-          { label: "Privacy policy", href: "#" },
-          { label: "Terms of service", href: "#" },
+          { label: "Privacy policy", href: "/privacy-policy" },
+          { label: "Terms of service", href: "/terms-of-service" },
         ]}
       />
 
@@ -155,10 +165,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             description: post.description,
             author: { "@type": "Organization", "name": "Audiment" },
             publisher: { "@type": "Organization", "name": "Audiment" },
-            datePublished: post.date
+            datePublished: post.date,
+            dateModified: post.date,
+            image: "https://audiment.com/opengraph-image"
           })
         }}
       />
-    </div>
+    </main>
   )
 }

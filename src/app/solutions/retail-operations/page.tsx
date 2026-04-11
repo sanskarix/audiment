@@ -17,26 +17,26 @@ import { ContactSection } from "@/components/ui/contact-section";
 import { HeroRestaurant } from "@/components/ui/hero-restaurant";
 
 export const metadata: Metadata = {
-  title: "Restaurant audit software | Stop fake store walks",
-  description: "Audiment is the high-trust operational execution platform for multi-location restaurants. Enforce photo evidence and 48-hour corrective actions.",
+  title: "Retail operations audit software for multi-location stores | Audiment",
+  description: "Audiment provides retail operations audit software for multi-location stores. Ensure consistent visual merchandising, safety, and brand compliance.",
   keywords: [
-    "restaurant audit software",
+    "retail store audit software",
     "QSR operational execution platform",
     "FSSAI compliance software",
-    "prevent fake restaurant audits",
+    "prevent fake retail store audits",
   ],
-  alternates: { canonical: 'https://audiment.com/solutions/restaurant-operations' },
+  alternates: { canonical: 'https://audiment.com/solutions/retail-operations' },
   openGraph: {
-    title: "Restaurant audit software | Stop fake store walks",
-    description: "Audiment is the high-trust operational execution platform for multi-location restaurants. Enforce photo evidence and 48-hour corrective actions.",
-    url: 'https://audiment.com/solutions/restaurant-operations',
+    title: "Retail operations audit software for multi-location stores | Audiment",
+    description: "Audiment provides retail operations audit software for multi-location stores. Ensure consistent visual merchandising, safety, and brand compliance.",
+    url: 'https://audiment.com/solutions/retail-operations',
     type: 'website',
     images: [{ url: 'https://audiment.com/opengraph-image', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Restaurant audit software | Stop fake store walks",
-    description: "Audiment is the high-trust operational execution platform for multi-location restaurants. Enforce photo evidence and 48-hour corrective actions.",
+    title: "Retail operations audit software for multi-location stores | Audiment",
+    description: "Audiment provides retail operations audit software for multi-location stores. Ensure consistent visual merchandising, safety, and brand compliance.",
   },
 };
 
@@ -47,18 +47,18 @@ function StructuredData() {
     mainEntity: [
       {
         "@type": "Question",
-        name: "What is restaurant audit software?",
+        name: "What is retail store audit software?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Restaurant audit software digitizes food safety, FSSAI compliance, and brand standard checklists. Modern platforms like Audiment require photo and video evidence to ensure audits are accurate.",
+          text: "Retail store audit software digitizes food safety, FSSAI compliance, and brand standard checklists. Modern platforms like Audiment require photo and video evidence to ensure audits are accurate.",
         },
       },
       {
         "@type": "Question",
-        name: "How do you stop fake restaurant audits?",
+        name: "How do you stop fake retail store audits?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Audiment stops fake audits (pencil-whipping) using Flash Verification, which requires the auditor to upload a geo-tagged selfie and a 1-minute video of the restaurant environment before starting.",
+          text: "Audiment stops fake audits (pencil-whipping) using Flash Verification, which requires the auditor to upload a geo-tagged selfie and a 1-minute video of the retail store environment before starting.",
         },
       },
     ],
@@ -70,14 +70,14 @@ function StructuredData() {
     "name": "Audiment",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web, iOS, Android",
-    "description": "Verified field audit software for multi-location restaurant operators. Photo evidence, CAPA tracking, and ground-truth compliance visibility.",
+    "description": "Verified field audit software for multi-location retail store operators. Photo evidence, CAPA tracking, and ground-truth compliance visibility.",
     "offers": {
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "INR",
       "priceSpecification": "Contact for pricing"
     },
-    "url": "https://audiment.com/solutions/restaurant-operations"
+    "url": "https://audiment.com/solutions/retail-operations"
   };
 
   return (
@@ -124,18 +124,18 @@ const comparisonRows = [
   },
 ];
 
-export default function RestaurantOperationsPage() {
+export default function RetailOperationsPage() {
   return (
     <main id="main-content" className="relative min-h-screen bg-white font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
       <StructuredData />
-      <HeroRestaurant />
+      <HeroRestaurant title="Stop fake audits across your retail stores" />
 
       {/* ── Problem Section ──────────────────────────────────────────── */}
       <section id="problem" className="py-24 md:py-32 bg-neutral-950 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="max-w-3xl mb-16">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-white leading-[1.15] mb-6">
-              Why traditional restaurant<br />
+              Why traditional retail store<br />
               <span className="text-neutral-400">audits fail at scale</span>
             </h2>
             <p className="text-lg text-neutral-400 leading-relaxed">
@@ -181,7 +181,7 @@ export default function RestaurantOperationsPage() {
           <div className="max-w-3xl mb-16">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 leading-[1.15] mb-6">
               Built for high-trust<br />
-              <span className="text-neutral-400">restaurant execution</span>
+              <span className="text-neutral-400">retail store execution</span>
             </h2>
             <p className="text-xl text-neutral-500 leading-relaxed">
               Every audit on our platform captures ground truth. No upload-from-gallery hacks. We force accountability at the station level across your entire franchise network.
@@ -226,7 +226,7 @@ export default function RestaurantOperationsPage() {
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-white mb-6">
               Audiment vs.<br />
-              <span className="text-neutral-400">Legacy restaurant checklists</span>
+              <span className="text-neutral-400">Legacy retail store checklists</span>
             </h2>
             <p className="text-lg text-neutral-400">
               See how conventional apps fall short and how our execution platform enforces real multi-location accountability.

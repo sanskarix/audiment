@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import ShimmerText from '@/components/ui/shimmer-text';
 
 const ROLE_ROUTES: Record<UserRole, string> = {
   admin: '/dashboard/admin',
@@ -82,7 +83,9 @@ export default function LoginPage() {
       <div className="w-full max-w-[420px] px-6 space-y-8 relative z-10">
         {/* Brand */}
         <div className="text-center space-y-3">
-          <h1 className="text-3xl font-semibold tracking-tighter text-heading">Audiment</h1>
+          <ShimmerText className="text-3xl font-semibold tracking-tighter">
+            Audiment
+          </ShimmerText>
         </div>
 
         <Card className="border-border/50 shadow-xl shadow-black/[0.02] backdrop-blur-sm bg-card/80">

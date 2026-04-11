@@ -20,7 +20,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const SITE_URL = "https://audiment.com";
-const OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -38,7 +37,7 @@ export const metadata: Metadata = {
     "compliance dashboard",
   ],
   alternates: {
-    canonical: SITE_URL,
+    canonical: '/',
   },
   openGraph: {
     type: "website",
@@ -47,21 +46,12 @@ export const metadata: Metadata = {
     title: "Audiment – Audit Management Software for Multi-Location Compliance",
     description:
       "Audiment is an enterprise-grade audit management platform for distributed locations. Photo evidence enforcement, automated corrective action workflows, geo-tagged field verification, real-time scoring and alerts, and role-based dashboards for admins, managers, and field auditors.",
-    images: [
-      {
-        url: OG_IMAGE,
-        width: 1200,
-        height: 630,
-        alt: "Audiment – Audit Management Software",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Audiment – Audit Management Software for Multi-Location Compliance",
     description:
       "Audiment is an enterprise-grade audit management platform for distributed locations. Photo evidence enforcement, automated corrective action workflows, geo-tagged field verification, real-time scoring and alerts, and role-based dashboards for admins, managers, and field auditors.",
-    images: [OG_IMAGE],
   },
   robots: {
     index: true,
@@ -86,6 +76,9 @@ export default function RootLayout({
 
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded focus:text-sm">
+          Skip to content
+        </a>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

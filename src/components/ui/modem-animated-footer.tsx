@@ -66,30 +66,28 @@ export const Footer = ({
             </div>
 
             {/* Links Columns */}
-            <div className="flex flex-row gap-16 md:gap-24">
+            <div className="flex flex-row gap-8 flex-wrap lg:gap-16">
+              <div className="flex flex-col gap-4">
+                <h3 className="font-medium text-heading mb-2">Solutions</h3>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/restaurant-operations">Restaurant Operations</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/retail-operations">Retail Operations</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/franchise-operations">Franchise Operations</Link>
+              </div>
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-heading mb-2">Platform</h3>
-                {navLinks.filter(n => ['Features', 'How it works', 'Use cases'].includes(n.label)).map((link, index) => (
-                  <Link key={index} className="hover:text-heading transition-colors duration-200" href={link.href}>
-                    {link.label}
-                  </Link>
-                ))}
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/#features">Features</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/#how-it-works">How it works</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/#use-cases">Use cases</Link>
               </div>
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-heading mb-2">Company</h3>
-                {navLinks.filter(n => ['Blog', 'Contact'].includes(n.label)).map((link, index) => (
-                  <Link key={index} className="hover:text-heading transition-colors duration-200" href={link.href}>
-                    {link.label}
-                  </Link>
-                ))}
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/blog">Blog</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/#contact">Contact</Link>
               </div>
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-heading mb-2">Legal</h3>
-                {navLinks.filter(n => ['Privacy policy', 'Terms of service'].includes(n.label)).map((link, index) => (
-                  <Link key={index} className="hover:text-heading transition-colors duration-200" href={link.href}>
-                    {link.label}
-                  </Link>
-                ))}
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/privacy-policy">Privacy policy</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/terms-of-service">Terms of service</Link>
               </div>
             </div>
           </div>

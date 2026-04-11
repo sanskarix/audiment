@@ -7,9 +7,10 @@ import Link from 'next/link'
 import { ThemeToggle } from '@/components/theme-toggle'
 
 const menuItems = [
+    { name: 'Restaurant Audits', href: '/solutions/restaurant-operations' },
+    { name: 'Retail Audits', href: '/solutions/retail-operations' },
+    { name: 'Franchise Compliance', href: '/solutions/franchise-operations' },
     { name: 'Features', href: '/#features' },
-    { name: 'How it works', href: '/#how-it-works' },
-    { name: 'Use cases', href: '/#use-cases' },
     { name: 'Blog', href: '/blog' },
 ]
 

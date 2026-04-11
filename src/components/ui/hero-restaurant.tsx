@@ -29,7 +29,7 @@ const transitionVariants = {
     },
 }
 
-export function HeroRestaurant() {
+export function HeroRestaurant({ title }: { title?: React.ReactNode }) {
     return (
         <>
             <HeroHeader />
@@ -53,8 +53,12 @@ export function HeroRestaurant() {
                             >
                                 <h1
                                     className="text-balance text-5xl font-semibold sm:text-6xl md:text-7xl tracking-tight leading-[1.1]">
-                                    Restaurant audit software<br />
-                                    <span className="text-neutral-400">that actually proves they were there.</span>
+                                    {title || (
+                                        <>
+                                            Restaurant audit software<br />
+                                            <span className="text-neutral-400">that actually proves they were there.</span>
+                                        </>
+                                    )}
                                 </h1>
 
                                 <p className="mx-auto mt-6 max-w-5xl text-pretty text-lg text-neutral-600">

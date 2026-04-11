@@ -8,6 +8,20 @@ import { Search } from 'lucide-react'
 export const metadata = {
   title: 'Blog – Audit Management Insights | Audiment',
   description: 'Expert insights on audit management, FSSAI compliance, multi-location operations, and corrective action tracking for operations leaders.',
+  alternates: { canonical: 'https://audiment.com/blog' },
+  openGraph: {
+    title: 'Audiment blog — field audit insights',
+    description: 'Expert insights on audit management, FSSAI compliance, multi-location operations, and corrective action tracking for field operations leaders.',
+    url: 'https://audiment.com/blog',
+    type: 'website',
+    images: [{ url: 'https://audiment.com/opengraph-image', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Audiment blog — field audit insights',
+    description: 'Expert insights on audit management, FSSAI compliance, multi-location operations, and corrective action tracking for field operations leaders.',
+  },
+  keywords: ['audit software', 'restaurant compliance', 'field audits', 'multi-location operations'],
 }
 
 export default async function BlogPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
@@ -29,7 +43,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
   const displayPosts = searchQuery ? filteredPosts : filteredPosts.filter(p => p.slug !== featuredPost?.slug)
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+    <main id="main-content" className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 pt-32 pb-24">
         {/* Header Section */}
@@ -43,10 +57,12 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
         {/* Centered Minimalist Search Bar */}
         <div className="max-w-2xl mx-auto mb-20">
           <form action="/blog" method="GET" className="relative group">
+            <label htmlFor="blog-search" className="sr-only">Search</label>
             <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
               <Search className="h-4.5 w-4.5 text-muted-foreground group-focus-within:text-primary transition-colors duration-300" />
             </div>
             <input
+              id="blog-search"
               name="q"
               type="text"
               placeholder="Search articles and guides..."
@@ -135,10 +151,10 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
           { label: "Use cases", href: "/#use-cases" },
           { label: "Blog", href: "/blog" },
           { label: "Contact", href: "/#contact" },
-          { label: "Privacy policy", href: "#" },
-          { label: "Terms of service", href: "#" },
+          { label: "Privacy policy", href: "/privacy-policy" },
+          { label: "Terms of service", href: "/terms-of-service" },
         ]}
       />
-    </div>
+    </main>
   )
 }

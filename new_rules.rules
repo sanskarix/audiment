@@ -36,7 +36,9 @@ service cloud.firestore {
       return isAuditor() && locationId in getUserData().assignedLocations;
     }
 
-
+    function adminOrManagesThisBranch(locationId) {
+      return isAdmin() || managerManagesBranch(locationId);
+    }
 
     // ─── USERS COLLECTION ───────────────────────────────
     // Only admin can list/create/delete users
@@ -51,7 +53,7 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // ─── LOCATIONS COLLECTION (Replaces Branches) ───────
+    // ─── LOCATIONS COLLECTION ────────────────────────────
     // Admin: full access
     // Manager: read branches assigned to them only
     // Auditor: read branches assigned to them only
@@ -76,7 +78,7 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
-    // ─── AUDITS COLLECTION (Replaces Audit Assignments) ──
+    // ─── AUDITS COLLECTION ───────────────────────────────
     // Admin: full access
     // Manager: read/create/update for their branches only
     // Auditor: read assignments assigned to them only
@@ -90,7 +92,7 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // ─── AUDIT RESPONSES COLLECTION (Replaces Audit Submissions)
+    // ─── AUDIT RESPONSES COLLECTION ─────────────────────
     // Admin: full access
     // Manager: read submissions for their branches only
     // Auditor: read/create/update their own submissions only
@@ -124,7 +126,7 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // ─── FLASHMOB AUDITS COLLECTION (Replaces Flashmob Submissions)
+    // ─── FLASHMOB AUDITS COLLECTION ─────────────────────
     // CRITICAL: Managers must NEVER see flashmob data
     // Admin: full access
     // Auditor: create only (cannot read back their own)

@@ -10,24 +10,25 @@ service cloud.firestore {
     }
 
     // Get the current user's Firestore document
+    // Only used where we need branchIds / assignedLocations — NOT for role checks.
     function getUserData() {
       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
     }
 
-    // Role checks
+    // ─── Role checks (token claims with Firestore lookup fallback) ──────────
     function isAdmin() {
-      return isAuth() && getUserData().role == 'admin';
+      return isAuth() && (request.auth.token.role == 'admin' || getUserData().role == 'ADMIN');
     }
 
     function isManager() {
-      return isAuth() && getUserData().role == 'manager';
+      return isAuth() && (request.auth.token.role == 'manager' || getUserData().role == 'MANAGER');
     }
 
     function isAuditor() {
-      return isAuth() && getUserData().role == 'auditor';
+      return isAuth() && (request.auth.token.role == 'auditor' || getUserData().role == 'AUDITOR');
     }
 
-    // Branch access checks
+    // Branch access checks (still requires Firestore lookup for assignedLocations)
     function managerManagesBranch(locationId) {
       return isManager() && locationId in getUserData().assignedLocations;
     }
@@ -37,14 +38,13 @@ service cloud.firestore {
     }
 
 
-
     // ─── USERS COLLECTION ───────────────────────────────
     // Only admin can list/create/delete users
     // Users can read and update their own profile only
 
     match /users/{userId} {
       allow read: if isAuth() && 
-        (request.auth.uid == userId || isAdmin());
+        (request.auth.uid == userId || isAdmin() || (isManager() && resource.data.managerId == request.auth.uid));
       allow create: if isAdmin();
       allow update: if isAdmin() || 
         request.auth.uid == userId;
@@ -59,7 +59,8 @@ service cloud.firestore {
     match /locations/{locationId} {
       allow read: if isAdmin() || 
         managerManagesBranch(locationId) || 
-        auditorAssignedToBranch(locationId);
+        auditorAssignedToBranch(locationId) ||
+        (isAuth() && request.auth.uid in resource.data.assignedManagerIds);
       allow create, update, delete: if isAdmin();
     }
 
@@ -84,6 +85,8 @@ service cloud.firestore {
     match /audits/{auditId} {
       allow read: if isAdmin() || 
         managerManagesBranch(resource.data.locationId) ||
+        (isManager() && resource.data.assignedManagerId == request.auth.uid) ||
+        (isManager() && resource.data.organizationId == getUserData().organizationId) ||
         (isAuditor() && resource.data.assignedAuditorId == request.auth.uid);
       allow create, update: if isAdmin() || 
         managerManagesBranch(resource.data.locationId);
@@ -116,6 +119,8 @@ service cloud.firestore {
     match /correctiveActions/{actionId} {
       allow read: if isAdmin() || 
         managerManagesBranch(resource.data.locationId) ||
+        (isManager() && resource.data.assignedManagerId == request.auth.uid) ||
+        (isManager() && resource.data.organizationId == getUserData().organizationId) ||
         (isAuditor() && resource.data.locationId in getUserData().assignedLocations);
       allow create: if isAdmin() || 
         managerManagesBranch(request.resource.data.locationId);
@@ -143,11 +148,11 @@ service cloud.firestore {
     // System (admin) creates notifications
 
     match /notifications/{notificationId} {
-      allow read: if isAuth() && 
-        resource.data.userId == request.auth.uid;
+      allow read: if isAdmin() || (isAuth() && 
+        resource.data.recipientId == request.auth.uid);
       allow create: if isAdmin();
       allow update: if isAuth() && 
-        resource.data.userId == request.auth.uid &&
+        resource.data.recipientId == request.auth.uid &&
         request.resource.data.diff(resource.data).affectedKeys()
           .hasOnly(['isRead']);
       allow delete: if isAdmin();

@@ -1,4 +1,4 @@
-# SEO Audit Checklist — Audiment
+# SEO Audit Checklist – Audiment
 
 This file is the single source of truth for the SEO audit.
 The AI agent must check every item below and report 
@@ -8,7 +8,7 @@ the actual file contents.
 
 ---
 
-## 1. METADATA — Every page file in src/app/
+## 1. METADATA – Every page file in src/app/
 
 For each page, check the exported `metadata` object.
 
@@ -89,7 +89,7 @@ Pages to check:
 
 ---
 
-## 5. LLMS.TXT (GEO — AI Search Visibility)
+## 5. LLMS.TXT (GEO – AI Search Visibility)
 
 - [ ] public/llms.txt exists
 - [ ] Contains a plain-language description of what 
@@ -209,7 +209,7 @@ Do not run the app. Check the code only.
 
 ---
 
-## 13. BLOG MDX CONTENT — SEO CHECKS
+## 13. BLOG MDX CONTENT – SEO CHECKS
 
 For each .mdx file in content/blog/:
 

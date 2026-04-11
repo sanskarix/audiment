@@ -17,12 +17,12 @@ import { TestimonialsSection } from "@/components/ui/testimonial-v2";
 import { ContactSection } from "@/components/ui/contact-section";
 
 export const metadata: Metadata = {
-  title: 'Audiment — verified audit software for multi-location ops',
+  title: 'Audiment – verified audit software for multi-location ops',
   description: 'Stop pencil-whipping across your locations. Audiment enforces photo evidence, verifies auditor presence, and delivers ground-truth visibility.',
   keywords: ['audit management software', 'restaurant brand standard audit app', 'software to prevent fake audits', 'franchise quality control software', 'CAPA software'],
   alternates: { canonical: 'https://audiment.com' },
   openGraph: {
-    title: 'Audiment — verified audit software for multi-location ops',
+    title: 'Audiment – verified audit software for multi-location ops',
     description: 'Stop pencil-whipping across your locations. Audiment enforces photo evidence, verifies auditor presence, and delivers ground-truth visibility.',
     url: 'https://audiment.com',
     siteName: 'Audiment',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Audiment — verified audit software for multi-location ops',
+    title: 'Audiment – verified audit software for multi-location ops',
     description: 'Stop pencil-whipping across your locations. Audiment enforces photo evidence, verifies auditor presence, and delivers ground-truth visibility.',
   },
 };
@@ -680,25 +680,25 @@ export default async function Home() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
             {userRole ? (
-                <Link
-                  href={
-                      userRole === 'admin' ? '/dashboard/admin' :
-                      userRole === 'manager' ? '/dashboard/manager' :
+              <Link
+                href={
+                  userRole === 'admin' ? '/dashboard/admin' :
+                    userRole === 'manager' ? '/dashboard/manager' :
                       userRole === 'auditor' ? '/dashboard/auditor' : '/login'
-                  }
-                  className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
-                >
-                  Go to app
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
+                }
+                className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
+              >
+                Go to app
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             ) : (
-                <Link
-                  href="#contact"
-                  className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
-                >
-                  Book a Call
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
+              <Link
+                href="#contact"
+                className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
+              >
+                Book a Call
+                <ArrowRight className="w-5 h-5" />
+              </Link>
             )}
             <Link
               href="#contact"
@@ -728,6 +728,7 @@ export default async function Home() {
           { label: "Blog", href: "/blog" },
           { label: "Contact", href: "#contact" },
           { label: "Privacy policy", href: "/privacy-policy" },
+          { label: "Cookie policy", href: "/cookie-policy" },
           { label: "Terms of service", href: "/terms-of-service" },
         ]}
       />

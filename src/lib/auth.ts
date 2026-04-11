@@ -14,6 +14,11 @@ export interface AuthUser {
 
 export async function loginUser(email: string, password: string): Promise<AuthUser> {
   const credential = await signInWithEmailAndPassword(auth, email, password);
+
+  // Force a token refresh so custom claims (role, orgId) set by the Admin SDK
+  // are included immediately — without this, the cached token may be stale.
+  await credential.user.getIdToken(true);
+
   const uid = credential.user.uid;
 
   const userDoc = await getDoc(doc(db, 'users', uid));

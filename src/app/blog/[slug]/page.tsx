@@ -150,6 +150,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           { label: "Blog", href: "/blog" },
           { label: "Contact", href: "/#contact" },
           { label: "Privacy policy", href: "/privacy-policy" },
+          { label: "Cookie policy", href: "/cookie-policy" },
           { label: "Terms of service", href: "/terms-of-service" },
         ]}
       />

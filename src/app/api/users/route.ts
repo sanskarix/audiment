@@ -29,6 +29,12 @@ export async function POST(req: Request) {
 
     const uid = userRecord.uid;
 
+    // ─── Set custom claims immediately so the ID token carries role + org ───
+    await adminAuth.setCustomUserClaims(uid, {
+      role: role.toLowerCase(),   // 'admin' | 'manager' | 'auditor'
+      orgId: organizationId,       // Firestore org document ID
+    });
+
     const userData: any = {
       uid,
       email,
@@ -56,7 +62,7 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
   try {
     const body = await req.json();
-    const { uid, name, managerId, hasFlashmobAccess, isActive } = body;
+    const { uid, name, role, managerId, hasFlashmobAccess, isActive } = body;
 
     if (!uid) {
       return NextResponse.json({ error: 'Missing user UID' }, { status: 400 });
@@ -67,9 +73,21 @@ export async function PATCH(req: Request) {
       await adminAuth.updateUser(uid, { displayName: name });
     }
 
-    // 2. Update Firestore document
+    // 2. Update custom claims if role is changing
+    if (role) {
+      // Fetch the current user's orgId from Firestore to preserve it in claims
+      const userDoc = await adminDb.collection('users').doc(uid).get();
+      const orgId = userDoc.data()?.organizationId ?? '';
+      await adminAuth.setCustomUserClaims(uid, {
+        role: role.toLowerCase(),   // 'admin' | 'manager' | 'auditor'
+        orgId,
+      });
+    }
+
+    // 3. Update Firestore document
     const updateData: any = {};
     if (name) updateData.name = name;
+    if (role) updateData.role = role.toUpperCase();
     if (managerId !== undefined) updateData.managerId = managerId;
     if (hasFlashmobAccess !== undefined) updateData.hasFlashmobAccess = hasFlashmobAccess;
     if (isActive !== undefined) {

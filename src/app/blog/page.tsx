@@ -10,7 +10,7 @@ export const metadata = {
   description: 'Expert insights on audit management, FSSAI compliance, multi-location operations, and corrective action tracking for operations leaders.',
   alternates: { canonical: 'https://audiment.com/blog' },
   openGraph: {
-    title: 'Audiment blog — field audit insights',
+    title: 'Audiment blog – field audit insights',
     description: 'Expert insights on audit management, FSSAI compliance, multi-location operations, and corrective action tracking for field operations leaders.',
     url: 'https://audiment.com/blog',
     type: 'website',
@@ -18,7 +18,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Audiment blog — field audit insights',
+    title: 'Audiment blog – field audit insights',
     description: 'Expert insights on audit management, FSSAI compliance, multi-location operations, and corrective action tracking for field operations leaders.',
   },
   keywords: ['audit software', 'restaurant compliance', 'field audits', 'multi-location operations'],
@@ -152,6 +152,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
           { label: "Blog", href: "/blog" },
           { label: "Contact", href: "/#contact" },
           { label: "Privacy policy", href: "/privacy-policy" },
+          { label: "Cookie policy", href: "/cookie-policy" },
           { label: "Terms of service", href: "/terms-of-service" },
         ]}
       />

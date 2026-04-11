@@ -87,6 +87,7 @@ export const Footer = ({
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-heading mb-2">Legal</h3>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/privacy-policy">Privacy policy</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/cookie-policy">Cookie policy</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/terms-of-service">Terms of service</Link>
               </div>
             </div>

@@ -158,7 +158,7 @@ const menuItems = [
     { name: 'Blog', href: '/blog' },
 ]
 
-const HeroHeader = ({ userRole }: { userRole?: string | null }) => {
+export const HeroHeader = ({ userRole }: { userRole?: string | null }) => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
 

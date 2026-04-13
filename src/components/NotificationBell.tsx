@@ -41,29 +41,20 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
+import { useAuthSync } from './AuthProvider';
 
 export default function NotificationBell({ variant, userRole }: { variant?: 'default' | 'trigger-only' | 'sidebar-item' | 'sidebar-card', userRole?: string }) {
+  const { isSynced, uid } = useAuthSync();
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [session, setSession] = useState<{ uid: string } | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ uid: data.uid });
-      } catch (e) { }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!session?.uid) return;
+    if (!isSynced || !uid) return;
 
     const q = query(
       collection(db, 'notifications'),
-      where('recipientId', '==', session.uid),
+      where('recipientId', '==', uid),
       orderBy('createdAt', 'desc'),
       limit(20)
     );
@@ -72,10 +63,12 @@ export default function NotificationBell({ variant, userRole }: { variant?: 'def
       const fetched = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as any));
       setNotifications(fetched);
       setUnreadCount(fetched.filter((n: any) => !n.isRead).length);
+    }, (err) => {
+      console.error('[NotificationBell] Snapshot error:', err);
     });
 
     return () => unsubscribe();
-  }, [session]);
+  }, [uid, isSynced]);
 
   const markAsRead = async (id: string) => {
     // Optimistic UI update

@@ -18,6 +18,7 @@ import { updatePassword, updateEmail, reauthenticateWithCredential, EmailAuthPro
 import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { useAuthSync } from '@/components/AuthProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -86,7 +87,6 @@ function SettingsContent() {
 
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
-  const [session, setSession] = useState<{ uid: string; orgId: string } | null>(null);
 
   const [userDoc, setUserDoc] = useState<any>(null);
   const [orgDoc, setOrgDoc] = useState<any>(null);
@@ -115,33 +115,27 @@ function SettingsContent() {
   const [orgForm, setOrgForm] = useState({ name: '', timezone: 'UTC' });
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ uid: data.uid, orgId: data.organizationId });
-      } catch { setLoading(false); }
-    } else { setLoading(false); }
-  }, []);
+  const { isSynced, uid, orgId } = useAuthSync();
+
+  // No longer needed
 
   useEffect(() => {
-    if (!session) return;
+    if (!isSynced || !uid || !orgId) return;
     async function fetchData() {
       try {
-        const uSnap = await getDoc(doc(db, 'users', session!.uid));
+        const uSnap = await getDoc(doc(db, 'users', uid!));
         if (uSnap.exists()) {
           const d = uSnap.data();
           setUserDoc(d);
           setProfileForm({ name: d.name || '', email: d.email || '' });
         }
-        const oSnap = await getDoc(doc(db, 'organizations', session!.orgId));
+        const oSnap = await getDoc(doc(db, 'organizations', orgId!));
         if (oSnap.exists()) {
           const d = oSnap.data();
           setOrgDoc(d);
           setOrgForm({ name: d.name || '', timezone: d.timezone || 'UTC' });
         }
-        const nSnap = await getDoc(doc(db, 'organizations', session!.orgId, 'settings', 'notifications'));
+        const nSnap = await getDoc(doc(db, 'organizations', orgId!, 'settings', 'notifications'));
         if (nSnap.exists()) {
           setNotifSettings(nSnap.data() as typeof notifSettings);
         }
@@ -149,7 +143,7 @@ function SettingsContent() {
       finally { setLoading(false); }
     }
     fetchData();
-  }, [session]);
+  }, [uid, orgId, isSynced]);
 
   const flashSuccess = (key: string) => {
     setSaveSuccess(key);
@@ -206,7 +200,7 @@ function SettingsContent() {
   };
 
   const handleCropSave = async () => {
-    if (!imageToCrop || !croppedAreaPixels || !cropTarget || !session) return;
+    if (!imageToCrop || !croppedAreaPixels || !cropTarget || !uid || !orgId) return;
     setCropModalOpen(false);
     setUploadingPhoto(true);
     try {
@@ -217,10 +211,10 @@ function SettingsContent() {
       if (!res.ok) throw new Error('Upload failed');
       const { url } = await res.json();
       if (cropTarget === 'user') {
-        await setDoc(doc(db, 'users', session.uid), { photoUrl: url }, { merge: true });
+        await setDoc(doc(db, 'users', uid), { photoUrl: url }, { merge: true });
         setUserDoc((prev: any) => ({ ...prev, photoUrl: url }));
       } else {
-        await setDoc(doc(db, 'organizations', session.orgId), { logoUrl: url }, { merge: true });
+        await setDoc(doc(db, 'organizations', orgId), { logoUrl: url }, { merge: true });
         setOrgDoc((prev: any) => ({ ...prev, logoUrl: url }));
       }
     } catch (err) {
@@ -233,14 +227,14 @@ function SettingsContent() {
   };
 
   const handleRemovePhoto = async (target: 'user' | 'org') => {
-    if (!session) return;
+    if (!uid || !orgId) return;
     try {
       if (target === 'user') {
         setUserDoc((prev: any) => ({ ...prev, photoUrl: null }));
-        await setDoc(doc(db, 'users', session.uid), { photoUrl: null }, { merge: true });
+        await setDoc(doc(db, 'users', uid), { photoUrl: null }, { merge: true });
       } else {
         setOrgDoc((prev: any) => ({ ...prev, logoUrl: null }));
-        await setDoc(doc(db, 'organizations', session.orgId), { logoUrl: null }, { merge: true });
+        await setDoc(doc(db, 'organizations', orgId), { logoUrl: null }, { merge: true });
       }
     } catch (err) {
       console.error('Failed to remove photo:', err);
@@ -248,13 +242,13 @@ function SettingsContent() {
   };
 
   const updateProfile = async () => {
-    if (!session) return;
+    if (!uid) return;
     setUpdating('profile');
     try {
-      await setDoc(doc(db, 'users', session.uid), { name: profileForm.name }, { merge: true });
+      await setDoc(doc(db, 'users', uid), { name: profileForm.name }, { merge: true });
       if (profileForm.email !== userDoc.email) {
         await updateEmail(auth.currentUser!, profileForm.email);
-        await setDoc(doc(db, 'users', session.uid), { email: profileForm.email }, { merge: true });
+        await setDoc(doc(db, 'users', uid), { email: profileForm.email }, { merge: true });
       }
       setUserDoc((prev: any) => ({ ...prev, ...profileForm }));
       flashSuccess('profile');
@@ -296,10 +290,10 @@ function SettingsContent() {
   };
 
   const updateOrganization = async () => {
-    if (!session) return;
+    if (!orgId) return;
     setUpdating('org');
     try {
-      await setDoc(doc(db, 'organizations', session.orgId), { name: orgForm.name, timezone: orgForm.timezone }, { merge: true });
+      await setDoc(doc(db, 'organizations', orgId), { name: orgForm.name, timezone: orgForm.timezone }, { merge: true });
       setOrgDoc((prev: any) => ({ ...prev, ...orgForm }));
       flashSuccess('org');
     } catch (err: any) { alert(err.message || 'Failed to update'); }
@@ -307,21 +301,21 @@ function SettingsContent() {
   };
 
   const updateNotification = async (updates: Partial<typeof notifSettings>) => {
-    if (!session) return;
+    if (!orgId) return;
     const merged = { ...notifSettings, ...updates };
     setNotifSettings(merged);
     try {
-      await setDoc(doc(db, 'organizations', session.orgId, 'settings', 'notifications'), merged, { merge: true });
+      await setDoc(doc(db, 'organizations', orgId, 'settings', 'notifications'), merged, { merge: true });
     } catch (err) { console.error(err); }
   };
 
   const exportData = async () => {
-    if (!session) return;
+    if (!orgId) return;
     setUpdating('export');
     try {
       const snap = await getDocs(query(
         collection(db, 'audits'),
-        where('organizationId', '==', session.orgId),
+        where('organizationId', '==', orgId),
         orderBy('createdAt', 'desc')
       ));
       const audits = snap.docs.map(d => d.data());
@@ -346,7 +340,7 @@ function SettingsContent() {
 
   if (loading) {
     return (
-      <DashboardShell role="Admin">
+      <DashboardShell role="admin">
         <div className="dashboard-page-container">
           <Skeleton className="h-9 w-40 mb-2" />
           <Skeleton className="h-5 w-80 mb-8" />
@@ -362,7 +356,7 @@ function SettingsContent() {
   }
 
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         {/* Header */}
         <div className="mb-8 flex flex-col gap-2">
@@ -694,7 +688,7 @@ function SettingsContent() {
 export default function AdminSettingsPage() {
   return (
     <Suspense fallback={
-      <DashboardShell role="Admin">
+      <DashboardShell role="admin">
         <div className="dashboard-page-container">
           <Skeleton className="h-9 w-40 mb-2" />
           <Skeleton className="h-5 w-80 mb-8" />

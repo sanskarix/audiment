@@ -40,8 +40,10 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { useAuthSync } from '@/components/AuthProvider';
 
 export default function ManagerReportDetailPage() {
+  const { isSynced } = useAuthSync();
   const { auditId } = useParams();
   const [audit, setAudit] = useState<any>(null);
   const [responses, setResponses] = useState<any[]>([]);
@@ -50,6 +52,7 @@ export default function ManagerReportDetailPage() {
   const reportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!isSynced) return;
     async function fetchReportData() {
       try {
         const auditDoc = await getDoc(doc(db, 'audits', auditId as string));
@@ -69,7 +72,7 @@ export default function ManagerReportDetailPage() {
       }
     }
     fetchReportData();
-  }, [auditId]);
+  }, [auditId, isSynced]);
 
   const exportToPDF = async () => {
     if (!reportRef.current) return;
@@ -216,7 +219,7 @@ export default function ManagerReportDetailPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Manager">
+      <DashboardShell role="manager">
         <div className="flex items-center justify-center min-h-[400px]">
           <Clock className="h-4 w-4 animate-spin text-muted-text" />
         </div>
@@ -226,7 +229,7 @@ export default function ManagerReportDetailPage() {
 
   if (!audit) {
     return (
-      <DashboardShell role="Manager">
+      <DashboardShell role="manager">
         <div className="text-center py-20 bg-muted/30 rounded-xl">
           <p className="text-muted-text font-normal">This report was not found or is no longer available.</p>
           <Button variant="link" asChild className="mt-2 text-primary">
@@ -238,7 +241,7 @@ export default function ManagerReportDetailPage() {
   }
 
   return (
-    <DashboardShell role="Manager">
+    <DashboardShell role="manager">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-8">
           <div className="flex items-center justify-between gap-6 w-full">

@@ -26,6 +26,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuthSync } from '@/components/AuthProvider';
 import Cropper from 'react-easy-crop';
 
 type Tab = 'profile' | 'security';
@@ -36,10 +37,10 @@ const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
 ];
 
 export default function ManagerSettingsPage() {
+  const { isSynced, uid } = useAuthSync();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
-  const [session, setSession] = useState<{ uid: string } | null>(null);
 
   const [userDoc, setUserDoc] = useState<any>(null);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
@@ -56,21 +57,13 @@ export default function ManagerSettingsPage() {
   const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ uid: data.uid });
-      } catch { setLoading(false); }
-    } else { setLoading(false); }
-  }, []);
+  // No longer needed
 
   useEffect(() => {
-    if (!session) return;
+    if (!isSynced || !uid) return;
     async function fetchData() {
       try {
-        const uSnap = await getDoc(doc(db, 'users', session!.uid));
+        const uSnap = await getDoc(doc(db, 'users', uid!));
         if (uSnap.exists()) {
           const d = uSnap.data();
           setUserDoc(d);
@@ -80,7 +73,7 @@ export default function ManagerSettingsPage() {
       finally { setLoading(false); }
     }
     fetchData();
-  }, [session]);
+  }, [uid, isSynced]);
 
   const flashSuccess = (key: string) => {
     setSaveSuccess(key);
@@ -136,7 +129,7 @@ export default function ManagerSettingsPage() {
   };
 
   const handleCropSave = async () => {
-    if (!imageToCrop || !croppedAreaPixels || !session) return;
+    if (!imageToCrop || !croppedAreaPixels || !uid) return;
     setCropModalOpen(false);
     setUploadingPhoto(true);
     try {
@@ -146,7 +139,7 @@ export default function ManagerSettingsPage() {
       const res = await fetch('/api/upload', { method: 'POST', body: fd });
       if (!res.ok) throw new Error('Upload failed');
       const { url } = await res.json();
-      await setDoc(doc(db, 'users', session.uid), { photoUrl: url }, { merge: true });
+      await setDoc(doc(db, 'users', uid!), { photoUrl: url }, { merge: true });
       setUserDoc((prev: any) => ({ ...prev, photoUrl: url }));
       flashSuccess('profile-photo');
     } catch (err) {
@@ -158,10 +151,10 @@ export default function ManagerSettingsPage() {
   };
 
   const handleRemovePhoto = async () => {
-    if (!session) return;
+    if (!uid) return;
     try {
       setUserDoc((prev: any) => ({ ...prev, photoUrl: null }));
-      await setDoc(doc(db, 'users', session.uid), { photoUrl: null }, { merge: true });
+      await setDoc(doc(db, 'users', uid!), { photoUrl: null }, { merge: true });
       flashSuccess('profile-photo-removed');
     } catch (err) {
       console.error('Failed to remove photo:', err);
@@ -169,15 +162,15 @@ export default function ManagerSettingsPage() {
   };
 
   const updateProfile = async () => {
-    if (!session) return;
+    if (!uid) return;
     setUpdating('profile');
     try {
-      await setDoc(doc(db, 'users', session.uid), { name: profileForm.name }, { merge: true });
+      await setDoc(doc(db, 'users', uid!), { name: profileForm.name }, { merge: true });
       if (profileForm.email !== userDoc.email) {
         if (auth.currentUser) {
           await updateEmail(auth.currentUser, profileForm.email);
         }
-        await setDoc(doc(db, 'users', session.uid), { email: profileForm.email }, { merge: true });
+        await setDoc(doc(db, 'users', uid!), { email: profileForm.email }, { merge: true });
       }
       setUserDoc((prev: any) => ({ ...prev, ...profileForm }));
       flashSuccess('profile');
@@ -220,7 +213,7 @@ export default function ManagerSettingsPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Manager">
+      <DashboardShell role="manager">
         <div className="dashboard-page-container">
           <Skeleton className="h-9 w-40 mb-2" />
           <div className="flex gap-8 mt-8">
@@ -235,7 +228,7 @@ export default function ManagerSettingsPage() {
   }
 
   return (
-    <DashboardShell role="Manager">
+    <DashboardShell role="manager">
       <div className="dashboard-page-container">
         {/* Header */}
         <div className="mb-8">

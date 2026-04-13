@@ -59,7 +59,7 @@ export default function FlashmobAuditDetailsPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Admin">
+      <DashboardShell role="admin">
         <div className="flex justify-center items-center h-64">
           <Loader2 className="h-8 w-8 animate-spin text-muted-text" />
         </div>
@@ -69,7 +69,7 @@ export default function FlashmobAuditDetailsPage() {
 
   if (!audit) {
     return (
-      <DashboardShell role="Admin">
+      <DashboardShell role="admin">
         <div className="text-center py-12">
           <h2 className="page-heading mb-4">Audit not found</h2>
           <Link href="/dashboard/admin/flashmob" passHref>
@@ -83,7 +83,7 @@ export default function FlashmobAuditDetailsPage() {
   const date = audit.submittedAt?.toDate();
 
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         <div className="page-header-section flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div className="flex flex-col gap-2">

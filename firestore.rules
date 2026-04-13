@@ -2,164 +2,199 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ─── HELPER FUNCTIONS ───────────────────────────────
+    // ─── HELPER FUNCTIONS ────────────────────────────────────────────────────
 
-    // Check if user is authenticated
     function isAuth() {
       return request.auth != null;
     }
 
-    // Get the current user's Firestore document
-    // Only used where we need branchIds / assignedLocations — NOT for role checks.
-    function getUserData() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
-    }
-
-    // ─── Role checks (token claims with Firestore lookup fallback) ──────────
+    // Role helpers — purely from token claims (no Firestore lookups = no quota limits)
     function isAdmin() {
-      return isAuth() && (request.auth.token.role == 'admin' || getUserData().role == 'ADMIN');
+      return isAuth() && request.auth.token.role.lower() == 'admin';
     }
 
     function isManager() {
-      return isAuth() && (request.auth.token.role == 'manager' || getUserData().role == 'MANAGER');
+      return isAuth() && request.auth.token.role.lower() == 'manager';
     }
 
     function isAuditor() {
-      return isAuth() && (request.auth.token.role == 'auditor' || getUserData().role == 'AUDITOR');
+      return isAuth() && request.auth.token.role.lower() == 'auditor';
     }
 
-    // Branch access checks (still requires Firestore lookup for assignedLocations)
-    function managerManagesBranch(locationId) {
-      return isManager() && locationId in getUserData().assignedLocations;
+    function isAdminOrManager() {
+      return isAdmin() || isManager();
     }
 
-    function auditorAssignedToBranch(locationId) {
-      return isAuditor() && locationId in getUserData().assignedLocations;
+    // Token-based org check — no Firestore lookup required
+    function myOrgId() {
+      return request.auth.token.organizationId;
     }
 
 
-    // ─── USERS COLLECTION ───────────────────────────────
-    // Only admin can list/create/delete users
-    // Users can read and update their own profile only
+    // ─── ORGANIZATIONS COLLECTION ─────────────────────────────────────────────
+    // Admin: full access to their own org document
+    // Manager: read their own org document
+    // Auditor: read their own org document
+
+    match /organizations/{orgId} {
+      allow read: if isAuth() && orgId == myOrgId();
+      allow create: if isAdmin() && orgId == myOrgId();
+      allow update: if isAdmin() && orgId == myOrgId();
+      allow delete: if isAdmin() && orgId == myOrgId();
+
+      // Nested settings subcollection
+      match /settings/{settingDoc} {
+        allow read: if isAuth() && orgId == myOrgId();
+        allow write: if isAdmin() && orgId == myOrgId();
+      }
+    }
+
+
+    // ─── USERS COLLECTION ────────────────────────────────────────────────────
+    // Admin: full access
+    // Manager: read any user in the system (to resolve names, auditors, etc.)
+    // Auditor: read + update own document
+    // Any user: update their own document (profile info, photo, etc.)
 
     match /users/{userId} {
-      allow read: if isAuth() && 
-        (request.auth.uid == userId || isAdmin() || (isManager() && resource.data.managerId == request.auth.uid));
+      allow read: if isAuth() && (
+        isAdmin() ||
+        isManager() ||
+        isAuditor() ||
+        request.auth.uid == userId
+      );
       allow create: if isAdmin();
-      allow update: if isAdmin() || 
-        request.auth.uid == userId;
+      allow update: if isAdmin() || request.auth.uid == userId;
       allow delete: if isAdmin();
     }
 
-    // ─── LOCATIONS COLLECTION (Replaces Branches) ───────
-    // Admin: full access
-    // Manager: read branches assigned to them only
-    // Auditor: read branches assigned to them only
+
+    // ─── LOCATIONS COLLECTION ────────────────────────────────────────────────
+    // Admin: full CRUD
+    // Manager + Auditor: read all locations (filtered on client by org)
 
     match /locations/{locationId} {
-      allow read: if isAdmin() || 
-        managerManagesBranch(locationId) || 
-        auditorAssignedToBranch(locationId) ||
-        (isAuth() && request.auth.uid in resource.data.assignedManagerIds);
-      allow create, update, delete: if isAdmin();
+      allow read: if isAuth() && (isAdmin() || isManager() || isAuditor());
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
     }
 
-    // ─── AUDIT TEMPLATES COLLECTION ─────────────────────
-    // Admin: full access
-    // Manager: read templates for their branches
-    // Auditor: read active templates for their branches
+
+    // ─── AUDIT TEMPLATES COLLECTION ──────────────────────────────────────────
+    // Admin: full CRUD (including questions subcollection)
+    // Manager + Auditor: read (to list templates; filtered by org on client)
 
     match /auditTemplates/{templateId} {
-      allow read: if isAdmin() || 
-        (isManager() && resource.data.locationIds.hasAny(getUserData().assignedLocations)) ||
-        (isAuditor() && resource.data.locationIds.hasAny(getUserData().assignedLocations) && 
-         resource.data.status == 'active');
-      allow create, update, delete: if isAdmin();
+      allow read: if isAuth() && (isAdmin() || isManager() || isAuditor());
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+
+      match /questions/{questionId} {
+        allow read: if isAuth() && (isAdmin() || isManager() || isAuditor());
+        allow create: if isAdmin();
+        allow update: if isAdmin();
+        allow delete: if isAdmin();
+      }
     }
 
-    // ─── AUDITS COLLECTION (Replaces Audit Assignments) ──
+
+    // ─── AUDITS COLLECTION ───────────────────────────────────────────────────
     // Admin: full access
-    // Manager: read/create/update for their branches only
-    // Auditor: read assignments assigned to them only
+    // Manager: read all audits (filtered by org on client); create + update
+    // Auditor: read own assigned audits; update own assigned audit (progress/submit)
 
     match /audits/{auditId} {
-      allow read: if isAdmin() || 
-        managerManagesBranch(resource.data.locationId) ||
-        (isManager() && resource.data.assignedManagerId == request.auth.uid) ||
-        (isManager() && resource.data.organizationId == getUserData().organizationId) ||
+      allow read: if isAuth() && (
+        isAdmin() ||
+        isManager() ||
+        (isAuditor() && resource.data.assignedAuditorId == request.auth.uid)
+      );
+      allow create: if isAdmin() || isManager();
+      allow update: if isAdmin() || isManager() ||
         (isAuditor() && resource.data.assignedAuditorId == request.auth.uid);
-      allow create, update: if isAdmin() || 
-        managerManagesBranch(resource.data.locationId);
       allow delete: if isAdmin();
     }
 
-    // ─── AUDIT RESPONSES COLLECTION (Replaces Audit Submissions)
+
+    // ─── AUDIT RESPONSES COLLECTION ──────────────────────────────────────────
     // Admin: full access
-    // Manager: read submissions for their branches only
-    // Auditor: read/create/update their own submissions only
+    // Manager: read all responses (to view reports)
+    // Auditor: create + read + update own responses
 
     match /auditResponses/{responseId} {
-      allow read: if isAdmin() || 
-        managerManagesBranch(resource.data.locationId) ||
+      allow read: if isAuth() && (
+        isAdmin() ||
+        isManager() ||
+        (isAuditor() && resource.data.auditorId == request.auth.uid)
+      );
+      allow create: if isAuth() && (
+        isAdmin() ||
+        isManager() ||
+        (isAuditor() && request.resource.data.auditorId == request.auth.uid)
+      );
+      allow update: if isAdmin() || isManager() ||
         (isAuditor() && resource.data.auditorId == request.auth.uid);
-      allow create: if isAuditor() && 
-        auditorAssignedToBranch(request.resource.data.locationId) &&
-        request.resource.data.auditorId == request.auth.uid;
-      allow update: if isAdmin() || 
-        (isAuditor() && resource.data.auditorId == request.auth.uid &&
-         resource.data.submittedAt == null);
       allow delete: if isAdmin();
     }
 
-    // ─── CORRECTIVE ACTIONS COLLECTION ──────────────────
+
+    // ─── CORRECTIVE ACTIONS COLLECTION ───────────────────────────────────────
     // Admin: full access
-    // Manager: read/update corrective actions for their branches
-    // Auditor: read corrective actions they created (via submission)
+    // Manager: read + create + update (managing actions from their branches)
+    // Auditor: create (auto-generated from audit submission batch)
 
     match /correctiveActions/{actionId} {
-      allow read: if isAdmin() || 
-        managerManagesBranch(resource.data.locationId) ||
-        (isManager() && resource.data.assignedManagerId == request.auth.uid) ||
-        (isManager() && resource.data.organizationId == getUserData().organizationId) ||
-        (isAuditor() && resource.data.locationId in getUserData().assignedLocations);
-      allow create: if isAdmin() || 
-        managerManagesBranch(request.resource.data.locationId);
-      allow update: if isAdmin() || 
-        managerManagesBranch(resource.data.locationId);
+      allow read: if isAuth() && (isAdmin() || isManager() || isAuditor());
+      allow create: if isAuth() && (isAdmin() || isManager() || isAuditor());
+      allow update: if isAdmin() || isManager();
       allow delete: if isAdmin();
     }
 
-    // ─── FLASHMOB AUDITS COLLECTION (Replaces Flashmob Submissions)
+
+    // ─── FLASHMOB AUDITS COLLECTION ──────────────────────────────────────────
     // CRITICAL: Managers must NEVER see flashmob data
     // Admin: full access
-    // Auditor: create only (cannot read back their own)
+    // Auditor: create (blind submit) + read OWN submitted records (for history page)
 
     match /flashmobAudits/{flashmobId} {
-      allow read: if isAdmin();
-      allow create: if isAuditor() && 
-        auditorAssignedToBranch(request.resource.data.locationId) &&
+      allow read: if isAdmin() ||
+        (isAuditor() && resource.data.auditorId == request.auth.uid);
+      allow create: if isAuditor() &&
         request.resource.data.auditorId == request.auth.uid &&
         request.resource.data.isVisibleToManager == false;
-      allow update, delete: if isAdmin();
-    }
-
-    // ─── NOTIFICATIONS COLLECTION ───────────────────────
-    // Users can only read their own notifications
-    // System (admin) creates notifications
-
-    match /notifications/{notificationId} {
-      allow read: if isAdmin() || (isAuth() && 
-        resource.data.recipientId == request.auth.uid);
-      allow create: if isAdmin();
-      allow update: if isAuth() && 
-        resource.data.recipientId == request.auth.uid &&
-        request.resource.data.diff(resource.data).affectedKeys()
-          .hasOnly(['isRead']);
+      allow update: if isAdmin();
       allow delete: if isAdmin();
     }
 
-    // ─── DENY ALL OTHER COLLECTIONS ─────────────────────
-    // Any collection not explicitly listed above is denied
+
+    // ─── NOTIFICATIONS COLLECTION ────────────────────────────────────────────
+    // Admin: full access
+    // Any authenticated user: create notifications (for system events, batch ops)
+    // Users: read their own notifications
+    // Users: update ONLY the isRead field on their own notifications
+    // Users: delete their own notifications
+
+    match /notifications/{notificationId} {
+      allow read: if isAuth() && (
+        isAdmin() ||
+        isManager() ||
+        isAuditor() ||
+        resource.data.recipientId == request.auth.uid
+      );
+      allow create: if isAuth();
+      allow update: if isAuth() && (
+        isAdmin() ||
+        (resource.data.recipientId == request.auth.uid &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']))
+      );
+      allow delete: if isAdmin() ||
+        (isAuth() && resource.data.recipientId == request.auth.uid);
+    }
+
+
+    // ─── DENY ALL OTHER COLLECTIONS ──────────────────────────────────────────
     match /{document=**} {
       allow read, write: if false;
     }

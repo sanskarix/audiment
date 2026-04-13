@@ -47,37 +47,32 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { useAuthSync } from '@/components/AuthProvider';
 
 export default function ManagerReportsPage() {
+  const { isSynced, uid, orgId } = useAuthSync();
   const [reports, setReports] = useState<any[]>([]);
   const [locations, setLocations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Filters
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        setSession(JSON.parse(decodeURIComponent(match[1])));
-      } catch (e) { }
-    }
-  }, []);
 
-  const fetchReports = async (ids?: string[]) => {
+  const fetchReports = async (ids?: string[], orgIdFetched?: string) => {
     setLoading(true);
     try {
       const activeIds = ids || locations.map(l => l.id);
-      if (activeIds.length === 0) {
+      const organizationId = orgIdFetched || orgId;
+      if (activeIds.length === 0 || !organizationId) {
         setReports([]);
         return;
       }
 
       let q = query(
         collection(db, 'audits'),
+        where('organizationId', '==', organizationId),
         where('status', '==', 'completed'),
         where('locationId', 'in', activeIds),
         orderBy('completedAt', 'desc')
@@ -99,7 +94,11 @@ export default function ManagerReportsPage() {
   };
 
   useEffect(() => {
-    if (!session?.uid) return;
+    if (!isSynced) return;
+    if (!uid || !orgId) {
+      setLoading(false);
+      return;
+    }
 
     async function fetchInitialData() {
       try {
@@ -107,7 +106,7 @@ export default function ManagerReportsPage() {
         let locationIds: string[] = [];
         
         // Strategy 1: Check User Document
-        const userRef = doc(db, 'users', session.uid);
+        const userRef = doc(db, 'users', uid!);
         const userSnap = await getDoc(userRef);
         const userData = userSnap.data();
         
@@ -121,13 +120,13 @@ export default function ManagerReportsPage() {
           console.log('Manager Reports - No locations in user doc, querying locations collection...');
           const locsByArrayQuery = query(
             collection(db, 'locations'),
-            where('organizationId', '==', session.organizationId),
-            where('assignedManagerIds', 'array-contains', session.uid)
+            where('organizationId', '==', orgId!),
+            where('assignedManagerIds', 'array-contains', uid!)
           );
           const locsBySingleQuery = query(
             collection(db, 'locations'),
-            where('organizationId', '==', session.organizationId),
-            where('assignedManagerId', '==', session.uid)
+            where('organizationId', '==', orgId!),
+            where('assignedManagerId', '==', uid!)
           );
           
           const [snapArray, snapSingle] = await Promise.all([
@@ -151,7 +150,7 @@ export default function ManagerReportsPage() {
 
         const locationsCollSnap = await getDocs(query(
           collection(db, 'locations'),
-          where('organizationId', '==', session.organizationId)
+          where('organizationId', '==', orgId!)
         ));
         
         // Filter locations locally based on assigned ids
@@ -163,19 +162,19 @@ export default function ManagerReportsPage() {
 
         const locIds = locs.map(l => l.id);
         if (locIds.length > 0) {
-          await fetchReports(locIds);
+          await fetchReports(locIds, orgId!);
         } else {
           setReports([]);
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('[ManagerReports] Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     }
     fetchInitialData();
-  }, [session]);
+  }, [uid, orgId, isSynced]);
 
   useEffect(() => {
     if (locations.length > 0) fetchReports();
@@ -183,7 +182,7 @@ export default function ManagerReportsPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Manager">
+      <DashboardShell role="manager">
         <div className="dashboard-page-container">
           <div className="page-header-section mb-6">
             <Skeleton className="h-8 w-64" />
@@ -205,7 +204,7 @@ export default function ManagerReportsPage() {
   );
 
   return (
-    <DashboardShell role="Manager">
+    <DashboardShell role="manager">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">

@@ -52,39 +52,31 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { format, startOfDay, endOfDay } from 'date-fns';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { useAuthSync } from '@/components/AuthProvider';
 
 export default function AdminReportsPage() {
+  const { isSynced, orgId } = useAuthSync();
   const [reports, setReports] = useState<any[]>([]);
   const [locations, setLocations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Filters
-  const [session, setSession] = useState<{ organizationId: string } | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
   const [dateRange, setDateRange] = useState<{ start: Date | null, end: Date | null }>({
     start: null,
     end: null
   });
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        setSession(JSON.parse(decodeURIComponent(match[1])));
-      } catch (e) { }
-    }
-  }, []);
+  // No longer needed
 
   useEffect(() => {
+    if (!isSynced || !orgId) return;
     async function fetchInitialData() {
       try {
-        if (!session?.organizationId) return;
-
-        console.log('Admin Reports - Fetching locations for org:', session.organizationId);
+        console.log('Admin Reports - Fetching locations for org:', orgId);
         const locationsSnap = await getDocs(query(
           collection(db, 'locations'),
-          where('organizationId', '==', session.organizationId)
+          where('organizationId', '==', orgId)
         ));
         console.log('Admin Reports - Locations found:', locationsSnap.size);
         setLocations(locationsSnap.docs.map(d => ({ id: d.id, name: d.data().name })));
@@ -96,20 +88,20 @@ export default function AdminReportsPage() {
         setLoading(false);
       }
     }
-    if (session?.organizationId) {
+    if (orgId) {
       fetchInitialData();
     }
-  }, [session]);
+  }, [orgId, isSynced]);
 
   async function fetchReports() {
     setLoading(true);
     try {
-      if (!session?.organizationId) return;
+      if (!orgId) return;
 
-      console.log('Admin Reports - Fetching completed audits for org:', session.organizationId);
+      console.log('Admin Reports - Fetching completed audits for org:', orgId);
       let q = query(
         collection(db, 'audits'),
-        where('organizationId', '==', session.organizationId),
+        where('organizationId', '==', orgId),
         where('status', '==', 'completed'),
         orderBy('completedAt', 'desc')
       );
@@ -136,12 +128,13 @@ export default function AdminReportsPage() {
   );
 
   useEffect(() => {
+    if (!isSynced) return;
     fetchReports();
-  }, [selectedLocation]);
+  }, [selectedLocation, isSynced]);
 
   if (loading) {
     return (
-      <DashboardShell role="Admin">
+      <DashboardShell role="admin">
         <div className="dashboard-page-container">
           <div className="page-header-section mb-6">
             <Skeleton className="h-8 w-64" />
@@ -157,7 +150,7 @@ export default function AdminReportsPage() {
   }
 
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

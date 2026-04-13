@@ -283,85 +283,63 @@ const LogoCloud = () => {
                             durationOnHover={20}
                             duration={40}
                             gap={112}>
-                            <div className="flex">
+                            <div className="flex h-36 items-center justify-center">
                                 <Image
-                                    className="mx-auto h-5 w-fit dark:invert object-contain"
-                                    src="https://html.tailus.io/blocks/customers/nvidia.svg"
-                                    alt="Nvidia Logo"
-                                    height={20}
-                                    width={100}
+                                    className="h-full w-auto max-w-none dark:invert object-contain"
+                                    src="/logos/aster.svg"
+                                    alt="Aster Logo"
+                                    height={160}
+                                    width={450}
                                     unoptimized
                                 />
                             </div>
-
-                            <div className="flex">
+                            <div className="flex h-36 items-center justify-center">
                                 <Image
-                                    className="mx-auto h-4 w-fit dark:invert object-contain"
-                                    src="https://html.tailus.io/blocks/customers/column.svg"
-                                    alt="Column Logo"
-                                    height={16}
-                                    width={100}
+                                    className="h-full w-auto max-w-none dark:invert object-contain"
+                                    src="/logos/ayatana.svg"
+                                    alt="Ayatana Logo"
+                                    height={160}
+                                    width={450}
                                     unoptimized
                                 />
                             </div>
-                            <div className="flex">
+                            <div className="flex h-36 items-center justify-center">
                                 <Image
-                                    className="mx-auto h-4 w-fit dark:invert object-contain"
-                                    src="https://html.tailus.io/blocks/customers/github.svg"
-                                    alt="GitHub Logo"
-                                    height={16}
-                                    width={100}
+                                    className="h-full w-auto max-w-none dark:invert object-contain"
+                                    src="/logos/bw.svg"
+                                    alt="BW Logo"
+                                    height={160}
+                                    width={450}
                                     unoptimized
                                 />
                             </div>
-                            <div className="flex">
+                            <div className="flex h-36 items-center justify-center">
                                 <Image
-                                    className="mx-auto h-5 w-fit dark:invert object-contain"
-                                    src="https://html.tailus.io/blocks/customers/nike.svg"
-                                    alt="Nike Logo"
-                                    height={20}
-                                    width={100}
+                                    className="h-full w-auto max-w-none dark:invert object-contain"
+                                    src="/logos/motherhood.svg"
+                                    alt="Motherhood Logo"
+                                    height={160}
+                                    width={450}
                                     unoptimized
                                 />
                             </div>
-                            <div className="flex">
+                            <div className="flex h-36 items-center justify-center">
                                 <Image
-                                    className="mx-auto h-5 w-fit dark:invert object-contain"
-                                    src="https://html.tailus.io/blocks/customers/lemonsqueezy.svg"
-                                    alt="Lemon Squeezy Logo"
-                                    height={20}
-                                    width={100}
+                                    className="h-full w-auto max-w-none dark:invert object-contain"
+                                    src="/logos/tom-and-chee.svg"
+                                    alt="Tom & Chee Logo"
+                                    height={160}
+                                    width={450}
                                     unoptimized
                                 />
                             </div>
-                            <div className="flex">
+                            <div className="flex h-36 items-center justify-center">
                                 <Image
-                                    className="mx-auto h-4 w-fit dark:invert object-contain"
-                                    src="https://html.tailus.io/blocks/customers/laravel.svg"
-                                    alt="Laravel Logo"
-                                    height={16}
-                                    width={100}
-                                    unoptimized
-                                />
-                            </div>
-                            <div className="flex">
-                                <Image
-                                    className="mx-auto h-7 w-fit dark:invert object-contain"
-                                    src="https://html.tailus.io/blocks/customers/lilly.svg"
-                                    alt="Lilly Logo"
-                                    height={28}
-                                    width={100}
-                                    unoptimized
-                                />
-                            </div>
-
-                            <div className="flex">
-                                <Image
-                                    className="mx-auto h-6 w-fit dark:invert object-contain"
-                                    src="https://html.tailus.io/blocks/customers/openai.svg"
-                                    alt="OpenAI Logo"
-                                    height={24}
-                                    width={100}
+                                    className="h-full w-auto max-w-none dark:invert object-contain"
+                                    src="/logos/vrl.svg"
+                                    alt="VRL Logo"
+                                    height={160}
+                                    width={450}
                                     unoptimized
                                 />
                             </div>

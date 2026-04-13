@@ -10,26 +10,21 @@ import { ChevronLeft, ChevronRight, MapPin, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { useAuthSync } from '@/components/AuthProvider';
 
 export default function ManagerCalendarPage() {
-  const [session, setSession] = useState<any>(null);
+  const { isSynced, uid, orgId } = useAuthSync();
   const [audits, setAudits] = useState<any[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        setSession(JSON.parse(decodeURIComponent(match[1])));
-      } catch (e) { }
+    if (!isSynced) return;
+    if (!uid || !orgId) {
+      setLoading(false);
+      return;
     }
-  }, []);
-
-  useEffect(() => {
-    if (!session?.uid || !session?.organizationId) return;
-
-    let unsubscribe = () => { };
 
     async function fetchCalendarData() {
       try {
@@ -37,7 +32,7 @@ export default function ManagerCalendarPage() {
         let locationIds: string[] = [];
         
         // Strategy 1: Check User Document
-        const userRef = doc(db, 'users', session.uid);
+        const userRef = doc(db, 'users', uid!);
         const userSnap = await getDoc(userRef);
         const userData = userSnap.data();
         
@@ -51,13 +46,13 @@ export default function ManagerCalendarPage() {
           console.log('Manager Calendar - No locations in user doc, querying locations collection...');
           const locsByArrayQuery = query(
             collection(db, 'locations'),
-            where('organizationId', '==', session.organizationId),
-            where('assignedManagerIds', 'array-contains', session.uid)
+            where('organizationId', '==', orgId!),
+            where('assignedManagerIds', 'array-contains', uid!)
           );
           const locsBySingleQuery = query(
             collection(db, 'locations'),
-            where('organizationId', '==', session.organizationId),
-            where('assignedManagerId', '==', session.uid)
+            where('organizationId', '==', orgId),
+            where('assignedManagerId', '==', uid)
           );
           
           const [snapArray, snapSingle] = await Promise.all([
@@ -77,13 +72,13 @@ export default function ManagerCalendarPage() {
           return;
         }
 
-        const usersSnap = await getDocs(query(collection(db, 'users'), where('organizationId', '==', session.organizationId)));
+        const usersSnap = await getDocs(query(collection(db, 'users'), where('organizationId', '==', orgId)));
         const usersMap = new Map();
         usersSnap.forEach(doc => usersMap.set(doc.id, doc.data().name));
 
         const auditsQuery = query(
           collection(db, 'audits'),
-          where('organizationId', '==', session.organizationId),
+          where('organizationId', '==', orgId),
           where('locationId', 'in', locationIds.slice(0, 30))
         );
 
@@ -101,13 +96,13 @@ export default function ManagerCalendarPage() {
         setAudits(fetchedAudits);
         setLoading(false);
       } catch (e) {
-        console.error("Error fetching calendar data:", e);
+        console.error("[ManagerCalendar] Error fetching calendar data:", e);
         setLoading(false);
       }
     }
 
     fetchCalendarData();
-  }, [session]);
+  }, [uid, orgId, isSynced]);
 
   const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
   const prevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
@@ -132,7 +127,7 @@ export default function ManagerCalendarPage() {
   const [expandedAuditId, setExpandedAuditId] = useState<string | null>(null);
 
   return (
-    <DashboardShell role="Manager">
+    <DashboardShell role="manager">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-1">

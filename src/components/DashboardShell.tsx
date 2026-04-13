@@ -45,14 +45,15 @@ import {
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import NotificationBell from './NotificationBell';
+import { useAuthSync } from './AuthProvider';
 
 interface DashboardShellProps {
-  role: 'Admin' | 'Manager' | 'Auditor';
+  role: 'admin' | 'manager' | 'auditor';
   children: React.ReactNode;
 }
 
 const NAV_ITEMS = {
-  Admin: [
+  admin: [
     { title: 'Overview', icon: LayoutDashboard, href: '/dashboard/admin' },
     { title: 'Users', icon: Users, href: '/dashboard/admin/users' },
     { title: 'Locations', icon: MapPin, href: '/dashboard/admin/locations' },
@@ -61,7 +62,7 @@ const NAV_ITEMS = {
     { title: 'Reports', icon: BarChart, href: '/dashboard/admin/reports' },
     { title: 'Flashmob', icon: Video, href: '/dashboard/admin/flashmob' },
   ],
-  Manager: [
+  manager: [
     { title: 'Overview', icon: LayoutDashboard, href: '/dashboard/manager' },
     { title: 'Audits', icon: CheckSquare, href: '/dashboard/manager/audits' },
     { title: 'Calendar', icon: Calendar, href: '/dashboard/manager/calendar' },
@@ -69,7 +70,7 @@ const NAV_ITEMS = {
     { title: 'Corrective actions', icon: ClipboardList, href: '/dashboard/manager/corrective-actions' },
     { title: 'Reports', icon: BarChart, href: '/dashboard/manager/reports' },
   ],
-  Auditor: [
+  auditor: [
     { title: 'My audits', icon: CheckSquare, href: '/dashboard/auditor' },
     { title: 'History', icon: HistoryIcon, href: '/dashboard/auditor/history' },
     { title: 'Flashmob', icon: Video, href: '/dashboard/auditor/flashmob' },
@@ -86,34 +87,31 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
   const { theme, setTheme } = useTheme();
   const [userState, setUserState] = useState<{ name: string; email: string; photoUrl?: string } | null>(null);
   const [hasFlashmobAccess, setHasFlashmobAccess] = useState(false);
+  const { isSynced, uid } = useAuthSync();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
+    if (!isSynced || !uid) return;
+    
     let unsubUser: any;
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setUserState({ name: data.name, email: data.email });
-        if (data.uid) {
-          unsubUser = onSnapshot(doc(db, 'users', data.uid), (snap) => {
-            const uData = snap.data();
-            if (uData) {
-              if (uData.isActive === false) {
-                logoutUser().then(() => {
-                  router.push('/login?error=' + encodeURIComponent('Your account has been deactivated. Contact your administrator.'));
-                });
-                return;
-              }
-              setUserState(prev => prev ? { ...prev, ...uData } : { name: uData.name, email: uData.email, photoUrl: uData.photoUrl });
-              if (role === 'Auditor') setHasFlashmobAccess(uData.hasFlashmobAccess === true);
-            }
+    unsubUser = onSnapshot(doc(db, 'users', uid), (snap) => {
+      const uData = snap.data();
+      if (uData) {
+        if (uData.isActive === false) {
+          logoutUser().then(() => {
+            router.push('/login?error=' + encodeURIComponent('Your account has been deactivated. Contact your administrator.'));
           });
+          return;
         }
-      } catch (e) { /* ignore */ }
-    }
+        setUserState(prev => prev ? { ...prev, ...uData } : { name: uData.name, email: uData.email, photoUrl: uData.photoUrl });
+        if (role === 'auditor') setHasFlashmobAccess(uData.hasFlashmobAccess === true);
+      }
+    }, (err) => {
+      console.error('[DashboardShell] User snapshot error:', err);
+    });
+
     return () => { if (unsubUser) unsubUser(); };
-  }, [role]);
+  }, [role, isSynced, uid]);
 
   async function handleLogout() {
     await logoutUser();
@@ -121,7 +119,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
   }
 
   const baseNav = NAV_ITEMS[role] ?? [];
-  const navItems = role === 'Auditor'
+  const navItems = role === 'auditor'
     ? baseNav.filter(item => item.href !== '/dashboard/auditor/flashmob' || hasFlashmobAccess)
     : baseNav;
 
@@ -186,7 +184,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                         </Avatar>
                         <div className="flex flex-col gap-0.5 leading-none overflow-hidden text-left ml-2">
                           <span className="font-medium truncate text-sm text-body">{userState?.name || 'Loading...'}</span>
-                          <span className="text-[10px] font-medium text-muted-text/50 truncate">{role}</span>
+                          <span className="text-[10px] font-medium text-muted-text/50 truncate uppercase tracking-widest">{role}</span>
                         </div>
                         <ChevronUp className="ml-auto h-4 w-4 shrink-0 opacity-50" />
                       </SidebarMenuButton>
@@ -200,8 +198,8 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                       <DropdownMenuItem className="cursor-pointer" asChild>
                         <Link
                           href={
-                            role === 'Admin' ? '/dashboard/admin/settings' :
-                              role === 'Manager' ? '/dashboard/manager/settings' :
+                            role === 'admin' ? '/dashboard/admin/settings' :
+                              role === 'manager' ? '/dashboard/manager/settings' :
                                 '/dashboard/auditor/settings'
                           }
                           className="flex items-center w-full"
@@ -274,8 +272,8 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                 <DropdownMenuItem className="cursor-pointer" asChild>
                   <Link
                     href={
-                      role === 'Admin' ? '/dashboard/admin/settings' :
-                        role === 'Manager' ? '/dashboard/manager/settings' :
+                      role === 'admin' ? '/dashboard/admin/settings' :
+                        role === 'manager' ? '/dashboard/manager/settings' :
                           '/dashboard/auditor/settings'
                     }
                     className="flex items-center w-full"

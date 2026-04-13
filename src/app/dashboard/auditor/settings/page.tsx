@@ -28,6 +28,7 @@ import {
   User2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuthSync } from '@/components/AuthProvider';
 import Cropper from 'react-easy-crop';
 
 const LANGUAGES = [
@@ -40,9 +41,9 @@ const LANGUAGES = [
 ];
 
 export default function AuditorSettingsPage() {
+  const { isSynced, uid, orgId } = useAuthSync();
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
-  const [session, setSession] = useState<{ uid: string; orgId: string } | null>(null);
 
   const [userDoc, setUserDoc] = useState<any>(null);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
@@ -59,21 +60,13 @@ export default function AuditorSettingsPage() {
   const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ uid: data.uid, orgId: data.organizationId });
-      } catch { setLoading(false); }
-    } else { setLoading(false); }
-  }, []);
+  // No longer needed
 
   useEffect(() => {
-    if (!session) return;
+    if (!isSynced || !uid) return;
     async function fetchData() {
       try {
-        const uSnap = await getDoc(doc(db, 'users', session!.uid));
+        const uSnap = await getDoc(doc(db, 'users', uid!));
         if (uSnap.exists()) {
           const d = uSnap.data();
           setUserDoc(d);
@@ -87,7 +80,7 @@ export default function AuditorSettingsPage() {
       finally { setLoading(false); }
     }
     fetchData();
-  }, [session]);
+  }, [uid, isSynced]);
 
   const flashSuccess = (key: string) => {
     setSaveSuccess(key);
@@ -143,7 +136,7 @@ export default function AuditorSettingsPage() {
   };
 
   const handleCropSave = async () => {
-    if (!imageToCrop || !croppedAreaPixels || !session) return;
+    if (!imageToCrop || !croppedAreaPixels || !uid) return;
     setCropModalOpen(false);
     setUploadingPhoto(true);
     try {
@@ -153,7 +146,7 @@ export default function AuditorSettingsPage() {
       const res = await fetch('/api/upload', { method: 'POST', body: fd });
       if (!res.ok) throw new Error('Upload failed');
       const { url } = await res.json();
-      await setDoc(doc(db, 'users', session.uid), { photoUrl: url }, { merge: true });
+      await setDoc(doc(db, 'users', uid), { photoUrl: url }, { merge: true });
       setUserDoc((prev: any) => ({ ...prev, photoUrl: url }));
     } catch (err) {
       console.error(err);
@@ -164,27 +157,27 @@ export default function AuditorSettingsPage() {
   };
 
   const handleRemovePhoto = async () => {
-    if (!session) return;
+    if (!uid) return;
     try {
       setUserDoc((prev: any) => ({ ...prev, photoUrl: null }));
-      await setDoc(doc(db, 'users', session.uid), { photoUrl: null }, { merge: true });
+      await setDoc(doc(db, 'users', uid), { photoUrl: null }, { merge: true });
     } catch (err) {
       console.error('Failed to remove photo:', err);
     }
   };
 
   const updateProfile = async () => {
-    if (!session) return;
+    if (!uid) return;
     setUpdating('profile');
     try {
-      await setDoc(doc(db, 'users', session.uid), { 
+      await setDoc(doc(db, 'users', uid), { 
         name: profileForm.name,
         language: profileForm.language 
       }, { merge: true });
       
       if (profileForm.email !== userDoc.email) {
         await updateEmail(auth.currentUser!, profileForm.email);
-        await setDoc(doc(db, 'users', session.uid), { email: profileForm.email }, { merge: true });
+        await setDoc(doc(db, 'users', uid), { email: profileForm.email }, { merge: true });
       }
       setUserDoc((prev: any) => ({ ...prev, ...profileForm }));
       flashSuccess('profile');
@@ -227,7 +220,7 @@ export default function AuditorSettingsPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Auditor">
+      <DashboardShell role="auditor">
         <div className="dashboard-page-container px-4 md:px-10">
           <Skeleton className="h-9 w-40 mb-2" />
           <Skeleton className="h-5 w-80 mb-8" />
@@ -241,7 +234,7 @@ export default function AuditorSettingsPage() {
   }
 
   return (
-    <DashboardShell role="Auditor">
+    <DashboardShell role="auditor">
       <div className="dashboard-page-container px-4 md:px-10 max-w-4xl">
         {/* Header */}
         <div className="page-header-section mb-8">

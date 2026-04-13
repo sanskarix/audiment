@@ -27,38 +27,27 @@ import { format } from 'date-fns';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuthSync } from '@/components/AuthProvider';
 
 export default function AdminFlashmobPage() {
+  const { isSynced, orgId } = useAuthSync();
   const [flashmobs, setFlashmobs] = useState<any[]>([]);
-  const [session, setSession] = useState<{ orgId: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ orgId: data.organizationId });
-      } catch (e) {
-        setLoading(false);
-      }
-    } else {
-      setLoading(false);
-    }
-  }, []);
+  // No longer needed
 
   useEffect(() => {
-    if (!session?.orgId) return;
+    if (!isSynced || !orgId) return;
 
     const fetchFlashmobs = async () => {
       try {
         const q = query(
           collection(db, 'flashmobAudits'),
-          where('organizationId', '==', session.orgId),
+          where('organizationId', '==', orgId),
           orderBy('submittedAt', 'desc')
         );
         const snap = await getDocs(q);
@@ -72,7 +61,7 @@ export default function AdminFlashmobPage() {
     };
 
     fetchFlashmobs();
-  }, [session]);
+  }, [orgId, isSynced]);
 
   const handleDelete = async (id: string) => {
     if (confirmDeleteId !== id) {
@@ -93,7 +82,7 @@ export default function AdminFlashmobPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Admin">
+      <DashboardShell role="admin">
         <div className="dashboard-page-container">
           <div className="page-header-section mb-6">
             <div className="flex flex-col gap-2">
@@ -127,7 +116,7 @@ export default function AdminFlashmobPage() {
   );
 
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">

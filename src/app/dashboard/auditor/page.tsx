@@ -36,11 +36,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-
+import { useAuthSync } from '@/components/AuthProvider';
 export default function AuditorDashboardPage() {
+  const { isSynced, uid, orgId } = useAuthSync();
   const [audits, setAudits] = useState<any[]>([]);
   const [userData, setUserData] = useState<any>(null);
-  const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -52,34 +52,28 @@ export default function AuditorDashboardPage() {
   );
 
   useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ orgId: data.organizationId, uid: data.uid });
-      } catch (e) { }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!session?.uid) return;
+    if (!isSynced || !uid) return;
     const fetchUserData = async () => {
-      const d = await getDoc(doc(db, 'users', session.uid));
+      const d = await getDoc(doc(db, 'users', uid));
       setUserData(d.data());
     };
     fetchUserData();
-  }, [session]);
+  }, [uid, isSynced]);
 
   useEffect(() => {
-    if (!session?.uid) return;
+    if (!isSynced) return;
+    if (!uid || !orgId) {
+      setLoading(false);
+      return;
+    }
 
-    console.log('Auditor Dashboard - Session:', session);
+    console.log('[AuditorDashboard] User info:', { uid, orgId });
     const q = query(
       collection(db, 'audits'),
-      where('organizationId', '==', session.orgId),
-      where('assignedAuditorId', '==', session.uid)
+      where('organizationId', '==', orgId),
+      where('assignedAuditorId', '==', uid)
     );
-    console.log('Auditor Dashboard - Fetching audits for auditor:', session.uid, 'in org:', session.orgId);
+    console.log('Auditor Dashboard - Fetching audits for auditor:', uid, 'in org:', orgId);
 
     const unsubscribe = onSnapshot(q, (snap) => {
       console.log('Auditor Dashboard - Docs found in snapshot:', snap.size);
@@ -105,12 +99,12 @@ export default function AuditorDashboardPage() {
       setAudits(fetched);
       setLoading(false);
     }, (err) => {
-      console.error('Firestore subscription error:', err);
+      console.error('[AuditorDashboard] Snapshot error:', err);
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [session]);
+  }, [uid, orgId, isSynced]);
 
   const completedAudits = audits.filter(a => a.status === 'completed');
   const missedAudits = audits.filter(a => a.status === 'missed');
@@ -124,7 +118,7 @@ export default function AuditorDashboardPage() {
   };
 
   return (
-    <DashboardShell role="Auditor">
+    <DashboardShell role="auditor">
       <div className="dashboard-page-container px-4 md:px-10">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">

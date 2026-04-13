@@ -68,6 +68,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRef } from 'react';
+import { useAuthSync } from '@/components/AuthProvider';
 
 interface ManagerStats {
   assignedLocations: number;
@@ -82,7 +83,9 @@ export default function ManagerDashboardPage() {
   const [correctiveActions, setCorrectiveActions] = useState<any[]>([]);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [session, setSession] = useState<any>(null);
+  const { isSynced, uid, orgId } = useAuthSync();
   const [managerExtraStats, setManagerExtraStats] = useState<{ unassigned: any[], nearDeadlines: any[] }>({ unassigned: [], nearDeadlines: [] });
 
   // Resolution state
@@ -94,43 +97,50 @@ export default function ManagerDashboardPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        setSession(JSON.parse(decodeURIComponent(match[1])));
-      } catch (e) { }
+    if (!isSynced) return;
+    if (!uid || !orgId) {
+      setLoading(false);
+      return;
     }
-  }, []);
-
-  useEffect(() => {
-    if (!session?.uid) return;
 
     async function fetchManagerData() {
       try {
-        console.log('Manager Dashboard - Fetching data for UID:', session.uid);
+        console.log('[ManagerDashboard] Fetching data for UID:', uid);
         
         const monthStart = startOfMonth(new Date());
         const now = new Date();
 
         // 1. Robust Location Detection
-        const qLoc = query(
-          collection(db, 'locations'),
-          where('organizationId', '==', session.organizationId),
-          where('assignedManagerIds', 'array-contains', session.uid)
-        );
-        const locSnap = await getDocs(qLoc);
-        let managedLocationIds = locSnap.docs.map(d => d.id);
-        
-        //profile fallback
-        const userSnap = await getDoc(doc(db, 'users', session.uid));
-        const userData = userSnap.data();
-        if (userData?.assignedLocations) {
-          const userLocs = userData.assignedLocations as string[];
-          userLocs.forEach(id => {
-            if (!managedLocationIds.includes(id)) managedLocationIds.push(id);
-          });
+        let managedLocationIds: string[] = [];
+        const userLocSnap = await getDoc(doc(db, 'users', uid!));
+        const userData = userLocSnap.data();
+        if (userData?.assignedLocationIds || userData?.assignedLocations) {
+          managedLocationIds = userData?.assignedLocationIds || userData?.assignedLocations || [];
         }
         
+        if (managedLocationIds.length === 0) {
+          const locsByArrayQuery = query(
+            collection(db, 'locations'),
+            where('organizationId', '==', orgId!),
+            where('assignedManagerIds', 'array-contains', uid!)
+          );
+          const locsBySingleQuery = query(
+            collection(db, 'locations'),
+            where('organizationId', '==', orgId!),
+            where('assignedManagerId', '==', uid!)
+          );
+          
+          const [snapArray, snapSingle] = await Promise.all([
+            getDocs(locsByArrayQuery),
+            getDocs(locsBySingleQuery)
+          ]);
+          
+          const foundIds = new Set<string>();
+          snapArray.docs.forEach(d => foundIds.add(d.id));
+          snapSingle.docs.forEach(d => foundIds.add(d.id));
+          managedLocationIds = Array.from(foundIds);
+        }
+
         if (managedLocationIds.length === 0) {
           console.log('Manager Dashboard - No managed locations found');
         }
@@ -140,7 +150,7 @@ export default function ManagerDashboardPage() {
         if (managedLocationIds.length > 0) {
           const auditsByLoc = query(
             collection(db, 'audits'),
-            where('organizationId', '==', session.organizationId),
+            where('organizationId', '==', orgId!),
             where('locationId', 'in', managedLocationIds.slice(0, 30))
           );
           const auditsSnap = await getDocs(auditsByLoc);
@@ -150,8 +160,8 @@ export default function ManagerDashboardPage() {
         // 3. Fetch Auditors
         const auditorsQuery = query(
           collection(db, 'users'),
-          where('organizationId', '==', session.organizationId),
-          where('managerId', '==', session.uid),
+          where('organizationId', '==', orgId!),
+          where('managerId', '==', uid!),
           where('role', '==', 'AUDITOR')
         );
         const auditorsSnap = await getDocs(auditorsQuery);
@@ -189,6 +199,7 @@ export default function ManagerDashboardPage() {
         if (managedLocationIds.length > 0) {
           const caQuery = query(
             collection(db, 'correctiveActions'),
+            where('organizationId', '==', orgId!),
             where('locationId', 'in', managedLocationIds.slice(0, 30))
           );
           const caSnap = await getDocs(caQuery);
@@ -238,8 +249,9 @@ export default function ManagerDashboardPage() {
           completedThisMonth: completedThisMonth.length
         } as any);
 
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching manager data:', error);
+        setErrorMsg(error.message || 'Unknown error occurred');
       } finally {
         setLoading(false);
       }
@@ -247,36 +259,42 @@ export default function ManagerDashboardPage() {
 
     fetchManagerData();
 
+    if (!uid || !orgId) return;
+
     // Fetch corrective actions (real-time)
     const caQuery = query(
       collection(db, 'correctiveActions'),
-      where('organizationId', '==', session.organizationId),
-      where('assignedManagerId', '==', session.uid),
+      where('organizationId', '==', orgId),
+      where('assignedManagerId', '==', uid),
       where('status', 'in', ['open', 'in_progress']),
       orderBy('createdAt', 'desc')
     );
 
     const unsubscribeCA = onSnapshot(caQuery, (snap) => {
       setCorrectiveActions(snap.docs.map(d => ({ id: d.id, ...d.data() } as any)));
+    }, (err) => {
+      console.error('[ManagerDashboard] CA snapshot error:', err);
     });
 
     // Fetch recent notifications (real-time)
     const notificationsQuery = query(
       collection(db, 'notifications'),
-      where('recipientId', '==', session.uid),
+      where('recipientId', '==', uid),
       orderBy('createdAt', 'desc'),
       limit(10)
     );
 
     const unsubscribeNotifications = onSnapshot(notificationsQuery, (snap) => {
       setNotifications(snap.docs.map(d => ({ id: d.id, ...d.data() } as any)));
+    }, (err) => {
+      console.error('[ManagerDashboard] Notifications snapshot error:', err);
     });
 
     return () => {
       unsubscribeCA();
       unsubscribeNotifications();
     };
-  }, [session]);
+  }, [uid, orgId, isSynced]);
 
   const handleResolve = async () => {
     if (!selectedCA || !resolutionNote) return;
@@ -320,7 +338,7 @@ export default function ManagerDashboardPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Manager">
+      <DashboardShell role="manager">
         <div className="dashboard-page-container">
           <div className="page-header-section mb-6">
             <Skeleton className="h-8 w-64" />
@@ -340,8 +358,14 @@ export default function ManagerDashboardPage() {
   }
 
   return (
-    <DashboardShell role="Manager">
+    <DashboardShell role="manager">
       <div className="dashboard-page-container px-6 md:px-10">
+        {errorMsg && (
+          <div className="bg-destructive/10 border border-destructive/20 text-destructive p-4 rounded-xl mb-6">
+            <h3 className="font-bold">Error loading dashboard</h3>
+            <p className="text-sm">{errorMsg}</p>
+          </div>
+        )}
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">
             <h1 className="page-heading">Overview</h1>

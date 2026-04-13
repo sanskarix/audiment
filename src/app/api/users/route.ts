@@ -31,8 +31,8 @@ export async function POST(req: Request) {
 
     // ─── Set custom claims immediately so the ID token carries role + org ───
     await adminAuth.setCustomUserClaims(uid, {
-      role: role.toLowerCase(),   // 'admin' | 'manager' | 'auditor'
-      orgId: organizationId,       // Firestore org document ID
+      role: role.toLowerCase(),
+      organizationId: organizationId,
     });
 
     const userData: any = {
@@ -79,8 +79,8 @@ export async function PATCH(req: Request) {
       const userDoc = await adminDb.collection('users').doc(uid).get();
       const orgId = userDoc.data()?.organizationId ?? '';
       await adminAuth.setCustomUserClaims(uid, {
-        role: role.toLowerCase(),   // 'admin' | 'manager' | 'auditor'
-        orgId,
+        role: role.toLowerCase(),
+        organizationId: orgId,
       });
     }
 

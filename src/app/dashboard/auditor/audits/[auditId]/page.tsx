@@ -50,9 +50,11 @@ import {
   AlertCircle,
   UploadCloud,
   FlipHorizontal,
+  MapPin,
 } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from '@/lib/utils';
+import { useAuthSync } from '@/components/AuthProvider';
 
 interface Question {
   id: string;
@@ -71,6 +73,7 @@ interface Response {
 }
 
 export default function AuditExecutionPage() {
+  const { isSynced, orgId, uid } = useAuthSync();
   const { auditId } = useParams() as { auditId: string };
   const router = useRouter();
 
@@ -78,7 +81,6 @@ export default function AuditExecutionPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [responses, setResponses] = useState<Record<string, Response>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -94,15 +96,11 @@ export default function AuditExecutionPage() {
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ orgId: data.organizationId, uid: data.uid });
-      } catch (e) { }
-    }
-  }, []);
+  // Geolocation popup state
+  const [showLocationErrorDialog, setShowLocationErrorDialog] = useState(false);
+  const [showInitialLocationPrompt, setShowInitialLocationPrompt] = useState(false);
+
+  // No longer needed
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -116,7 +114,7 @@ export default function AuditExecutionPage() {
   }, [hasUnsavedChanges]);
 
   useEffect(() => {
-    if (!session?.uid || !auditId) return;
+    if (!isSynced || !uid || !auditId) return;
 
     async function fetchData() {
       try {
@@ -146,7 +144,11 @@ export default function AuditExecutionPage() {
         const fetchedQuestions = qSnap.docs.map(d => ({ id: d.id, ...d.data() } as Question));
         setQuestions(fetchedQuestions);
 
-        const rSnap = await getDocs(query(collection(db, 'auditResponses'), where('auditId', '==', auditId)));
+        const rSnap = await getDocs(query(
+          collection(db, 'auditResponses'), 
+          where('auditId', '==', auditId),
+          where('auditorId', '==', uid)
+        ));
         const existingResponses: Record<string, Response> = {};
         rSnap.forEach(d => {
           const data = d.data();
@@ -159,6 +161,10 @@ export default function AuditExecutionPage() {
         });
         setResponses(existingResponses);
 
+        if (auditData.status !== 'completed') {
+          setShowInitialLocationPrompt(true);
+        }
+
       } catch (err) {
         console.error('Fetch error:', err);
       } finally {
@@ -167,7 +173,7 @@ export default function AuditExecutionPage() {
     }
 
     fetchData();
-  }, [session, auditId, router]);
+  }, [uid, auditId, router, isSynced]);
 
   const currentQuestion = questions[currentIndex];
   const currentResponse = currentQuestion ? (responses[currentQuestion.id] || {
@@ -204,7 +210,7 @@ export default function AuditExecutionPage() {
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !currentQuestion || !session) return;
+    if (!file || !currentQuestion || !uid) return;
 
     setUploading(currentQuestion.id);
     try {
@@ -299,7 +305,7 @@ export default function AuditExecutionPage() {
   };
 
   const capturePhoto = async () => {
-    if (!cameraVideoRef.current || !cameraStreamRef.current || !currentQuestion || !session) return;
+    if (!cameraVideoRef.current || !cameraStreamRef.current || !currentQuestion || !uid) return;
     setCapturing(true);
     try {
       const video = cameraVideoRef.current;
@@ -382,8 +388,8 @@ export default function AuditExecutionPage() {
 
   const saveProgress = async (isFinal = false) => {
     console.log(`[AuditSubmission] Starting saveProgress. isFinal: ${isFinal}`);
-    if (!session || !audit) {
-      console.warn('[AuditSubmission] Missing session or audit data', { session, audit });
+    if (!uid || !audit) {
+      console.warn('[AuditSubmission] Missing uid or audit data', { uid, audit });
       return;
     }
     setSaving(true);
@@ -405,7 +411,7 @@ export default function AuditExecutionPage() {
           answer: r.answer,
           score: r.score,
           severity: q.severity,
-          auditorId: session.uid,
+          auditorId: uid,
           locationId: audit.locationId,
           photoUrls: r.photoUrls,
           notes: r.notes,
@@ -426,7 +432,7 @@ export default function AuditExecutionPage() {
               questionText: q.questionText,
               locationId: audit.locationId,
               locationName: audit.locationName,
-              organizationId: session.orgId,
+              organizationId: orgId,
               assignedManagerId: audit.assignedManagerId,
               description: r.notes || `Failed critical question: ${q.questionText}`,
               severity: q.severity,
@@ -471,16 +477,18 @@ export default function AuditExecutionPage() {
         // New geolocation logic
         const location = await getLocation();
 
+        if (!location.locationCaptured) {
+          console.warn('[AuditSubmission] Location not captured, aborting final submission.');
+          setSaving(false);
+          setShowLocationErrorDialog(true);
+          return; // Prevent submission
+        }
+
         updateData.latitude = location.latitude;
         updateData.longitude = location.longitude;
         updateData.locationCaptured = location.locationCaptured;
 
-        if (!location.locationCaptured) {
-          console.warn('[AuditSubmission] Location not captured, but submitting.');
-          alert("Location not captured. Audit will still be submitted without geo-tag.");
-        } else {
-          console.log('[AuditSubmission] Geolocation captured');
-        }
+        console.log('[AuditSubmission] Geolocation captured');
       }
 
       batch.update(auditRef, updateData);
@@ -491,7 +499,7 @@ export default function AuditExecutionPage() {
         // 1. Notify Manager & Admin about low score
         const adminQuery = query(
           collection(db, 'users'),
-          where('organizationId', '==', session.orgId),
+          where('organizationId', '==', orgId),
           where('role', '==', 'ADMIN')
         );
         const adminSnap = await getDocs(adminQuery);
@@ -501,7 +509,7 @@ export default function AuditExecutionPage() {
           if (!recipientId) return;
           const notifRef = doc(collection(db, 'notifications'));
           batch.set(notifRef, {
-            organizationId: session.orgId,
+            organizationId: orgId,
             recipientId,
             recipientRole: recipientId === audit.assignedManagerId ? 'manager' : 'admin',
             type: 'low_score',
@@ -531,7 +539,7 @@ export default function AuditExecutionPage() {
           adminSnap.docs.forEach(adminDoc => {
             const trendNotifRef = doc(collection(db, 'notifications'));
             batch.set(trendNotifRef, {
-              organizationId: session.orgId,
+              organizationId: orgId,
               recipientId: adminDoc.id,
               recipientRole: 'admin',
               type: 'trend_alert',
@@ -575,6 +583,20 @@ export default function AuditExecutionPage() {
               <Skeleton className="h-24 rounded-xl" />
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!currentQuestion) {
+    return (
+      <div className="flex min-h-[500px] items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <p className="font-semibold text-heading text-lg">No questions found</p>
+          <p className="text-muted-text text-sm pb-4">This audit template doesn't contain any questions.</p>
+          <Button variant="outline" onClick={() => router.push('/dashboard/auditor')}>
+            Return to Dashboard
+          </Button>
         </div>
       </div>
     );
@@ -793,6 +815,51 @@ export default function AuditExecutionPage() {
           )}
         </div>
       </footer>
+
+      {/* Initial Location Prompt Dialog */}
+      <AlertDialog open={showInitialLocationPrompt} onOpenChange={setShowInitialLocationPrompt}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <MapPin className="h-5 w-5 text-primary" /> Location Required
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              To begin and verify this audit accurately, you must allow location access. Your location is captured strictly to verify you are on-site during the audit process.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button onClick={() => {
+              setShowInitialLocationPrompt(false);
+              getLocation(); // Trigger browser permission prompt natively
+            }}>
+              Enable Location
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Submission Location Error Dialog */}
+      <AlertDialog open={showLocationErrorDialog} onOpenChange={setShowLocationErrorDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertCircle className="h-5 w-5" /> Location Verification Failed
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Please explicitly enable location services and check your browser permissions to proceed. We could not safely verify your location, so the audit cannot be finalized.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Close</AlertDialogCancel>
+            <Button onClick={async () => {
+              setShowLocationErrorDialog(false);
+              await getLocation(); // Fire the prompt before they try to submit again
+            }}>
+              Try Again
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Unsaved Changes Guard Dialog */}
       <AlertDialog open={showExitDialog} onOpenChange={setShowExitDialog}>

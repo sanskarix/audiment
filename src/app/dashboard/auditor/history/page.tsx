@@ -47,6 +47,7 @@ import {
 } from '@/components/ui/table';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import { useAuthSync } from '@/components/AuthProvider';
 
 interface AuditHistoryItem {
   id: string;
@@ -60,36 +61,29 @@ interface AuditHistoryItem {
 }
 
 export default function AuditorHistoryPage() {
+  const { isSynced, orgId, uid } = useAuthSync();
   const [history, setHistory] = useState<AuditHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        setSession(JSON.parse(decodeURIComponent(match[1])));
-      } catch (e) { }
-    }
-  }, []);
+  // No longer needed
 
   useEffect(() => {
-    if (!session?.uid || !session?.organizationId) return;
+    if (!isSynced || !uid || !orgId) return;
 
     // Fetch standard completed audits
     const qAudits = query(
       collection(db, 'audits'),
-      where('organizationId', '==', session.organizationId),
-      where('assignedAuditorId', '==', session.uid),
+      where('organizationId', '==', orgId),
+      where('assignedAuditorId', '==', uid),
       where('status', '==', 'completed')
     );
 
     // Fetch flashmob audits
     const qFlashmob = query(
       collection(db, 'flashmobAudits'),
-      where('organizationId', '==', session.organizationId),
-      where('auditorId', '==', session.uid)
+      where('organizationId', '==', orgId),
+      where('auditorId', '==', uid)
     );
 
     let auditsData: any[] = [];
@@ -129,7 +123,7 @@ export default function AuditorHistoryPage() {
     };
 
     fetchHistory();
-  }, [session]);
+  }, [uid, orgId, isSynced]);
 
   const filteredHistory = history.filter(item =>
     item.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -146,7 +140,7 @@ export default function AuditorHistoryPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Auditor">
+      <DashboardShell role="auditor">
         <div className="dashboard-page-container">
           <div className="page-header-section mb-6">
             <Skeleton className="h-8 w-64" />
@@ -170,7 +164,7 @@ export default function AuditorHistoryPage() {
   }
 
   return (
-    <DashboardShell role="Auditor">
+    <DashboardShell role="auditor">
       <div className="dashboard-page-container px-6 md:px-10">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">

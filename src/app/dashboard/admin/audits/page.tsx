@@ -18,6 +18,7 @@ import {
 import DashboardShell from '@/components/DashboardShell';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { useAuthSync } from '@/components/AuthProvider';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -42,11 +43,11 @@ import { cn } from '@/lib/utils';
 import { CalendarIcon, Plus, CheckSquare, Clock, AlertCircle, Search, MoreHorizontal, Pencil, Loader2, Filter, X } from 'lucide-react';
 
 export default function AdminAuditsPage() {
+  const { isSynced, uid, orgId } = useAuthSync();
   const [audits, setAudits] = useState<any[]>([]);
   const [templates, setTemplates] = useState<any[]>([]);
   const [locations, setLocations] = useState<any[]>([]);
   const [managers, setManagers] = useState<any[]>([]);
-  const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -74,83 +75,68 @@ export default function AdminAuditsPage() {
   const [editingAuditId, setEditingAuditId] = useState<string | null>(null);
 
   useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ orgId: data.organizationId, uid: data.uid });
-      } catch (e) { }
+    if (!isSynced) return;
+    if (!orgId) {
+      setLoading(false);
+      return;
     }
-  }, []);
 
-  useEffect(() => {
-    if (!session?.orgId) return;
+    const qAudits = query(collection(db, 'audits'), where('organizationId', '==', orgId));
+    const unsubscribe = onSnapshot(qAudits, (snap) => {
+      const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+      
+      const toDate = (val: any): Date => {
+        if (!val) return new Date(0);
+        if (typeof val.toDate === 'function') return val.toDate();
+        return new Date(val);
+      };
 
-    const fetchData = async () => {
-      try {
-        const qAudits = query(collection(db, 'audits'), where('organizationId', '==', session.orgId));
-        const snap = await getDocs(qAudits);
-        const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
-        
-        const toDate = (val: any): Date => {
-          if (!val) return new Date(0);
-          if (typeof val.toDate === 'function') return val.toDate();
-          return new Date(val);
-        };
+      fetched.sort((a, b) => {
+        const deadA = toDate(a.deadline).getTime();
+        const deadB = toDate(b.deadline).getTime();
+        if (deadA !== deadB) return deadA - deadB;
 
-        fetched.sort((a, b) => {
-          // 1. Deadline (closest first)
-          const deadA = toDate(a.deadline).getTime();
-          const deadB = toDate(b.deadline).getTime();
-          if (deadA !== deadB) return deadA - deadB;
-
-          // 2. Status (Pending/Missed first)
-          const statusMap: any = { missed: 0, published: 1, assigned: 1, in_progress: 2, completed: 3 };
-          const statusA = statusMap[a.status] ?? 99;
-          const statusB = statusMap[b.status] ?? 99;
-          return statusA - statusB;
-        });
-        setAudits(fetched);
-      } catch (err) {
-        console.error('Error fetching audits:', err);
-      }
-    };
-
-    fetchData();
+        const statusMap: any = { missed: 0, published: 1, assigned: 1, in_progress: 2, completed: 3 };
+        const statusA = statusMap[a.status] ?? 99;
+        const statusB = statusMap[b.status] ?? 99;
+        return statusA - statusB;
+      });
+      setAudits(fetched);
+    }, (err) => {
+      console.error('[AdminAudits] Error fetching audits:', err);
+    });
 
     // Fetch Templates
-    const qTemplates = query(collection(db, 'auditTemplates'), where('organizationId', '==', session.orgId), where('isActive', '==', true));
+    const qTemplates = query(collection(db, 'auditTemplates'), where('organizationId', '==', orgId), where('isActive', '==', true));
     getDocs(qTemplates).then(snap => {
       setTemplates(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
 
     // Fetch Locations
-    const qLocations = query(collection(db, 'locations'), where('organizationId', '==', session.orgId), where('isActive', '==', true));
+    const qLocations = query(collection(db, 'locations'), where('organizationId', '==', orgId), where('isActive', '==', true));
     getDocs(qLocations).then(snap => {
       setLocations(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
 
     // Fetch Managers
-    const qManagers = query(collection(db, 'users'), where('organizationId', '==', session.orgId), where('role', '==', 'MANAGER'), where('isActive', '==', true));
+    const qManagers = query(collection(db, 'users'), where('organizationId', '==', orgId), where('role', '==', 'MANAGER'), where('isActive', '==', true));
     getDocs(qManagers).then(snap => {
       setManagers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
 
-    // Removed real-time listener cleanup
-  }, [session]);
+    return () => unsubscribe();
+  }, [orgId, isSynced]);
 
   const handlePublish = async () => {
-    if (!formData.templateId || !formData.locationId || !formData.managerId || !formData.scheduledDate || !formData.deadline || !session) return;
+    const template = templates.find(t => t.id === formData.templateId);
+    const location = locations.find(l => l.id === formData.locationId);
+    
+    if (!template || !location || !formData.scheduledDate || !formData.deadline) return;
 
     setLoading(true);
     try {
-      const template = templates.find(t => t.id === formData.templateId);
-      const location = locations.find(l => l.id === formData.locationId);
-
-      if (!template || !location) throw new Error('Invalid template or location');
-
       const auditData: any = {
-        organizationId: session.orgId,
+        organizationId: orgId,
         templateId: formData.templateId,
         templateTitle: template.title,
         locationId: formData.locationId,
@@ -161,19 +147,14 @@ export default function AdminAuditsPage() {
         recurringDay: formData.recurring !== 'none' ? formData.recurringDay : null,
         scheduledDate: Timestamp.fromDate(formData.scheduledDate),
         deadline: Timestamp.fromDate(formData.deadline),
+        status: 'published',
       };
 
       if (editingAuditId) {
-        await updateDoc(doc(db, 'audits', editingAuditId), auditData);
+        // When editing, we remove the status field so we don't accidentally reset an 'assigned' or 'in_progress' audit.
+        const { status, ...updateData } = auditData;
+        await updateDoc(doc(db, 'audits', editingAuditId), updateData);
       } else {
-        auditData.publishedBy = session.uid;
-        auditData.assignedAuditorId = '';
-        auditData.status = 'published';
-        auditData.createdAt = serverTimestamp();
-        auditData.totalScore = 0;
-        auditData.maxPossibleScore = 0;
-        auditData.scorePercentage = 0;
-
         let occurrences = 1;
         if (formData.recurring !== 'none' && formData.scheduledDate && formData.repeatUntil) {
           const diffTime = Math.abs(formData.repeatUntil.getTime() - formData.scheduledDate.getTime());
@@ -201,7 +182,7 @@ export default function AdminAuditsPage() {
           if (i === 0) {
             // Create notification for Manager only for the first occurrence
             await addDoc(collection(db, 'notifications'), {
-              organizationId: session.orgId,
+              organizationId: orgId,
               recipientId: formData.managerId,
               recipientRole: 'manager',
               type: formData.isSurprise ? 'surprise_audit' : 'audit_assigned',
@@ -313,7 +294,7 @@ export default function AdminAuditsPage() {
   });
 
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between w-full gap-4">

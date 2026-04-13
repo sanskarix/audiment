@@ -49,6 +49,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { useAuthSync } from '@/components/AuthProvider';
 
 interface CorrectiveAction {
   id: string;
@@ -68,9 +69,9 @@ interface CorrectiveAction {
 }
 
 export default function ManagerCorrectiveActionsPage() {
+  const { isSynced, uid, orgId } = useAuthSync();
   const [actions, setActions] = useState<CorrectiveAction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
 
   // Resolution state
   const [selectedCA, setSelectedCA] = useState<CorrectiveAction | null>(null);
@@ -80,21 +81,17 @@ export default function ManagerCorrectiveActionsPage() {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        setSession(JSON.parse(decodeURIComponent(match[1])));
-      } catch (e) { }
-    }
-  }, []);
 
   useEffect(() => {
-    if (!session?.uid || !session?.organizationId) return;
+    if (!isSynced) return;
+    if (!uid || !orgId) {
+      setLoading(false);
+      return;
+    }
 
     const q = query(
       collection(db, 'correctiveActions'),
-      where('organizationId', '==', session.organizationId)
+      where('organizationId', '==', orgId)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -103,23 +100,16 @@ export default function ManagerCorrectiveActionsPage() {
         ...doc.data()
       })) as CorrectiveAction[];
       
-      // Filter for specific manager's locations if needed, 
-      // but usually the query covers it. Let's filter client-side 
-      // to ensure strictly assigned manager actions if that's the logic 
-      // (Wait, the query was filtering by assignedManagerId in previous version)
-      // Actually, if we want ALL actions for the org that this manager leads?
-      // BUG 3 says "assigned to this manager".
-      
-      const managerActions = fetchedActions.filter(ca => (ca as any).assignedManagerId === session.uid);
+      const managerActions = fetchedActions.filter(ca => (ca as any).assignedManagerId === uid);
       setActions(managerActions);
       setLoading(false);
     }, (error) => {
-      console.error("Error fetching corrective actions:", error);
+      console.error("[ManagerCorrectiveActions] Error fetching corrective actions:", error);
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [session]);
+  }, [uid, orgId, isSynced]);
 
   const handleComplete = async () => {
     if (!selectedCA || !resolutionNote) return;
@@ -196,7 +186,7 @@ export default function ManagerCorrectiveActionsPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Manager">
+      <DashboardShell role="manager">
         <div className="flex items-center justify-center min-h-[400px]">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
@@ -205,7 +195,7 @@ export default function ManagerCorrectiveActionsPage() {
   }
 
   return (
-    <DashboardShell role="Manager">
+    <DashboardShell role="manager">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">

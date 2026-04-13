@@ -58,11 +58,12 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from '@/components/ui/button';
+import { useAuthSync } from '@/components/AuthProvider';
 
 export default function AdminCorrectiveActionsPage() {
+  const { isSynced, orgId } = useAuthSync();
   const [actions, setActions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [managers, setManagers] = useState<any[]>([]);
   const [editingCA, setEditingCA] = useState<any>(null);
@@ -72,34 +73,24 @@ export default function AdminCorrectiveActionsPage() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [expandedPhotoUrl, setExpandedPhotoUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        setSession(JSON.parse(decodeURIComponent(match[1])));
-      } catch (e) { }
-    }
-  }, []);
 
   useEffect(() => {
-    if (!session?.organizationId) return;
+    if (!isSynced) return;
+    if (!orgId) {
+      setLoading(false);
+      return;
+    }
 
     // Fetch all open corrective actions for the organization
     const q = query(
       collection(db, 'correctiveActions'),
-      where('organizationId', '==', session.organizationId),
+      where('organizationId', '==', orgId),
       where('status', 'in', ['open', 'in_progress', 'completed']),
       orderBy('deadline', 'asc')
     );
 
     const unsubscribe = onSnapshot(q, async (snap) => {
       const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-      // We need manager names if they aren't stored (schema says assignedManagerId is stored)
-      // For now we'll just show the ID or fetch names if needed.
-      // Better to store managerName in the CA doc during creation for performance.
-      // Re-reading DATABASE.md: assignedManagerId is there, but not managerName.
-      // I'll fetch manager names for better UX.
 
       const toDate = (val: any): Date => {
         if (!val) return new Date(0);
@@ -138,22 +129,22 @@ export default function AdminCorrectiveActionsPage() {
       setActions(actionsWithExtras);
       setLoading(false);
     }, (err) => {
-      console.error('Snapshot error:', err);
+      console.error('[AdminCorrectiveActions] Snapshot error:', err);
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [session]);
+  }, [orgId, isSynced]);
 
   useEffect(() => {
-    if (!session?.organizationId) return;
+    if (!isSynced || !orgId) return;
     const fetchManagers = async () => {
-      const q = query(collection(db, 'users'), where('organizationId', '==', session.organizationId), where('role', '==', 'MANAGER'));
+      const q = query(collection(db, 'users'), where('organizationId', '==', orgId), where('role', '==', 'MANAGER'));
       const snap = await getDocs(q);
       setManagers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     };
     fetchManagers();
-  }, [session]);
+  }, [orgId, isSynced]);
 
   const handleAssign = async () => {
     if (!editingCA || !selectedManager || !selectedDate) return;
@@ -204,7 +195,7 @@ export default function AdminCorrectiveActionsPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Admin">
+      <DashboardShell role="admin">
         <div className="dashboard-page-container">
           <div className="page-header-section mb-6">
             <div className="flex flex-col gap-2">
@@ -227,7 +218,7 @@ export default function AdminCorrectiveActionsPage() {
   }
 
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">

@@ -1,0 +1,28 @@
+config:
+  target: "https://audiment.vercel.app"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      name: "Warm up"
+    - duration: 60
+      arrivalRate: 20
+      name: "Ramp up"
+    - duration: 60
+      arrivalRate: 50
+      name: "Peak load"
+
+scenarios:
+  - name: "Health check"
+    flow:
+      - get:
+          url: "/api/health"
+
+  - name: "Login page load"
+    flow:
+      - get:
+          url: "/login"
+
+  - name: "Public landing page"
+    flow:
+      - get:
+          url: "/"

@@ -19,6 +19,7 @@ import { MoreHorizontal, Pencil, Trash2, Mail, UserPlus, Search, Filter } from '
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import React from 'react';
+import { useAuthSync } from '@/components/AuthProvider';
 
 // Memoized Form Components to prevent lag
 const UserFormFields = React.memo(({ formData, setFormData, activeManagers, isEdit = false, selectedUser = null, handleResetPassword = null }: any) => {
@@ -123,8 +124,8 @@ const UserFormFields = React.memo(({ formData, setFormData, activeManagers, isEd
 UserFormFields.displayName = 'UserFormFields';
 
 export default function AdminUsersPage() {
+  const { isSynced, orgId } = useAuthSync();
   const [users, setUsers] = useState<any[]>([]);
-  const [session, setSession] = useState<{ orgId: string } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [managerFilter, setManagerFilter] = useState('all');
   const [locationFilter, setLocationFilter] = useState('all');
@@ -155,25 +156,14 @@ export default function AdminUsersPage() {
     hasFlashmobAccess: false,
   });
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ orgId: data.organizationId });
-      } catch (e) {
-        console.error('Failed to parse session cookie');
-      }
-    }
-  }, []);
 
   useEffect(() => {
-    if (!session?.orgId) return;
+    if (!isSynced || !orgId) return;
     const fetchData = async () => {
       try {
         const q = query(
           collection(db, 'users'),
-          where('organizationId', '==', session.orgId)
+          where('organizationId', '==', orgId)
         );
         const usersSnap = await getDocs(q);
         const fetchedUsers: any[] = [];
@@ -185,7 +175,7 @@ export default function AdminUsersPage() {
 
         const qLoc = query(
           collection(db, 'locations'),
-          where('organizationId', '==', session.orgId)
+          where('organizationId', '==', orgId)
         );
         const locationsSnap = await getDocs(qLoc);
         const fetchedLocations: any[] = [];
@@ -199,7 +189,7 @@ export default function AdminUsersPage() {
       }
     };
     fetchData();
-  }, [session]);
+  }, [orgId, isSynced]);
 
   const handleToggleActive = async (userId: string, currentStatus: boolean) => {
     try {
@@ -224,7 +214,7 @@ export default function AdminUsersPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          organizationId: session?.orgId,
+          organizationId: orgId,
         }),
       });
 
@@ -335,7 +325,7 @@ export default function AdminUsersPage() {
   }, [users, searchQuery, managerFilter, locationFilter, orgLocations]);
 
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">

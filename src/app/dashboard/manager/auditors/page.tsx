@@ -8,7 +8,6 @@ import {
   collection,
   query,
   where,
-  onSnapshot,
   doc,
   addDoc,
   serverTimestamp,
@@ -73,6 +72,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
+import { useAuthSync } from '@/components/AuthProvider';
 
 interface Auditor {
   id: string;
@@ -89,11 +89,11 @@ interface Auditor {
 }
 
 export default function AuditorsPage() {
+  const { isSynced, uid, orgId } = useAuthSync();
   const router = useRouter();
   const [auditors, setAuditors] = useState<Auditor[]>([]);
   const [teamAuditsCount, setTeamAuditsCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
@@ -105,24 +105,20 @@ export default function AuditorsPage() {
   const [newAuditorEmail, setNewAuditorEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        setSession(JSON.parse(decodeURIComponent(match[1])));
-      } catch (e) { }
-    }
-  }, []);
 
   useEffect(() => {
-    if (!session?.uid || !session?.organizationId) return;
+    if (!isSynced) return;
+    if (!uid || !orgId) {
+      setLoading(false);
+      return;
+    }
 
     const fetchData = async () => {
       try {
         const q = query(
           collection(db, 'users'),
-          where('organizationId', '==', session.organizationId),
-          where('managerId', '==', session.uid),
+          where('organizationId', '==', orgId),
+          where('managerId', '==', uid),
           where('role', '==', 'AUDITOR')
         );
         const snapshot = await getDocs(q);
@@ -133,9 +129,10 @@ export default function AuditorsPage() {
         setAuditors(fetchedAuditors);
         
         const auditorIds = fetchedAuditors.map(a => a.id).filter(id => !!id);
-        if (auditorIds.length > 0) {
+          if (auditorIds.length > 0) {
           const auditsQuery = query(
             collection(db, 'audits'),
+            where('organizationId', '==', orgId),
             where('assignedAuditorId', 'in', auditorIds.slice(0, 30))
           );
           const snap = await getDocs(auditsQuery);
@@ -146,13 +143,13 @@ export default function AuditorsPage() {
           setLoading(false);
         }
       } catch (err) {
-        console.error("Error fetching auditors:", err);
+        console.error("[ManagerAuditors] Error fetching auditors:", err);
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [session]);
+  }, [uid, orgId, isSynced]);
 
   const toggleField = async (auditorId: string, field: string, currentValue: boolean) => {
     setIsUpdating(auditorId + field);
@@ -162,6 +159,11 @@ export default function AuditorsPage() {
         [field]: !currentValue,
         ...(field === 'isActive' ? { status: !currentValue ? 'active' : 'inactive' } : {})
       });
+      setAuditors(prev => prev.map(a => a.id === auditorId ? {
+        ...a,
+        [field]: !currentValue,
+        ...(field === 'isActive' ? { status: !currentValue ? 'active' : 'inactive' } : {})
+      } : a));
     } catch (error) {
       console.error(`Error updating ${field}:`, error);
     } finally {
@@ -181,21 +183,23 @@ export default function AuditorsPage() {
 
   const handleAddAuditor = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newAuditorName || !newAuditorEmail || !session) return;
+    if (!newAuditorName || !newAuditorEmail || !orgId || !uid) return;
 
     setIsSubmitting(true);
     try {
-      await addDoc(collection(db, 'users'), {
+      const newAuditor = {
         name: newAuditorName,
         email: newAuditorEmail,
         role: 'AUDITOR',
-        organizationId: session.organizationId,
-        managerId: session.uid,
-        status: 'active',
+        organizationId: orgId,
+        managerId: uid,
+        status: 'active' as const,
         isActive: true,
         flashmobAccess: false,
         createdAt: serverTimestamp(),
-      });
+      };
+      const docRef = await addDoc(collection(db, 'users'), newAuditor);
+      setAuditors(prev => [{ id: docRef.id, ...newAuditor }, ...prev]);
 
       setNewAuditorName('');
       setNewAuditorEmail('');
@@ -220,7 +224,7 @@ export default function AuditorsPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Manager">
+      <DashboardShell role="manager">
         <div className="flex items-center justify-center min-h-[400px]">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
@@ -229,7 +233,7 @@ export default function AuditorsPage() {
   }
 
   return (
-    <DashboardShell role="Manager">
+    <DashboardShell role="manager">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">

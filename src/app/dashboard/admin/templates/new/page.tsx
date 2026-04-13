@@ -5,7 +5,7 @@ import TemplateBuilder from '@/components/admin/TemplateBuilder';
 
 export default function NewTemplatePage() {
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         <TemplateBuilder />
       </div>

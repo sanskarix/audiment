@@ -16,11 +16,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Card } from '@/components/ui/card';
 import { MoreHorizontal, Pencil, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuthSync } from '@/components/AuthProvider';
 
 export default function AdminLocationsPage() {
+  const { isSynced, orgId } = useAuthSync();
   const [locations, setLocations] = useState<any[]>([]);
   const [managers, setManagers] = useState<any[]>([]);
-  const [session, setSession] = useState<{ orgId: string } | null>(null);
 
 
   // Form states
@@ -46,27 +47,17 @@ export default function AdminLocationsPage() {
     assignedManagerIds: [] as string[],
   });
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ orgId: data.organizationId });
-      } catch (e) {
-        console.error('Failed to parse session cookie');
-      }
-    }
-  }, []);
+  // No longer needed
 
   useEffect(() => {
-    if (!session?.orgId) return;
+    if (!isSynced || !orgId) return;
 
     const fetchData = async () => {
       try {
         // Fetch Locations
         const locationsQuery = query(
           collection(db, 'locations'),
-          where('organizationId', '==', session.orgId)
+          where('organizationId', '==', orgId)
         );
         const locationsSnap = await getDocs(locationsQuery);
         const fetchedLocations: any[] = [];
@@ -79,7 +70,7 @@ export default function AdminLocationsPage() {
         // Fetch Managers
         const usersQuery = query(
           collection(db, 'users'),
-          where('organizationId', '==', session.orgId),
+          where('organizationId', '==', orgId),
           where('role', '==', 'MANAGER')
         );
         const usersSnap = await getDocs(usersQuery);
@@ -98,7 +89,7 @@ export default function AdminLocationsPage() {
     };
 
     fetchData();
-  }, [session]);
+  }, [orgId, isSynced]);
 
 
 
@@ -117,7 +108,7 @@ export default function AdminLocationsPage() {
     setLoading(true);
     setError('');
 
-    if (!session?.orgId) {
+    if (!orgId) {
       setError('Missing organization ID');
       setLoading(false);
       return;
@@ -125,7 +116,7 @@ export default function AdminLocationsPage() {
 
     try {
       await addDoc(collection(db, 'locations'), {
-        organizationId: session.orgId,
+        organizationId: orgId,
         name: formData.name,
         address: formData.address,
         city: formData.city,
@@ -197,7 +188,7 @@ export default function AdminLocationsPage() {
   };
 
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">

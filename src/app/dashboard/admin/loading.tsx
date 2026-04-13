@@ -4,7 +4,7 @@ import DashboardShell from "@/components/DashboardShell";
 
 export default function AdminLoading() {
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container space-y-6">
         <div className="flex flex-col gap-2">
           <Skeleton className="h-9 w-48" />

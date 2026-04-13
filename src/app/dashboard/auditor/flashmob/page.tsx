@@ -36,6 +36,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { useAuthSync } from '@/components/AuthProvider';
 
 type Step = 'location' | 'video' | 'review' | 'selfie' | 'submitting' | 'success';
 
@@ -92,9 +93,9 @@ const StepBreadcrumb = ({ current }: { current: Step }) => {
 };
 
 export default function FlashmobAuditPage() {
+  const { isSynced, orgId, uid } = useAuthSync();
   const router = useRouter();
   const [userData, setUserData] = useState<any>(null);
-  const [session, setSession] = useState<{ orgId: string, uid: string, name: string } | null>(null);
   const [locations, setLocations] = useState<any[]>([]);
 
   const [step, setStep] = useState<Step>('location');
@@ -116,21 +117,13 @@ export default function FlashmobAuditPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ orgId: data.organizationId, uid: data.uid, name: data.name });
-      } catch (e) { setLoading(false); }
-    } else { setLoading(false); }
-  }, []);
+  // No longer needed
 
   useEffect(() => {
-    if (!session?.uid) return;
+    if (!isSynced || !uid) return;
     const fetchUserData = async () => {
       try {
-        const d = await getDoc(doc(db, 'users', session.uid));
+        const d = await getDoc(doc(db, 'users', uid));
         if (d.exists()) {
           const data = d.data();
           setUserData(data);
@@ -142,20 +135,20 @@ export default function FlashmobAuditPage() {
       }
     };
     fetchUserData();
-  }, [session]);
+  }, [uid, isSynced]);
 
   useEffect(() => {
-    if (!session?.orgId) return;
+    if (!isSynced || !orgId) return;
     async function fetchLocations() {
       try {
-        const q = query(collection(db, 'locations'), where('organizationId', '==', session?.orgId));
+        const q = query(collection(db, 'locations'), where('organizationId', '==', orgId));
         const snap = await getDocs(q);
         setLocations(snap.docs.map(d => ({ id: d.id, ...d.data() })));
       } catch (err) { console.error(err); }
       finally { setLoading(false); }
     }
     fetchLocations();
-  }, [session]);
+  }, [orgId, isSynced]);
 
   // Cleanup all streams on unmount
   useEffect(() => {
@@ -313,7 +306,7 @@ export default function FlashmobAuditPage() {
 
 
   const handleSubmit = async () => {
-    if (!videoBlob || !selfieBlob || !session || !selectedLocation) return;
+    if (!videoBlob || !selfieBlob || !orgId || !uid || !selectedLocation) return;
     setSaving(true);
     try {
       let latitude = 0, longitude = 0;
@@ -337,16 +330,17 @@ export default function FlashmobAuditPage() {
 
       const location = locations.find(l => l.id === selectedLocation);
       await addDoc(collection(db, 'flashmobAudits'), {
-        organizationId: session.orgId,
+        organizationId: orgId,
         locationId: selectedLocation,
         locationName: location?.name || 'Unknown',
-        auditorId: session.uid,
-        auditorName: session.name || 'Anonymous',
+        auditorId: uid,
+        auditorName: userData?.name || 'Anonymous',
         videoUrl: vData.url,
         selfieUrl: sData.url,
         latitude, longitude,
+        isVisibleToManager: false,
         submittedAt: serverTimestamp(),
-        visibleTo: [session.uid]
+        visibleTo: [uid]
       });
       setStep('success');
     } catch (err) {
@@ -359,7 +353,7 @@ export default function FlashmobAuditPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Auditor">
+      <DashboardShell role="auditor">
         <div className="dashboard-page-container max-w-2xl mx-auto px-6 md:px-10 pb-32">
           <Skeleton className="h-8 w-64 mb-2" />
           <Skeleton className="h-4 w-48 mb-10" />
@@ -372,7 +366,7 @@ export default function FlashmobAuditPage() {
 
   if (userData && !userData.hasFlashmobAccess) {
     return (
-      <DashboardShell role="Auditor">
+      <DashboardShell role="auditor">
         <div className="max-w-md mx-auto mt-20 px-6">
           <Card className="standard-card">
             <CardHeader className="text-center pb-4 pt-8">
@@ -396,7 +390,7 @@ export default function FlashmobAuditPage() {
   }
 
   return (
-    <DashboardShell role="Auditor">
+    <DashboardShell role="auditor">
       <div className="dashboard-page-container max-w-2xl mx-auto px-6 md:px-10 pb-20">
 
         {/* Header */}

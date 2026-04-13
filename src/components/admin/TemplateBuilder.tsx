@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { Plus, ArrowUp, ArrowDown, Trash2, ArrowLeft, Save, AlertCircle, Camera, FileText } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from 'next/navigation';
+import { useAuthSync } from '@/components/AuthProvider';
 
 type QuestionType = 'yes_no' | 'rating';
 type SeverityType = 'low' | 'medium' | 'critical';
@@ -33,6 +34,7 @@ interface TemplateBuilderProps {
 }
 
 export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
+  const { isSynced } = useAuthSync();
   const router = useRouter();
   const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
   const [loading, setLoading] = useState(false);
@@ -45,6 +47,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
   const [expandedQuestion, setExpandedQuestion] = useState<string | undefined>();
 
   useEffect(() => {
+    if (!isSynced) return;
     const match = document.cookie.match(/audiment_session=([^;]+)/);
     if (match) {
       try {
@@ -54,10 +57,10 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
         console.error('Failed to parse session cookie', e);
       }
     }
-  }, []);
+  }, [isSynced]);
 
   useEffect(() => {
-    if (!templateId || !session?.orgId) return;
+    if (!isSynced || !templateId || !session?.orgId) return;
 
     const loadTemplate = async () => {
       setFetching(true);
@@ -94,7 +97,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
     };
 
     loadTemplate();
-  }, [templateId, session]);
+  }, [templateId, session, isSynced]);
 
   const moveQuestion = (index: number, direction: 'up' | 'down') => {
     if (direction === 'up' && index === 0) return;

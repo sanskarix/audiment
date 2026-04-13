@@ -13,7 +13,6 @@ import {
   getDocs,
   getDoc,
   doc,
-  onSnapshot,
 } from 'firebase/firestore';
 import {
   Card,
@@ -39,6 +38,7 @@ import {
   Clock,
   ClipboardList
 } from 'lucide-react';
+import { useAuthSync } from '@/components/AuthProvider';
 
 interface Auditor {
   id: string;
@@ -57,6 +57,7 @@ interface Audit {
 }
 
 export default function PerformancePage() {
+  const { isSynced, uid, orgId } = useAuthSync();
   const params = useParams();
   const router = useRouter();
   const auditorId = params.id as string;
@@ -65,8 +66,13 @@ export default function PerformancePage() {
   const [audits, setAudits] = useState<Audit[]>([]);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
-    if (!auditorId) return;
+    if (!isSynced) return;
+    if (!auditorId || !orgId) {
+      setLoading(false);
+      return;
+    }
 
     const fetchAuditor = async () => {
       try {
@@ -76,7 +82,7 @@ export default function PerformancePage() {
           setAuditor({ id: docSnap.id, ...docSnap.data() } as Auditor);
         }
       } catch (e) {
-        console.error("Error fetching auditor:", e);
+        console.error("[AuditorPerformance] Error fetching auditor:", e);
       }
     };
 
@@ -84,6 +90,7 @@ export default function PerformancePage() {
       try {
         const q = query(
           collection(db, 'audits'),
+          where('organizationId', '==', orgId),
           where('assignedAuditorId', '==', auditorId)
         );
         const snapshot = await getDocs(q);
@@ -100,14 +107,14 @@ export default function PerformancePage() {
         setAudits(fetched);
         setLoading(false);
       } catch (e) {
-        console.error("Error fetching auditor audits:", e);
+        console.error("[AuditorPerformance] Error fetching auditor audits:", e);
         setLoading(false);
       }
     };
 
     fetchAuditor();
     fetchAudits();
-  }, [auditorId]);
+  }, [auditorId, orgId, isSynced]);
 
   const stats = {
     total: audits.length,
@@ -137,7 +144,7 @@ export default function PerformancePage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Manager">
+      <DashboardShell role="manager">
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
@@ -146,7 +153,7 @@ export default function PerformancePage() {
   }
 
   return (
-    <DashboardShell role="Manager">
+    <DashboardShell role="manager">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-8">
           <div className="flex flex-col gap-2">

@@ -19,6 +19,7 @@ import { MoreHorizontal, Plus, ClipboardCheck, Settings2, Trash2 } from 'lucide-
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuthSync } from '@/components/AuthProvider';
 
 const washroomQuestions = [
   { questionText: "Are washrooms completely separated from the food preparation area?", questionType: "yes_no", severity: "critical", requiresPhoto: false, order: 1 },
@@ -43,29 +44,19 @@ const kitchenQuestions = [
 ];
 
 export default function AdminTemplatesPage() {
+  const { isSynced, orgId, uid } = useAuthSync();
   const router = useRouter();
   const [templates, setTemplates] = useState<any[]>([]);
-  const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
   const [loading, setLoading] = useState(false);
 
 
-  useEffect(() => {
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ orgId: data.organizationId, uid: data.uid });
-      } catch (e) {
-        console.error('Failed to parse session cookie', e);
-      }
-    }
-  }, []);
+  // No longer needed
 
   useEffect(() => {
-    if (!session?.orgId) return;
+    if (!isSynced || !orgId) return;
     const fetchTemplates = async () => {
       try {
-        const q = query(collection(db, 'auditTemplates'), where('organizationId', '==', session.orgId));
+        const q = query(collection(db, 'auditTemplates'), where('organizationId', '==', orgId));
         const snapshot = await getDocs(q);
         const fetched: any[] = [];
         snapshot.forEach(d => fetched.push({ id: d.id, ...d.data() }));
@@ -76,10 +67,10 @@ export default function AdminTemplatesPage() {
       }
     };
     fetchTemplates();
-  }, [session]);
+  }, [orgId, isSynced]);
 
   const loadFssaiDefaults = async () => {
-    if (!session?.orgId || !session?.uid) return;
+    if (!orgId || !uid) return;
     setLoading(true);
 
     try {
@@ -87,7 +78,7 @@ export default function AdminTemplatesPage() {
 
       const t1Ref = doc(collection(db, 'auditTemplates'));
       batch.set(t1Ref, {
-        organizationId: session.orgId, title: "FSSAI Washroom Standards", category: "hygiene", description: "Default washroom audit compliant with FSSAI regulations.", isActive: true, createdBy: session.uid, createdAt: serverTimestamp(), isFssaiDefault: true
+        organizationId: orgId, title: "FSSAI Washroom Standards", category: "hygiene", description: "Default washroom audit compliant with FSSAI regulations.", isActive: true, createdBy: uid, createdAt: serverTimestamp(), isFssaiDefault: true
       });
       washroomQuestions.forEach(q => {
         const qRef = doc(collection(db, `auditTemplates/${t1Ref.id}/questions`));
@@ -96,7 +87,7 @@ export default function AdminTemplatesPage() {
 
       const t2Ref = doc(collection(db, 'auditTemplates'));
       batch.set(t2Ref, {
-        organizationId: session.orgId, title: "FSSAI Kitchen Hygiene Standards", category: "hygiene", description: "Kitchen hygiene check compliant with FSSAI.", isActive: true, createdBy: session.uid, createdAt: serverTimestamp(), isFssaiDefault: true
+        organizationId: orgId, title: "FSSAI Kitchen Hygiene Standards", category: "hygiene", description: "Kitchen hygiene check compliant with FSSAI.", isActive: true, createdBy: uid, createdAt: serverTimestamp(), isFssaiDefault: true
       });
       kitchenQuestions.forEach(q => {
         const qRef = doc(collection(db, `auditTemplates/${t2Ref.id}/questions`));
@@ -144,7 +135,7 @@ export default function AdminTemplatesPage() {
   const hasFssai = templates.some(t => t.isFssaiDefault);
 
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-2">

@@ -46,8 +46,10 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { useAuthSync } from '@/components/AuthProvider';
 
 export default function AuditReportDetailPage() {
+  const { isSynced } = useAuthSync();
   const { auditId } = useParams();
   const [audit, setAudit] = useState<any>(null);
   const [responses, setResponses] = useState<any[]>([]);
@@ -57,6 +59,7 @@ export default function AuditReportDetailPage() {
   const reportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!isSynced) return;
     async function fetchReportData() {
       try {
         const auditDoc = await getDoc(doc(db, 'audits', auditId as string));
@@ -76,7 +79,7 @@ export default function AuditReportDetailPage() {
       }
     }
     fetchReportData();
-  }, [auditId]);
+  }, [auditId, isSynced]);
 
   const exportToPDF = async () => {
     if (!reportRef.current) return;
@@ -241,7 +244,7 @@ export default function AuditReportDetailPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Admin">
+      <DashboardShell role="admin">
         <div className="flex items-center justify-center min-h-[400px]">
           <Clock className="h-8 w-8 animate-spin text-primary" />
         </div>
@@ -251,7 +254,7 @@ export default function AuditReportDetailPage() {
 
   if (!audit) {
     return (
-      <DashboardShell role="Admin">
+      <DashboardShell role="admin">
         <div className="text-center py-20">
           <p className="text-muted-text font-normal">Audit report not found.</p>
         </div>
@@ -260,7 +263,7 @@ export default function AuditReportDetailPage() {
   }
 
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         <div className="page-header-section flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
           <div className="flex flex-col gap-2">

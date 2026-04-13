@@ -47,6 +47,7 @@ import { Progress } from "@/components/ui/progress";
 import { format, subMonths, startOfToday, startOfMonth } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuthSync } from '@/components/AuthProvider';
 
 interface DashboardStats {
   totalAuditsThisMonth: number;
@@ -56,23 +57,19 @@ interface DashboardStats {
 }
 
 export default function AdminDashboardPage() {
+  const { isSynced, orgId } = useAuthSync();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [trendAlerts, setTrendAlerts] = useState<any[]>([]);
 
   useEffect(() => {
+    if (!isSynced) return;
+    if (!orgId) {
+      setLoading(false);
+      return;
+    }
     async function fetchDashboardData() {
       try {
-        const match = document.cookie.match(/audiment_session=([^;]+)/);
-        const session = match ? JSON.parse(decodeURIComponent(match[1])) : null;
-        console.log('Admin Dashboard - Session:', session);
-
-        if (!session?.organizationId) {
-          console.warn('Admin Dashboard - No organizationId in session');
-          setLoading(false);
-          return;
-        }
-
         const now = new Date();
         const monthStart = startOfMonth(now);
 
@@ -80,10 +77,10 @@ export default function AdminDashboardPage() {
         const auditsRef = collection(db, 'audits');
         const auditsQuery = query(
           auditsRef,
-          where('organizationId', '==', session.organizationId),
+          where('organizationId', '==', orgId),
           where('createdAt', '>=', Timestamp.fromDate(monthStart))
         );
-        console.log('Admin Dashboard - Fetching audits for org:', session.organizationId);
+        console.log('Admin Dashboard - Fetching audits for org:', orgId);
 
         const auditsSnap = await getDocs(auditsQuery);
         console.log('Admin Dashboard - Audits count:', auditsSnap.size);
@@ -99,7 +96,7 @@ export default function AdminDashboardPage() {
         // 3. Fetch Location Scores
         const completedAuditsQuery = query(
           auditsRef,
-          where('organizationId', '==', session.organizationId),
+          where('organizationId', '==', orgId),
           where('status', '==', 'completed'),
           orderBy('completedAt', 'desc'),
           limit(100)
@@ -139,38 +136,36 @@ export default function AdminDashboardPage() {
 
     fetchDashboardData();
 
-    // Trend Alerts and Corrective Actions Real-time Listeners
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    const sessionDoc = match ? JSON.parse(decodeURIComponent(match[1])) : null;
+    // Corrective Actions count
+    const caQuery = query(
+      collection(db, 'correctiveActions'),
+      where('organizationId', '==', orgId),
+      where('status', 'in', ['open', 'in_progress'])
+    );
+    const unsubscribeCA = onSnapshot(caQuery, (snap) => {
+      setStats(prev => prev ? { ...prev, openCorrectiveActions: snap.size } : prev);
+    }, (err) => {
+      console.error('[AdminDashboard] CA snapshot error:', err);
+    });
 
-    if (sessionDoc?.organizationId) {
-      // Corrective Actions count
-      const caQuery = query(
-        collection(db, 'correctiveActions'),
-        where('organizationId', '==', sessionDoc.organizationId),
-        where('status', 'in', ['open', 'in_progress'])
-      );
-      const unsubscribeCA = onSnapshot(caQuery, (snap) => {
-        setStats(prev => prev ? { ...prev, openCorrectiveActions: snap.size } : prev);
-      });
+    // Trend Alerts
+    const trendQuery = query(
+      collection(db, 'notifications'),
+      where('organizationId', '==', orgId),
+      where('type', '==', 'trend_alert'),
+      where('isRead', '==', false)
+    );
+    const unsubscribeTrend = onSnapshot(trendQuery, (snap) => {
+      setTrendAlerts(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    }, (err) => {
+      console.error('[AdminDashboard] Trend snapshot error:', err);
+    });
 
-      // Trend Alerts
-      const trendQuery = query(
-        collection(db, 'notifications'),
-        where('organizationId', '==', sessionDoc.organizationId),
-        where('type', '==', 'trend_alert'),
-        where('isRead', '==', false)
-      );
-      const unsubscribeTrend = onSnapshot(trendQuery, (snap) => {
-        setTrendAlerts(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      });
-
-      return () => {
-        unsubscribeCA();
-        unsubscribeTrend();
-      };
-    }
-  }, []);
+    return () => {
+      unsubscribeCA();
+      unsubscribeTrend();
+    };
+  }, [isSynced, orgId]);
 
   const handleDismissAlert = async (id: string) => {
     try {
@@ -182,7 +177,7 @@ export default function AdminDashboardPage() {
 
   if (loading) {
     return (
-      <DashboardShell role="Admin">
+      <DashboardShell role="admin">
         <div className="dashboard-page-container">
           <div className="page-header-section mb-6">
             <div className="flex flex-col gap-2">
@@ -202,7 +197,7 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         <div className="page-header-section mb-6">
           <div className="flex flex-col gap-2">

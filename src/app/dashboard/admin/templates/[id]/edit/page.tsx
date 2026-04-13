@@ -9,7 +9,7 @@ export default function EditTemplatePage() {
   const id = params.id as string;
 
   return (
-    <DashboardShell role="Admin">
+    <DashboardShell role="admin">
       <div className="dashboard-page-container">
         <TemplateBuilder templateId={id} />
       </div>

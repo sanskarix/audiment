@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import ShimmerText from '@/components/ui/shimmer-text';
+import posthog from 'posthog-js';
 
 const ROLE_ROUTES: Record<UserRole, string> = {
   admin: '/dashboard/admin',
@@ -46,10 +47,12 @@ export default function LoginPage() {
     if (resetMode) {
       try {
         await sendPasswordResetEmail(auth, email);
+        posthog.capture('password_reset_requested', { email });
         setResetSuccess('Password reset link sent. Check your inbox.');
         setResetMode(false);
       } catch (err: any) {
         console.error('Reset error:', err);
+        posthog.captureException(err);
         setError('Failed to send reset email. Please try again.');
       } finally {
         setLoading(false);
@@ -59,10 +62,13 @@ export default function LoginPage() {
 
     try {
       const user = await loginUser(email, password);
+      posthog.identify(email, { email, role: user.role });
+      posthog.capture('user_logged_in', { email, role: user.role });
       router.push(ROLE_ROUTES[user.role]);
     } catch (err: any) {
       console.error('Login error:', err);
       const code = err.code || '';
+      posthog.capture('user_login_failed', { email, error_code: code });
       if (code === 'auth/invalid-credential') setError('Incorrect email or password. Please try again.');
       else if (code === 'auth/user-not-found') setError('No account found with this email.');
       else if (code === 'auth/wrong-password') setError('Incorrect password. Please try again.');

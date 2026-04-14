@@ -55,6 +55,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from '@/lib/utils';
 import { useAuthSync } from '@/components/AuthProvider';
+import posthog from 'posthog-js';
 
 interface Question {
   id: string;
@@ -339,9 +340,15 @@ export default function AuditExecutionPage() {
               photoUrls: [...(prev[currentQuestion.id]?.photoUrls || []), data.url]
             }
           }));
+          posthog.capture('audit_photo_captured', {
+            audit_id: auditId,
+            question_id: currentQuestion.id,
+            question_severity: currentQuestion.severity,
+          });
           setHasUnsavedChanges(true);
         } catch (err) {
           console.error('Upload failed', err);
+          posthog.captureException(err);
           alert('Photo upload failed. Please try again.');
         } finally {
           setUploading(null);
@@ -558,7 +565,23 @@ export default function AuditExecutionPage() {
       console.log('[AuditSubmission] Batch committed successfully');
       setHasUnsavedChanges(false);
 
-      if (isFinal) router.push('/dashboard/auditor');
+      if (isFinal) {
+        posthog.capture('audit_submitted', {
+          audit_id: auditId,
+          location_name: audit.locationName,
+          score_percentage: updateData.scorePercentage,
+          total_questions: questions.length,
+          answered_questions: Object.keys(responses).length,
+        });
+        router.push('/dashboard/auditor');
+      } else {
+        posthog.capture('audit_progress_saved', {
+          audit_id: auditId,
+          location_name: audit.locationName,
+          answered_questions: Object.keys(responses).length,
+          total_questions: questions.length,
+        });
+      }
     } catch (err: any) {
       console.error('[AuditSubmission] CRITICAL ERROR during submission:', err);
       alert(`Failed to submit audit: ${err.message || 'Unknown error'}. Please check your connection or console for details.`);

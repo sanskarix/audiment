@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebase-admin';
+import { getPostHogClient } from '@/lib/posthog-server';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -50,6 +51,16 @@ export async function POST(req: Request) {
     }
 
     await adminDb.collection('users').doc(uid).set(userData);
+
+    const posthog = getPostHogClient();
+    posthog.capture({
+      distinctId: uid,
+      event: 'user_created_server',
+      properties: {
+        role: role.toUpperCase(),
+        organization_id: organizationId,
+      },
+    });
 
     return NextResponse.json({ success: true, uid }, { status: 201 });
   } catch (err: any) {

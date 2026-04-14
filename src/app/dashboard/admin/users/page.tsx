@@ -20,6 +20,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { useAuthSync } from '@/components/AuthProvider';
+import posthog from 'posthog-js';
 
 // Memoized Form Components to prevent lag
 const UserFormFields = React.memo(({ formData, setFormData, activeManagers, isEdit = false, selectedUser = null, handleResetPassword = null }: any) => {
@@ -221,6 +222,7 @@ export default function AdminUsersPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to create user');
 
+      posthog.capture('user_created', { role: formData.role });
       setFormData({ name: '', email: '', password: '', role: 'MANAGER', managerId: '' });
       setIsCreateOpen(false);
     } catch (err: any) {
@@ -269,6 +271,7 @@ export default function AdminUsersPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to delete user');
 
+      posthog.capture('user_deleted', { role: selectedUser?.role });
       setIsDeleteOpen(false);
       setSelectedUser(null);
     } catch (err: any) {

@@ -50,6 +50,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useAuthSync } from '@/components/AuthProvider';
+import posthog from 'posthog-js';
 
 interface CorrectiveAction {
   id: string;
@@ -122,6 +123,13 @@ export default function ManagerCorrectiveActionsPage() {
         resolutionPhotoUrls: resolutionPhotos,
         completedAt: serverTimestamp()
       });
+      posthog.capture('corrective_action_completed', {
+        corrective_action_id: selectedCA.id,
+        location_name: selectedCA.locationName,
+        severity: selectedCA.severity,
+        has_photos: resolutionPhotos.length > 0,
+        photo_count: resolutionPhotos.length,
+      });
       setSelectedCA(null);
       setResolutionNote('');
       setResolutionPhotos([]);
@@ -136,6 +144,9 @@ export default function ManagerCorrectiveActionsPage() {
     try {
       await updateDoc(doc(db, 'correctiveActions', caId), {
         status: 'in_progress'
+      });
+      posthog.capture('corrective_action_marked_ongoing', {
+        corrective_action_id: caId,
       });
     } catch (error) {
       console.error('Error marking as ongoing:', error);

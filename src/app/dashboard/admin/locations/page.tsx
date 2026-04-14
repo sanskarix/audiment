@@ -17,6 +17,7 @@ import { Card } from '@/components/ui/card';
 import { MoreHorizontal, Pencil, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthSync } from '@/components/AuthProvider';
+import posthog from 'posthog-js';
 
 export default function AdminLocationsPage() {
   const { isSynced, orgId } = useAuthSync();
@@ -127,6 +128,11 @@ export default function AdminLocationsPage() {
         createdAt: serverTimestamp(),
       });
 
+      posthog.capture('location_created', {
+        location_name: formData.name,
+        city: formData.city,
+        assigned_manager_count: formData.assignedManagerIds.length,
+      });
       setFormData({ name: '', address: '', city: '', assignedManagerIds: [] });
       setIsCreateOpen(false);
     } catch (err: any) {
@@ -149,6 +155,12 @@ export default function AdminLocationsPage() {
         assignedManagerIds: editFormData.assignedManagerIds,
       });
 
+      posthog.capture('location_updated', {
+        location_id: selectedLocation.id,
+        location_name: editFormData.name,
+        city: editFormData.city,
+        assigned_manager_count: editFormData.assignedManagerIds.length,
+      });
       setIsEditOpen(false);
       setSelectedLocation(null);
     } catch (err: any) {

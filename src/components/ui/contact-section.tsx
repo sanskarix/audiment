@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CheckCircle2, Loader2, Send } from 'lucide-react';
+import posthog from 'posthog-js';
 
 export function ContactSection() {
     const [loading, setLoading] = useState(false);
@@ -29,6 +30,10 @@ export function ContactSection() {
                 ...formData,
                 outlets: Number(formData.outlets),
                 createdAt: serverTimestamp()
+            });
+            posthog.capture('contact_form_submitted', {
+                company_name: formData.companyName,
+                outlets: Number(formData.outlets),
             });
             setSuccess(true);
             setFormData({

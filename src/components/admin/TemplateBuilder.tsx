@@ -16,6 +16,7 @@ import { Plus, ArrowUp, ArrowDown, Trash2, ArrowLeft, Save, AlertCircle, Camera,
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from 'next/navigation';
 import { useAuthSync } from '@/components/AuthProvider';
+import posthog from 'posthog-js';
 
 type QuestionType = 'yes_no' | 'rating';
 type SeverityType = 'low' | 'medium' | 'critical';
@@ -195,8 +196,15 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
       });
 
       await batch.commit();
+      posthog.capture('template_saved', {
+        is_new: !templateId,
+        template_title: title,
+        category,
+        question_count: questions.length,
+      });
       router.push('/dashboard/admin/templates');
     } catch (e: any) {
+      posthog.captureException(e);
       setError(e.message || 'Failed to save template');
     } finally {
       setLoading(false);

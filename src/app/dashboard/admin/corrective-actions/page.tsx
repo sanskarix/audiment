@@ -59,6 +59,7 @@ import { cn } from '@/lib/utils';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from '@/components/ui/button';
 import { useAuthSync } from '@/components/AuthProvider';
+import posthog from 'posthog-js';
 
 export default function AdminCorrectiveActionsPage() {
   const { isSynced, orgId } = useAuthSync();
@@ -154,6 +155,12 @@ export default function AdminCorrectiveActionsPage() {
         assignedManagerId: selectedManager,
         deadline: new Date(selectedDate),
       });
+      posthog.capture('corrective_action_assigned', {
+        corrective_action_id: editingCA.id,
+        location_name: editingCA.locationName,
+        severity: editingCA.severity,
+        deadline: selectedDate,
+      });
       setEditingCA(null);
     } catch (error) {
       console.error("Error updating CA", error);
@@ -169,6 +176,11 @@ export default function AdminCorrectiveActionsPage() {
         status: 'resolved',
         resolvedAt: serverTimestamp()
       });
+      posthog.capture('corrective_action_resolved', {
+        corrective_action_id: resolvingCA.id,
+        location_name: resolvingCA.locationName,
+        severity: resolvingCA.severity,
+      });
       setResolvingCA(null);
     } catch (error) {
       console.error("Error resolving CA", error);
@@ -180,6 +192,11 @@ export default function AdminCorrectiveActionsPage() {
     try {
       await updateDoc(doc(db, 'correctiveActions', resolvingCA.id), {
         status: 'in_progress'
+      });
+      posthog.capture('corrective_action_rejected', {
+        corrective_action_id: resolvingCA.id,
+        location_name: resolvingCA.locationName,
+        severity: resolvingCA.severity,
       });
       setResolvingCA(null);
     } catch (error) {

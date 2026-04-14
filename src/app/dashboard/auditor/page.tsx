@@ -37,6 +37,7 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { useAuthSync } from '@/components/AuthProvider';
+import posthog from 'posthog-js';
 export default function AuditorDashboardPage() {
   const { isSynced, uid, orgId } = useAuthSync();
   const [audits, setAudits] = useState<any[]>([]);
@@ -206,13 +207,13 @@ export default function AuditorDashboardPage() {
                 const isFuture = a.scheduledDate?.toDate() > new Date();
                 const deadline = a.deadline?.toDate();
                 const isOverdue = deadline && deadline < new Date();
-                
+
                 return (
                   <Card key={a.id} className="standard-card border-border/40 hover:border-primary/20 hover:shadow-md transition-all duration-300 group overflow-hidden">
                     <div className="flex flex-col md:flex-row md:items-center justify-between p-4 md:p-5 gap-4">
                       {/* Left: Title and Location */}
                       <div className="flex-1 space-y-1.5 min-w-0">
-                        <h3 className="text-[14px] md:text-[15px] font-semibold text-heading leading-tight group-hover:text-primary transition-colors truncate">
+                        <h3 className="text-[14px] font-semibold text-heading leading-tight group-hover:text-primary transition-colors truncate">
                           {a.templateTitle}
                         </h3>
                         <div className="flex items-center gap-2 text-[12px] text-muted-text">
@@ -248,12 +249,17 @@ export default function AuditorDashboardPage() {
                       <div className="shrink-0 flex items-center pt-1 md:pt-0">
                         {isFuture ? (
                           <div className="flex items-center gap-2 px-3 py-2 bg-muted/10 rounded-lg opacity-60">
-                             <Clock className="h-3.5 w-3.5 text-muted-text" />
-                             <span className="text-[11px] font-medium text-muted-text">Locked</span>
+                            <Clock className="h-3.5 w-3.5 text-muted-text" />
+                            <span className="text-[11px] font-medium text-muted-text">Locked</span>
                           </div>
                         ) : (
                           <Button size="sm" className="h-9 px-5 font-semibold text-[13px] shadow-lg shadow-primary/10 active:scale-95 transition-all" asChild>
-                            <Link href={`/dashboard/auditor/audits/${a.id}`}>
+                            <Link href={`/dashboard/auditor/audits/${a.id}`} onClick={() => posthog.capture('audit_started', {
+                              audit_id: a.id,
+                              template_title: a.templateTitle,
+                              location_name: a.locationName,
+                              status: a.status,
+                            })}>
                               {a.status === 'in_progress' ? 'Resume' : 'Start audit'}
                               <ChevronRight className="ml-1.5 h-3.5 w-3.5" />
                             </Link>

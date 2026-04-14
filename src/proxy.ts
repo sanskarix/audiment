@@ -82,7 +82,7 @@ if (typeof setInterval !== 'undefined') {
 }
 // ─────────────────────────────────────────────
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   // ─── RATE LIMITING ──────────────────────────
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
     ?? request.headers.get('x-real-ip')

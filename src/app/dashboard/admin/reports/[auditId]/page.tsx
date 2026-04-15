@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
+import { calculateAuditScore, ScoreInputQuestion, QuestionType, Severity, SCORING_VERSION } from '@/lib/scoring';
 import { db } from '@/lib/firebase';
 import {
   doc,
@@ -40,6 +41,7 @@ import {
   CheckCircle2,
   XCircle,
   HelpCircle,
+  AlertCircle,
   Image as ImageIcon
 } from 'lucide-react';
 import { format } from 'date-fns';
@@ -64,15 +66,40 @@ export default function AuditReportDetailPage() {
       try {
         const auditDoc = await getDoc(doc(db, 'audits', auditId as string));
         if (auditDoc.exists()) {
-          setAudit({ id: auditDoc.id, ...auditDoc.data() });
+          const auditData = { id: auditDoc.id, ...auditDoc.data() } as any;
 
           const responsesSnap = await getDocs(query(
             collection(db, 'auditResponses'),
             where('auditId', '==', auditId)
           ));
-          setResponses(responsesSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+          const responsesData = responsesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+          // Recalculate if version mismatch or missing to ensure consistency
+          if (auditData.scoringVersion !== SCORING_VERSION) {
+            console.log(`[Report] Scoring version mismatch (${auditData.scoringVersion} vs ${SCORING_VERSION}). Recalculating...`);
+            const input: ScoreInputQuestion[] = responsesData.map((r: any) => ({
+              questionId: r.questionId,
+              questionText: r.questionText,
+              questionType: r.questionType as QuestionType,
+              severity: (r.severity || 'medium') as Severity,
+              answer: r.questionType === 'yes_no'
+                ? (r.answer === 'yes' ? 'Yes' : r.answer === 'no' ? 'No' : null)
+                : (r.score ?? null)
+            }));
+            const reScore = calculateAuditScore(input);
+            auditData.finalScore = reScore.finalScore;
+            auditData.scorePercentage = reScore.finalScore;
+            auditData.grade = reScore.grade;
+            auditData.hasCriticalFailure = reScore.hasCriticalFailure;
+            auditData.criticalFailureCount = reScore.criticalFailureCount;
+            auditData.scoringTrace = reScore.trace;
+          }
+
+          setAudit(auditData);
+          setResponses(responsesData);
         }
-      } catch (error) {
+      } catch (error: any) {
+        if (error.name === 'AbortError') return;
         console.error('Error fetching report:', error);
       } finally {
         setLoading(false);
@@ -287,6 +314,12 @@ export default function AuditReportDetailPage() {
 
         <div ref={reportRef} className="standard-card p-10 bg-background">
           {/* Report Header */}
+          {audit.hasCriticalFailure && (
+            <div className="mb-6 p-4 rounded-xl bg-destructive/10 border border-destructive text-destructive font-bold flex items-center gap-3">
+              <AlertCircle className="h-5 w-5" />
+              ⚠️ {audit.criticalFailureCount} Critical Failure(s)
+            </div>
+          )}
           <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-border/50 pb-10 mb-10 gap-10">
             <div className="space-y-6 flex-1">
               <h1 className="text-[28px] font-semibold text-heading leading-tight">{audit.templateTitle}</h1>
@@ -308,17 +341,30 @@ export default function AuditReportDetailPage() {
 
             <div className="flex flex-col items-center justify-center p-10 rounded-2xl bg-muted/5 border border-border/50 min-w-[220px]">
               <p className="text-[11px] font-normal text-muted-text/50 uppercase tracking-wider mb-2">Final Score</p>
-              <div className={cn(
-                "text-[42px] font-bold tabular-nums leading-none",
-                audit.scorePercentage >= 90 ? "text-success" : audit.scorePercentage >= 70 ? "text-primary" : "text-destructive"
-              )}>{audit.scorePercentage}%</div>
+              <div className="flex items-center gap-3">
+                <div className={cn(
+                  "text-[42px] font-bold tabular-nums leading-none",
+                  (audit.finalScore ?? audit.scorePercentage) >= 90 ? "text-success" : (audit.finalScore ?? audit.scorePercentage) >= 75 ? "text-primary" : "text-destructive"
+                )}>{audit.finalScore ?? audit.scorePercentage}%</div>
+                {audit.grade && (
+                  <Badge variant="outline" className={cn(
+                    "uppercase tracking-wider font-bold",
+                    audit.grade === 'critical_fail' ? "border-destructive text-destructive" :
+                    audit.grade === 'fail' ? "border-destructive text-destructive" :
+                    audit.grade === 'excellent' ? "border-success text-success" :
+                    "border-primary text-primary"
+                  )}>
+                    {audit.grade.replace('_', ' ')}
+                  </Badge>
+                )}
+              </div>
               <div className="h-2 w-full bg-muted/20 rounded-full mt-6 overflow-hidden">
                 <div
                   className={cn(
                     "h-full rounded-full transition-all duration-1000",
-                    audit.scorePercentage >= 90 ? "bg-success" : audit.scorePercentage >= 70 ? "bg-primary" : "bg-destructive"
+                    (audit.finalScore ?? audit.scorePercentage) >= 90 ? "bg-success" : (audit.finalScore ?? audit.scorePercentage) >= 75 ? "bg-primary" : "bg-destructive"
                   )}
-                  style={{ width: `${audit.scorePercentage}%` }}
+                  style={{ width: `${audit.finalScore ?? audit.scorePercentage}%` }}
                 />
               </div>
             </div>
@@ -336,9 +382,23 @@ export default function AuditReportDetailPage() {
                         <div className="space-y-3">
                           <p className="text-[16px] font-normal text-body leading-relaxed">{resp.questionText}</p>
                           <div className="flex flex-wrap items-center gap-3">
-                            <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-2.5 text-[11px] font-normal capitalize">
-                              {String(resp.severity ?? '').toLowerCase()} Quality
-                            </Badge>
+                             <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-2.5 text-[11px] font-normal capitalize">
+                               {String(resp.severity ?? '').toLowerCase()} Quality
+                             </Badge>
+                             {(() => {
+                               const traceItem = audit.scoringTrace?.find((t: any) => t.questionId === resp.questionId);
+                               const isFailed = traceItem 
+                                 ? traceItem.isCriticalFailure 
+                                 : (resp.severity === 'critical' && (
+                                     (resp.questionType === 'yes_no' && resp.answer === 'no') ||
+                                     (resp.questionType === 'rating' && resp.score < 6)
+                                   ));
+                               return isFailed ? (
+                                 <Badge variant="destructive" className="h-6 rounded-full px-2.5 text-[11px] font-bold uppercase tracking-wider">
+                                   CRITICAL FAIL
+                                 </Badge>
+                               ) : null;
+                             })()}
                             {resp.notes && (
                               <div className="flex items-center gap-2.5 bg-muted/5 px-3 py-1.5 rounded-lg border border-border/50">
                                 <span className="body-text text-muted-text">
@@ -358,7 +418,11 @@ export default function AuditReportDetailPage() {
                             {resp.answer === 'yes' ? <CheckCircle2 className="h-3.5 w-3.5" /> : resp.answer === 'no' ? <XCircle className="h-3.5 w-3.5" /> : <HelpCircle className="h-3.5 w-3.5" />}
                             <span className="capitalize">{resp.answer}</span>
                           </div>
-                          <p className="text-[11px] font-normal text-muted-text/40 tabular-nums px-2">{resp.score} / {resp.maxScore || 10} pts</p>
+                          <p className="text-[11px] font-normal text-muted-text/40 tabular-nums px-2">
+                            {resp.questionType === 'yes_no' 
+                              ? (resp.answer === 'yes' ? 10 : 0) 
+                              : (resp.score ?? 0)} / 10 pts
+                          </p>
                         </div>
                       </div>
 

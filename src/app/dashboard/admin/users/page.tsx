@@ -158,37 +158,38 @@ export default function AdminUsersPage() {
   });
 
 
-  useEffect(() => {
+  const fetchData = async () => {
     if (!isSynced || !orgId) return;
-    const fetchData = async () => {
-      try {
-        const q = query(
-          collection(db, 'users'),
-          where('organizationId', '==', orgId)
-        );
-        const usersSnap = await getDocs(q);
-        const fetchedUsers: any[] = [];
-        usersSnap.forEach((doc) => {
-          fetchedUsers.push({ id: doc.id, ...doc.data() });
-        });
-        fetchedUsers.sort((a, b) => a.name.localeCompare(b.name));
-        setUsers(fetchedUsers);
+    try {
+      const q = query(
+        collection(db, 'users'),
+        where('organizationId', '==', orgId)
+      );
+      const usersSnap = await getDocs(q);
+      const fetchedUsers: any[] = [];
+      usersSnap.forEach((doc) => {
+        fetchedUsers.push({ id: doc.id, ...doc.data() });
+      });
+      fetchedUsers.sort((a, b) => a.name.localeCompare(b.name));
+      setUsers(fetchedUsers);
 
-        const qLoc = query(
-          collection(db, 'locations'),
-          where('organizationId', '==', orgId)
-        );
-        const locationsSnap = await getDocs(qLoc);
-        const fetchedLocations: any[] = [];
-        locationsSnap.forEach((doc) => {
-          fetchedLocations.push({ id: doc.id, ...doc.data() });
-        });
-        fetchedLocations.sort((a, b) => a.name.localeCompare(b.name));
-        setOrgLocations(fetchedLocations);
-      } catch (err) {
-        console.error('Error fetching users/locations:', err);
-      }
-    };
+      const qLoc = query(
+        collection(db, 'locations'),
+        where('organizationId', '==', orgId)
+      );
+      const locationsSnap = await getDocs(qLoc);
+      const fetchedLocations: any[] = [];
+      locationsSnap.forEach((doc) => {
+        fetchedLocations.push({ id: doc.id, ...doc.data() });
+      });
+      fetchedLocations.sort((a, b) => a.name.localeCompare(b.name));
+      setOrgLocations(fetchedLocations);
+    } catch (err) {
+      console.error('Error fetching users/locations:', err);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [orgId, isSynced]);
 
@@ -199,6 +200,7 @@ export default function AdminUsersPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ uid: userId, isActive: !currentStatus })
       });
+      await fetchData();
     } catch (err) {
       console.error('Failed to toggle status', err);
     }
@@ -223,6 +225,8 @@ export default function AdminUsersPage() {
       if (!res.ok) throw new Error(data.error || 'Failed to create user');
 
       posthog.capture('user_created', { role: formData.role });
+      
+      await fetchData();
       setFormData({ name: '', email: '', password: '', role: 'MANAGER', managerId: '' });
       setIsCreateOpen(false);
     } catch (err: any) {
@@ -250,6 +254,7 @@ export default function AdminUsersPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to update user');
 
+      await fetchData();
       setIsEditOpen(false);
       setSelectedUser(null);
     } catch (err: any) {
@@ -272,6 +277,8 @@ export default function AdminUsersPage() {
       if (!res.ok) throw new Error(data.error || 'Failed to delete user');
 
       posthog.capture('user_deleted', { role: selectedUser?.role });
+      
+      await fetchData();
       setIsDeleteOpen(false);
       setSelectedUser(null);
     } catch (err: any) {

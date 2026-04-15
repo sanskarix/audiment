@@ -77,6 +77,25 @@ export default function RootLayout({
 
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <Script id="silence-abort-error" strategy="beforeInteractive">
+          {`
+            (function() {
+              const originalError = console.error;
+              console.error = function(...args) {
+                const msg = args.join(' ');
+                if (
+                  msg.includes('AbortError') || 
+                  msg.includes('signal is aborted') || 
+                  msg.includes('signal was aborted') ||
+                  msg.includes('The user aborted a request')
+                ) {
+                  return;
+                }
+                originalError.apply(console, args);
+              };
+            })();
+          `}
+        </Script>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

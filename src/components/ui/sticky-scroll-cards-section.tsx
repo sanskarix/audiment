@@ -214,7 +214,7 @@ const FeatureCard = React.forwardRef<HTMLDivElement, FeatureCardProps>(
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
               </div>
 
-              <div className="pt-8 h-full">
+              <div className="pt-8 h-full relative">
                 <Image
                   src={feature.imageUrl}
                   alt={feature.title}

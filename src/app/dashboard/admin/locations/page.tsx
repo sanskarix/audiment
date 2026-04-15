@@ -50,45 +50,44 @@ export default function AdminLocationsPage() {
 
   // No longer needed
 
-  useEffect(() => {
+  const fetchData = async () => {
     if (!isSynced || !orgId) return;
+    try {
+      // Fetch Locations
+      const locationsQuery = query(
+        collection(db, 'locations'),
+        where('organizationId', '==', orgId)
+      );
+      const locationsSnap = await getDocs(locationsQuery);
+      const fetchedLocations: any[] = [];
+      locationsSnap.forEach((doc) => {
+        fetchedLocations.push({ id: doc.id, ...doc.data() });
+      });
+      fetchedLocations.sort((a, b) => a.name.localeCompare(b.name));
+      setLocations(fetchedLocations);
 
-    const fetchData = async () => {
-      try {
-        // Fetch Locations
-        const locationsQuery = query(
-          collection(db, 'locations'),
-          where('organizationId', '==', orgId)
-        );
-        const locationsSnap = await getDocs(locationsQuery);
-        const fetchedLocations: any[] = [];
-        locationsSnap.forEach((doc) => {
-          fetchedLocations.push({ id: doc.id, ...doc.data() });
-        });
-        fetchedLocations.sort((a, b) => a.name.localeCompare(b.name));
-        setLocations(fetchedLocations);
+      // Fetch Managers
+      const usersQuery = query(
+        collection(db, 'users'),
+        where('organizationId', '==', orgId),
+        where('role', '==', 'MANAGER')
+      );
+      const usersSnap = await getDocs(usersQuery);
+      const fetchedManagers: any[] = [];
+      usersSnap.forEach((doc) => {
+        const data = doc.data();
+        if (data.isActive !== false) {
+          fetchedManagers.push({ id: doc.id, ...data });
+        }
+      });
+      fetchedManagers.sort((a, b) => a.name.localeCompare(b.name));
+      setManagers(fetchedManagers);
+    } catch (err) {
+      console.error('Error fetching locations/managers:', err);
+    }
+  };
 
-        // Fetch Managers
-        const usersQuery = query(
-          collection(db, 'users'),
-          where('organizationId', '==', orgId),
-          where('role', '==', 'MANAGER')
-        );
-        const usersSnap = await getDocs(usersQuery);
-        const fetchedManagers: any[] = [];
-        usersSnap.forEach((doc) => {
-          const data = doc.data();
-          if (data.isActive !== false) {
-            fetchedManagers.push({ id: doc.id, ...data });
-          }
-        });
-        fetchedManagers.sort((a, b) => a.name.localeCompare(b.name));
-        setManagers(fetchedManagers);
-      } catch (err) {
-        console.error('Error fetching locations/managers:', err);
-      }
-    };
-
+  useEffect(() => {
     fetchData();
   }, [orgId, isSynced]);
 
@@ -99,6 +98,7 @@ export default function AdminLocationsPage() {
       await updateDoc(doc(db, 'locations', locationId), {
         isActive: !currentStatus,
       });
+      await fetchData();
     } catch (err) {
       console.error('Failed to toggle status', err);
     }
@@ -133,6 +133,8 @@ export default function AdminLocationsPage() {
         city: formData.city,
         assigned_manager_count: formData.assignedManagerIds.length,
       });
+      
+      await fetchData();
       setFormData({ name: '', address: '', city: '', assignedManagerIds: [] });
       setIsCreateOpen(false);
     } catch (err: any) {
@@ -161,6 +163,8 @@ export default function AdminLocationsPage() {
         city: editFormData.city,
         assigned_manager_count: editFormData.assignedManagerIds.length,
       });
+      
+      await fetchData();
       setIsEditOpen(false);
       setSelectedLocation(null);
     } catch (err: any) {

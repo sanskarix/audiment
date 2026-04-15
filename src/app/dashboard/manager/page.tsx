@@ -87,6 +87,11 @@ export default function ManagerDashboardPage() {
   const [session, setSession] = useState<any>(null);
   const { isSynced, uid, orgId } = useAuthSync();
   const [managerExtraStats, setManagerExtraStats] = useState<{ unassigned: any[], nearDeadlines: any[] }>({ unassigned: [], nearDeadlines: [] });
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Resolution state
   const [selectedCA, setSelectedCA] = useState<any>(null);
@@ -232,7 +237,7 @@ export default function ManagerDashboardPage() {
             .slice(0, 10)
             .map(a => ({
               date: format(toDate(a.completedAt), 'MM/dd'),
-              score: a.scorePercentage || 0
+              score: a.finalScore ?? a.scorePercentage ?? 0
             }))
             .reverse(),
           auditorActivity: auditors.map(aud => {
@@ -272,7 +277,8 @@ export default function ManagerDashboardPage() {
 
     const unsubscribeCA = onSnapshot(caQuery, (snap) => {
       setCorrectiveActions(snap.docs.map(d => ({ id: d.id, ...d.data() } as any)));
-    }, (err) => {
+    }, (err: any) => {
+      if (err.name === 'AbortError') return;
       console.error('[ManagerDashboard] CA snapshot error:', err);
     });
 
@@ -286,7 +292,8 @@ export default function ManagerDashboardPage() {
 
     const unsubscribeNotifications = onSnapshot(notificationsQuery, (snap) => {
       setNotifications(snap.docs.map(d => ({ id: d.id, ...d.data() } as any)));
-    }, (err) => {
+    }, (err: any) => {
+      if (err.name === 'AbortError') return;
       console.error('[ManagerDashboard] Notifications snapshot error:', err);
     });
 
@@ -329,7 +336,8 @@ export default function ManagerDashboardPage() {
       if (!res.ok) throw new Error('Upload failed');
       const data = await res.json();
       setResolutionPhotos(prev => [...prev, data.url]);
-    } catch (err) {
+    } catch (err: any) {
+      if (err.name === 'AbortError') return;
       console.error('Upload failed', err);
     } finally {
       setIsUploading(false);
@@ -499,58 +507,62 @@ export default function ManagerDashboardPage() {
               <p className="body-text mt-1">Score trends from recent audits</p>
             </div>
             <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={stats?.recentAuditScores} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} strokeOpacity={0.5} />
-                  <XAxis 
-                    dataKey="date" 
-                    stroke="var(--muted-text)" 
-                    fontSize={10} 
-                    axisLine={false} 
-                    tickLine={false} 
-                    fontWeight={500} 
-                    tick={{ dy: 10 }}
-                  />
-                  <YAxis 
-                    stroke="var(--muted-text)" 
-                    fontSize={10} 
-                    axisLine={false} 
-                    tickLine={false} 
-                    domain={[0, 100]} 
-                    fontWeight={500}
-                    tickFormatter={(val) => `${val}%`}
-                  />
-                  <Tooltip
-                    contentStyle={{ 
-                      borderRadius: '12px', 
-                      border: '1px solid var(--border)', 
-                      backgroundColor: 'var(--background)', 
-                      color: 'var(--heading)', 
-                      fontSize: '11px',
-                      fontWeight: '600',
-                      boxShadow: '0 15px 30px rgba(0,0,0,0.15)',
-                      padding: '12px'
-                    }}
-                    cursor={{ stroke: 'var(--primary)', strokeWidth: 1, strokeDasharray: '4 4' }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="score"
-                    stroke="var(--primary)"
-                    strokeWidth={3}
-                    fillOpacity={1}
-                    fill="url(#colorScore)"
-                    dot={false}
-                    activeDot={{ r: 5, strokeWidth: 0, fill: 'var(--primary)' }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              {isMounted ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={stats?.recentAuditScores} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.2}/>
+                        <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} strokeOpacity={0.5} />
+                    <XAxis 
+                      dataKey="date" 
+                      stroke="var(--muted-text)" 
+                      fontSize={10} 
+                      axisLine={false} 
+                      tickLine={false} 
+                      fontWeight={500} 
+                      tick={{ dy: 10 }}
+                    />
+                    <YAxis 
+                      stroke="var(--muted-text)" 
+                      fontSize={10} 
+                      axisLine={false} 
+                      tickLine={false} 
+                      domain={[0, 100]} 
+                      fontWeight={500}
+                      tickFormatter={(val) => `${val}%`}
+                    />
+                    <Tooltip
+                      contentStyle={{ 
+                        borderRadius: '12px', 
+                        border: '1px solid var(--border)', 
+                        backgroundColor: 'var(--background)', 
+                        color: 'var(--heading)', 
+                        fontSize: '11px',
+                        fontWeight: '600',
+                        boxShadow: '0 15px 30px rgba(0,0,0,0.15)',
+                        padding: '12px'
+                      }}
+                      cursor={{ stroke: 'var(--primary)', strokeWidth: 1, strokeDasharray: '4 4' }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="score"
+                      stroke="var(--primary)"
+                      strokeWidth={3}
+                      fillOpacity={1}
+                      fill="url(#colorScore)"
+                      dot={false}
+                      activeDot={{ r: 5, strokeWidth: 0, fill: 'var(--primary)' }}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              ) : (
+                <Skeleton className="h-full w-full rounded-xl" />
+              )}
             </div>
           </Card>
 

@@ -63,7 +63,8 @@ export default function NotificationBell({ variant, userRole }: { variant?: 'def
       const fetched = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as any));
       setNotifications(fetched);
       setUnreadCount(fetched.filter((n: any) => !n.isRead).length);
-    }, (err) => {
+    }, (err: any) => {
+      if (err.name === 'AbortError') return;
       console.error('[NotificationBell] Snapshot error:', err);
     });
 

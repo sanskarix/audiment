@@ -74,16 +74,14 @@ export default function AdminAuditsPage() {
   const [open, setOpen] = useState(false);
   const [editingAuditId, setEditingAuditId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!isSynced) return;
-    if (!orgId) {
-      setLoading(false);
-      return;
-    }
-
-    const qAudits = query(collection(db, 'audits'), where('organizationId', '==', orgId));
-    const unsubscribe = onSnapshot(qAudits, (snap) => {
-      const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+  const fetchData = async () => {
+    if (!isSynced || !orgId) return;
+    
+    try {
+      // Fetch Audits
+      const qAudits = query(collection(db, 'audits'), where('organizationId', '==', orgId));
+      const auditSnap = await getDocs(qAudits);
+      const fetched = auditSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
       
       const toDate = (val: any): Date => {
         if (!val) return new Date(0);
@@ -102,29 +100,29 @@ export default function AdminAuditsPage() {
         return statusA - statusB;
       });
       setAudits(fetched);
-    }, (err) => {
-      console.error('[AdminAudits] Error fetching audits:', err);
-    });
 
-    // Fetch Templates
-    const qTemplates = query(collection(db, 'auditTemplates'), where('organizationId', '==', orgId), where('isActive', '==', true));
-    getDocs(qTemplates).then(snap => {
-      setTemplates(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    });
+      // Fetch Templates
+      const qTemplates = query(collection(db, 'auditTemplates'), where('organizationId', '==', orgId), where('isActive', '==', true));
+      const templateSnap = await getDocs(qTemplates);
+      setTemplates(templateSnap.docs.map(d => ({ id: d.id, ...d.data() } as any)).sort((a, b) => (a.title || '').localeCompare(b.title || '')));
 
-    // Fetch Locations
-    const qLocations = query(collection(db, 'locations'), where('organizationId', '==', orgId), where('isActive', '==', true));
-    getDocs(qLocations).then(snap => {
-      setLocations(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    });
+      // Fetch Locations
+      const qLocations = query(collection(db, 'locations'), where('organizationId', '==', orgId), where('isActive', '==', true));
+      const locationSnap = await getDocs(qLocations);
+      setLocations(locationSnap.docs.map(d => ({ id: d.id, ...d.data() } as any)).sort((a, b) => (a.name || '').localeCompare(b.name || '')));
 
-    // Fetch Managers
-    const qManagers = query(collection(db, 'users'), where('organizationId', '==', orgId), where('role', '==', 'MANAGER'), where('isActive', '==', true));
-    getDocs(qManagers).then(snap => {
-      setManagers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    });
+      // Fetch Managers
+      const qManagers = query(collection(db, 'users'), where('organizationId', '==', orgId), where('role', '==', 'MANAGER'), where('isActive', '==', true));
+      const managerSnap = await getDocs(qManagers);
+      setManagers(managerSnap.docs.map(d => ({ id: d.id, ...d.data() } as any)).sort((a, b) => (a.name || '').localeCompare(b.name || '')));
 
-    return () => unsubscribe();
+    } catch (err) {
+      console.error('[AdminAudits] Error fetching data:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, [orgId, isSynced]);
 
   const handlePublish = async () => {
@@ -148,6 +146,7 @@ export default function AdminAuditsPage() {
         scheduledDate: Timestamp.fromDate(formData.scheduledDate),
         deadline: Timestamp.fromDate(formData.deadline),
         status: 'published',
+        createdAt: serverTimestamp(),
       };
 
       if (editingAuditId) {
@@ -205,6 +204,7 @@ export default function AdminAuditsPage() {
         }
       }
 
+      await fetchData();
       setOpen(false);
       // Reset form
       setEditingAuditId(null);
@@ -326,7 +326,7 @@ export default function AdminAuditsPage() {
               </DialogTrigger>
               <DialogContent className="sm:max-w-lg p-6">
                 <DialogHeader>
-                  <DialogTitle className="text-xl font-semibold text-heading">
+                  <DialogTitle className="page-heading">
                     {editingAuditId ? 'Edit audit' : 'New audit'}
                   </DialogTitle>
                 </DialogHeader>
@@ -334,9 +334,9 @@ export default function AdminAuditsPage() {
                 <div className="space-y-4 py-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-2">
-                      <Label htmlFor="template" className="text-xs text-muted-foreground">Template</Label>
+                      <Label htmlFor="template" className="text-body font-normal">Template</Label>
                       <Select value={formData.templateId} onValueChange={(val) => updateFormField('templateId', val)}>
-                        <SelectTrigger id="template" className="h-10 text-body bg-muted/5 border-border/50">
+                        <SelectTrigger id="template" className="h-11 text-body bg-muted/5 border-border/50">
                           <SelectValue placeholder="Select template" />
                         </SelectTrigger>
                         <SelectContent>
@@ -348,12 +348,12 @@ export default function AdminAuditsPage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Label htmlFor="location" className="text-xs text-muted-foreground">Location</Label>
+                      <Label htmlFor="location" className="text-body font-normal">Location</Label>
                       <Select value={formData.locationId} onValueChange={(val) => {
                         updateFormField('locationId', val);
                         updateFormField('managerId', '');
                       }}>
-                        <SelectTrigger id="location" className="h-10 text-body bg-muted/5 border-border/50">
+                        <SelectTrigger id="location" className="h-11 text-body bg-muted/5 border-border/50">
                           <SelectValue placeholder="Select location" />
                         </SelectTrigger>
                         <SelectContent>
@@ -366,9 +366,9 @@ export default function AdminAuditsPage() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="manager" className="text-xs text-muted-foreground">Manager</Label>
+                    <Label htmlFor="manager" className="text-body font-normal">Manager</Label>
                     <Select value={formData.managerId} onValueChange={(val) => updateFormField('managerId', val)}>
-                      <SelectTrigger id="manager" className="h-10 text-body bg-muted/5 border-border/50">
+                      <SelectTrigger id="manager" className="h-11 text-body bg-muted/5 border-border/50">
                         <SelectValue placeholder="Select manager" />
                       </SelectTrigger>
                       <SelectContent>
@@ -381,10 +381,10 @@ export default function AdminAuditsPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-2">
-                      <Label className="text-xs text-muted-foreground">Scheduled date</Label>
+                      <Label className="text-body font-normal">Scheduled date</Label>
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.scheduledDate && "text-muted-text")}>
+                          <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.scheduledDate && "text-muted-text")}>
                             <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
                             {formData.scheduledDate ? format(formData.scheduledDate, "PPP") : "Pick a date"}
                           </Button>
@@ -402,10 +402,10 @@ export default function AdminAuditsPage() {
                       </Popover>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Label className="text-xs text-muted-foreground">Deadline</Label>
+                      <Label className="text-body font-normal">Deadline</Label>
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.deadline && "text-muted-text")}>
+                          <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.deadline && "text-muted-text")}>
                             <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
                             {formData.deadline ? format(formData.deadline, "PPP") : "Pick a date"}
                           </Button>
@@ -418,9 +418,9 @@ export default function AdminAuditsPage() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="recurring" className="text-xs text-muted-foreground">Frequency</Label>
+                    <Label htmlFor="recurring" className="text-body font-normal">Frequency</Label>
                     <Select value={formData.recurring} onValueChange={(val: any) => updateFormField('recurring', val)}>
-                      <SelectTrigger id="recurring" className="h-10 text-body bg-muted/5 border-border/50">
+                      <SelectTrigger id="recurring" className="h-11 text-body bg-muted/5 border-border/50">
                         <SelectValue placeholder="Frequency" />
                       </SelectTrigger>
                       <SelectContent>
@@ -436,9 +436,9 @@ export default function AdminAuditsPage() {
                     <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-1">
                       {formData.recurring === 'weekly' && (
                         <div className="flex flex-col gap-2">
-                          <Label className="text-xs text-muted-foreground">Repeat on day</Label>
+                          <Label className="text-body font-normal">Repeat on day</Label>
                           <Select value={formData.recurringDay.toString()} onValueChange={(val) => updateFormField('recurringDay', parseInt(val))}>
-                            <SelectTrigger className="h-10 text-body bg-background border-border/50">
+                            <SelectTrigger className="h-11 text-body bg-background border-border/50">
                               <SelectValue placeholder="Select day" />
                             </SelectTrigger>
                             <SelectContent>
@@ -456,9 +456,9 @@ export default function AdminAuditsPage() {
 
                       {formData.recurring === 'monthly' && (
                         <div className="flex flex-col gap-2">
-                          <Label className="text-xs text-muted-foreground">Repeat on date</Label>
+                          <Label className="text-body font-normal">Repeat on date</Label>
                           <Select value={formData.recurringDay.toString()} onValueChange={(val) => updateFormField('recurringDay', parseInt(val))}>
-                            <SelectTrigger className="h-10 text-body bg-background border-border/50">
+                            <SelectTrigger className="h-11 text-body bg-background border-border/50">
                               <SelectValue placeholder="Select date" />
                             </SelectTrigger>
                             <SelectContent>
@@ -471,10 +471,10 @@ export default function AdminAuditsPage() {
                       )}
 
                       <div className="flex flex-col gap-2">
-                        <Label className="text-xs text-muted-foreground">Repeat until</Label>
+                        <Label className="text-body font-normal">Repeat until</Label>
                         <Popover>
                           <PopoverTrigger asChild>
-                            <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-background", !formData.repeatUntil && "text-muted-text")}>
+                            <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50 bg-background", !formData.repeatUntil && "text-muted-text")}>
                               <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
                               {formData.repeatUntil ? format(formData.repeatUntil, "PPP") : "Pick a date"}
                             </Button>
@@ -488,14 +488,15 @@ export default function AdminAuditsPage() {
                   )}
 
                   <div className="flex items-center justify-between py-2 border-t border-border/50">
-                    <Label htmlFor="isSurprise" className="text-sm font-medium">Surprise audit</Label>
+                    <Label htmlFor="isSurprise" className="text-body font-normal">Surprise audit</Label>
                     <Switch id="isSurprise" checked={formData.isSurprise} onCheckedChange={(val) => updateFormField('isSurprise', val)} />
                   </div>
                 </div>
 
                 <DialogFooter className="gap-2">
-                  <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+                  <Button variant="outline" className="h-11 px-6 font-medium" onClick={() => setOpen(false)}>Cancel</Button>
                   <Button
+                    className="h-11 px-6 font-medium shadow-lg shadow-primary/20"
                     onClick={handlePublish}
                     disabled={loading || !formData.templateId || !formData.locationId || !formData.managerId || !formData.scheduledDate || !formData.deadline}
                   >

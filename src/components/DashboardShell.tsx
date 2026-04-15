@@ -106,7 +106,8 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
         setUserState(prev => prev ? { ...prev, ...uData } : { name: uData.name, email: uData.email, photoUrl: uData.photoUrl });
         if (role === 'auditor') setHasFlashmobAccess(uData.hasFlashmobAccess === true);
       }
-    }, (err) => {
+    }, (err: any) => {
+      if (err.name === 'AbortError') return;
       console.error('[DashboardShell] User snapshot error:', err);
     });
 

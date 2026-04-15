@@ -75,22 +75,19 @@ export default function AdminCorrectiveActionsPage() {
   const [expandedPhotoUrl, setExpandedPhotoUrl] = useState<string | null>(null);
 
 
-  useEffect(() => {
-    if (!isSynced) return;
-    if (!orgId) {
-      setLoading(false);
-      return;
-    }
+  const fetchActions = async () => {
+    if (!isSynced || !orgId) return;
+    
+    try {
+      // Fetch all open corrective actions for the organization
+      const q = query(
+        collection(db, 'correctiveActions'),
+        where('organizationId', '==', orgId),
+        where('status', 'in', ['open', 'in_progress', 'completed']),
+        orderBy('deadline', 'asc')
+      );
 
-    // Fetch all open corrective actions for the organization
-    const q = query(
-      collection(db, 'correctiveActions'),
-      where('organizationId', '==', orgId),
-      where('status', 'in', ['open', 'in_progress', 'completed']),
-      orderBy('deadline', 'asc')
-    );
-
-    const unsubscribe = onSnapshot(q, async (snap) => {
+      const snap = await getDocs(q);
       const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() }));
 
       const toDate = (val: any): Date => {
@@ -129,12 +126,14 @@ export default function AdminCorrectiveActionsPage() {
 
       setActions(actionsWithExtras);
       setLoading(false);
-    }, (err) => {
-      console.error('[AdminCorrectiveActions] Snapshot error:', err);
+    } catch (err) {
+      console.error('[AdminCorrectiveActions] Fetch error:', err);
       setLoading(false);
-    });
+    }
+  };
 
-    return () => unsubscribe();
+  useEffect(() => {
+    fetchActions();
   }, [orgId, isSynced]);
 
   useEffect(() => {
@@ -161,6 +160,7 @@ export default function AdminCorrectiveActionsPage() {
         severity: editingCA.severity,
         deadline: selectedDate,
       });
+      await fetchActions();
       setEditingCA(null);
     } catch (error) {
       console.error("Error updating CA", error);
@@ -181,6 +181,7 @@ export default function AdminCorrectiveActionsPage() {
         location_name: resolvingCA.locationName,
         severity: resolvingCA.severity,
       });
+      await fetchActions();
       setResolvingCA(null);
     } catch (error) {
       console.error("Error resolving CA", error);
@@ -198,6 +199,7 @@ export default function AdminCorrectiveActionsPage() {
         location_name: resolvingCA.locationName,
         severity: resolvingCA.severity,
       });
+      await fetchActions();
       setResolvingCA(null);
     } catch (error) {
       console.error("Error rejecting CA", error);

@@ -52,20 +52,21 @@ export default function AdminTemplatesPage() {
 
   // No longer needed
 
-  useEffect(() => {
+  const fetchTemplates = async () => {
     if (!isSynced || !orgId) return;
-    const fetchTemplates = async () => {
-      try {
-        const q = query(collection(db, 'auditTemplates'), where('organizationId', '==', orgId));
-        const snapshot = await getDocs(q);
-        const fetched: any[] = [];
-        snapshot.forEach(d => fetched.push({ id: d.id, ...d.data() }));
-        fetched.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis() || 0);
-        setTemplates(fetched);
-      } catch (err) {
-        console.error('Error fetching templates:', err);
-      }
-    };
+    try {
+      const q = query(collection(db, 'auditTemplates'), where('organizationId', '==', orgId));
+      const snapshot = await getDocs(q);
+      const fetched: any[] = [];
+      snapshot.forEach(d => fetched.push({ id: d.id, ...d.data() }));
+      fetched.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis() || 0);
+      setTemplates(fetched);
+    } catch (err) {
+      console.error('Error fetching templates:', err);
+    }
+  };
+
+  useEffect(() => {
     fetchTemplates();
   }, [orgId, isSynced]);
 
@@ -95,6 +96,7 @@ export default function AdminTemplatesPage() {
       });
 
       await batch.commit();
+      await fetchTemplates();
     } catch (e) {
       console.error(e);
     } finally {
@@ -107,6 +109,7 @@ export default function AdminTemplatesPage() {
   const handleToggleActive = async (id: string, currentStatus: boolean) => {
     try {
       await updateDoc(doc(db, 'auditTemplates', id), { isActive: !currentStatus });
+      await fetchTemplates();
     } catch (e) {
       console.error(e);
     }
@@ -126,6 +129,7 @@ export default function AdminTemplatesPage() {
       batch.delete(doc(db, 'auditTemplates', templateId));
 
       await batch.commit();
+      await fetchTemplates();
     } catch (e) {
       console.error('Error deleting template:', e);
       alert('Failed to delete template');

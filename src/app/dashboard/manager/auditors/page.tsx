@@ -106,48 +106,43 @@ export default function AuditorsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
 
-  useEffect(() => {
-    if (!isSynced) return;
-    if (!uid || !orgId) {
-      setLoading(false);
-      return;
-    }
-
-    const fetchData = async () => {
-      try {
-        const q = query(
-          collection(db, 'users'),
+  const fetchData = async () => {
+    if (!isSynced || !uid || !orgId) return;
+    try {
+      const q = query(
+        collection(db, 'users'),
+        where('organizationId', '==', orgId),
+        where('managerId', '==', uid),
+        where('role', '==', 'AUDITOR')
+      );
+      const snapshot = await getDocs(q);
+      const fetchedAuditors = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Auditor[];
+      setAuditors(fetchedAuditors);
+      
+      const auditorIds = fetchedAuditors.map(a => a.id).filter(id => !!id);
+        if (auditorIds.length > 0) {
+        const auditsQuery = query(
+          collection(db, 'audits'),
           where('organizationId', '==', orgId),
-          where('managerId', '==', uid),
-          where('role', '==', 'AUDITOR')
+          where('assignedAuditorId', 'in', auditorIds.slice(0, 30))
         );
-        const snapshot = await getDocs(q);
-        const fetchedAuditors = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as Auditor[];
-        setAuditors(fetchedAuditors);
-        
-        const auditorIds = fetchedAuditors.map(a => a.id).filter(id => !!id);
-          if (auditorIds.length > 0) {
-          const auditsQuery = query(
-            collection(db, 'audits'),
-            where('organizationId', '==', orgId),
-            where('assignedAuditorId', 'in', auditorIds.slice(0, 30))
-          );
-          const snap = await getDocs(auditsQuery);
-          setTeamAuditsCount(snap.size);
-          setLoading(false);
-        } else {
-          setTeamAuditsCount(0);
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error("[ManagerAuditors] Error fetching auditors:", err);
+        const snap = await getDocs(auditsQuery);
+        setTeamAuditsCount(snap.size);
+        setLoading(false);
+      } else {
+        setTeamAuditsCount(0);
         setLoading(false);
       }
-    };
+    } catch (err) {
+      console.error("[ManagerAuditors] Error fetching auditors:", err);
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [uid, orgId, isSynced]);
 
@@ -159,11 +154,7 @@ export default function AuditorsPage() {
         [field]: !currentValue,
         ...(field === 'isActive' ? { status: !currentValue ? 'active' : 'inactive' } : {})
       });
-      setAuditors(prev => prev.map(a => a.id === auditorId ? {
-        ...a,
-        [field]: !currentValue,
-        ...(field === 'isActive' ? { status: !currentValue ? 'active' : 'inactive' } : {})
-      } : a));
+      await fetchData();
     } catch (error) {
       console.error(`Error updating ${field}:`, error);
     } finally {
@@ -198,8 +189,8 @@ export default function AuditorsPage() {
         flashmobAccess: false,
         createdAt: serverTimestamp(),
       };
-      const docRef = await addDoc(collection(db, 'users'), newAuditor);
-      setAuditors(prev => [{ id: docRef.id, ...newAuditor }, ...prev]);
+      await addDoc(collection(db, 'users'), newAuditor);
+      await fetchData();
 
       setNewAuditorName('');
       setNewAuditorEmail('');

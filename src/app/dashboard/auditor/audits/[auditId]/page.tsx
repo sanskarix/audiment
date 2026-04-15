@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { getIdToken } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 import Image from 'next/image';
 import { db } from '@/lib/firebase';
 import {
@@ -15,7 +17,6 @@ import {
   where,
   writeBatch,
   Timestamp,
-  limit
 } from 'firebase/firestore';
 import {
   AlertDialog,
@@ -56,6 +57,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from '@/lib/utils';
 import { useAuthSync } from '@/components/AuthProvider';
 import posthog from 'posthog-js';
+import { calculateAuditScore, ScoreInputQuestion, QuestionType, Severity } from '@/lib/scoring';
 
 interface Question {
   id: string;
@@ -166,7 +168,8 @@ export default function AuditExecutionPage() {
           setShowInitialLocationPrompt(true);
         }
 
-      } catch (err) {
+      } catch (err: any) {
+        if (err.name === 'AbortError') return;
         console.error('Fetch error:', err);
       } finally {
         setLoading(false);
@@ -237,7 +240,8 @@ export default function AuditExecutionPage() {
           photoUrls: [...(prev[currentQuestion.id]?.photoUrls || []), downloadURL]
         }
       }));
-    } catch (err) {
+    } catch (err: any) {
+      if (err.name === 'AbortError') return;
       console.error('Upload failed', err);
     } finally {
       setUploading(null);
@@ -346,7 +350,8 @@ export default function AuditExecutionPage() {
             question_severity: currentQuestion.severity,
           });
           setHasUnsavedChanges(true);
-        } catch (err) {
+        } catch (err: any) {
+          if (err.name === 'AbortError') return;
           console.error('Upload failed', err);
           posthog.captureException(err);
           alert('Photo upload failed. Please try again.');
@@ -403,11 +408,33 @@ export default function AuditExecutionPage() {
 
     try {
       const batch = writeBatch(db);
-      console.log('[AuditSubmission] Preparing batch for responses:', Object.keys(responses).length);
+      
+      // Calculate final scores first for consistency
+      const scoringInput: ScoreInputQuestion[] = questions.map(q => ({
+        questionId: q.id,
+        questionText: q.questionText,
+        questionType: q.questionType as QuestionType,
+        severity: (q.severity || 'medium') as Severity,
+        answer: q.questionType === 'yes_no'
+          ? (responses[q.id]?.answer === 'yes' ? 'Yes' : responses[q.id]?.answer === 'no' ? 'No' : null)
+          : (responses[q.id]?.score ?? null)
+      }));
+
+      const scoreResult = calculateAuditScore(scoringInput);
+
+      if (isFinal) {
+        console.log('AUDIT SCORING TRACE:', JSON.stringify({
+          auditId,
+          locationName: audit.locationName,
+          ...scoreResult
+        }, null, 2));
+      }
 
       Object.entries(responses).forEach(([qId, r]) => {
         const q = questions.find(question => question.id === qId);
         if (!q) return;
+
+        const traceItem = scoreResult.trace.find(t => t.questionId === qId);
 
         const responseRef = doc(db, 'auditResponses', `${auditId}_${qId}`);
         batch.set(responseRef, {
@@ -422,35 +449,29 @@ export default function AuditExecutionPage() {
           locationId: audit.locationId,
           photoUrls: r.photoUrls,
           notes: r.notes,
-          submittedAt: serverTimestamp()
+          submittedAt: serverTimestamp(),
+          isCriticalFailure: traceItem?.isCriticalFailure ?? false
         });
 
-        // Block 9: Auto-create corrective action for failed critical questions
-        if (isFinal) {
-          const isFailed = (q.severity === 'critical') && (
-            (q.questionType === 'yes_no' && r.answer === 'no') ||
-            (q.questionType === 'rating' && r.score <= 3)
-          );
-
-          if (isFailed) {
-            const caData = {
-              auditId,
-              questionId: qId,
-              questionText: q.questionText,
-              locationId: audit.locationId,
-              locationName: audit.locationName,
-              organizationId: orgId,
-              assignedManagerId: audit.assignedManagerId,
-              description: r.notes || `Failed critical question: ${q.questionText}`,
-              severity: q.severity,
-              status: 'open',
-              reminderSent: false,
-              deadline: Timestamp.fromDate(new Date(Date.now() + 48 * 60 * 60 * 1000)),
-              createdAt: serverTimestamp()
-            };
-            const caRef = doc(collection(db, 'correctiveActions'));
-            batch.set(caRef, caData);
-          }
+        // Auto-create corrective action for failed critical questions
+        if (isFinal && traceItem?.isCriticalFailure) {
+          const caData = {
+            auditId,
+            questionId: qId,
+            questionText: q.questionText,
+            locationId: audit.locationId,
+            locationName: audit.locationName,
+            organizationId: orgId,
+            assignedManagerId: audit.assignedManagerId,
+            description: r.notes || `Critical Failure detected: ${q.questionText}`,
+            severity: q.severity,
+            status: 'open',
+            reminderSent: false,
+            deadline: Timestamp.fromDate(new Date(Date.now() + 48 * 60 * 60 * 1000)),
+            createdAt: serverTimestamp()
+          };
+          const caRef = doc(collection(db, 'correctiveActions'));
+          batch.set(caRef, caData);
         }
       });
 
@@ -459,110 +480,76 @@ export default function AuditExecutionPage() {
         updatedAt: serverTimestamp()
       };
 
-      // Status priority logic:
-      // 1. If finishing (isFinal), always mark completed
-      // 2. If just saving/leaving, only set to in_progress if it wasn't already completed
       if (isFinal) {
         updateData.status = 'completed';
-      } else if (audit.status !== 'completed') {
-        updateData.status = 'in_progress';
-      }
-
-      if (isFinal) {
-        console.log('[AuditSubmission] Calculating final scores');
-        let totalScore = 0;
-        let maxPossibleScore = 0;
-        questions.forEach(q => {
-          maxPossibleScore += (q.questionType === 'yes_no' ? 1 : 10);
-          totalScore += (responses[q.id]?.score || 0);
-        });
-        updateData.totalScore = totalScore;
-        updateData.maxPossibleScore = maxPossibleScore;
-        updateData.scorePercentage = Math.round((totalScore / maxPossibleScore) * 100);
+        updateData.finalScore = scoreResult.finalScore;
+        updateData.scorePercentage = scoreResult.finalScore; // backward compatibility
+        updateData.grade = scoreResult.grade;
+        updateData.hasCriticalFailure = scoreResult.hasCriticalFailure;
+        updateData.criticalFailureCount = scoreResult.criticalFailureCount;
+        updateData.scoringVersion = scoreResult.scoringVersion;
+        updateData.scoringTrace = scoreResult.trace;
+        updateData.weightedEarned = scoreResult.weightedEarned;
+        updateData.weightedMax = scoreResult.weightedMax;
         updateData.completedAt = serverTimestamp();
 
-        // New geolocation logic
+        // Geolocation
         const location = await getLocation();
-
         if (!location.locationCaptured) {
           console.warn('[AuditSubmission] Location not captured, aborting final submission.');
           setSaving(false);
           setShowLocationErrorDialog(true);
-          return; // Prevent submission
+          return;
         }
 
         updateData.latitude = location.latitude;
         updateData.longitude = location.longitude;
         updateData.locationCaptured = location.locationCaptured;
-
-        console.log('[AuditSubmission] Geolocation captured');
+      } else if (audit.status !== 'completed') {
+        updateData.status = 'in_progress';
       }
 
       batch.update(auditRef, updateData);
 
-      // Block 10: Low score and Trend alerts
-      if (isFinal && updateData.scorePercentage < 60) {
-        console.log('[AuditSubmission] Low score detected, processing alerts');
-        // 1. Notify Manager & Admin about low score
-        const adminQuery = query(
-          collection(db, 'users'),
-          where('organizationId', '==', orgId),
-          where('role', '==', 'ADMIN')
-        );
-        const adminSnap = await getDocs(adminQuery);
-        const recipientIds = [audit.assignedManagerId, ...adminSnap.docs.map(d => d.id)];
-
-        recipientIds.forEach(recipientId => {
-          if (!recipientId) return;
-          const notifRef = doc(collection(db, 'notifications'));
-          batch.set(notifRef, {
-            organizationId: orgId,
-            recipientId,
-            recipientRole: recipientId === audit.assignedManagerId ? 'manager' : 'admin',
-            type: 'low_score',
-            title: `Low Audit Score: ${updateData.scorePercentage}%`,
-            message: `Audit for ${audit.locationName} completed with a low score of ${updateData.scorePercentage}%.`,
-            relatedId: auditId,
-            isRead: false,
-            createdAt: serverTimestamp()
-          });
-        });
-
-        // 2. Check for Trend alert (3 consecutive low scores)
-        const recentAuditsQuery = query(
-          collection(db, 'audits'),
-          where('locationId', '==', audit.locationId),
-          where('status', '==', 'completed'),
-          orderBy('completedAt', 'desc'),
-          limit(3)
-        );
-        const recentAuditsSnap = await getDocs(recentAuditsQuery);
-        const recentAudits = recentAuditsSnap.docs.map(d => d.data());
-
-        const allRecentScores = [updateData.scorePercentage, ...recentAudits.map(a => a.scorePercentage)];
-
-        if (allRecentScores.length >= 3 && allRecentScores.slice(0, 3).every(s => s < 60)) {
-          console.log('[AuditSubmission] Trend alert triggered');
-          adminSnap.docs.forEach(adminDoc => {
-            const trendNotifRef = doc(collection(db, 'notifications'));
-            batch.set(trendNotifRef, {
-              organizationId: orgId,
-              recipientId: adminDoc.id,
-              recipientRole: 'admin',
-              type: 'trend_alert',
-              title: `Performance Trend Alert: ${audit.locationName}`,
-              message: `${audit.locationName} has scored below 60% on 3 consecutive audits. Priority review required.`,
-              relatedId: auditId,
-              isRead: false,
-              createdAt: serverTimestamp()
-            });
-          });
-        }
-      }
-
       console.log('[AuditSubmission] Committing batch...');
       await batch.commit();
       console.log('[AuditSubmission] Batch committed successfully');
+
+      // ── Post-commit: fire-and-forget low-score & trend alert notifications ──
+      // This runs AFTER the main batch succeeds so it can never block submission.
+      // Notifications are generated server-side (Admin SDK) to avoid Firestore
+      // security-rule denials — auditors cannot query other auditors' completed
+      // audit docs from the client, which caused "Missing or insufficient permissions".
+      if (isFinal && updateData.scorePercentage < 60) {
+        console.log('[AuditSubmission] Low score detected, dispatching server notification job...');
+        try {
+          const currentUser = auth.currentUser;
+          if (currentUser) {
+            const idToken = await getIdToken(currentUser);
+            fetch('/api/audit/submit-notifications', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`,
+              },
+              body: JSON.stringify({
+                auditId,
+                scorePercentage: updateData.scorePercentage,
+                locationId: audit.locationId,
+                locationName: audit.locationName,
+                assignedManagerId: audit.assignedManagerId,
+                organizationId: orgId,
+              }),
+            }).then(res => {
+              if (!res.ok) console.warn('[AuditSubmission] Notification job responded with non-OK status:', res.status);
+              else console.log('[AuditSubmission] Notification job dispatched successfully.');
+            }).catch(err => console.warn('[AuditSubmission] Notification job failed (non-blocking):', err));
+          }
+        } catch (notifErr) {
+          // Non-blocking: log but do not rethrow — the audit itself already succeeded.
+          console.warn('[AuditSubmission] Could not dispatch notification job:', notifErr);
+        }
+      }
       setHasUnsavedChanges(false);
 
       if (isFinal) {
@@ -840,7 +827,7 @@ export default function AuditExecutionPage() {
       </footer>
 
       {/* Initial Location Prompt Dialog */}
-      <AlertDialog open={showInitialLocationPrompt} onOpenChange={setShowInitialLocationPrompt}>
+      <AlertDialog open={showInitialLocationPrompt}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">

@@ -83,19 +83,16 @@ export default function ManagerCorrectiveActionsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
 
-  useEffect(() => {
-    if (!isSynced) return;
-    if (!uid || !orgId) {
-      setLoading(false);
-      return;
-    }
+  const fetchActions = async () => {
+    if (!isSynced || !uid || !orgId) return;
 
-    const q = query(
-      collection(db, 'correctiveActions'),
-      where('organizationId', '==', orgId)
-    );
+    try {
+      const q = query(
+        collection(db, 'correctiveActions'),
+        where('organizationId', '==', orgId)
+      );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const snapshot = await getDocs(q);
       const fetchedActions = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -104,12 +101,14 @@ export default function ManagerCorrectiveActionsPage() {
       const managerActions = fetchedActions.filter(ca => (ca as any).assignedManagerId === uid);
       setActions(managerActions);
       setLoading(false);
-    }, (error) => {
+    } catch (error) {
       console.error("[ManagerCorrectiveActions] Error fetching corrective actions:", error);
       setLoading(false);
-    });
+    }
+  };
 
-    return () => unsubscribe();
+  useEffect(() => {
+    fetchActions();
   }, [uid, orgId, isSynced]);
 
   const handleComplete = async () => {
@@ -130,6 +129,7 @@ export default function ManagerCorrectiveActionsPage() {
         has_photos: resolutionPhotos.length > 0,
         photo_count: resolutionPhotos.length,
       });
+      await fetchActions();
       setSelectedCA(null);
       setResolutionNote('');
       setResolutionPhotos([]);
@@ -148,6 +148,7 @@ export default function ManagerCorrectiveActionsPage() {
       posthog.capture('corrective_action_marked_ongoing', {
         corrective_action_id: caId,
       });
+      await fetchActions();
     } catch (error) {
       console.error('Error marking as ongoing:', error);
     }

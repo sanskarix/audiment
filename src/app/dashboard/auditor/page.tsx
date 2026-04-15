@@ -99,7 +99,8 @@ export default function AuditorDashboardPage() {
       });
       setAudits(fetched);
       setLoading(false);
-    }, (err) => {
+    }, (err: any) => {
+      if (err.name === 'AbortError') return;
       console.error('[AuditorDashboard] Snapshot error:', err);
       setLoading(false);
     });

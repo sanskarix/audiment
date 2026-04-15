@@ -319,12 +319,14 @@ export default function FlashmobAuditPage() {
       const videoFormData = new FormData();
       videoFormData.append('file', videoBlob, 'flashmob_video.webm');
       const vRes = await fetch('/api/upload', { method: 'POST', body: videoFormData });
+      if (vRes.status === 0) return; // Aborted
       const vData = await vRes.json();
       if (!vRes.ok) throw new Error(vData.error || 'Video upload failed');
 
       const selfieFormData = new FormData();
       selfieFormData.append('file', selfieBlob, 'selfie.jpg');
       const sRes = await fetch('/api/upload', { method: 'POST', body: selfieFormData });
+      if (sRes.status === 0) return; // Aborted
       const sData = await sRes.json();
       if (!sRes.ok) throw new Error(sData.error || 'Selfie upload failed');
 
@@ -343,7 +345,8 @@ export default function FlashmobAuditPage() {
         visibleTo: [uid]
       });
       setStep('success');
-    } catch (err) {
+    } catch (err: any) {
+      if (err.name === 'AbortError') return;
       console.error('Flashmob submission failed:', err);
       alert('Submission failed. Check your connection.');
     } finally { setSaving(false); }

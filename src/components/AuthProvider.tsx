@@ -44,7 +44,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             role,
             orgId,
           });
-        } catch (e) {
+        } catch (e: any) {
+          if (e.name === 'AbortError') return;
           console.error('Failed to sync auth token:', e);
           // Even if refresh fails, we set synced = true as a fallback so the app doesn't hang,
           // though it might hit permission errors if the token is very stale.

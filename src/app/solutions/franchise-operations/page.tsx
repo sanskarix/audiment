@@ -14,7 +14,8 @@ import {
 } from "lucide-react";
 import { Footer } from "@/components/ui/modem-animated-footer";
 import { ContactSection } from "@/components/ui/contact-section";
-import { HeroRestaurant } from "@/components/ui/hero-restaurant";
+import { Navbar } from "@/components/ui/navbar";
+import { SolutionsHero } from "@/components/ui/solutions-hero";
 
 export const metadata: Metadata = {
   title: "Franchise compliance audit software for multi-location chains | Audiment",
@@ -128,7 +129,12 @@ export default function FranchiseOperationsPage() {
   return (
     <main id="main-content" className="relative min-h-screen bg-white font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
       <StructuredData />
-      <HeroRestaurant title={<>Ground-truth accountability<br /><span className="text-neutral-400">across every franchise location</span></>} />
+      <Navbar />
+      <SolutionsHero 
+        subtitle="Franchise Operations"
+        title={<>Ground-truth accountability<br /><span className="text-neutral-400">across every franchise location</span></>}
+        description="Stop relying on pencil-whipped paper checklists. Get ground-truth visibility across every franchise location with mandatory photo evidence, geo-tagged selfies, and automated corrective actions."
+      />
 
       {/* ── Problem Section ──────────────────────────────────────────── */}
       <section id="problem" className="py-24 md:py-32 bg-neutral-950 px-6">
@@ -138,7 +144,7 @@ export default function FranchiseOperationsPage() {
               Why traditional franchise location<br />
               <span className="text-neutral-400">audits fail at scale</span>
             </h2>
-            <p className="text-lg text-neutral-400 leading-relaxed">
+            <p className="text-xl text-neutral-400 leading-relaxed">
               When you rely on trust instead of proof, quality slips. Area managers check boxes, store issues persist, and you fall out of compliance.
             </p>
           </div>
@@ -228,7 +234,7 @@ export default function FranchiseOperationsPage() {
               Audiment vs.<br />
               <span className="text-neutral-400">Legacy franchise location checklists</span>
             </h2>
-            <p className="text-lg text-neutral-400">
+            <p className="text-xl text-neutral-400">
               See how conventional apps fall short and how our execution platform enforces real multi-location accountability.
             </p>
           </div>

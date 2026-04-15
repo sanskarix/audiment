@@ -1,3 +1,5 @@
+import { Navbar } from '@/components/ui/navbar'
+import { SolutionsHero } from '@/components/ui/solutions-hero'
 import Link from 'next/link'
 
 interface PainPoint {
@@ -61,34 +63,18 @@ export default function SolutionPageTemplate({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 bg-gradient-to-b from-primary/10 to-background border-b border-border text-center">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold mb-6 uppercase tracking-wide text-sm border border-primary/20 shadow-sm">
-            Audiment for {industry}
-          </span>
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-balance text-heading">
-            {heroH1}
-          </h1>
-          <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto text-balance">
-            {heroSubheadline}
-          </p>
-          <div className="flex items-center justify-center gap-4">
-            <Link href="/#contact" className="px-8 py-4 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/25">
-              Book a Call
-            </Link>
-            <Link href="/" className="px-8 py-4 rounded-xl bg-muted text-foreground font-bold hover:bg-muted/80 transition-all">
-              Back to Home
-            </Link>
-          </div>
-        </div>
-      </section>
+      <Navbar />
+      <SolutionsHero 
+        subtitle={industry}
+        title={heroH1}
+        description={heroSubheadline}
+      />
 
       {/* Pain Points */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold mb-4 text-heading">The challenges holding your operations back</h2>
-          <p className="text-muted-foreground text-lg">Traditional systems fail when subjected to the reality of scale.</p>
+          <p className="text-muted-foreground text-xl">Traditional systems fail when subjected to the reality of scale.</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           {painPoints.map((point, idx) => (
@@ -107,7 +93,7 @@ export default function SolutionPageTemplate({
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-3xl font-bold mb-6 text-heading">How Audiment solves it</h2>
-              <p className="text-lg text-muted-foreground mb-10">We've built the ultimate platform to transform your field execution and guarantee compliance standards everywhere.</p>
+              <p className="text-xl text-muted-foreground mb-10">We've built the ultimate platform to transform your field execution and guarantee compliance standards everywhere.</p>
               <div className="space-y-10">
                 {features.map((feature, idx) => (
                   <div key={idx} className="flex gap-6">
@@ -135,7 +121,7 @@ export default function SolutionPageTemplate({
       <section className="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4 text-heading">Sample {industry} Audit Checklist</h2>
-          <p className="text-muted-foreground text-lg">Transform static PDFs into powerful digital workflows mapped to standard operating procedures.</p>
+          <p className="text-muted-foreground text-xl">Transform static PDFs into powerful digital workflows mapped to standard operating procedures.</p>
         </div>
         <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg">
           <table className="w-full text-left border-collapse">

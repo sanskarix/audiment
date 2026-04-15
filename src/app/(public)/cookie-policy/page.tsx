@@ -1,7 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
 import { Footer } from "@/components/ui/modem-animated-footer";
-import { HeroHeader } from "@/components/ui/hero-section-3";
+import { Navbar } from "@/components/ui/navbar";
 
 export const metadata: Metadata = {
   title: "Cookie Policy – Audiment",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function CookiePolicyPage() {
   return (
     <main id="main-content" className="relative text-neutral-900 bg-white font-sans selection:bg-neutral-900 selection:text-white">
-      <HeroHeader />
+      <Navbar />
 
       {/* Hero Section */}
       <section className="pt-40 pb-20 md:pt-48 md:pb-24 bg-neutral-50 border-b border-neutral-200/60 px-6">

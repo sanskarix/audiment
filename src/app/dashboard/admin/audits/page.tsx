@@ -304,6 +304,7 @@ export default function AdminAuditsPage() {
               <h1 className="page-heading">Audits</h1>
               <p className="body-text text-muted-text hidden md:block">Manage audits and schedules.</p>
             </div>
+            
             <Dialog open={open} onOpenChange={(val) => {
               setOpen(val);
               if (!val) {
@@ -510,6 +511,7 @@ export default function AdminAuditsPage() {
             </Dialog>
           </div>
         </div>
+
         <div className="flex items-center gap-2 mb-6">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
@@ -555,7 +557,7 @@ export default function AdminAuditsPage() {
                   <DropdownMenuSeparator className="my-1" />
                   
                   <span className="text-[10px] font-bold uppercase tracking-wider text-muted-text px-2 py-1 block">Location</span>
-                  <DropdownMenuRadioGroup value={locationFilter} onValueChange={setLocationFilter} className="max-h-[200px] overflow-y-auto">
+                  <DropdownMenuRadioGroup value={locationFilter} onValueChange={setLocationFilter} className="max-height-[200px] overflow-y-auto">
                     <DropdownMenuRadioItem value="all" className="text-xs">All Locations</DropdownMenuRadioItem>
                     {locations.map(loc => (
                       <DropdownMenuRadioItem key={loc.id} value={loc.id} className="text-xs">{loc.name}</DropdownMenuRadioItem>
@@ -620,63 +622,63 @@ export default function AdminAuditsPage() {
                           {a.locationName}
                         </TableCell>
                         <TableCell className="standard-table-cell">{getStatusBadge(a)}</TableCell>
-                      <TableCell className="standard-table-cell">
-                        <div className="flex flex-col gap-1.5 font-normal">
-                          <span className="text-[14px] font-normal text-body">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="standard-table-cell">
-                        {a.isSurprise ? (
-                          <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">
-                            Surprise
-                          </Badge>
-                        ) : (
-                          <span className="text-[14px] font-normal text-muted-text">Routine</span>
-                        )}
-                      </TableCell>
-                      <TableCell className="standard-table-cell text-right">
-                        {a.status === 'completed' ? (
-                          <div className="flex flex-col items-end gap-0.5">
-                            <span className={cn("text-[14px] font-medium tabular-nums", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
-                              {a.scorePercentage}%
-                            </span>
-                            <span className="text-[11px] font-normal text-muted-text/50 tabular-nums">{a.totalScore} / {a.maxPossibleScore}</span>
+                        <TableCell className="standard-table-cell">
+                          <div className="flex flex-col gap-1.5 font-normal">
+                            <span className="text-[14px] font-normal text-body">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                           </div>
-                        ) : (
-                          <span className="text-[14px] font-normal text-muted-text">Pending</span>
-                        )}
-                      </TableCell>
-                      <TableCell className="px-4 py-3">
-                        {(a.status === 'published' || a.status === 'assigned') && (
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4 opacity-50" /></Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48 p-1.5 rounded-xl border-muted/20 shadow-xl">
-                              <DropdownMenuItem
-                                className="rounded-lg h-10 font-medium cursor-pointer focus:bg-primary/5 focus:text-primary transition-all text-body"
-                                onClick={() => {
-                                  setEditingAuditId(a.id);
-                                  setFormData({
-                                    templateId: a.templateId,
-                                    locationId: a.locationId,
-                                    managerId: a.assignedManagerId || '',
-                                    scheduledDate: a.scheduledDate?.toDate(),
-                                    deadline: a.deadline?.toDate(),
-                                    isSurprise: a.isSurprise || false,
-                                    recurring: a.recurring || 'none',
-                                    recurringDay: a.recurringDay || 1,
-                                    repeatUntil: a.repeatUntil?.toDate() || undefined,
-                                  });
-                                  setOpen(true);
-                                }}
-                              >
-                                <Pencil className="mr-2 h-4 w-4" /> Edit
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        )}
-                      </TableCell>
+                        </TableCell>
+                        <TableCell className="standard-table-cell">
+                          {a.isSurprise ? (
+                            <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">
+                              Surprise
+                            </Badge>
+                          ) : (
+                            <span className="text-[14px] font-normal text-muted-text">Routine</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="standard-table-cell text-right">
+                          {a.status === 'completed' ? (
+                            <div className="flex flex-col items-end gap-0.5">
+                              <span className={cn("text-[14px] font-medium tabular-nums", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
+                                {a.scorePercentage}%
+                              </span>
+                              <span className="text-[11px] font-normal text-muted-text/50 tabular-nums">{a.totalScore} / {a.maxPossibleScore}</span>
+                            </div>
+                          ) : (
+                            <span className="text-[14px] font-normal text-muted-text">Pending</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="px-4 py-3">
+                          {(a.status === 'published' || a.status === 'assigned') && (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4 opacity-50" /></Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-48 p-1.5 rounded-xl border-muted/20 shadow-xl">
+                                <DropdownMenuItem
+                                  className="rounded-lg h-10 font-medium cursor-pointer focus:bg-primary/5 focus:text-primary transition-all text-body"
+                                  onClick={() => {
+                                    setEditingAuditId(a.id);
+                                    setFormData({
+                                      templateId: a.templateId,
+                                      locationId: a.locationId,
+                                      managerId: a.assignedManagerId || '',
+                                      scheduledDate: a.scheduledDate?.toDate(),
+                                      deadline: a.deadline?.toDate(),
+                                      isSurprise: a.isSurprise || false,
+                                      recurring: a.recurring || 'none',
+                                      recurringDay: a.recurringDay || 1,
+                                      repeatUntil: a.repeatUntil?.toDate() || undefined,
+                                    });
+                                    setOpen(true);
+                                  }}
+                                >
+                                  <Pencil className="mr-2 h-4 w-4" /> Edit
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          )}
+                        </TableCell>
                       </TableRow>
                     );
                   })

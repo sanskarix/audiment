@@ -190,6 +190,31 @@ export default function AuditExecutionPage() {
     photoUrls: []
   }) : null;
 
+  const getLocation = useCallback(async (): Promise<{ locationCaptured: boolean; latitude: number | null; longitude: number | null }> => {
+    if (typeof window === 'undefined') {
+      return { locationCaptured: false, latitude: null, longitude: null };
+    }
+    if (!('geolocation' in navigator)) {
+      return { locationCaptured: false, latitude: null, longitude: null };
+    }
+
+    return await new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            locationCaptured: true,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        () => {
+          resolve({ locationCaptured: false, latitude: null, longitude: null });
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    });
+  }, []);
+
   const handleAnswer = (answer: string, score: number) => {
     if (!currentQuestion) return;
     setResponses(prev => ({

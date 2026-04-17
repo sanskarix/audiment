@@ -297,11 +297,12 @@ export default function AdminAuditsPage() {
   return (
     <DashboardShell role="admin">
       <div className="dashboard-page-container">
+        {/* ── Page Header ── */}
         <div className="page-header-section mb-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between w-full gap-4">
-            <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col">
               <h1 className="page-heading">Audits</h1>
-              <p className="body-text text-muted-text">Manage audits and schedules.</p>
+              <p className="body-text text-muted-text hidden md:block">Manage audits and schedules.</p>
             </div>
             <Dialog open={open} onOpenChange={(val) => {
               setOpen(val);
@@ -321,21 +322,21 @@ export default function AdminAuditsPage() {
               }
             }}>
               <DialogTrigger asChild>
-                <Button size="default" className="shadow-lg shadow-primary/20 h-11 px-5 text-[14px] font-medium gap-2 active:scale-95 transition-all">
-                  <Plus className="mr-2 h-4 w-4" /> New audit
+                <Button size="default" className="shadow-lg shadow-primary/20 h-10 md:h-11 px-4 md:px-5 text-xs md:text-[14px] font-bold gap-2 active:scale-95 transition-all">
+                  <Plus className="h-4 w-4" /> <span>New Audit</span>
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-lg p-6 max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-[90vh] max-md:overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle className="page-heading">
-                    {editingAuditId ? 'Edit audit' : 'New audit'}
+              <DialogContent className="sm:max-w-lg p-6 max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-auto max-md:max-h-[90vh] max-md:overflow-y-auto">
+                <DialogHeader className="max-md:pb-4">
+                  <DialogTitle className="text-lg md:text-xl font-bold text-heading">
+                    {editingAuditId ? 'Edit Audit' : 'New Audit'}
                   </DialogTitle>
                 </DialogHeader>
 
-                <div className="space-y-4 py-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="template" className="text-body font-normal">Template</Label>
+                <div className="space-y-5 py-2 md:py-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <Label htmlFor="template" className="text-xs font-semibold text-muted-text uppercase tracking-wider">Template</Label>
                       <Select value={formData.templateId} onValueChange={(val) => updateFormField('templateId', val)}>
                         <SelectTrigger id="template" className="h-11 text-body bg-muted/5 border-border/50">
                           <SelectValue placeholder="Select template" />
@@ -348,8 +349,8 @@ export default function AdminAuditsPage() {
                       </Select>
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="location" className="text-body font-normal">Location</Label>
+                    <div className="flex flex-col gap-1.5">
+                      <Label htmlFor="location" className="text-xs font-semibold text-muted-text uppercase tracking-wider">Location</Label>
                       <Select value={formData.locationId} onValueChange={(val) => {
                         updateFormField('locationId', val);
                         updateFormField('managerId', '');
@@ -508,66 +509,58 @@ export default function AdminAuditsPage() {
               </DialogContent>
             </Dialog>
           </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative flex-1 group max-w-md">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
-              placeholder="Search..."
-              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
+              placeholder="Search audits..."
+              className="pl-9 h-10 md:h-11 text-xs md:text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70 focus:border-primary/50 transition-all rounded-xl md:rounded-lg"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             {(statusFilter !== 'all' || locationFilter !== 'all' || managerFilter !== 'all') && (
               <Button
                 variant="ghost"
+                size="sm"
                 onClick={() => { setStatusFilter('all'); setLocationFilter('all'); setManagerFilter('all'); }}
-                className="h-11 px-3 text-[11px] font-medium text-muted-text hover:text-destructive transition-colors group"
+                className="h-10 px-2 text-[10px] font-bold text-destructive hover:bg-destructive/10 uppercase tracking-tight"
               >
-                <X className="h-3 w-3 mr-1.5 opacity-40 group-hover:opacity-100" />
                 Clear
               </Button>
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className={cn(
-                  "h-11 px-4 gap-2 font-medium text-xs border-border/50",
+                  "h-10 md:h-11 w-10 md:w-auto md:px-4 flex items-center justify-center gap-2 font-medium text-xs border-border/50 rounded-xl md:rounded-lg",
                   (statusFilter !== 'all' || locationFilter !== 'all' || managerFilter !== 'all') ? "text-primary border-primary/20 bg-primary/5" : "text-muted-text"
                 )}>
                   <Filter className="h-4 w-4" />
-                  Filters
+                  <span className="hidden md:inline">Filters</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 overflow-y-auto max-h-[400px]">
-                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Status</DropdownMenuLabel>
-                <DropdownMenuRadioGroup value={statusFilter} onValueChange={setStatusFilter}>
-                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Statuses</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="published" className="text-body cursor-pointer">Published</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="assigned" className="text-body cursor-pointer">Assigned</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="in_progress" className="text-body cursor-pointer">In Progress</DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="completed" className="text-body cursor-pointer">Completed</DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-
-                <DropdownMenuSeparator />
-                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Location</DropdownMenuLabel>
-                <DropdownMenuRadioGroup value={locationFilter} onValueChange={setLocationFilter}>
-                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Locations</DropdownMenuRadioItem>
-                  {locations.map(loc => (
-                    <DropdownMenuRadioItem key={loc.id} value={loc.id} className="text-body cursor-pointer">{loc.name}</DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-
-                <DropdownMenuSeparator />
-                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Manager</DropdownMenuLabel>
-                <DropdownMenuRadioGroup value={managerFilter} onValueChange={setManagerFilter}>
-                  <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Managers</DropdownMenuRadioItem>
-                  {managers.map(m => (
-                    <DropdownMenuRadioItem key={m.id} value={m.id} className="text-body cursor-pointer">{m.name}</DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
+              <DropdownMenuContent align="end" className="w-[240px] p-2">
+                <div className="space-y-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-text px-2 py-1 block">Status</span>
+                  <DropdownMenuRadioGroup value={statusFilter} onValueChange={setStatusFilter}>
+                    <DropdownMenuRadioItem value="all" className="text-xs">All Statuses</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="published" className="text-xs">Published</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="assigned" className="text-xs">Assigned</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="in_progress" className="text-xs">In Progress</DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="completed" className="text-xs">Completed</DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                  
+                  <DropdownMenuSeparator className="my-1" />
+                  
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-text px-2 py-1 block">Location</span>
+                  <DropdownMenuRadioGroup value={locationFilter} onValueChange={setLocationFilter} className="max-h-[200px] overflow-y-auto">
+                    <DropdownMenuRadioItem value="all" className="text-xs">All Locations</DropdownMenuRadioItem>
+                    {locations.map(loc => (
+                      <DropdownMenuRadioItem key={loc.id} value={loc.id} className="text-xs">{loc.name}</DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

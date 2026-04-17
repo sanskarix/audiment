@@ -292,37 +292,38 @@ export default function AuditReportDetailPage() {
   return (
     <DashboardShell role="admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-4">
-              <Link href="/dashboard/admin/reports" className="text-muted-text hover:text-primary transition-colors flex items-center">
+        <div className="page-header-section mb-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <Link href="/dashboard/admin/reports" className="text-muted-text hover:text-primary transition-colors">
                 <ArrowLeft className="h-5 w-5" />
               </Link>
-              <div className="h-5 w-[1px] bg-border/80"></div>
-              <h1 className="text-xl font-semibold text-heading">Detailed Report</h1>
+              <h1 className="text-lg md:text-xl font-bold text-heading">Report</h1>
             </div>
+            <Button
+              onClick={exportToPDF}
+              disabled={isExporting}
+              size="sm"
+              className="h-10 md:h-11 px-3 md:px-5 font-bold gap-2 md:gap-3 shadow-lg shadow-primary/20 transition-all active:scale-95"
+            >
+              {isExporting ? <Clock className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+              <span className="hidden md:inline">{isExporting ? 'Exporting...' : 'Export PDF'}</span>
+              {!isExporting && <span className="md:hidden">PDF</span>}
+            </Button>
           </div>
-          <Button
-            onClick={exportToPDF}
-            disabled={isExporting}
-            className="h-11 font-medium gap-3 shadow-lg shadow-primary/20 transition-all active:scale-95"
-          >
-            {isExporting ? <Clock className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-            {isExporting ? 'Exporting...' : 'Export PDF'}
-          </Button>
         </div>
 
-        <div ref={reportRef} className="standard-card p-10 bg-background">
+        <div ref={reportRef} className="standard-card p-4 md:p-10 bg-background shadow-none md:shadow-sm">
           {/* Report Header */}
           {audit.hasCriticalFailure && (
-            <div className="mb-6 p-4 rounded-xl bg-destructive/10 border border-destructive text-destructive font-bold flex items-center gap-3">
-              <AlertCircle className="h-5 w-5" />
-              ⚠️ {audit.criticalFailureCount} Critical Failure(s)
+            <div className="mb-6 p-4 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive font-bold flex items-center gap-3 text-xs md:text-sm">
+              <AlertCircle className="h-5 w-5 shrink-0" />
+              <span>{audit.criticalFailureCount} Critical Failure(s) Detected</span>
             </div>
           )}
-          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-border/50 pb-10 mb-10 gap-10">
-            <div className="space-y-6 flex-1">
-              <h1 className="text-[28px] font-semibold text-heading leading-tight">{audit.templateTitle}</h1>
+          <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-border/40 pb-6 md:pb-10 mb-6 md:mb-10 gap-6 md:gap-10">
+            <div className="space-y-4 md:space-y-6 flex-1">
+              <h1 className="text-xl md:text-[28px] font-bold text-heading leading-tight">{audit.templateTitle}</h1>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-10 pt-4">
                 <div className="flex flex-col gap-1.5">
                   <p className="text-[11px] font-normal text-muted-text/50 uppercase tracking-wider">Location</p>
@@ -339,50 +340,50 @@ export default function AuditReportDetailPage() {
               </div>
             </div>
 
-            <div className="flex flex-col items-center justify-center p-10 rounded-2xl bg-muted/5 border border-border/50 min-w-[220px]">
-              <p className="text-[11px] font-normal text-muted-text/50 uppercase tracking-wider mb-2">Final Score</p>
+            <div className="flex flex-col items-center justify-center p-6 md:p-10 rounded-2xl bg-muted/5 border border-border/40 min-w-[180px] md:min-w-[220px]">
+              <p className="text-[10px] md:text-[11px] font-bold text-muted-text/50 uppercase tracking-widest mb-1 md:mb-2 text-center">Final Score</p>
               <div className="flex items-center gap-3">
                 <div className={cn(
-                  "text-[42px] font-bold tabular-nums leading-none",
+                  "text-3xl md:text-[42px] font-bold tabular-nums leading-none",
                   (audit.finalScore ?? audit.scorePercentage) >= 90 ? "text-success" : (audit.finalScore ?? audit.scorePercentage) >= 75 ? "text-primary" : "text-destructive"
                 )}>{audit.finalScore ?? audit.scorePercentage}%</div>
                 {audit.grade && (
                   <Badge variant="outline" className={cn(
-                    "uppercase tracking-wider font-bold",
-                    audit.grade === 'critical_fail' ? "border-destructive text-destructive" :
-                    audit.grade === 'fail' ? "border-destructive text-destructive" :
-                    audit.grade === 'excellent' ? "border-success text-success" :
-                    "border-primary text-primary"
+                    "uppercase tracking-widest font-bold text-[10px]",
+                    audit.grade === 'critical_fail' ? "border-destructive text-destructive bg-destructive/5" :
+                    audit.grade === 'fail' ? "border-destructive text-destructive bg-destructive/5" :
+                    audit.grade === 'excellent' ? "border-success text-success bg-success/5" :
+                    "border-primary text-primary bg-primary/5"
                   )}>
                     {audit.grade.replace('_', ' ')}
                   </Badge>
                 )}
               </div>
-              <div className="h-2 w-full bg-muted/20 rounded-full mt-6 overflow-hidden">
+              <div className="h-2 w-full bg-muted/20 rounded-full mt-4 md:mt-6 overflow-hidden">
                 <div
-                  className={cn(
+                   className={cn(
                     "h-full rounded-full transition-all duration-1000",
                     (audit.finalScore ?? audit.scorePercentage) >= 90 ? "bg-success" : (audit.finalScore ?? audit.scorePercentage) >= 75 ? "bg-primary" : "bg-destructive"
-                  )}
-                  style={{ width: `${audit.finalScore ?? audit.scorePercentage}%` }}
+                   )}
+                   style={{ width: `${audit.finalScore ?? audit.scorePercentage}%` }}
                 />
               </div>
             </div>
           </div>
 
           {/* Response Details */}
-          <div className="space-y-8">
-            <h3 className="text-[14px] font-medium text-heading mb-6 px-1">Detailed Findings</h3>
-            <div className="grid gap-4">
+          <div className="space-y-6 md:space-y-8">
+            <h3 className="text-xs md:text-[14px] font-bold uppercase tracking-widest text-muted-text/60 mb-4 md:mb-6 px-1">Detailed Findings</h3>
+            <div className="grid gap-3 md:gap-4">
               {responses.sort((a, b) => (a.order || 0) - (b.order || 0)).map((resp, i) => (
-                <div key={resp.id} className="border border-border/40 hover:bg-muted/5 transition-all p-8 rounded-xl group/row">
-                  <div className="flex flex-col md:flex-row gap-8">
-                    <div className="flex-1 space-y-6">
-                      <div className="flex items-start justify-between gap-10">
-                        <div className="space-y-3">
-                          <p className="text-[16px] font-normal text-body leading-relaxed">{resp.questionText}</p>
-                          <div className="flex flex-wrap items-center gap-3">
-                             <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-2.5 text-[11px] font-normal capitalize">
+                <div key={resp.id} className="border border-border/40 hover:bg-muted/5 transition-all p-4 md:p-8 rounded-xl group/row bg-muted/5 md:bg-transparent">
+                  <div className="flex flex-col md:flex-row gap-4 md:gap-8">
+                    <div className="flex-1 space-y-4 md:space-y-6">
+                      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-10">
+                        <div className="space-y-2 md:space-y-3">
+                          <p className="text-sm md:text-[16px] font-medium md:font-normal text-heading leading-relaxed">{resp.questionText}</p>
+                          <div className="flex flex-wrap items-center gap-2 md:gap-3">
+                             <Badge variant="secondary" className="h-5 md:h-6 rounded-full bg-muted/20 text-muted-text border-none px-2 md:px-2.5 text-[9px] md:text-[11px] font-bold md:font-normal capitalize">
                                {String(resp.severity ?? '').toLowerCase()} Quality
                              </Badge>
                              {(() => {
@@ -394,34 +395,34 @@ export default function AuditReportDetailPage() {
                                      (resp.questionType === 'rating' && resp.score < 6)
                                    ));
                                return isFailed ? (
-                                 <Badge variant="destructive" className="h-6 rounded-full px-2.5 text-[11px] font-bold uppercase tracking-wider">
+                                 <Badge variant="destructive" className="h-5 md:h-6 rounded-full px-2 md:px-2.5 text-[9px] md:text-[11px] font-bold uppercase tracking-wider">
                                    CRITICAL FAIL
                                  </Badge>
                                ) : null;
                              })()}
-                            {resp.notes && (
-                              <div className="flex items-center gap-2.5 bg-muted/5 px-3 py-1.5 rounded-lg border border-border/50">
-                                <span className="body-text text-muted-text">
-                                  <b>Note:</b> {resp.notes}
-                                </span>
-                              </div>
-                            )}
                           </div>
+                          {resp.notes && (
+                            <div className="bg-primary/5 px-3 py-2 rounded-lg border border-primary/10 mt-2">
+                              <p className="text-xs text-body italic leading-relaxed">
+                                <b className="not-italic text-primary font-bold uppercase text-[9px] mr-1">Note:</b> {resp.notes}
+                              </p>
+                            </div>
+                          )}
                         </div>
-                        <div className="flex flex-col items-end gap-1.5 min-w-[120px]">
+                        <div className="flex items-center md:flex-col md:items-end gap-3 md:gap-1.5 min-w-fit">
                           <div className={cn(
-                            "h-8 rounded-full border-none px-4 text-[13px] font-medium flex items-center gap-2",
+                            "h-7 md:h-8 rounded-full border-none px-3 md:px-4 text-[11px] md:text-[13px] font-bold flex items-center gap-1.5",
                             resp.answer === 'yes' ? "bg-success/10 text-success" :
                               resp.answer === 'no' ? "bg-destructive/10 text-destructive" :
                                 "bg-muted/10 text-muted-text"
                           )}>
-                            {resp.answer === 'yes' ? <CheckCircle2 className="h-3.5 w-3.5" /> : resp.answer === 'no' ? <XCircle className="h-3.5 w-3.5" /> : <HelpCircle className="h-3.5 w-3.5" />}
+                            {resp.answer === 'yes' ? <CheckCircle2 className="h-3 md:h-3.5 w-3 md:w-3.5" /> : resp.answer === 'no' ? <XCircle className="h-3 md:h-3.5 w-3 md:w-3.5" /> : <HelpCircle className="h-3 md:h-3.5 w-3 md:w-3.5" />}
                             <span className="capitalize">{resp.answer}</span>
                           </div>
-                          <p className="text-[11px] font-normal text-muted-text/40 tabular-nums px-2">
+                          <p className="text-[10px] md:text-[11px] font-bold text-muted-text/40 tabular-nums px-1">
                             {resp.questionType === 'yes_no' 
                               ? (resp.answer === 'yes' ? 10 : 0) 
-                              : (resp.score ?? 0)} / 10 pts
+                              : (resp.score ?? 0)}/10
                           </p>
                         </div>
                       </div>

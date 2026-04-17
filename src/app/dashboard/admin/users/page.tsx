@@ -338,81 +338,83 @@ export default function AdminUsersPage() {
   return (
     <DashboardShell role="admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Users</h1>
-            <p className="body-text text-muted-text">Manage users, roles and permissions.</p>
-          </div>
+        <div className="page-header-section mb-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col">
+              <h1 className="page-heading">Users</h1>
+              <p className="body-text text-muted-text hidden md:block">Manage users, roles and permissions.</p>
+            </div>
 
-          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-            <DialogTrigger asChild>
-              <Button
-                size="default"
-                className="shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2"
-              >
-                <UserPlus className="h-4 w-4" />
-                <span>Add User</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] transition-all duration-150 max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-auto max-md:max-h-[85vh] max-md:overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle className="font-semibold text-heading">Add User</DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleCreateUser}>
-                <UserFormFields 
-                  formData={formData} 
-                  setFormData={setFormData} 
-                  activeManagers={activeManagers} 
-                />
-                {error && <p className="text-sm text-destructive mb-4">{error}</p>}
-                <DialogFooter>
-                  <Button type="submit" disabled={loading} className="w-full h-11 font-medium transition-all active:scale-[0.98]">
-                    {loading ? 'Adding...' : 'Add User'}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
+            <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  size="default"
+                  className="shadow-lg shadow-primary/20 h-10 md:h-11 px-4 md:px-5 text-xs md:text-[14px] font-bold gap-2 active:scale-95 transition-all"
+                >
+                  <UserPlus className="h-4 w-4" />
+                  <span>Add User</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] transition-all duration-150 max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-auto max-md:max-h-[85vh] max-md:overflow-y-auto">
+                <DialogHeader className="max-md:pb-2">
+                  <DialogTitle className="text-lg md:text-xl font-bold text-heading">Add User</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleCreateUser}>
+                  <UserFormFields 
+                    formData={formData} 
+                    setFormData={setFormData} 
+                    activeManagers={activeManagers} 
+                  />
+                  {error && <p className="text-xs text-destructive mb-4 font-medium px-1">{error}</p>}
+                  <DialogFooter className="max-md:pb-4">
+                    <Button type="submit" disabled={loading} className="w-full h-11 font-bold transition-all active:scale-[0.98] shadow-lg shadow-primary/20">
+                      {loading ? 'Adding...' : 'Add User'}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
-        {success && <div className="bg-success/10 border border-success/50 text-success p-3 rounded-md text-sm font-normal animate-in fade-in slide-in-from-top-1">{success}</div>}
+        {success && <div className="bg-success/10 border border-success/50 text-success p-3 rounded-md text-xs font-medium mb-4 animate-in fade-in slide-in-from-top-1">{success}</div>}
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-2 mb-6">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
-              placeholder="Search users by name, email, or role..."
-              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
+              placeholder="Search users..."
+              className="pl-9 h-10 md:h-11 text-xs md:text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70 focus:border-primary/50 transition-all rounded-xl md:rounded-lg"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
+              <Button variant="outline" className="h-10 md:h-11 w-10 md:w-auto md:px-4 flex items-center justify-center gap-2 font-medium text-xs border-border/50 text-[#6b7280] rounded-xl md:rounded-lg">
                 <Filter className="h-4 w-4" />
-                Filters
+                <span className="hidden md:inline">Filters</span>
                 {(managerFilter !== 'all' || locationFilter !== 'all') && (
-                  <Badge variant="secondary" className="ml-1 px-1 py-0 h-4 text-[10px] rounded-sm">1</Badge>
+                  <Badge variant="secondary" className="ml-1 px-1 py-0 h-4 text-[10px] rounded-sm bg-primary text-white">!</Badge>
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[200px]">
-              <DropdownMenuLabel>Filter by Manager</DropdownMenuLabel>
+            <DropdownMenuContent align="end" className="w-[200px] p-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-text px-2 py-1 block">Manager</span>
               <DropdownMenuRadioGroup value={managerFilter} onValueChange={(val) => { setManagerFilter(val); setLocationFilter('all'); }}>
-                <DropdownMenuRadioItem value="all">All Managers</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="all" className="text-xs">All Managers</DropdownMenuRadioItem>
                 {activeManagers.map(m => (
-                  <DropdownMenuRadioItem key={m.id} value={m.id}>{m.name}</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem key={m.id} value={m.id} className="text-xs">{m.name}</DropdownMenuRadioItem>
                 ))}
               </DropdownMenuRadioGroup>
 
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="my-1" />
 
-              <DropdownMenuLabel>Filter by Location</DropdownMenuLabel>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-text px-2 py-1 block">Location</span>
               <DropdownMenuRadioGroup value={locationFilter} onValueChange={(val) => { setLocationFilter(val); setManagerFilter('all'); }}>
-                <DropdownMenuRadioItem value="all">All Locations</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="all" className="text-xs">All Locations</DropdownMenuRadioItem>
                 {orgLocations.map((loc: any) => (
-                  <DropdownMenuRadioItem key={loc.id} value={loc.id}>{loc.name}</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem key={loc.id} value={loc.id} className="text-xs">{loc.name}</DropdownMenuRadioItem>
                 ))}
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>

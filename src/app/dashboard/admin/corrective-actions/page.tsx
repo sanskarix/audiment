@@ -239,159 +239,223 @@ export default function AdminCorrectiveActionsPage() {
   return (
     <DashboardShell role="admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Actions</h1>
-            <p className="body-text text-muted-text">Track and resolve issues.</p>
+        <div className="page-header-section mb-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col">
+              <h1 className="page-heading">Actions</h1>
+              <p className="body-text text-muted-text hidden md:block">Track and resolve issues across your organization.</p>
+            </div>
+            <Badge variant="secondary" className="h-7 rounded-full bg-destructive/10 text-destructive border-none px-3 text-[10px] font-bold animate-pulse">
+              {actions.length} PENDING
+            </Badge>
           </div>
-          <Badge variant="secondary" className="h-7 rounded-full bg-destructive/10 text-destructive border-none px-4 text-[12px] font-medium animate-pulse">
-            {actions.length} PENDING
-          </Badge>
         </div>
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <Card className="standard-card p-4 md:p-6 overflow-hidden relative border-l-4 border-l-destructive">
+            <div className="flex items-center justify-between mb-2 md:mb-4">
+              <p className="section-heading text-xs uppercase tracking-widest opacity-60">Overdue</p>
+              <Clock className="h-4 w-4 text-destructive/40" />
+            </div>
+            <div className="flex items-end gap-2">
+              <div className="text-2xl md:text-[32px] font-bold tracking-tight text-destructive tabular-nums leading-none">
+                {actions.filter(a => a.deadline?.toDate() < new Date()).length}
+              </div>
+              <p className="text-[10px] font-medium text-muted-text/50 pb-0.5">NON-COMPLIANT</p>
+            </div>
+          </Card>
+
+          <Card className="standard-card p-4 md:p-6 overflow-hidden relative border-l-4 border-l-warning">
+            <div className="flex items-center justify-between mb-2 md:mb-4">
+              <p className="section-heading text-xs uppercase tracking-widest opacity-60">Critical</p>
+              <AlertCircle className="h-4 w-4 text-warning/40" />
+            </div>
+            <div className="flex items-end gap-2">
+              <div className="text-2xl md:text-[32px] font-bold tracking-tight text-warning tabular-nums leading-none">
+                {actions.filter(a => a.severity === 'critical').length}
+              </div>
+              <p className="text-[10px] font-medium text-muted-text/50 pb-0.5">FIX REQUIRED</p>
+            </div>
+          </Card>
+
+          <Card className="standard-card p-4 md:p-6 overflow-hidden relative border-l-4 border-l-primary/40">
+            <div className="flex items-center justify-between mb-2 md:mb-4">
+              <p className="section-heading text-xs uppercase tracking-widest opacity-60">Upcoming</p>
+              <ClipboardList className="h-4 w-4 text-primary/40" />
+            </div>
+            <div className="flex items-end gap-2">
+              <div className="text-2xl md:text-[32px] font-bold tracking-tight text-heading tabular-nums leading-none">48h</div>
+              <p className="text-[10px] font-medium text-muted-text/50 pb-0.5">NEXT BATCH</p>
+            </div>
+          </Card>
+        </div>
+
+        <div className="flex items-center gap-2 mb-6">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
-              placeholder="Search..."
-              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
+              placeholder="Search actions..."
+              className="pl-9 h-10 md:h-11 text-xs md:text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70 focus:border-primary/50 transition-all rounded-xl md:rounded-lg"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
+          <Button variant="outline" className="h-10 md:h-11 w-10 md:w-auto md:px-4 flex items-center justify-center gap-2 font-medium text-xs border-border/50 text-[#6b7280] rounded-xl md:rounded-lg">
             <Filter className="h-4 w-4" />
-            Filters
+            <span className="hidden md:inline">Filters</span>
           </Button>
         </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-          <Card className="standard-card p-6 overflow-hidden relative">
-            <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Overdue</p>
-              <Clock className="h-4 w-4 text-destructive/40" />
-            </div>
-            <div>
-              <div className="text-[32px] font-semibold tracking-tight text-destructive tabular-nums leading-tight">
-                {actions.filter(a => a.deadline?.toDate() < new Date()).length}
-              </div>
-              <p className="body-text mt-2">Overdue</p>
-            </div>
-          </Card>
-
-          <Card className="standard-card p-6 overflow-hidden relative">
-            <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Critical</p>
-              <AlertCircle className="h-4 w-4 text-warning/40" />
-            </div>
-            <div>
-              <div className="text-[32px] font-semibold tracking-tight text-warning tabular-nums leading-tight">
-                {actions.filter(a => a.severity === 'critical').length}
-              </div>
-              <p className="body-text mt-2">Critical</p>
-            </div>
-          </Card>
-
-          <Card className="standard-card p-6 overflow-hidden relative">
-            <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Upcoming</p>
-              <ClipboardList className="h-4 w-4 text-primary/40" />
-            </div>
-            <div>
-              <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">48h</div>
-              <p className="body-text mt-2">Upcoming</p>
-            </div>
+        <div className="hidden md:block">
+          <Card className="standard-card">
+            <Table>
+              <TableHeader className="standard-table-header">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="standard-table-head">Location</TableHead>
+                  <TableHead className="standard-table-head">Issue</TableHead>
+                  <TableHead className="standard-table-head">Severity</TableHead>
+                  <TableHead className="standard-table-head">Deadline</TableHead>
+                  <TableHead className="standard-table-head text-center">Status</TableHead>
+                  <TableHead className="standard-table-head text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {loading ? (
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell className="py-4 px-4"><Skeleton className="h-5 w-[120px]" /></TableCell>
+                      <TableCell className="py-4 px-4"><Skeleton className="h-5 w-full" /></TableCell>
+                      <TableCell className="py-4 px-4"><Skeleton className="h-6 w-16 rounded-full" /></TableCell>
+                      <TableCell className="py-4 px-4"><Skeleton className="h-5 w-24" /></TableCell>
+                      <TableCell className="py-4 px-4"><Skeleton className="h-6 w-20 rounded-full mx-auto" /></TableCell>
+                      <TableCell className="py-4 px-4 text-right"><Skeleton className="h-8 w-16 ml-auto" /></TableCell>
+                    </TableRow>
+                  ))
+                ) : filteredActions.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="standard-table-cell py-24 text-center text-muted-text bg-muted/5">
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="bg-success/10 p-4 rounded-full">
+                          <CheckCircle2 className="h-8 w-8 text-success opacity-40" />
+                        </div>
+                        <p className="page-heading text-lg opacity-40 tracking-tight font-medium">All systems operational. No open actions.</p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredActions.map((action) => (
+                    <TableRow key={action.id} className="standard-table-row group">
+                      <TableCell className="py-4 px-4 text-[14px] font-normal text-heading align-middle">
+                        {action.locationName}
+                      </TableCell>
+                      <TableCell className="py-4 px-4 text-[14px] font-normal text-body leading-relaxed align-middle">
+                        {action.questionText}
+                      </TableCell>
+                      <TableCell className="py-4 px-4 align-middle">
+                        <Badge className={cn(
+                          "h-6 rounded-full border-none px-2.5 text-[11px] font-normal capitalize",
+                          action.severity === 'critical' ? "bg-destructive/10 text-destructive" : "bg-warning/10 text-warning"
+                        )}>
+                          {action.severity}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="py-4 px-4 align-middle">
+                        <div className={cn(
+                          "text-[13px] font-normal tabular-nums",
+                          action.deadline?.toDate() < new Date() ? "text-destructive font-medium" : "text-muted-text"
+                        )}>
+                          {format(action.deadline?.toDate(), 'MMM d, h:mm a')}
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-3 py-2 text-center">
+                        <Badge variant="secondary" className={cn(
+                          "h-6 rounded-full border-none px-2.5 text-[11px] font-normal capitalize",
+                          action.status === 'in_progress' ? "bg-primary/10 text-primary" :
+                            action.status === 'completed' ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
+                        )}>
+                          {action.status.replace('_', ' ')}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="px-3 py-2 text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button variant="outline" size="sm" className="h-8 text-xs font-medium tracking-widest" onClick={() => {
+                            setEditingCA(action);
+                            setSelectedManager(action.assignedManagerId || '');
+                            setSelectedDate(action.deadline?.toDate() ? format(action.deadline.toDate(), 'yyyy-MM-dd') : '');
+                          }}>Edit</Button>
+                          {action.status === 'completed' && (
+                            <Button size="sm" className="h-8 text-xs font-medium tracking-widest bg-success text-success-foreground hover:bg-success/90" onClick={() => setResolvingCA(action)}>Review</Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
           </Card>
         </div>
 
-        {/* Actions Table */}
-        <Card className="standard-card">
-          <Table>
-            <TableHeader className="standard-table-header">
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="standard-table-head">Location</TableHead>
-                <TableHead className="standard-table-head">Issue</TableHead>
-                <TableHead className="standard-table-head">Severity</TableHead>
-                <TableHead className="standard-table-head">Deadline</TableHead>
-                <TableHead className="standard-table-head text-center">Status</TableHead>
-                <TableHead className="standard-table-head text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={i}>
-                    <TableCell className="py-4 px-4"><Skeleton className="h-5 w-[120px]" /></TableCell>
-                    <TableCell className="py-4 px-4"><Skeleton className="h-5 w-full" /></TableCell>
-                    <TableCell className="py-4 px-4"><Skeleton className="h-6 w-16 rounded-full" /></TableCell>
-                    <TableCell className="py-4 px-4"><Skeleton className="h-5 w-24" /></TableCell>
-                    <TableCell className="py-4 px-4"><Skeleton className="h-6 w-20 rounded-full mx-auto" /></TableCell>
-                    <TableCell className="py-4 px-4 text-right"><Skeleton className="h-8 w-16 ml-auto" /></TableCell>
-                  </TableRow>
-                ))
-              ) : actions.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="standard-table-cell py-24 text-center text-muted-text bg-muted/5">
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="bg-success/10 p-4 rounded-full">
-                        <CheckCircle2 className="h-8 w-8 text-success opacity-40" />
-                      </div>
-                      <p className="page-heading text-lg opacity-40  tracking-tight font-medium">All systems operational. No open actions.</p>
+        {/* Mobile Card View */}
+        <div className="grid md:hidden grid-cols-1 gap-3">
+          {filteredActions.length === 0 ? (
+            <div className="py-20 flex flex-col items-center justify-center text-muted-text bg-muted/5 rounded-2xl border border-dashed">
+              <CheckCircle2 className="h-8 w-8 text-success opacity-20 mb-2" />
+              <p className="text-sm font-medium">All systems operational</p>
+            </div>
+          ) : (
+            filteredActions.map((action) => (
+              <MobileCard key={action.id} className="border-l-4 border-l-primary/40">
+                <MobileCardHeader>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <MobileCardTitle>{action.locationName}</MobileCardTitle>
+                      <MobileCardDescription className="line-clamp-2 mt-1 italic">
+                        "{action.questionText}"
+                      </MobileCardDescription>
                     </div>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredActions.map((action) => (
-                  <TableRow key={action.id} className="standard-table-row group">
-                    <TableCell className="py-4 px-4 text-[14px] font-normal text-heading align-middle">
-                      {action.locationName}
-                    </TableCell>
-                    <TableCell className="py-4 px-4 text-[14px] font-normal text-body leading-relaxed align-middle">
-                      {action.questionText}
-                    </TableCell>
-                    <TableCell className="py-4 px-4 align-middle">
-                      <Badge className={cn(
-                        "h-6 rounded-full border-none px-2.5 text-[11px] font-normal capitalize",
-                        action.severity === 'critical' ? "bg-destructive/10 text-destructive" : "bg-warning/10 text-warning"
-                      )}>
-                        {action.severity}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="py-4 px-4 align-middle">
-                      <div className={cn(
-                        "text-[13px] font-normal tabular-nums",
-                        action.deadline?.toDate() < new Date() ? "text-destructive font-medium" : "text-muted-text"
+                    <Badge className={cn(
+                      "h-5 rounded-full border-none px-2 text-[10px] uppercase font-bold",
+                      action.severity === 'critical' ? "bg-destructive text-white" : "bg-warning text-warning-foreground"
+                    )}>
+                      {action.severity}
+                    </Badge>
+                  </div>
+                </MobileCardHeader>
+                <MobileCardContent>
+                  <div className="flex flex-col gap-2 pt-1">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-muted-text uppercase font-semibold">Deadline</span>
+                      <span className={cn(
+                        "font-bold tabular-nums",
+                        action.deadline?.toDate() < new Date() ? "text-destructive" : "text-heading"
                       )}>
                         {format(action.deadline?.toDate(), 'MMM d, h:mm a')}
-                      </div>
-                    </TableCell>
-                    <TableCell className="px-3 py-2 text-center">
-                      <Badge variant="secondary" className={cn(
-                        "h-6 rounded-full border-none px-2.5 text-[11px] font-normal capitalize",
-                        action.status === 'in_progress' ? "bg-primary/10 text-primary" :
-                          action.status === 'completed' ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
-                      )}>
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-muted-text uppercase font-semibold">Status</span>
+                      <Badge variant="secondary" className="h-5 rounded-full px-2 text-[9px] font-bold">
                         {action.status.replace('_', ' ')}
                       </Badge>
-                    </TableCell>
-                    <TableCell className="px-3 py-2 text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="sm" className="h-8 text-xs font-medium tracking-widest" onClick={() => {
-                          setEditingCA(action);
-                          setSelectedManager(action.assignedManagerId || '');
-                          setSelectedDate(action.deadline?.toDate() ? format(action.deadline.toDate(), 'yyyy-MM-dd') : '');
-                        }}>Edit</Button>
-                        {action.status === 'completed' && (
-                          <Button size="sm" className="h-8 text-xs font-medium tracking-widest bg-success text-success-foreground hover:bg-success/90" onClick={() => setResolvingCA(action)}>Review</Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </Card>
+                    </div>
+                  </div>
+                </MobileCardContent>
+                <MobileCardFooter>
+                  <Button variant="outline" size="sm" className="h-8 text-[10px] font-bold px-4" onClick={() => {
+                    setEditingCA(action);
+                    setSelectedManager(action.assignedManagerId || '');
+                    setSelectedDate(action.deadline?.toDate() ? format(action.deadline.toDate(), 'yyyy-MM-dd') : '');
+                  }}>Manage</Button>
+                  {action.status === 'completed' && (
+                    <Button size="sm" className="h-8 text-[10px] font-bold px-4 bg-success" onClick={() => setResolvingCA(action)}>Resolve</Button>
+                  )}
+                </MobileCardFooter>
+              </MobileCard>
+            ))
+          )}
+        </div>
       </div>
 
       <Dialog open={!!editingCA} onOpenChange={(open) => !open && setEditingCA(null)}>

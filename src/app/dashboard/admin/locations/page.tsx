@@ -204,64 +204,88 @@ export default function AdminLocationsPage() {
     }
   };
 
+  const filteredLocations = locations.filter(loc => 
+    loc.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    loc.city.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <DashboardShell role="admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Locations</h1>
-            <p className="body-text text-muted-text">Manage locations and add assign managers.</p>
-          </div>
-
-          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-            <DialogTrigger asChild>
-              <Button size="default" className="shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2 active:scale-95 transition-all">
-                <Plus className="mr-2 h-4 w-4" /> Add Location
-              </Button>
-            </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-auto max-md:max-h-[85vh] max-md:overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle className="font-semibold text-heading">Add Location</DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleCreateLocation} className="space-y-4 py-6">
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="name" className="text-body font-normal">Location Name</Label>
-                  <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required placeholder="Downtown Branch" className="text-body" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="address" className="text-body font-normal">Address</Label>
-                  <Input value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} required placeholder="123 Main St" className="text-body" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="city" className="text-body font-normal">City</Label>
-                  <Input value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} required placeholder="Megacity" className="text-body" />
-                </div>
-                <div className="flex flex-col gap-4">
-                  <Label className="text-body font-normal">Managers</Label>
-                  <div className="grid grid-cols-2 gap-4 border rounded-md p-4 bg-muted/20">
-                    {managers.length === 0 ? (
-                      <p className="text-xs text-muted-text col-span-2">No active managers found</p>
-                    ) : (
-                      managers.map(m => (
+        {/* ── Page Header ── */}
+        <div className="page-header-section mb-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col">
+              <h1 className="page-heading">Locations</h1>
+              <p className="body-text text-muted-text hidden md:block">Manage organization locations.</p>
+            </div>
+            
+            <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  size="default" 
+                  className="shadow-lg shadow-primary/20 h-10 md:h-11 px-4 md:px-5 text-xs md:text-[14px] font-bold gap-2 active:scale-95 transition-all"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Add Location</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-auto max-md:max-h-[85vh] max-md:overflow-y-auto">
+                <DialogHeader className="max-md:pb-2">
+                  <DialogTitle className="text-lg md:text-xl font-bold text-heading">Add Location</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleCreateLocation} className="space-y-4 py-2">
+                  <div className="flex flex-col gap-1.5">
+                    <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Location Name</Label>
+                    <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required placeholder="Store #101" className="h-11" />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Address</Label>
+                    <Input value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} required placeholder="123 Street Name" className="h-11" />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">City</Label>
+                    <Input value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} required placeholder="City" className="h-11" />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Assign Managers</Label>
+                    <div className="grid grid-cols-2 gap-2 border rounded-xl p-3 bg-muted/5 max-h-[160px] overflow-y-auto">
+                      {managers.map(m => (
                         <div key={m.id} className="flex items-center space-x-2">
                           <input
                             type="checkbox"
                             id={`mgr-${m.id}`}
                             checked={formData.assignedManagerIds.includes(m.id)}
                             onChange={() => toggleManagerSelection(m.id, false)}
-                            className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                            className="h-4 w-4 rounded border-gray-300"
                           />
-                          <Label htmlFor={`mgr-${m.id}`} className="text-sm font-normal cursor-pointer line-clamp-1">{m.name}</Label>
+                          <Label htmlFor={`mgr-${m.id}`} className="text-xs truncate cursor-pointer">{m.name}</Label>
                         </div>
-                      ))
-                    )}
+                      ))}
+                    </div>
                   </div>
-                </div>
-                {error && <p className="text-sm text-destructive">{error}</p>}
-                <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Adding...' : 'Add Location'}</Button></DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
+                  {error && <p className="text-xs text-destructive font-medium">{error}</p>}
+                  <DialogFooter className="max-md:pb-4">
+                    <Button type="submit" disabled={loading} className="w-full h-11 font-bold shadow-lg shadow-primary/20">
+                      {loading ? 'Adding...' : 'Add Location'}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 mb-6">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+            <Input
+              placeholder="Search locations..."
+              className="pl-9 h-10 md:h-11 text-xs md:text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70 focus:border-primary/50 transition-all rounded-xl md:rounded-lg"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
 
 

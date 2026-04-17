@@ -305,28 +305,30 @@ export default function AdminDashboardPage() {
               <h3 className="section-heading">Performance</h3>
               <p className="body-text mt-1">Average score</p>
             </div>
-            <div className="h-[400px] w-full">
+            <div className="h-[300px] md:h-[400px] w-full -ml-4 md:ml-0">
               {isMounted ? (
-                <ResponsiveContainer width="100%" height="100%" minHeight={400}>
-                  <BarChart data={stats?.locationScores} margin={{ top: 20, right: 30, left: 0, bottom: 0 }} barSize={40}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={stats?.locationScores} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.1} />
                     <XAxis
                       dataKey="name"
                       stroke="var(--muted-text)"
-                      fontSize={11}
+                      fontSize={10}
                       fontWeight={500}
                       tickLine={false}
                       axisLine={false}
                       tick={{ dy: 10 }}
+                      interval={0}
                     />
                     <YAxis
                       stroke="var(--muted-text)"
-                      fontSize={11}
+                      fontSize={10}
                       fontWeight={500}
                       tickLine={false}
                       axisLine={false}
                       tickFormatter={(value) => `${value}%`}
                       domain={[0, 100]}
+                      hide={typeof window !== 'undefined' && window.innerWidth < 400}
                     />
                     <Tooltip
                       cursor={{ fill: 'var(--muted)', opacity: 0.4 }}
@@ -335,12 +337,12 @@ export default function AdminDashboardPage() {
                         borderRadius: '12px',
                         border: '1px solid var(--border)',
                         boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-                        fontSize: '12px',
+                        fontSize: '11px',
                         fontWeight: '500',
                         color: 'var(--heading)'
                       }}
                     />
-                    <Bar dataKey="score" radius={[6, 6, 0, 0]} barSize={40}>
+                    <Bar dataKey="score" radius={[4, 4, 0, 0]} barSize={window?.innerWidth < 768 ? 24 : 40}>
                       {stats?.locationScores.map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}

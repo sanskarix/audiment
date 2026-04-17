@@ -30,7 +30,6 @@ const NAV_CONFIG: Record<string, NavItem[]> = {
     { label: 'Home', icon: Home, href: '/dashboard/admin' },
     { label: 'Audits', icon: CheckSquare, href: '/dashboard/admin/audits' },
     { label: 'Users', icon: Users, href: '/dashboard/admin/users' },
-    { label: 'Flashmob', icon: Video, href: '/dashboard/admin/flashmob' },
   ],
   manager: [
     { label: 'Home', icon: Home, href: '/dashboard/manager' },
@@ -40,9 +39,7 @@ const NAV_CONFIG: Record<string, NavItem[]> = {
   ],
   auditor: [
     { label: 'Home', icon: Home, href: '/dashboard/auditor' },
-    { label: 'Audits', icon: CheckSquare, href: '/dashboard/auditor/audits' }, // Note: spec says Audits, but usually it's the home list. I'll point to home if necessary or specific /audits path.
     { label: 'History', icon: History, href: '/dashboard/auditor/history' },
-    { label: 'Flashmob', icon: Video, href: '/dashboard/auditor/flashmob' },
   ],
 };
 

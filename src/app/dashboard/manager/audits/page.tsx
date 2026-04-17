@@ -361,186 +361,189 @@ export default function ManagerAuditsPage() {
   return (
   <DashboardShell role="manager">
     <div className="dashboard-page-container">
-      <div className="page-header-section mb-6">
-        <div className="flex flex-col gap-2">
-          <h1 className="page-heading">Audits</h1>
-          <p className="body-text">Manage ongoing and upcoming audits for your locations.</p>
-        </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="default" className="shadow-lg shadow-primary/20 h-11 px-5 text-[14px] font-medium gap-2 active:scale-95 transition-all">
-              <Plus className="mr-2 h-4 w-4" /> New audit
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-lg p-6">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-semibold text-heading">New audit</DialogTitle>
-              <DialogDescription className="text-sm text-muted-text">Schedule a new audit for your branches.</DialogDescription>
-            </DialogHeader>
+        <div className="page-header-section mb-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col">
+              <h1 className="page-heading">Audits</h1>
+              <p className="body-text text-muted-text hidden md:block">Manage ongoing and upcoming audits for your locations.</p>
+            </div>
+            
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  size="default" 
+                  className="shadow-lg shadow-primary/20 h-10 md:h-11 px-4 md:px-5 text-xs md:text-[14px] font-bold gap-2 active:scale-95 transition-all shrink-0"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>New Audit</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-none shadow-2xl max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:max-h-[85vh] max-md:overflow-y-auto">
+                <DialogHeader className="p-6 pb-2">
+                  <DialogTitle className="text-xl font-bold text-heading">New Audit</DialogTitle>
+                  <DialogDescription className="text-sm text-muted-text">Schedule a new audit for your branches.</DialogDescription>
+                </DialogHeader>
 
-            <div className="space-y-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="template" className="text-xs text-muted-foreground">Template</Label>
-                  <Select value={formData.templateId} onValueChange={(val) => updateFormField('templateId', val)}>
-                    <SelectTrigger id="template" className="h-10 text-body bg-muted/5 border-border/50">
-                      <SelectValue placeholder="Select template" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {templates.map(t => (
-                        <SelectItem key={t.id} value={t.id} className="text-body">{t.title}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <div className="p-6 pt-2 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Template</Label>
+                      <Select value={formData.templateId} onValueChange={(val) => updateFormField('templateId', val)}>
+                        <SelectTrigger className="h-11 text-body bg-muted/5 border-border/50">
+                          <SelectValue placeholder="Select template" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {templates.map(t => (
+                            <SelectItem key={t.id} value={t.id} className="text-body">{t.title}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="location" className="text-xs text-muted-foreground">Location</Label>
-                  <Select value={formData.locationId} onValueChange={(val) => updateFormField('locationId', val)}>
-                    <SelectTrigger id="location" className="h-10 text-body bg-muted/5 border-border/50">
-                      <SelectValue placeholder="Select location" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {locations.map(l => (
-                        <SelectItem key={l.id} value={l.id} className="text-body">{l.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
+                    <div className="flex flex-col gap-1.5">
+                      <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Location</Label>
+                      <Select value={formData.locationId} onValueChange={(val) => updateFormField('locationId', val)}>
+                        <SelectTrigger className="h-11 text-body bg-muted/5 border-border/50">
+                          <SelectValue placeholder="Select location" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {locations.map(l => (
+                            <SelectItem key={l.id} value={l.id} className="text-body">{l.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-2">
-                  <Label className="text-xs text-muted-foreground">Scheduled date</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.scheduledDate && "text-muted-text")}>
-                        <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
-                        {formData.scheduledDate ? format(formData.scheduledDate, "PPP") : "Pick a date"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
-                      <Calendar mode="single" selected={formData.scheduledDate} onSelect={(date: any) => {
-                        updateFormField('scheduledDate', date);
-                        if (date && (!formData.deadline || date > formData.deadline)) {
-                          const newDeadline = new Date(date);
-                          newDeadline.setHours(23, 59, 59);
-                          updateFormField('deadline', newDeadline);
-                        }
-                      }} initialFocus />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label className="text-xs text-muted-foreground">Deadline</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.deadline && "text-muted-text")}>
-                        <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
-                        {formData.deadline ? format(formData.deadline, "PPP") : "Pick a date"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="end">
-                      <Calendar mode="single" selected={formData.deadline} onSelect={(date) => updateFormField('deadline', date)} disabled={(date: any) => formData.scheduledDate ? date < formData.scheduledDate : false} initialFocus />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Scheduled date</Label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.scheduledDate && "text-muted-text")}>
+                            <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
+                            {formData.scheduledDate ? format(formData.scheduledDate, "PPP") : "Pick a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
+                          <Calendar mode="single" selected={formData.scheduledDate} onSelect={(date: any) => {
+                            updateFormField('scheduledDate', date);
+                            if (date && (!formData.deadline || date > formData.deadline)) {
+                              const newDeadline = new Date(date);
+                              newDeadline.setHours(23, 59, 59);
+                              updateFormField('deadline', newDeadline);
+                            }
+                          }} initialFocus />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Deadline</Label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.deadline && "text-muted-text")}>
+                            <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
+                            {formData.deadline ? format(formData.deadline, "PPP") : "Pick a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="end">
+                          <Calendar mode="single" selected={formData.deadline} onSelect={(date) => updateFormField('deadline', date)} disabled={(date: any) => formData.scheduledDate ? date < formData.scheduledDate : false} initialFocus />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  </div>
 
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="recurring" className="text-xs text-muted-foreground">Frequency</Label>
-                <Select value={formData.recurring} onValueChange={(val: any) => updateFormField('recurring', val)}>
-                  <SelectTrigger id="recurring" className="h-10 text-body bg-muted/5 border-border/50">
-                    <SelectValue placeholder="Frequency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">One-time</SelectItem>
-                    <SelectItem value="daily">Daily</SelectItem>
-                    <SelectItem value="weekly">Weekly</SelectItem>
-                    <SelectItem value="monthly">Monthly</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="recurring" className="text-xs font-semibold text-muted-text uppercase tracking-wider">Frequency</Label>
+                    <Select value={formData.recurring} onValueChange={(val: any) => updateFormField('recurring', val)}>
+                      <SelectTrigger id="recurring" className="h-11 text-body bg-muted/5 border-border/50">
+                        <SelectValue placeholder="Frequency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">One-time</SelectItem>
+                        <SelectItem value="daily">Daily</SelectItem>
+                        <SelectItem value="weekly">Weekly</SelectItem>
+                        <SelectItem value="monthly">Monthly</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-              {formData.recurring !== 'none' && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col gap-2">
-                    <Label className="text-xs text-muted-foreground">Repeat until</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-background", !formData.repeatUntil && "text-muted-text")}>
-                          <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
-                          {formData.repeatUntil ? format(formData.repeatUntil, "PPP") : "Pick a date"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
-                        <Calendar mode="single" selected={formData.repeatUntil} onSelect={(date) => updateFormField('repeatUntil', date)} disabled={(date: any) => formData.scheduledDate ? date < formData.scheduledDate : false} initialFocus />
-                      </PopoverContent>
-                    </Popover>
+                  {formData.recurring !== 'none' && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Repeat until</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50 bg-background", !formData.repeatUntil && "text-muted-text")}>
+                              <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
+                              {formData.repeatUntil ? format(formData.repeatUntil, "PPP") : "Pick a date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
+                            <Calendar mode="single" selected={formData.repeatUntil} onSelect={(date) => updateFormField('repeatUntil', date)} disabled={(date: any) => formData.scheduledDate ? date < formData.scheduledDate : false} initialFocus />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-between py-2 border-t border-border/50">
+                    <Label htmlFor="isSurprise" className="text-sm font-medium">Surprise audit</Label>
+                    <Switch id="isSurprise" checked={formData.isSurprise} onCheckedChange={(val) => updateFormField('isSurprise', val)} />
                   </div>
                 </div>
-              )}
 
-              <div className="flex items-center justify-between py-2 border-t border-border/50">
-                <Label htmlFor="isSurprise" className="text-sm font-medium">Surprise audit</Label>
-                <Switch id="isSurprise" checked={formData.isSurprise} onCheckedChange={(val) => updateFormField('isSurprise', val)} />
-              </div>
-            </div>
-
-            <DialogFooter className="gap-2">
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-              <Button
-                onClick={handlePublish}
-                disabled={loading || !formData.templateId || !formData.locationId || !formData.scheduledDate || !formData.deadline}
-              >
-                {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                Publish audit
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      {/* Global Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="relative flex-1 group max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-          <Input
-            placeholder="Search audits by template, location, manager or status..."
-            className="pl-9 h-11 text-body font-normal bg-background border border-border/50 placeholder:text-muted-text/60"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+                <DialogFooter className="p-6 pt-2 bg-muted/5 border-t border-border/50">
+                  <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="h-11 font-bold">Cancel</Button>
+                  <Button
+                    onClick={handlePublish}
+                    className="h-11 font-bold shadow-lg shadow-primary/20 flex-1"
+                    disabled={loading || !formData.templateId || !formData.locationId || !formData.scheduledDate || !formData.deadline}
+                  >
+                    {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : 'Publish Audit'}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          {selectedAuditIds.length > 0 && (
+
+        {selectedAuditIds.length > 0 && (
+          <div className="flex items-center gap-3 mb-6 p-4 rounded-2xl bg-primary/5 border border-primary/20 animate-in slide-in-from-top-2 duration-200">
+            <p className="text-xs font-bold text-primary uppercase tracking-widest">{selectedAuditIds.length} Audits Selected</p>
             <Button
               variant="default"
               size="sm"
-              className="h-11 px-4 gap-2 font-medium text-xs bg-primary text-white shadow-lg shadow-primary/20 hover:scale-105 transition-all"
+              className="h-9 px-4 gap-2 font-bold text-[11px] bg-primary text-white shadow-lg shadow-primary/20 ml-auto active:scale-95 transition-all"
               onClick={() => setBulkDialogOpen(true)}
             >
-              <UserPlus className="h-4 w-4" /> Bulk assign ({selectedAuditIds.length})
+              <UserPlus className="h-3.5 w-3.5" /> Bulk Assign
             </Button>
-          )}
-          {(statusFilter !== 'all' || assigneeFilter !== 'all') && (
-            <Button
-              variant="ghost"
-              onClick={() => { setStatusFilter('all'); setAssigneeFilter('all'); }}
-              className="h-11 px-3 text-[11px] font-medium text-muted-text hover:text-destructive transition-colors group"
-            >
-              <X className="h-3 w-3 mr-1.5 opacity-40 group-hover:opacity-100" />
-              Clear
+            <Button variant="ghost" size="sm" className="h-9 w-9 p-0 text-muted-text" onClick={() => setSelectedAuditIds([])}>
+              <X className="h-4 w-4" />
             </Button>
-          )}
+          </div>
+        )}
+
+        <div className="flex items-center gap-2 mb-6">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+            <Input
+              placeholder="Search audits..."
+              className="pl-9 h-10 md:h-11 text-xs md:text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-muted-text/60 focus:border-primary/50 transition-all rounded-xl md:rounded-lg"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className={cn(
-                "h-11 px-4 gap-2 font-medium text-xs border-border/50",
-                (statusFilter !== 'all' || assigneeFilter !== 'all') ? "text-primary border-primary/20 bg-primary/5" : "text-muted-text"
+                "h-10 md:h-11 w-10 md:w-auto md:px-4 flex items-center justify-center gap-2 font-bold text-xs border-border/50 rounded-xl md:rounded-lg",
+                (statusFilter !== 'all' || assigneeFilter !== 'all') ? "text-primary border-primary/20 bg-primary/5" : "text-[#6b7280]"
               )}>
                 <Filter className="h-4 w-4" />
-                Filters
+                <span className="hidden md:inline">Filters</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
@@ -565,7 +568,6 @@ export default function ManagerAuditsPage() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </div>
 
       {/* Desktop Table View */}
       <div className="hidden md:block">

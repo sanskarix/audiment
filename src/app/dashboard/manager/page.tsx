@@ -506,7 +506,7 @@ export default function ManagerDashboardPage() {
               <h3 className="section-heading">Performance trend</h3>
               <p className="body-text mt-1">Score trends from recent audits</p>
             </div>
-            <div className="h-[300px] w-full">
+            <div className="h-[250px] md:h-[300px] w-full -ml-4 md:ml-0">
               {isMounted ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={stats?.recentAuditScores} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
@@ -534,6 +534,7 @@ export default function ManagerDashboardPage() {
                       domain={[0, 100]} 
                       fontWeight={500}
                       tickFormatter={(val) => `${val}%`}
+                      hide={typeof window !== 'undefined' && window.innerWidth < 400}
                     />
                     <Tooltip
                       contentStyle={{ 
@@ -546,7 +547,6 @@ export default function ManagerDashboardPage() {
                         boxShadow: '0 15px 30px rgba(0,0,0,0.15)',
                         padding: '12px'
                       }}
-                      cursor={{ stroke: 'var(--primary)', strokeWidth: 1, strokeDasharray: '4 4' }}
                     />
                     <Area
                       type="monotone"
@@ -668,9 +668,14 @@ export default function ManagerDashboardPage() {
         {/* Recent Notifications & Recent Audits Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card className="standard-card p-6">
-            <div className="mb-6">
-              <h3 className="section-heading">Recent Notifications</h3>
-              <p className="body-text mt-1">Latest updates and alerts</p>
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h3 className="section-heading">Recent Notifications</h3>
+                <p className="body-text mt-1">Latest updates and alerts</p>
+              </div>
+              <Link href="/dashboard/manager/reports" className="text-[11px] font-semibold text-primary hover:underline">
+                View all
+              </Link>
             </div>
             <ScrollArea className="h-[350px] pr-4">
               {notifications.length === 0 ? (
@@ -681,15 +686,24 @@ export default function ManagerDashboardPage() {
               ) : (
                 <div className="space-y-4">
                   {notifications.map((n) => (
-                    <div key={n.id} className={cn("p-4 rounded-xl border border-border/40 transition-all", !n.isRead && "bg-primary/5 border-primary/20")}>
-                      <div className="flex items-center justify-between mb-1">
-                        <p className="text-[13px] font-semibold text-heading">{n.title}</p>
-                        <span className="text-[10px] text-muted-text/50">
-                          {n.createdAt ? format(n.createdAt.toDate(), 'MMM d, h:mm a') : 'Now'}
-                        </span>
+                    <Link 
+                      key={n.id} 
+                      href={n.type?.includes('action') ? "/dashboard/manager/corrective-actions" : "/dashboard/manager/reports"}
+                      className="block group"
+                    >
+                      <div className={cn(
+                        "p-4 rounded-xl border border-border/40 transition-all group-hover:bg-muted/30 group-hover:border-primary/20",
+                        !n.isRead && "bg-primary/5 border-primary/20"
+                      )}>
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="text-[13px] font-semibold text-heading group-hover:text-primary transition-colors">{n.title}</p>
+                          <span className="text-[10px] text-muted-text/50">
+                            {n.createdAt ? format(n.createdAt.toDate(), 'MMM d') : 'Now'}
+                          </span>
+                        </div>
+                        <p className="text-[12px] text-body line-clamp-2">{n.message}</p>
                       </div>
-                      <p className="text-[12px] text-body line-clamp-2">{n.message}</p>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               )}

@@ -214,25 +214,25 @@ export default function ManagerReportsPage() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-2 mb-6">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
-              placeholder="Search reports by template or location..."
-              className="pl-9 h-11 bg-background text-body"
+              placeholder="Search reports..."
+              className="pl-9 h-10 md:h-11 text-xs md:text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-muted-text/60 focus:border-primary/50 transition-all rounded-xl md:rounded-lg"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className={cn(
-                  "h-11 px-4 gap-2 font-medium text-xs border-border/50",
-                  selectedLocation !== 'all' ? "text-primary border-primary/20 bg-primary/5" : "text-muted-text"
+                  "h-10 md:h-11 w-10 md:w-auto md:px-4 flex items-center justify-center gap-2 font-bold text-xs border-border/50 rounded-xl md:rounded-lg",
+                  selectedLocation !== 'all' ? "text-primary border-primary/20 bg-primary/5" : "text-[#6b7280]"
                 )}>
                   <Filter className="h-4 w-4" />
-                  {selectedLocation === 'all' ? 'Filters' : locations.find(l => l.id === selectedLocation)?.name}
+                  <span className="hidden md:inline">{selectedLocation === 'all' ? 'Filters' : locations.find(l => l.id === selectedLocation)?.name}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">

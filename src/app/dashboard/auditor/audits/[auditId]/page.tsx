@@ -104,9 +104,10 @@ export default function AuditExecutionPage() {
   // Geolocation popup state
   const [showLocationErrorDialog, setShowLocationErrorDialog] = useState(false);
   const [showInitialLocationPrompt, setShowInitialLocationPrompt] = useState(false);
+  const [showPermissionErrorDialog, setShowPermissionErrorDialog] = useState(false);
 
-  // No longer needed
-
+  // State and refs already defined above
+ 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
@@ -271,33 +272,22 @@ export default function AuditExecutionPage() {
     }
   }, []);
 
-  const cameraVideoCallbackRef = useCallback((videoEl: HTMLVideoElement | null) => {
-    // Always keep cameraVideoRef in sync – capturePhoto reads from it
-    cameraVideoRef.current = videoEl;
-    if (!videoEl) return;
-    const attach = async () => {
-      try {
-        if (!cameraStreamRef.current) {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { ideal: cameraFacing }, width: { ideal: 1280 }, height: { ideal: 720 } },
-            audio: false
-          });
-          cameraStreamRef.current = stream;
-        }
-        videoEl.srcObject = cameraStreamRef.current;
-        try { await videoEl.play(); } catch (e: any) { if (e.name !== 'AbortError') console.error(e); }
-      } catch (err) {
-        console.error('Camera error:', err);
-        alert('Could not access camera. Please allow camera permissions.');
-        setCameraOpen(false);
-      }
-    };
-    attach();
-  }, [cameraFacing]);
-
-  const openCamera = () => {
-    setCameraFacing('environment');
-    setCameraOpen(true);
+  const openCamera = async () => {
+    try {
+      setCapturing(true); // Loading state while requesting
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false
+      });
+      cameraStreamRef.current = stream;
+      setCameraFacing('environment');
+      setCameraOpen(true);
+    } catch (err) {
+      console.error('Camera error:', err);
+      setShowPermissionErrorDialog(true);
+    } finally {
+      setCapturing(false);
+    }
   };
 
   const closeCamera = () => {
@@ -306,10 +296,32 @@ export default function AuditExecutionPage() {
   };
 
   const flipCamera = async () => {
-    stopCameraStream();
-    setCameraFacing(f => f === 'environment' ? 'user' : 'environment');
-    // The cameraVideoCallbackRef will re-fire when the video element remounts due to key change
+    try {
+      stopCameraStream();
+      const newFacing = cameraFacing === 'environment' ? 'user' : 'environment';
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: newFacing }, width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false
+      });
+      cameraStreamRef.current = stream;
+      setCameraFacing(newFacing);
+      if (cameraVideoRef.current) {
+        cameraVideoRef.current.srcObject = stream;
+      }
+    } catch (err) {
+      console.error('Flip camera error:', err);
+    }
   };
+
+  const cameraVideoCallbackRef = useCallback((videoEl: HTMLVideoElement | null) => {
+    cameraVideoRef.current = videoEl;
+    if (videoEl && cameraStreamRef.current) {
+      videoEl.srcObject = cameraStreamRef.current;
+      videoEl.play().catch(e => {
+        if (e.name !== 'AbortError') console.error('Video play error:', e);
+      });
+    }
+  }, []);
 
   const capturePhoto = async () => {
     if (!cameraVideoRef.current || !cameraStreamRef.current || !currentQuestion || !uid) return;
@@ -370,35 +382,6 @@ export default function AuditExecutionPage() {
 
   // Cleanup camera on unmount
   useEffect(() => { return () => { stopCameraStream(); }; }, [stopCameraStream]);
-
-  const getLocation = (): Promise<{ latitude: number; longitude: number; locationCaptured: boolean }> => {
-    return new Promise((resolve) => {
-      if (!navigator.geolocation) {
-        resolve({ latitude: 0, longitude: 0, locationCaptured: false });
-        return;
-      }
-
-      const timeout = setTimeout(() => {
-        resolve({ latitude: 0, longitude: 0, locationCaptured: false });
-      }, 8000);
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          clearTimeout(timeout);
-          resolve({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            locationCaptured: true
-          });
-        },
-        () => {
-          clearTimeout(timeout);
-          resolve({ latitude: 0, longitude: 0, locationCaptured: false });
-        },
-        { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-      );
-    });
-  };
 
   const saveProgress = async (isFinal = false) => {
     console.log(`[AuditSubmission] Starting saveProgress. isFinal: ${isFinal}`);
@@ -896,7 +879,24 @@ export default function AuditExecutionPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Unsaved Changes Guard Dialog */}
+      {/* Camera Permission Error Dialog */}
+      <AlertDialog open={showPermissionErrorDialog} onOpenChange={setShowPermissionErrorDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+              <Camera className="h-5 w-5" /> Camera Access Denied
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Audiment needs camera access to capture evidence photos. Please enable camera permissions in your browser or device settings and try again.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button onClick={() => setShowPermissionErrorDialog(false)}>
+              Got it
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <AlertDialog open={showExitDialog} onOpenChange={setShowExitDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>

@@ -509,6 +509,7 @@ export default function AdminAuditsPage() {
               </DialogContent>
             </Dialog>
           </div>
+        </div>
         <div className="flex items-center gap-2 mb-6">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />

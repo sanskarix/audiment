@@ -60,6 +60,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from '@/components/ui/button';
 import { useAuthSync } from '@/components/AuthProvider';
 import posthog from 'posthog-js';
+import { MobileCard, MobileCardHeader, MobileCardTitle, MobileCardDescription, MobileCardContent } from '@/components/mobile/MobileCard';
 
 export default function AdminCorrectiveActionsPage() {
   const { isSynced, orgId } = useAuthSync();

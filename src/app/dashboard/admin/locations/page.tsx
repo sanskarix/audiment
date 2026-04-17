@@ -14,10 +14,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card } from '@/components/ui/card';
-import { MoreHorizontal, Pencil, Plus } from 'lucide-react';
+import { MoreHorizontal, Pencil, Plus, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthSync } from '@/components/AuthProvider';
 import posthog from 'posthog-js';
+import { MobileCard, MobileCardHeader, MobileCardTitle, MobileCardDescription, MobileCardContent } from '@/components/mobile/MobileCard';
 
 export default function AdminLocationsPage() {
   const { isSynced, orgId } = useAuthSync();

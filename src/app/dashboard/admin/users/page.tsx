@@ -15,12 +15,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { MoreHorizontal, Pencil, Trash2, Mail, UserPlus, Search, Filter } from 'lucide-react';
+import { MoreHorizontal, Pencil, Trash2, Mail, UserPlus, Search, Filter, MapPin } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { useAuthSync } from '@/components/AuthProvider';
 import posthog from 'posthog-js';
+import { MobileCard, MobileCardHeader, MobileCardTitle, MobileCardDescription, MobileCardContent } from '@/components/mobile/MobileCard';
 
 // Memoized Form Components to prevent lag
 const UserFormFields = React.memo(({ formData, setFormData, activeManagers, isEdit = false, selectedUser = null, handleResetPassword = null }: any) => {
@@ -353,7 +354,7 @@ export default function AdminUsersPage() {
                 <span>Add User</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] transition-all duration-150">
+            <DialogContent className="sm:max-w-[425px] transition-all duration-150 max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-auto max-md:max-h-[85vh] max-md:overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="font-semibold text-heading">Add User</DialogTitle>
               </DialogHeader>
@@ -418,87 +419,167 @@ export default function AdminUsersPage() {
           </DropdownMenu>
         </div>
 
-        <Card className="standard-card">
-          <Table>
-            <TableHeader className="standard-table-header">
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="standard-table-head">Name</TableHead>
-                <TableHead className="standard-table-head">Email</TableHead>
-                <TableHead className="standard-table-head">Role</TableHead>
-                <TableHead className="standard-table-head">Status</TableHead>
-                <TableHead className="standard-table-head text-right w-[100px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredUsers.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="standard-table-cell h-32 text-center">
-                    No users found matching your search.
-                  </TableCell>
+        <div className="hidden md:block">
+          <Card className="standard-card">
+            <Table>
+              <TableHeader className="standard-table-header">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="standard-table-head">Name</TableHead>
+                  <TableHead className="standard-table-head">Email</TableHead>
+                  <TableHead className="standard-table-head">Role</TableHead>
+                  <TableHead className="standard-table-head">Status</TableHead>
+                  <TableHead className="standard-table-head text-right w-[100px]">Actions</TableHead>
                 </TableRow>
-              ) : (
-                filteredUsers.map((user) => (
-                  <TableRow key={user.id} className="standard-table-row group">
-                    <TableCell className="standard-table-cell">{user.name}</TableCell>
-                    <TableCell className="standard-table-cell">{user.email}</TableCell>
-                    <TableCell className="standard-table-cell">
-                      <Badge
-                        variant={user.role === 'ADMIN' ? 'default' : user.role === 'MANAGER' ? 'secondary' : 'outline'}
-                        className={cn("px-2 py-0.5 text-body", user.role === 'ADMIN' && "text-white")}
-                        style={{ fontSize: 12, fontWeight: 400 }}
-                      >
-                        {String(user.role ?? '')
-                          .toLowerCase()
-                          .replace(/^\w/, (c) => c.toUpperCase())}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="standard-table-cell">
-                      <div className="flex items-center">
-                        <Switch
-                          checked={user.isActive !== false}
-                          onCheckedChange={() =>
-                            handleToggleActive(user.id, user.isActive !== false)
-                          }
-                          disabled={user.role === 'ADMIN'}
-                        />
-                      </div>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => {
-                            setSelectedUser(user);
-                            setEditFormData({
-                              name: user.name,
-                              managerId: user.managerId || '',
-                              hasFlashmobAccess: user.hasFlashmobAccess === true
-                            });
-                            setIsEditOpen(true);
-                          }} disabled={user.role === 'ADMIN'}>
-                            <Pencil className="mr-2 h-4 w-4" /> Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive" onClick={() => {
-                            setSelectedUser(user);
-                            setIsDeleteOpen(true);
-                          }} disabled={user.role === 'ADMIN'}>
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+              </TableHeader>
+              <TableBody>
+                {filteredUsers.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="standard-table-cell h-32 text-center">
+                      No users found matching your search.
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </Card>
+                ) : (
+                  filteredUsers.map((user) => (
+                    <TableRow key={user.id} className="standard-table-row group">
+                      <TableCell className="standard-table-cell">{user.name}</TableCell>
+                      <TableCell className="standard-table-cell">{user.email}</TableCell>
+                      <TableCell className="standard-table-cell">
+                        <Badge
+                          variant={user.role === 'ADMIN' ? 'default' : user.role === 'MANAGER' ? 'secondary' : 'outline'}
+                          className={cn("px-2 py-0.5 text-body", user.role === 'ADMIN' && "text-white")}
+                          style={{ fontSize: 12, fontWeight: 400 }}
+                        >
+                          {String(user.role ?? '')
+                            .toLowerCase()
+                            .replace(/^\w/, (c) => c.toUpperCase())}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="standard-table-cell">
+                        <div className="flex items-center">
+                          <Switch
+                            checked={user.isActive !== false}
+                            onCheckedChange={() =>
+                              handleToggleActive(user.id, user.isActive !== false)
+                            }
+                            disabled={user.role === 'ADMIN'}
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => {
+                              setSelectedUser(user);
+                              setEditFormData({
+                                name: user.name,
+                                managerId: user.managerId || '',
+                                hasFlashmobAccess: user.hasFlashmobAccess === true
+                              });
+                              setIsEditOpen(true);
+                            }} disabled={user.role === 'ADMIN'}>
+                              <Pencil className="mr-2 h-4 w-4" /> Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="text-destructive" onClick={() => {
+                              setSelectedUser(user);
+                              setIsDeleteOpen(true);
+                            }} disabled={user.role === 'ADMIN'}>
+                              <Trash2 className="mr-2 h-4 w-4" /> Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        </div>
+
+        {/* Mobile View */}
+        <div className="flex flex-col gap-3 md:hidden">
+          {filteredUsers.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+              <div className="bg-muted/10 p-4 rounded-full mb-4">
+                <UserPlus className="h-8 w-8 opacity-20" />
+              </div>
+              <p className="text-muted-text">No users found. Add one to get started.</p>
+            </div>
+          ) : (
+            filteredUsers.map((user) => (
+              <MobileCard key={user.id} className="relative overflow-hidden">
+                <MobileCardHeader>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <MobileCardTitle className="truncate">{user.name}</MobileCardTitle>
+                      <MobileCardDescription className="truncate">{user.email}</MobileCardDescription>
+                    </div>
+                    <Badge
+                      variant={user.role === 'ADMIN' ? 'default' : user.role === 'MANAGER' ? 'secondary' : 'outline'}
+                      className={cn("px-2 py-0 h-5 text-[10px] font-bold shrink-0", user.role === 'ADMIN' && "text-white")}
+                    >
+                      {user.role}
+                    </Badge>
+                  </div>
+                </MobileCardHeader>
+                <MobileCardContent>
+                  <div className="flex items-center justify-between pt-1">
+                    <div className="flex items-center gap-3">
+                      <Switch 
+                        checked={user.isActive !== false} 
+                        onCheckedChange={() => handleToggleActive(user.id, user.isActive !== false)} 
+                        disabled={user.role === 'ADMIN'}
+                        className="scale-90"
+                      />
+                      <span className="text-[11px] font-medium text-muted-text">
+                        {user.isActive !== false ? 'Active' : 'Inactive'}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center gap-1">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 text-muted-text"
+                        disabled={user.role === 'ADMIN'}
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setEditFormData({
+                            name: user.name,
+                            managerId: user.managerId || '',
+                            hasFlashmobAccess: user.hasFlashmobAccess === true
+                          });
+                          setIsEditOpen(true);
+                        }}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 text-destructive hover:bg-destructive/10"
+                        disabled={user.role === 'ADMIN'}
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setIsDeleteOpen(true);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </MobileCardContent>
+              </MobileCard>
+            ))
+          )}
+        </div>
 
         {/* Edit Dialog */}
         <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-          <DialogContent className="sm:max-w-[425px] transition-all duration-150">
+          <DialogContent className="sm:max-w-[425px] transition-all duration-150 max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-auto max-md:max-h-[85vh] max-md:overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="font-semibold text-heading">Edit User</DialogTitle>
               <DialogDescription className="text-muted-text">Update the details for {selectedUser?.name}.</DialogDescription>

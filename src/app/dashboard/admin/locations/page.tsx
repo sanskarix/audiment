@@ -218,7 +218,7 @@ export default function AdminLocationsPage() {
                 <Plus className="mr-2 h-4 w-4" /> Add Location
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[425px] max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-auto max-md:max-h-[85vh] max-md:overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="font-semibold text-heading">Add Location</DialogTitle>
               </DialogHeader>
@@ -265,66 +265,133 @@ export default function AdminLocationsPage() {
 
 
 
-        <Card className="standard-card">
-          <Table>
-            <TableHeader className="standard-table-header">
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="standard-table-head">Name</TableHead>
-                <TableHead className="standard-table-head">City</TableHead>
-                <TableHead className="standard-table-head">Managers</TableHead>
-                <TableHead className="standard-table-head">Status</TableHead>
-                <TableHead className="standard-table-head text-right w-[100px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {locations.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="standard-table-cell h-32 text-center">
-                    No locations found. Add your first location to get started.
-                  </TableCell>
+        <div className="hidden md:block">
+          <Card className="standard-card">
+            <Table>
+              <TableHeader className="standard-table-header">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="standard-table-head">Name</TableHead>
+                  <TableHead className="standard-table-head">City</TableHead>
+                  <TableHead className="standard-table-head">Managers</TableHead>
+                  <TableHead className="standard-table-head">Status</TableHead>
+                  <TableHead className="standard-table-head text-right w-[100px]">Actions</TableHead>
                 </TableRow>
-              ) : (
-                locations.map((location: any) => (
-                  <TableRow key={location.id} className="standard-table-row group">
-                    <TableCell className="standard-table-cell font-normal text-sm text-body">
-                      {location.name}
-                    </TableCell>
-                    <TableCell className="standard-table-cell text-body font-normal">{location.city}</TableCell>
-                    <TableCell className="standard-table-cell text-body font-normal">{getManagerNames(location.assignedManagerIds, location.assignedManagerId)}</TableCell>
-                    <TableCell className="standard-table-cell">
-                      <Switch checked={location.isActive} onCheckedChange={() => handleToggleActive(location.id, location.isActive)} />
-                    </TableCell>
-                    <TableCell className="standard-table-cell text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => {
-                            setSelectedLocation(location);
-                            setEditFormData({
-                              name: location.name,
-                              address: location.address || '',
-                              city: location.city || '',
-                              assignedManagerIds: location.assignedManagerIds || (location.assignedManagerId ? [location.assignedManagerId] : [])
-                            });
-                            setIsEditOpen(true);
-                          }}>
-                            <Pencil className="mr-2 h-4 w-4" /> Edit
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+              </TableHeader>
+              <TableBody>
+                {locations.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="standard-table-cell h-32 text-center">
+                      No locations found. Add your first location to get started.
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </Card>
+                ) : (
+                  locations.map((location: any) => (
+                    <TableRow key={location.id} className="standard-table-row group">
+                      <TableCell className="standard-table-cell font-normal text-sm text-body">
+                        {location.name}
+                      </TableCell>
+                      <TableCell className="standard-table-cell text-body font-normal">{location.city}</TableCell>
+                      <TableCell className="standard-table-cell text-body font-normal">{getManagerNames(location.assignedManagerIds, location.assignedManagerId)}</TableCell>
+                      <TableCell className="standard-table-cell">
+                        <Switch checked={location.isActive} onCheckedChange={() => handleToggleActive(location.id, location.isActive)} />
+                      </TableCell>
+                      <TableCell className="standard-table-cell text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => {
+                              setSelectedLocation(location);
+                              setEditFormData({
+                                name: location.name,
+                                address: location.address || '',
+                                city: location.city || '',
+                                assignedManagerIds: location.assignedManagerIds || (location.assignedManagerId ? [location.assignedManagerId] : [])
+                              });
+                              setIsEditOpen(true);
+                            }}>
+                              <Pencil className="mr-2 h-4 w-4" /> Edit
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        </div>
+
+        {/* Mobile View */}
+        <div className="flex flex-col gap-3 md:hidden">
+          {locations.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+              <div className="bg-muted/10 p-4 rounded-full mb-4">
+                <MapPin className="h-8 w-8 opacity-20" />
+              </div>
+              <p className="text-muted-text">No locations found. Add one to get started.</p>
+            </div>
+          ) : (
+            locations.map((location: any) => (
+              <MobileCard key={location.id} className="relative overflow-hidden">
+                <MobileCardHeader>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1">
+                      <MobileCardTitle>{location.name}</MobileCardTitle>
+                      <MobileCardDescription>{location.city}, {location.address}</MobileCardDescription>
+                    </div>
+                    <div className="flex flex-col items-end gap-2">
+                      <Switch 
+                        checked={location.isActive} 
+                        onCheckedChange={() => handleToggleActive(location.id, location.isActive)} 
+                        className="scale-90"
+                      />
+                      <Badge variant={location.isActive ? "secondary" : "outline"} className={cn(
+                        "text-[10px] font-bold px-2 py-0",
+                        location.isActive ? "bg-success/10 text-success border-none" : "text-muted-text"
+                      )}>
+                        {location.isActive ? "ACTIVE" : "INACTIVE"}
+                      </Badge>
+                    </div>
+                  </div>
+                </MobileCardHeader>
+                <MobileCardContent>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] uppercase tracking-wider text-muted-text font-semibold">Assigned Managers</span>
+                    <span className="text-xs font-medium text-heading">
+                      {getManagerNames(location.assignedManagerIds, location.assignedManagerId)}
+                    </span>
+                  </div>
+                </MobileCardContent>
+                <div className="absolute bottom-2 right-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 text-muted-text"
+                    onClick={() => {
+                      setSelectedLocation(location);
+                      setEditFormData({
+                        name: location.name,
+                        address: location.address || '',
+                        city: location.city || '',
+                        assignedManagerIds: location.assignedManagerIds || (location.assignedManagerId ? [location.assignedManagerId] : [])
+                      });
+                      setIsEditOpen(true);
+                    }}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </div>
+              </MobileCard>
+            ))
+          )}
+        </div>
 
         {/* Edit Dialog */}
         <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[425px] max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-auto max-md:max-h-[85vh] max-md:overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="font-semibold text-heading">Edit Location</DialogTitle>
               <DialogDescription className="text-muted-text">Update the details for {selectedLocation?.name}.</DialogDescription>

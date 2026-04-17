@@ -17,7 +17,7 @@ export async function loginUser(email: string, password: string): Promise<AuthUs
 
   // Force a token refresh so custom claims (role, orgId) set by the Admin SDK
   // are included immediately — without this, the cached token may be stale.
-  await credential.user.getIdToken(true);
+  const idToken = await credential.user.getIdToken(true);
 
   const uid = credential.user.uid;
 
@@ -38,9 +38,21 @@ export async function loginUser(email: string, password: string): Promise<AuthUs
     throw new Error('User record is missing an organizationId. Please contact support.');
   }
 
-  // Store session info in a cookie (readable by proxy)
-  const sessionData = JSON.stringify({ uid, role, email: data.email, name: data.name, organizationId: data.organizationId });
-  document.cookie = `audiment_session=${encodeURIComponent(sessionData)}; path=/; max-age=${60 * 60 * 24 * 7}`;
+  // ── Set HttpOnly session cookie via the server-side API route ──────────────
+  // This replaces the previous `document.cookie = ...` assignment.
+  // The server uses adminAuth.verifyIdToken() to validate the token and sets
+  // the cookie with HttpOnly + Secure flags, making it invisible to JavaScript.
+  const sessionRes = await fetch('/api/auth/session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ idToken }),
+  });
+
+  if (!sessionRes.ok) {
+    // Non-fatal: the Firebase auth is valid; we just couldn't set the HttpOnly cookie.
+    // Log it but don't block the login — the Bearer token flow will still work.
+    console.error('[loginUser] Failed to set server session cookie:', await sessionRes.text());
+  }
 
   return {
     uid,
@@ -52,9 +64,16 @@ export async function loginUser(email: string, password: string): Promise<AuthUs
 }
 
 export async function logoutUser(): Promise<void> {
+  // ── Clear the HttpOnly cookie server-side FIRST ────────────────────────────
+  // document.cookie cannot clear an HttpOnly cookie, so we must call the API.
+  try {
+    await fetch('/api/auth/logout', { method: 'POST' });
+  } catch (err) {
+    // Non-fatal: the firebase signOut below will still invalidate the client session.
+    console.error('[logoutUser] Failed to clear server session cookie:', err);
+  }
+
   await signOut(auth);
-  // Clear session cookie
-  document.cookie = 'audiment_session=; path=/; max-age=0';
 }
 
 export function getSessionFromCookie(cookieString: string): { uid: string; role: UserRole; name: string; email: string; organizationId: string; } | null {

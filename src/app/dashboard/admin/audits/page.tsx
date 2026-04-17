@@ -40,7 +40,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, Plus, CheckSquare, Clock, AlertCircle, Search, MoreHorizontal, Pencil, Loader2, Filter, X } from 'lucide-react';
+import { CalendarIcon, Plus, CheckSquare, Clock, AlertCircle, Search, MoreHorizontal, Pencil, Loader2, Filter, X, MapPin } from 'lucide-react';
+import { MobileCard, MobileCardHeader, MobileCardTitle, MobileCardDescription, MobileCardContent } from '@/components/mobile/MobileCard';
 
 export default function AdminAuditsPage() {
   const { isSynced, uid, orgId } = useAuthSync();
@@ -324,7 +325,7 @@ export default function AdminAuditsPage() {
                   <Plus className="mr-2 h-4 w-4" /> New audit
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-lg p-6">
+              <DialogContent className="sm:max-w-lg p-6 max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-[90vh] max-md:overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle className="page-heading">
                     {editingAuditId ? 'Edit audit' : 'New audit'}
@@ -572,121 +573,217 @@ export default function AdminAuditsPage() {
           </div>
         </div>
 
-        <Card className="standard-card">
-          <Table>
-            <TableHeader className="standard-table-header">
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="standard-table-head">Template</TableHead>
-                <TableHead className="standard-table-head">Location</TableHead>
-                <TableHead className="standard-table-head">Status</TableHead>
-                <TableHead className="standard-table-head">Deadline</TableHead>
-                <TableHead className="standard-table-head">Surprise</TableHead>
-                <TableHead className="standard-table-head text-right">Score</TableHead>
-                <TableHead className="standard-table-head w-[50px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredAudits.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="standard-table-cell text-center py-24">
-                    <div className="flex flex-col items-center justify-center gap-4">
-                      <div className="bg-muted/10 p-4 rounded-full">
-                        <CheckSquare className="h-8 w-8 opacity-20" />
-                      </div>
-                      <p className="page-heading opacity-40">No audits published yet.</p>
-                    </div>
-                  </TableCell>
+        {/* Desktop Table View */}
+        <div className="hidden md:block">
+          <Card className="standard-card">
+            <Table>
+              <TableHeader className="standard-table-header">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="standard-table-head">Template</TableHead>
+                  <TableHead className="standard-table-head">Location</TableHead>
+                  <TableHead className="standard-table-head">Status</TableHead>
+                  <TableHead className="standard-table-head">Deadline</TableHead>
+                  <TableHead className="standard-table-head">Surprise</TableHead>
+                  <TableHead className="standard-table-head text-right">Score</TableHead>
+                  <TableHead className="standard-table-head w-[50px]"></TableHead>
                 </TableRow>
-              ) : (
-                filteredAudits.map((a) => {
-                  const now = new Date();
-                  const deadline = a.deadline?.toDate();
-                  const isDeadlineHit = a.status === 'missed' || (a.status !== 'completed' && deadline && deadline < now);
-                  
-                  return (
-                    <TableRow key={a.id} className={cn(
-                      "standard-table-row group",
-                      isDeadlineHit && "bg-destructive/5 hover:bg-destructive/10"
-                    )}>
+              </TableHeader>
+              <TableBody>
+                {filteredAudits.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="standard-table-cell text-center py-24">
+                      <div className="flex flex-col items-center justify-center gap-4">
+                        <div className="bg-muted/10 p-4 rounded-full">
+                          <CheckSquare className="h-8 w-8 opacity-20" />
+                        </div>
+                        <p className="page-heading opacity-40">No audits published yet.</p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredAudits.map((a) => {
+                    const now = new Date();
+                    const deadline = a.deadline?.toDate();
+                    const isDeadlineHit = a.status === 'missed' || (a.status !== 'completed' && deadline && deadline < now);
+                    
+                    return (
+                      <TableRow key={a.id} className={cn(
+                        "standard-table-row group",
+                        isDeadlineHit && "bg-destructive/5 hover:bg-destructive/10"
+                      )}>
+                        <TableCell className="standard-table-cell">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
+                            {a.recurring && a.recurring !== 'none' && (
+                              <div className="h-5 rounded-full bg-primary/10 text-primary px-2 flex items-center gap-1.5 w-fit text-[11px] font-normal">
+                                <Clock className="w-2.5 h-2.5" />
+                                <span className="capitalize">{a.recurring}</span>
+                              </div>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="standard-table-cell text-[14px] font-normal text-body">
+                          {a.locationName}
+                        </TableCell>
+                        <TableCell className="standard-table-cell">{getStatusBadge(a)}</TableCell>
                       <TableCell className="standard-table-cell">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
-                          {a.recurring && a.recurring !== 'none' && (
-                            <div className="h-5 rounded-full bg-primary/10 text-primary px-2 flex items-center gap-1.5 w-fit text-[11px] font-normal">
-                              <Clock className="w-2.5 h-2.5" />
-                              <span className="capitalize">{a.recurring}</span>
-                            </div>
-                          )}
+                        <div className="flex flex-col gap-1.5 font-normal">
+                          <span className="text-[14px] font-normal text-body">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="standard-table-cell text-[14px] font-normal text-body">
-                        {a.locationName}
+                      <TableCell className="standard-table-cell">
+                        {a.isSurprise ? (
+                          <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">
+                            Surprise
+                          </Badge>
+                        ) : (
+                          <span className="text-[14px] font-normal text-muted-text">Routine</span>
+                        )}
                       </TableCell>
-                      <TableCell className="standard-table-cell">{getStatusBadge(a)}</TableCell>
-                    <TableCell className="standard-table-cell">
-                      <div className="flex flex-col gap-1.5 font-normal">
-                        <span className="text-[14px] font-normal text-body">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="standard-table-cell">
-                      {a.isSurprise ? (
-                        <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">
-                          Surprise
-                        </Badge>
-                      ) : (
-                        <span className="text-[14px] font-normal text-muted-text">Routine</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="standard-table-cell text-right">
-                      {a.status === 'completed' ? (
-                        <div className="flex flex-col items-end gap-0.5">
-                          <span className={cn("text-[14px] font-medium tabular-nums", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
+                      <TableCell className="standard-table-cell text-right">
+                        {a.status === 'completed' ? (
+                          <div className="flex flex-col items-end gap-0.5">
+                            <span className={cn("text-[14px] font-medium tabular-nums", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
+                              {a.scorePercentage}%
+                            </span>
+                            <span className="text-[11px] font-normal text-muted-text/50 tabular-nums">{a.totalScore} / {a.maxPossibleScore}</span>
+                          </div>
+                        ) : (
+                          <span className="text-[14px] font-normal text-muted-text">Pending</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="px-4 py-3">
+                        {(a.status === 'published' || a.status === 'assigned') && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4 opacity-50" /></Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-48 p-1.5 rounded-xl border-muted/20 shadow-xl">
+                              <DropdownMenuItem
+                                className="rounded-lg h-10 font-medium cursor-pointer focus:bg-primary/5 focus:text-primary transition-all text-body"
+                                onClick={() => {
+                                  setEditingAuditId(a.id);
+                                  setFormData({
+                                    templateId: a.templateId,
+                                    locationId: a.locationId,
+                                    managerId: a.assignedManagerId || '',
+                                    scheduledDate: a.scheduledDate?.toDate(),
+                                    deadline: a.deadline?.toDate(),
+                                    isSurprise: a.isSurprise || false,
+                                    recurring: a.recurring || 'none',
+                                    recurringDay: a.recurringDay || 1,
+                                    repeatUntil: a.repeatUntil?.toDate() || undefined,
+                                  });
+                                  setOpen(true);
+                                }}
+                              >
+                                <Pencil className="mr-2 h-4 w-4" /> Edit
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </TableCell>
+                      </TableRow>
+                    );
+                  })
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="flex md:hidden flex-col gap-3">
+          {filteredAudits.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-4 py-12">
+              <div className="bg-muted/10 p-4 rounded-full">
+                <CheckSquare className="h-8 w-8 opacity-20" />
+              </div>
+              <p className="page-heading opacity-40">No audits found.</p>
+            </div>
+          ) : (
+            filteredAudits.map((a) => (
+              <MobileCard key={a.id} className="relative overflow-hidden">
+                <MobileCardHeader>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1">
+                      <MobileCardTitle>{a.templateTitle}</MobileCardTitle>
+                      <MobileCardDescription className="flex items-center gap-1.5 mt-1">
+                        <MapPin className="h-3 w-3 opacity-50" />
+                        {a.locationName}
+                      </MobileCardDescription>
+                    </div>
+                    {getStatusBadge(a)}
+                  </div>
+                </MobileCardHeader>
+
+                <MobileCardContent>
+                  <div className="grid grid-cols-2 gap-y-3 gap-x-2 mt-1">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] uppercase tracking-wider text-muted-text font-semibold">Deadline</span>
+                      <span className="text-xs font-medium text-heading">
+                        {a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-1 items-end">
+                      <span className="text-[10px] uppercase tracking-wider text-muted-text font-semibold">Frequency</span>
+                      <span className="text-xs font-medium text-heading">
+                        {a.recurring && a.recurring !== 'none' ? (
+                          <span className="capitalize">{a.recurring}</span>
+                        ) : 'One-time'}
+                      </span>
+                    </div>
+                    {a.status === 'completed' && (
+                      <div className="flex flex-col gap-1 col-span-2 pt-2 border-t border-border/50">
+                        <span className="text-[10px] uppercase tracking-wider text-muted-text font-semibold">Audit Result</span>
+                        <div className="flex items-center justify-between">
+                          <span className={cn("text-base font-bold", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
                             {a.scorePercentage}%
                           </span>
-                          <span className="text-[11px] font-normal text-muted-text/50 tabular-nums">{a.totalScore} / {a.maxPossibleScore}</span>
+                          <span className="text-xs text-muted-text">{a.totalScore} / {a.maxPossibleScore} pts</span>
                         </div>
-                      ) : (
-                        <span className="text-[14px] font-normal text-muted-text">Pending</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="px-4 py-3">
-                      {(a.status === 'published' || a.status === 'assigned') && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4 opacity-50" /></Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-48 p-1.5 rounded-xl border-muted/20 shadow-xl">
-                            <DropdownMenuItem
-                              className="rounded-lg h-10 font-medium cursor-pointer focus:bg-primary/5 focus:text-primary transition-all text-body"
-                              onClick={() => {
-                                setEditingAuditId(a.id);
-                                setFormData({
-                                  templateId: a.templateId,
-                                  locationId: a.locationId,
-                                  managerId: a.assignedManagerId || '',
-                                  scheduledDate: a.scheduledDate?.toDate(),
-                                  deadline: a.deadline?.toDate(),
-                                  isSurprise: a.isSurprise || false,
-                                  recurring: a.recurring || 'none',
-                                  recurringDay: a.recurringDay || 1,
-                                  repeatUntil: a.repeatUntil?.toDate() || undefined,
-                                });
-                                setOpen(true);
-                              }}
-                            >
-                              <Pencil className="mr-2 h-4 w-4" /> Edit
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
-                    </TableCell>
-                    </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-          </Table>
-        </Card>
+                      </div>
+                    )}
+                  </div>
+                </MobileCardContent>
+
+                {/* Mobile Overflow Menu */}
+                {(a.status === 'published' || a.status === 'assigned') && (
+                  <div className="absolute top-2 right-2">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-text">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuItem 
+                          onClick={() => {
+                            setEditingAuditId(a.id);
+                            setFormData({
+                              templateId: a.templateId,
+                              locationId: a.locationId,
+                              managerId: a.assignedManagerId || '',
+                              scheduledDate: a.scheduledDate?.toDate(),
+                              deadline: a.deadline?.toDate(),
+                              isSurprise: a.isSurprise || false,
+                              recurring: a.recurring || 'none',
+                              recurringDay: a.recurringDay || 1,
+                              repeatUntil: a.repeatUntil?.toDate() || undefined,
+                            });
+                            setOpen(true);
+                          }}
+                        >
+                          <Pencil className="mr-2 h-4 w-4" /> Edit Audit
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                )}
+              </MobileCard>
+            ))
+          )}
+        </div>
       </div>
     </DashboardShell>
   );

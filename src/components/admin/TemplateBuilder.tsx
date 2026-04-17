@@ -35,9 +35,10 @@ interface TemplateBuilderProps {
 }
 
 export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
-  const { isSynced } = useAuthSync();
+  // orgId and uid come from Firebase ID token claims via AuthProvider —
+  // these are always authoritative and do not depend on the session cookie.
+  const { isSynced, uid, orgId } = useAuthSync();
   const router = useRouter();
-  const [session, setSession] = useState<{ orgId: string, uid: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(!!templateId);
   const [error, setError] = useState('');
@@ -48,20 +49,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
   const [expandedQuestion, setExpandedQuestion] = useState<string | undefined>();
 
   useEffect(() => {
-    if (!isSynced) return;
-    const match = document.cookie.match(/audiment_session=([^;]+)/);
-    if (match) {
-      try {
-        const data = JSON.parse(decodeURIComponent(match[1]));
-        setSession({ orgId: data.organizationId, uid: data.uid });
-      } catch (e) {
-        console.error('Failed to parse session cookie', e);
-      }
-    }
-  }, [isSynced]);
-
-  useEffect(() => {
-    if (!isSynced || !templateId || !session?.orgId) return;
+    if (!isSynced || !templateId || !orgId) return;
 
     const loadTemplate = async () => {
       setFetching(true);
@@ -98,7 +86,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
     };
 
     loadTemplate();
-  }, [templateId, session, isSynced]);
+  }, [templateId, orgId, isSynced]);
 
   const moveQuestion = (index: number, direction: 'up' | 'down') => {
     if (direction === 'up' && index === 0) return;
@@ -146,7 +134,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
   };
 
   const saveTemplate = async () => {
-    if (!title.trim() || questions.length === 0 || !session?.orgId) {
+    if (!title.trim() || questions.length === 0 || !orgId) {
       setError('Title and at least 1 question required.');
       return;
     }
@@ -174,11 +162,11 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
       } else {
         tRef = doc(collection(db, 'auditTemplates'));
         batch.set(tRef, {
-          organizationId: session.orgId,
+          organizationId: orgId,
           title,
           category,
           isActive: true,
-          createdBy: session.uid,
+          createdBy: uid,
           createdAt: serverTimestamp(),
         });
       }
@@ -233,47 +221,49 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-
-      {/* ── Sticky Top Bar ── */}
-      <div className="sticky top-0 z-50 -mx-6 -mt-8 px-6 py-4 bg-background/95 backdrop-blur-xl border-b border-border/50 flex items-center justify-between">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-4">
-            <button onClick={() => router.back()} className="text-muted-text hover:text-primary transition-colors flex items-center">
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-            <div className="h-5 w-[1px] bg-border/80"></div>
-            <h1 className="text-xl font-semibold text-heading">
-              {templateId ? (title || 'Edit Template') : (title || 'New Template')}
-            </h1>
-          </div>
+    <div className="flex flex-col gap-6">      {/* ── Sticky Top Bar ── */}
+      <div className="sticky top-0 z-50 -mx-4 md:-mx-6 -mt-6 md:-mt-8 px-4 md:px-6 py-3 md:py-4 bg-background/95 backdrop-blur-xl border-b border-border/50 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-0">
+        <div className="flex items-center gap-3">
+          <button onClick={() => router.back()} className="h-9 w-9 flex items-center justify-center rounded-full text-muted-text hover:bg-muted/10 transition-colors">
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <div className="h-5 w-[1px] bg-border/80 hidden md:block"></div>
+          <h1 className="text-lg md:text-xl font-bold text-heading truncate pr-2">
+            {templateId ? (title || 'Edit Template') : (title || 'New Template')}
+          </h1>
         </div>
 
-        <div className="flex items-center gap-3">
-          {error && (
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-destructive/5 border border-destructive/20 rounded-lg text-destructive text-sm font-normal animate-in slide-in-from-right">
-              <AlertCircle className="h-4 w-4 shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-            className="h-11 px-4 font-medium text-muted-text hover:text-foreground"
-          >
-            Discard
-          </Button>
-          <Button
-            onClick={saveTemplate}
-            disabled={loading}
-            className="h-11 px-5 font-medium shadow-lg shadow-primary/20 gap-2 active:scale-95 transition-all"
-          >
-            {loading
-              ? <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-              : <Save className="h-4 w-4" />
-            }
-            {loading ? 'Saving...' : 'Save Template'}
-          </Button>
+        <div className="flex items-center justify-between md:justify-end gap-2 w-full md:w-auto">
+          <div className="flex-1 md:flex-none flex items-center gap-2">
+            {error && (
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-destructive/5 border border-destructive/20 rounded-md text-destructive text-[11px] font-medium md:animate-in md:slide-in-from-right max-w-[150px] md:max-w-none truncate">
+                <AlertCircle className="h-3 w-3 shrink-0" />
+                <span className="truncate">{error}</span>
+              </div>
+            )}
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.back()}
+              className="h-10 px-3 font-semibold text-muted-text hover:text-foreground text-xs md:text-sm"
+            >
+              Discard
+            </Button>
+            <Button
+              size="sm"
+              onClick={saveTemplate}
+              disabled={loading}
+              className="h-10 px-4 md:px-5 font-bold shadow-lg shadow-primary/20 gap-2 active:scale-95 transition-all text-xs md:text-sm"
+            >
+              {loading
+                ? <div className="h-3 w-3 md:h-4 md:w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                : <Save className="h-4 w-4" />
+              }
+              {loading ? 'Saving...' : 'Save Template'}
+            </Button>
+          </div>
         </div>
       </div>
 

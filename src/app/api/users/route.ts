@@ -1,12 +1,18 @@
 import { NextResponse } from 'next/server';
 import { adminAuth, adminDb } from '@/lib/firebase-admin';
 import { getPostHogClient } from '@/lib/posthog-server';
+import { getCallerInfo, unauthorized, forbidden } from '@/lib/auth-server';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-// POST: Create a new user
+// POST: Create a new user — Admin only
 export async function POST(req: Request) {
+  // ── Security: verify caller is an Admin ────────────────────────────────────
+  const caller = await getCallerInfo(req);
+  if (!caller) return unauthorized();
+  if (caller.role !== 'admin') return forbidden();
+
   try {
     const body = await req.json();
     const { email, password, role, name, organizationId, managerId } = body;
@@ -20,6 +26,11 @@ export async function POST(req: Request) {
 
     if (missing.length > 0) {
       return NextResponse.json({ error: `Missing required fields: ${missing.join(', ')}` }, { status: 400 });
+    }
+
+    // Prevent creating users in a different organization
+    if (organizationId !== caller.organizationId) {
+      return forbidden();
     }
 
     const userRecord = await adminAuth.createUser({
@@ -69,14 +80,28 @@ export async function POST(req: Request) {
   }
 }
 
-// PATCH: Update a user
+// PATCH: Update a user — Admin only
 export async function PATCH(req: Request) {
+  // ── Security: verify caller is an Admin ────────────────────────────────────
+  const caller = await getCallerInfo(req);
+  if (!caller) return unauthorized();
+  if (caller.role !== 'admin') return forbidden();
+
   try {
     const body = await req.json();
     const { uid, name, role, managerId, hasFlashmobAccess, isActive } = body;
 
     if (!uid) {
       return NextResponse.json({ error: 'Missing user UID' }, { status: 400 });
+    }
+
+    // Ensure the target user belongs to the caller's organization
+    const targetDoc = await adminDb.collection('users').doc(uid).get();
+    if (!targetDoc.exists) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+    if (targetDoc.data()?.organizationId !== caller.organizationId) {
+      return forbidden();
     }
 
     // 1. Update Auth displayName if name changed
@@ -115,8 +140,13 @@ export async function PATCH(req: Request) {
   }
 }
 
-// DELETE: Permanent deletion
+// DELETE: Permanent deletion — Admin only
 export async function DELETE(req: Request) {
+  // ── Security: verify caller is an Admin ────────────────────────────────────
+  const caller = await getCallerInfo(req);
+  if (!caller) return unauthorized();
+  if (caller.role !== 'admin') return forbidden();
+
   try {
     const { searchParams } = new URL(req.url);
     const uid = searchParams.get('uid');
@@ -125,9 +155,18 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: 'Missing user UID' }, { status: 400 });
     }
 
-    // Always prevent deleting the root admin user safely or checking role
+    // Prevent deleting the root admin user safely or checking role
     const userDoc = await adminDb.collection('users').doc(uid).get();
-    if (userDoc.exists && userDoc.data()?.role === 'ADMIN') {
+    if (!userDoc.exists) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Ensure target belongs to the same organization
+    if (userDoc.data()?.organizationId !== caller.organizationId) {
+      return forbidden();
+    }
+
+    if (userDoc.data()?.role === 'ADMIN') {
       return NextResponse.json({ error: 'Cannot delete admin account' }, { status: 403 });
     }
 

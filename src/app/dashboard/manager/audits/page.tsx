@@ -54,6 +54,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { Switch } from '@/components/ui/switch';
 import { format } from 'date-fns';
+import Link from 'next/link';
+import { MobileCard, MobileCardHeader, MobileCardTitle, MobileCardDescription, MobileCardContent, MobileCardFooter } from '@/components/mobile/MobileCard';
 
 export default function ManagerAuditsPage() {
   const { isSynced, uid, orgId } = useAuthSync();
@@ -565,158 +567,241 @@ export default function ManagerAuditsPage() {
         </div>
       </div>
 
-      <Card className="standard-card">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader className="standard-table-header">
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="w-[50px] pl-6">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-border"
-                    checked={selectedAuditIds.length === filteredAudits.filter(a => !a.status || a.status === 'published' || a.status === 'assigned').length && filteredAudits.length > 0}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedAuditIds(filteredAudits.filter(a => !a.status || a.status === 'published' || a.status === 'assigned').map(a => a.id));
-                      } else {
-                        setSelectedAuditIds([]);
-                      }
-                    }}
-                  />
-                </TableHead>
-                <TableHead className="standard-table-head">Template</TableHead>
-                <TableHead className="standard-table-head">Location</TableHead>
-                <TableHead className="standard-table-head">Deadline</TableHead>
-                <TableHead className="standard-table-head">Status</TableHead>
-                <TableHead className="standard-table-head">Assignee</TableHead>
-                <TableHead className="standard-table-head text-right pr-6">Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredAudits.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="standard-table-cell h-32 text-center text-muted-text">
-                    No audits found matching your criteria.
-                  </TableCell>
+      {/* Desktop Table View */}
+      <div className="hidden md:block">
+        <Card className="standard-card">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader className="standard-table-header">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="w-[50px] pl-6">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-border"
+                      checked={selectedAuditIds.length === filteredAudits.filter(a => !a.status || a.status === 'published' || a.status === 'assigned').length && filteredAudits.length > 0}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedAuditIds(filteredAudits.filter(a => !a.status || a.status === 'published' || a.status === 'assigned').map(a => a.id));
+                        } else {
+                          setSelectedAuditIds([]);
+                        }
+                      }}
+                    />
+                  </TableHead>
+                  <TableHead className="standard-table-head">Template</TableHead>
+                  <TableHead className="standard-table-head">Location</TableHead>
+                  <TableHead className="standard-table-head">Deadline</TableHead>
+                  <TableHead className="standard-table-head">Status</TableHead>
+                  <TableHead className="standard-table-head">Assignee</TableHead>
+                  <TableHead className="standard-table-head text-right pr-6">Action</TableHead>
                 </TableRow>
-              ) : (
-                filteredAudits.map((a) => (
-                  <TableRow key={a.id} className={cn("standard-table-row group", selectedAuditIds.includes(a.id) && "bg-primary/5")}>
-                    <TableCell className="pl-6">
-                      <input
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-border"
-                        checked={selectedAuditIds.includes(a.id)}
-                        disabled={a.status && a.status !== 'published' && a.status !== 'assigned'}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedAuditIds(prev => [...prev, a.id]);
-                          } else {
-                            setSelectedAuditIds(prev => prev.filter(id => id !== a.id));
-                          }
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell className="standard-table-cell">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
-                        {a.recurring && a.recurring !== 'none' && (
-                          <div className="h-5 rounded-full bg-primary/10 text-primary px-2 flex items-center gap-1 w-fit text-[11px] font-normal capitalize shrink-0">
-                            <span>{a.recurring}</span>
-                          </div>
-                        )}
-                      </div>
-                      {a.isSurprise && (
-                        <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-warning font-medium">
-                          <span>Surprise</span>
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell className="standard-table-cell">
-                      <span className="text-[14px] font-normal text-body">{a.locationName}</span>
-                    </TableCell>
-                    <TableCell className="standard-table-cell">
-                      <span className="text-[13px] font-normal text-muted-text">
-                        {a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                      </span>
-                    </TableCell>
-                    <TableCell className="standard-table-cell">{getStatusBadge(a.status)}</TableCell>
-                    <TableCell className="standard-table-cell">
-                      {a.assignedAuditorId ? (
-                        <span className="text-[14px] font-normal text-body">
-                          {auditors.find(aud => aud.id === a.assignedAuditorId)?.name || 'Assigned'}
-                        </span>
-                      ) : (
-                        <span className="text-[13px] font-normal text-muted-text/60 italic">Unassigned</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="standard-table-cell text-right pr-6">
-                      {(!a.status || a.status.toLowerCase() !== 'completed') && (
-                        <Dialog open={open && selectedAudit?.id === a.id} onOpenChange={(val) => {
-                          if (!val) {
-                            setOpen(false);
-                            setSelectedAudit(null);
-                          }
-                        }}>
-                          <DialogTrigger asChild>
-                            <Button variant="default" size="sm" className={cn(
-                              "h-8 text-xs font-medium shadow-sm transition-all",
-                              a.assignedAuditorId ? "bg-muted hover:bg-muted/80 text-muted-foreground shadow-none" : ""
-                            )} onClick={() => {
-                              setSelectedAudit(a);
-                              setOpen(true);
-                            }}>
-                              <UserPlus className="h-3.5 w-3.5 mr-1.5" />
-                              {a.assignedAuditorId ? 'Reassign' : 'Assign auditor'}
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-[450px]">
-                            <DialogHeader>
-                              <DialogTitle className="font-semibold text-heading">
-                                {a.assignedAuditorId ? 'Reassign auditor' : 'Assign auditor'}
-                              </DialogTitle>
-                              <DialogDescription className="text-muted-text text-sm">
-                                Assigning <strong className="text-heading font-medium">{a.templateTitle}</strong> to {a.locationName}
-                              </DialogDescription>
-                            </DialogHeader>
-                            <div className="space-y-4 py-4">
-                              <div className="space-y-2">
-                                <Label className="text-body font-normal">Select auditor</Label>
-                                <Select value={selectedAuditor} onValueChange={setSelectedAuditor}>
-                                  <SelectTrigger className="h-10 text-body bg-background border-border/50">
-                                    <SelectValue placeholder="Choose an auditor" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {auditors.map(aud => (
-                                      <SelectItem key={aud.id} value={aud.id}>{aud.name}</SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                            </div>
-                            <DialogFooter>
-                              <Button variant="outline" onClick={() => setOpen(false)} className="font-normal text-sm">Cancel</Button>
-                              <Button onClick={handleAssign} disabled={loading || !selectedAuditor} className="font-normal text-sm">
-                                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Assign
-                              </Button>
-                            </DialogFooter>
-                          </DialogContent>
-                        </Dialog>
-                      )}
-                      {a.status === 'completed' && (
-                        <Button size="sm" variant="ghost" className="h-8 text-[11px] font-normal text-muted-text hover:text-primary">
-                          Review report
-                        </Button>
-                      )}
+              </TableHeader>
+              <TableBody>
+                {filteredAudits.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="standard-table-cell h-32 text-center text-muted-text">
+                      No audits found matching your criteria.
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </Card>
+                ) : (
+                  filteredAudits.map((a) => (
+                    <TableRow key={a.id} className={cn("standard-table-row group", selectedAuditIds.includes(a.id) && "bg-primary/5")}>
+                      <TableCell className="pl-6">
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 rounded border-border"
+                          checked={selectedAuditIds.includes(a.id)}
+                          disabled={a.status && a.status !== 'published' && a.status !== 'assigned'}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedAuditIds(prev => [...prev, a.id]);
+                            } else {
+                              setSelectedAuditIds(prev => prev.filter(id => id !== a.id));
+                            }
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell className="standard-table-cell">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
+                          {a.recurring && a.recurring !== 'none' && (
+                            <div className="h-5 rounded-full bg-primary/10 text-primary px-2 flex items-center gap-1 w-fit text-[11px] font-normal capitalize shrink-0">
+                              <span>{a.recurring}</span>
+                            </div>
+                          )}
+                        </div>
+                        {a.isSurprise && (
+                          <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-warning font-medium">
+                            <span>Surprise</span>
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell className="standard-table-cell">
+                        <span className="text-[14px] font-normal text-body">{a.locationName}</span>
+                      </TableCell>
+                      <TableCell className="standard-table-cell">
+                        <span className="text-[13px] font-normal text-muted-text">
+                          {a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
+                      </TableCell>
+                      <TableCell className="standard-table-cell">{getStatusBadge(a.status)}</TableCell>
+                      <TableCell className="standard-table-cell">
+                        {a.assignedAuditorId ? (
+                          <span className="text-[14px] font-normal text-body">
+                            {auditors.find(aud => aud.id === a.assignedAuditorId)?.name || 'Assigned'}
+                          </span>
+                        ) : (
+                          <span className="text-[13px] font-normal text-muted-text/60 italic">Unassigned</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="standard-table-cell text-right pr-6">
+                        {(!a.status || a.status.toLowerCase() !== 'completed') && (
+                          <Dialog open={open && selectedAudit?.id === a.id} onOpenChange={(val) => {
+                            if (!val) {
+                              setOpen(false);
+                              setSelectedAudit(null);
+                            }
+                          }}>
+                            <DialogTrigger asChild>
+                              <Button variant="default" size="sm" className={cn(
+                                "h-8 text-xs font-medium shadow-sm transition-all",
+                                a.assignedAuditorId ? "bg-muted hover:bg-muted/80 text-muted-foreground shadow-none" : ""
+                              )} onClick={() => {
+                                setSelectedAudit(a);
+                                setOpen(true);
+                              }}>
+                                <UserPlus className="h-3.5 w-3.5 mr-1.5" />
+                                {a.assignedAuditorId ? 'Reassign' : 'Assign auditor'}
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[450px]">
+                              <DialogHeader>
+                                <DialogTitle className="font-semibold text-heading">
+                                  {a.assignedAuditorId ? 'Reassign auditor' : 'Assign auditor'}
+                                </DialogTitle>
+                                <DialogDescription className="text-muted-text text-sm">
+                                  Assigning <strong className="text-heading font-medium">{a.templateTitle}</strong> to {a.locationName}
+                                </DialogDescription>
+                              </DialogHeader>
+                              <div className="space-y-4 py-4">
+                                <div className="space-y-2">
+                                  <Label className="text-body font-normal">Select auditor</Label>
+                                  <Select value={selectedAuditor} onValueChange={setSelectedAuditor}>
+                                    <SelectTrigger className="h-10 text-body bg-background border-border/50">
+                                      <SelectValue placeholder="Choose an auditor" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {auditors.map(aud => (
+                                        <SelectItem key={aud.id} value={aud.id}>{aud.name}</SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+                              <DialogFooter>
+                                <Button variant="outline" onClick={() => setOpen(false)} className="font-normal text-sm">Cancel</Button>
+                                <Button onClick={handleAssign} disabled={loading || !selectedAuditor} className="font-normal text-sm">
+                                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                  Assign
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                        )}
+                        {a.status === 'completed' && (
+                          <Button size="sm" variant="ghost" className="h-8 text-[11px] font-normal text-muted-text hover:text-primary" asChild>
+                            <Link href={`/dashboard/manager/reports/${a.id}`}>
+                              Review report
+                            </Link>
+                          </Button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </Card>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="flex md:hidden flex-col gap-3">
+        {filteredAudits.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-4 py-12">
+            <div className="bg-muted/10 p-4 rounded-full">
+              <CheckSquare className="h-8 w-8 opacity-20" />
+            </div>
+            <p className="page-heading opacity-40">No audits found.</p>
+          </div>
+        ) : (
+          filteredAudits.map((a) => (
+            <MobileCard key={a.id} className="relative overflow-hidden">
+              <MobileCardHeader>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1">
+                    <MobileCardTitle>{a.templateTitle}</MobileCardTitle>
+                    <MobileCardDescription className="flex items-center gap-1.5 mt-1">
+                      <MapPin className="h-3 w-3 opacity-50" />
+                      {a.locationName}
+                    </MobileCardDescription>
+                  </div>
+                  {getStatusBadge(a.status)}
+                </div>
+              </MobileCardHeader>
+
+              <MobileCardContent>
+                <div className="grid grid-cols-2 gap-y-3 gap-x-2 mt-1">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] uppercase tracking-wider text-muted-text font-semibold">Deadline</span>
+                    <span className="text-xs font-medium text-heading">
+                      {a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-1 items-end">
+                    <span className="text-[10px] uppercase tracking-wider text-muted-text font-semibold">Assignee</span>
+                    <span className="text-xs font-medium text-heading truncate max-w-[120px]">
+                      {a.assignedAuditorId ? (
+                        auditors.find(aud => aud.id === a.assignedAuditorId)?.name || 'Assigned'
+                      ) : (
+                        <span className="italic opacity-50">Unassigned</span>
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </MobileCardContent>
+
+              <MobileCardFooter className="mt-3">
+                {(!a.status || a.status.toLowerCase() !== 'completed') ? (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full h-9 text-xs font-semibold"
+                    onClick={() => {
+                      setSelectedAudit(a);
+                      setOpen(true);
+                    }}
+                  >
+                    <UserPlus className="h-3.5 w-3.5 mr-2" />
+                    {a.assignedAuditorId ? 'Reassign' : 'Assign Auditor'}
+                  </Button>
+                ) : (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full h-9 text-xs font-semibold" 
+                    asChild
+                  >
+                    <Link href={`/dashboard/manager/reports/${a.id}`}>
+                      View Report
+                    </Link>
+                  </Button>
+                )}
+              </MobileCardFooter>
+            </MobileCard>
+          ))
+        )}
+      </div>
       {/* Bulk Assign Dialog */}
       <Dialog open={bulkDialogOpen} onOpenChange={setBulkDialogOpen}>
         <DialogContent className="sm:max-w-[450px]">

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
+import { getCallerInfo, unauthorized } from '@/lib/auth-server';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -11,7 +12,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// POST: Upload a file — any authenticated user (auditor, manager, admin)
 export async function POST(request: Request) {
+  // ── Security: verify caller is authenticated ───────────────────────────────
+  const caller = await getCallerInfo(request);
+  if (!caller) return unauthorized();
+
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;

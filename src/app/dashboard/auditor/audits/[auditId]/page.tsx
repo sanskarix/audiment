@@ -52,6 +52,8 @@ import {
   UploadCloud,
   FlipHorizontal,
   MapPin,
+  Plus,
+  FileText
 } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from '@/lib/utils';
@@ -621,39 +623,48 @@ export default function AuditExecutionPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background overflow-x-hidden">
       {/* Header with Progress Bar */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl px-6 py-4 shadow-sm">
+      <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl px-4 md:px-6 py-3 md:py-4 shadow-sm">
         <div className="mx-auto max-w-2xl w-full">
-          <div className="flex items-center justify-between mb-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                if (hasUnsavedChanges) {
-                  setShowExitDialog(true);
-                } else {
-                  router.push('/dashboard/auditor');
-                }
-              }}
-              className="gap-2 font-medium text-muted-text hover:text-destructive hover:bg-destructive/10 text-xs tracking-tight p-0 h-auto"
-            >
-              <ChevronLeft className="h-4 w-4" /> Back
-            </Button>
-            <div className="text-center">
-              <p className="text-sm font-semibold text-heading">
-                Question {currentIndex + 1} <span className="text-muted-text/40 font-normal">of {questions.length}</span>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex flex-col">
+              <p className="text-[10px] md:text-[11px] font-bold text-muted-text/60 uppercase tracking-widest truncate max-w-[150px] md:max-w-none">
+                {audit?.templateTitle} • {audit?.locationName}
               </p>
+              <h1 className="text-sm md:text-base font-bold text-heading">
+                Step {currentIndex + 1} <span className="text-muted-text/40 font-normal">of {questions.length}</span>
+              </h1>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => saveProgress(false)}
-              disabled={saving}
-              className="h-8 px-3 gap-2 font-medium text-xs border-primary/20 text-primary hover:bg-primary/5 active:scale-95"
-            >
-              {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <UploadCloud className="h-3.5 w-3.5" />} Save
-            </Button>
+            
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => saveProgress(false)}
+                disabled={saving}
+                className="h-8 px-2 md:px-3 text-primary hover:bg-primary/5 font-semibold text-xs transition-all"
+              >
+                {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <UploadCloud className="h-3.5 w-3.5 mr-1" />}
+                <span className="hidden md:inline">Save progress</span>
+                <span className="md:hidden">Save</span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  if (hasUnsavedChanges) {
+                    setShowExitDialog(true);
+                  } else {
+                    router.push('/dashboard/auditor');
+                  }
+                }}
+                className="h-8 w-8 md:w-auto md:px-3 p-0 text-muted-text hover:text-destructive hover:bg-destructive/5"
+              >
+                <X className="h-4 w-4 md:mr-1" />
+                <span className="hidden md:inline">Exit</span>
+              </Button>
+            </div>
           </div>
-          <div className="relative h-1.5 w-full bg-muted rounded-full overflow-hidden">
+          <div className="relative h-1 w-full bg-muted rounded-full overflow-hidden">
             <div
               className="absolute top-0 left-0 h-full bg-primary transition-all duration-500 ease-out"
               style={{ width: `${progressValue}%` }}
@@ -662,70 +673,72 @@ export default function AuditExecutionPage() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col justify-center px-6 py-8 max-w-2xl mx-auto w-full">
-        <div className="space-y-8">
-          <div className="space-y-4">
+      <main className="flex-1 flex flex-col px-4 md:px-6 py-6 md:py-12 max-w-2xl mx-auto w-full">
+        <div className="flex-1 flex flex-col justify-center space-y-8 md:space-y-12">
+          <div className="space-y-4 md:space-y-6">
             <div className="flex items-center gap-2">
               <Badge
                 variant={currentQuestion.severity === 'critical' ? 'destructive' : 'secondary'}
                 className={cn(
-                  "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5",
+                  "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md",
                   currentQuestion.severity !== 'critical' && "bg-muted text-muted-text"
                 )}
               >
                 {currentQuestion.severity}
               </Badge>
               {currentQuestion.requiresPhoto && (
-                <Badge variant="outline" className="text-[10px] font-bold text-warning border-warning/30 bg-warning/5 tracking-wider px-2 py-0.5">
+                <Badge variant="outline" className="text-[10px] font-bold text-amber-600 border-amber-200 bg-amber-50 tracking-wider px-2 py-0.5 rounded-md">
                   PHOTO REQUIRED
                 </Badge>
               )}
             </div>
-            <h2 className="text-xl md:text-2xl font-bold text-heading leading-tight mb-6">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-heading leading-tight">
               {currentQuestion.questionText}
             </h2>
           </div>
 
-          <div className="space-y-10">
+          <div className="space-y-8 md:space-y-12">
             {/* Question Input */}
-            <div>
+            <div className="w-full">
               {currentQuestion.questionType === 'yes_no' ? (
-                <div className="flex gap-3 w-full">
+                <div className="flex flex-col sm:flex-row gap-4 w-full">
                   <Button
                     variant={currentResponse?.answer === 'yes' ? 'default' : 'outline'}
                     className={cn(
-                      "flex-1 h-14 text-lg font-semibold rounded-xl border-2 transition-all",
+                      "flex-1 h-16 md:h-20 text-xl font-bold rounded-2xl border-2 transition-all active:scale-[0.97]",
                       currentResponse?.answer === 'yes'
-                        ? "bg-success hover:bg-success/90 text-success-foreground border-success shadow-lg active:scale-95"
-                        : "hover:bg-success/5 border-border active:scale-95"
+                        ? "bg-success hover:bg-success/90 text-success-foreground border-success shadow-lg shadow-success/20"
+                        : "hover:bg-success/5 border-border text-muted-text"
                     )}
                     onClick={() => handleAnswer('yes', 1)}
-                  >
+                   >
+                    <CheckCircle2 className={cn("mr-2 h-6 w-6", currentResponse?.answer === 'yes' ? "opacity-100" : "opacity-20")} />
                     Yes
                   </Button>
                   <Button
                     variant={currentResponse?.answer === 'no' ? 'default' : 'outline'}
                     className={cn(
-                      "flex-1 h-14 text-lg font-semibold rounded-xl border-2 transition-all",
+                      "flex-1 h-16 md:h-20 text-xl font-bold rounded-2xl border-2 transition-all active:scale-[0.97]",
                       currentResponse?.answer === 'no'
-                        ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground border-destructive shadow-lg active:scale-95"
-                        : "hover:bg-destructive/5 border-border active:scale-95"
+                        ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground border-destructive shadow-lg shadow-destructive/20"
+                        : "hover:bg-destructive/5 border-border text-muted-text"
                     )}
                     onClick={() => handleAnswer('no', 0)}
                   >
+                    <X className={cn("mr-2 h-6 w-6", currentResponse?.answer === 'no' ? "opacity-100" : "opacity-20")} />
                     No
                   </Button>
                 </div>
               ) : (
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-5 gap-2 md:gap-3">
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                     <Button
                       key={num}
                       variant={currentResponse?.score === num ? 'default' : 'outline'}
                       className={cn(
-                        "w-10 h-10 p-0 font-bold text-sm transition-all rounded-lg active:scale-95",
+                        "h-12 md:h-14 p-0 font-bold text-lg transition-all rounded-xl active:scale-95",
                         currentResponse?.score === num
-                          ? "bg-primary text-primary-foreground shadow-md"
+                          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
                           : "hover:bg-primary/10 hover:border-primary/30 text-muted-text"
                       )}
                       onClick={() => handleAnswer(num.toString(), num)}
@@ -737,55 +750,67 @@ export default function AuditExecutionPage() {
               )}
             </div>
 
-            {/* Photo Attachment Area */}
-            <div className="mt-6 pt-6 border-t border-border/50">
-              <div className="flex items-center justify-between mb-4">
-                <Label className="text-sm font-semibold text-heading flex items-center gap-2">
-                  <ImageIcon className="h-4 w-4 opacity-70" /> Photos
-                </Label>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={openCamera}
-                  disabled={!!uploading}
-                  className="h-9 gap-2 font-semibold text-xs border-primary/20 text-primary hover:bg-primary/5 active:scale-95"
-                >
-                  {uploading ? <Loader2 className="h-4 w-4 animate-spin text-primary" /> : <Camera className="h-4 w-4 text-primary" />}
-                  {uploading ? 'Uploading…' : 'Take Photo'}
-                </Button>
-              </div>
+            {/* Photo & Notes Group */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pt-8 border-t border-border/50">
+              {/* Photo Attachment Area */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs font-bold text-muted-text uppercase tracking-widest flex items-center gap-2">
+                    <Camera className="h-3.5 w-3.5" /> Evidence photos
+                  </Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={openCamera}
+                    disabled={!!uploading}
+                    className="h-8 md:h-9 px-3 gap-2 font-bold text-xs text-primary hover:bg-primary/5 rounded-full"
+                  >
+                    {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
+                    Add photo
+                  </Button>
+                </div>
 
-              {isPhotoRequired && !hasPhoto && (
-                <p className="text-xs font-semibold text-destructive mb-4 animate-pulse">
-                  * Evidence photo is required for this question.
-                </p>
-              )}
-
-              <div className="flex flex-wrap gap-3">
-                {currentResponse?.photoUrls.map((url, i) => (
-                  <div key={i} className="group relative w-20 h-20 rounded-xl overflow-hidden border border-border/50 bg-muted/30">
-                    <Image src={url} alt="Evidence" width={80} height={80} className="h-full w-full object-cover" unoptimized />
-                    <button
-                      onClick={() => removePhoto(url)}
-                      className="absolute right-1 top-1 rounded-full bg-destructive shadow-lg p-1 text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
+                {isPhotoRequired && !hasPhoto && (
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/5 border border-destructive/10 text-destructive animate-pulse">
+                    <AlertCircle className="h-4 w-4" />
+                    <span className="text-[11px] font-bold uppercase tracking-tight">Photo evidence required</span>
                   </div>
-                ))}
-              </div>
-            </div>
+                )}
 
-            {/* Notes Area */}
-            <div className="mt-4 space-y-3">
-              <Label className="text-sm font-semibold text-heading">Notes</Label>
-              <Textarea
-                placeholder="Observed discrepancies, context or details..."
-                value={currentResponse?.notes || ''}
-                onChange={(e) => handleNoteChange(e.target.value)}
-                className="min-h-[100px] border-border/50 bg-muted/5 focus:bg-background transition-all rounded-xl text-body text-[14px]"
-              />
+                <div className="flex flex-wrap gap-3">
+                  {currentResponse?.photoUrls.map((url, i) => (
+                    <div key={i} className="group relative w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border border-border/50 shadow-sm">
+                      <Image src={url} alt="Evidence" width={80} height={80} className="h-full w-full object-cover" unoptimized />
+                      <button
+                        onClick={() => removePhoto(url)}
+                        className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-all"
+                      >
+                        <X className="h-5 w-5 text-white" />
+                      </button>
+                    </div>
+                  ))}
+                  <button 
+                    onClick={openCamera}
+                    className="w-16 h-16 md:w-20 md:h-20 rounded-xl border-2 border-dashed border-muted flex items-center justify-center text-muted-text/40 hover:text-primary/40 hover:border-primary/20 transition-all"
+                  >
+                    <Plus className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Notes Area */}
+              <div className="space-y-4">
+                <Label className="text-xs font-bold text-muted-text uppercase tracking-widest flex items-center gap-2">
+                  <FileText className="h-3.5 w-3.5" /> Additional notes
+                </Label>
+                <Textarea
+                  placeholder="Describe what you see..."
+                  value={currentResponse?.notes || ''}
+                  onChange={(e) => handleNoteChange(e.target.value)}
+                  className="min-h-[100px] md:min-h-[120px] border-border/50 bg-muted/5 focus:bg-background focus:ring-1 focus:ring-primary/20 transition-all rounded-xl text-body text-[14px] resize-none"
+                />
+              </div>
             </div>
           </div>
         </div>

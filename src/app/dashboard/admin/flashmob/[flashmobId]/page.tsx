@@ -1,19 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, User, MapPin, Calendar, Clock, Loader2, Trash2, ShieldCheck, ChevronLeft } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Clock, Loader2, Trash2, ShieldCheck, ExternalLink, User, Video, Camera, History } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { deleteDoc } from 'firebase/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function FlashmobAuditDetailsPage() {
   const params = useParams();
@@ -46,7 +44,7 @@ export default function FlashmobAuditDetailsPage() {
       setConfirmDelete(true);
       return;
     }
-    
+
     setIsDeleting(true);
     try {
       await deleteDoc(doc(db, 'flashmobAudits', params.flashmobId as string));
@@ -60,8 +58,21 @@ export default function FlashmobAuditDetailsPage() {
   if (loading) {
     return (
       <DashboardShell role="admin">
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-text" />
+        <div className="dashboard-page-container max-w-5xl">
+          <div className="flex items-center gap-3 mb-8">
+            <Skeleton className="h-10 w-10 rounded-lg" />
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-32" />
+            </div>
+          </div>
+          <div className="grid gap-6 md:grid-cols-4 mb-8">
+            {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-24 rounded-xl" />)}
+          </div>
+          <div className="grid gap-8 md:grid-cols-3">
+            <Skeleton className="md:col-span-2 aspect-video rounded-xl" />
+            <Skeleton className="aspect-[3/4] rounded-xl" />
+          </div>
         </div>
       </DashboardShell>
     );
@@ -70,107 +81,143 @@ export default function FlashmobAuditDetailsPage() {
   if (!audit) {
     return (
       <DashboardShell role="admin">
-        <div className="text-center py-12">
-          <h2 className="page-heading mb-4">Audit not found</h2>
-          <Link href="/dashboard/admin/flashmob" passHref>
-            <Button>Return to flashmob logs</Button>
+        <div className="dashboard-page-container flex flex-col items-center justify-center py-32 text-center">
+          <div className="h-16 w-16 rounded-2xl bg-muted/30 flex items-center justify-center mb-6">
+            <Video className="h-8 w-8 text-muted-text/30" />
+          </div>
+          <h2 className="section-heading mb-2">Audit record not found</h2>
+          <p className="body-text text-muted-text/60 max-w-xs mb-8">The verification entry you are looking for might have been removed or moved.</p>
+          <Link href="/dashboard/admin/flashmob">
+            <Button variant="outline" className="h-11 px-6 gap-2 border-border/50">
+              <ArrowLeft className="h-4 w-4" /> Back to Dashboard
+            </Button>
           </Link>
         </div>
       </DashboardShell>
     );
   }
 
-  const date = audit.submittedAt?.toDate();
+  const date = audit.submittedAt?.toDate ? audit.submittedAt.toDate() : new Date();
 
   return (
     <DashboardShell role="admin">
-      <div className="dashboard-page-container">
-        <div className="page-header-section flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-4">
-              <Link href="/dashboard/admin/flashmob" className="text-muted-text hover:text-primary transition-colors flex items-center">
-                <ArrowLeft className="h-5 w-5" />
-              </Link>
-              <div className="h-5 w-[1px] bg-border/80"></div>
-              <h1 className="text-xl font-semibold text-heading">Flashmob Log</h1>
+      <div className="dashboard-page-container max-w-5xl animate-in fade-in slide-in-from-bottom-2 duration-500">
+
+        {/* Header Section */}
+        <div className="page-header-section mb-8">
+          <div className="flex items-center gap-4">
+            <Link
+              href="/dashboard/admin/flashmob"
+              className="h-10 w-10 rounded-xl border border-border/50 flex items-center justify-center text-muted-text hover:text-heading hover:bg-muted/40 transition-all shrink-0 active:scale-95"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+            <div className="h-8 w-px bg-border/40 hidden sm:block" />
+            <div>
+              <h1 className="page-heading truncate max-w-[200px] sm:max-w-md">{audit.locationName || 'Verification Log'}</h1>
+              <p className="muted-label">Verified site check-in • {format(date, 'PPP')}</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Button
-              variant={confirmDelete ? "destructive" : "outline"}
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className={cn("h-11 px-5 gap-2 transition-all active:scale-95", confirmDelete && "animate-in fade-in zoom-in-95")}
-            >
-              {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
-              {confirmDelete ? "Click to confirm deletion" : "Delete Log"}
-            </Button>
-          </div>
+
+          <Button
+            variant={confirmDelete ? "destructive" : "outline"}
+            className={cn(
+              "h-11 px-5 gap-2 border-border/50 active:scale-95 transition-all",
+              confirmDelete && "animate-in zoom-in-95 duration-200"
+            )}
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+            {confirmDelete ? "Confirm Deletion" : "Delete Log"}
+          </Button>
         </div>
 
-        <div className="flex flex-col gap-8">
-          {/* Metadata Card - Redundant Header Removed */}
-          <Card className="standard-card">
-            <CardContent className="p-10">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
-                <div className="flex flex-col gap-1.5">
-                  <p className="text-[11px] font-normal text-muted-text/50 uppercase tracking-widest">Auditor</p>
-                  <p className="text-body flex items-center gap-2.5 font-medium">{audit.auditorName || 'Unknown'}</p>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <p className="text-[11px] font-normal text-muted-text/50 uppercase tracking-widest">Location</p>
-                  <p className="text-body flex items-center gap-2.5 font-medium">{audit.locationName}</p>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <p className="text-[11px] font-normal text-muted-text/50 uppercase tracking-widest">Completed On</p>
-                  <p className="text-body flex items-center gap-2.5 font-medium">{date ? format(date, 'MMMM d, yyyy') : 'N/A'}</p>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <p className="text-[11px] font-normal text-muted-text/50 uppercase tracking-widest">Timestamp</p>
-                  <p className="text-body flex items-center gap-2.5 font-medium">{date ? format(date, 'h:mm:ss a') : 'N/A'}</p>
-                </div>
+        {/* Metadata Strip */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {[
+            { label: 'Auditor', value: audit.auditorName || 'Anonymous', icon: User },
+            { label: 'Site Location', value: audit.locationName || 'Unknown', icon: MapPin },
+            { label: 'Verify Date', value: format(date, 'MMM d, yyyy'), icon: Calendar },
+            { label: 'Timestamp', value: format(date, 'HH:mm:ss'), icon: Clock },
+          ].map((item) => (
+            <div key={item.label} className="standard-card p-5 flex items-start gap-4">
+              <div className="h-10 w-10 rounded-xl bg-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
+                <item.icon className="h-5 w-5 text-primary" />
               </div>
+              <div className="min-w-0">
+                <p className="muted-label text-[10px] uppercase tracking-wider mb-1">{item.label}</p>
+                <p className="body-text font-bold text-heading truncate">{item.value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
 
-              {(audit.latitude && audit.longitude) && (
-                <div className="mt-10 pt-10 border-t border-border/50  flex flex-col md:flex-row md:items-center justify-between gap-6 group">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-full bg-success/10 flex items-center justify-center text-success shrink-0 ring-4 ring-success/5">
-                      <ShieldCheck className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <p className="text-[14px] font-medium text-heading">Geo-location Verified</p>
-                      <p className="text-[13px] text-muted-text/50">Coordinates: {audit.latitude}, {audit.longitude}</p>
-                    </div>
-                  </div>
-                  <Button variant="secondary" className="h-11 px-6 gap-2" onClick={() => window.open(`https://www.google.com/maps?q=${audit.latitude},${audit.longitude}`, '_blank')}>
-                    <MapPin className="h-4 w-4" /> View Map
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+        {/* Geo Verification Banner */}
+        {audit.latitude && audit.longitude && (
+          <div className="standard-card p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 bg-success/5 border-success/20">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-2xl bg-success/10 flex items-center justify-center shrink-0 border border-success/20">
+                <ShieldCheck className="h-6 w-6 text-success" />
+              </div>
+              <div>
+                <h3 className="section-heading text-success">Geo-location Verified</h3>
+                <p className="body-text text-success/70 font-mono tracking-tight">
+                  Coordinates: {audit.latitude.toFixed(6)}, {audit.longitude.toFixed(6)}
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              className="h-11 px-5 gap-2 bg-background border-success/20 hover:bg-success/5 text-success transition-colors"
+              onClick={() => window.open(`https://www.google.com/maps?q=${audit.latitude},${audit.longitude}`, '_blank')}
+            >
+              <MapPin className="h-4 w-4" />
+              View on Map
+              <ExternalLink className="h-3 w-3 opacity-40" />
+            </Button>
+          </div>
+        )}
 
-          <div className="grid gap-8 md:grid-cols-3">
-            <Card className="standard-card md:col-span-2 overflow-hidden">
-               <div className="bg-muted/5 border-b border-border/40 px-8 py-4 flex items-center justify-between">
-                 <h2 className="text-[13px] font-semibold text-heading uppercase tracking-wider">Video Scan</h2>
-                 <p className="text-[11px] text-muted-text/50">UNCUT FIELD EVIDENCE</p>
-               </div>
-               <CardContent className="p-0 bg-black aspect-video flex items-center justify-center relative group">
-                 <video src={audit.videoUrl} controls className="h-full w-full object-contain z-10" />
-                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-               </CardContent>
-            </Card>
+        {/* Media Evidence */}
+        <div className="grid gap-8 md:grid-cols-3">
+          {/* Video Section */}
+          <div className="md:col-span-2 space-y-4">
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-2">
+                <Video className="h-4 w-4 text-primary" />
+                <h3 className="section-heading">Video Evidence</h3>
+              </div>
+              <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[10px] px-2 py-0.5 font-bold uppercase tracking-wider">
+                Unedited Stream
+              </Badge>
+            </div>
+            <div className="standard-card p-0 overflow-hidden bg-black aspect-video ring-1 ring-border/40 shadow-2xl">
+              <video
+                src={audit.videoUrl}
+                controls
+                className="h-full w-full object-contain"
+              />
+            </div>
+          </div>
 
-            <Card className="standard-card overflow-hidden">
-               <div className="bg-muted/5 border-b border-border/40 px-8 py-4">
-                 <h2 className="text-[13px] font-semibold text-heading uppercase tracking-wider">Auditor ID</h2>
-               </div>
-               <CardContent className="p-0 aspect-[3/4] bg-muted relative group overflow-hidden">
-                 <Image src={audit.selfieUrl} alt="Auditor Selfie" width={400} height={533} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-               </CardContent>
-            </Card>
+          {/* Selfie Section */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 px-1">
+              <Camera className="h-4 w-4 text-primary" />
+              <h3 className="section-heading">Identify Verification</h3>
+            </div>
+            <div className="standard-card p-0 overflow-hidden aspect-[3/4] relative group ring-1 ring-border/40 shadow-2xl">
+              <Image
+                src={audit.selfieUrl}
+                alt="Auditor Selfie"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <p className="text-white text-[11px] font-semibold uppercase tracking-widest text-center">Auditor ID Confirmation</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

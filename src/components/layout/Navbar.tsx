@@ -31,76 +31,81 @@ export const Navbar = () => {
             <nav
                 data-state={menuState && 'active'}
                 className="fixed group z-50 w-full px-2 top-0">
-                <div className={cn('mx-auto mt-2 max-w-7xl px-4 transition-all duration-300 lg:px-12', isScrolled && 'bg-background/80 max-w-5xl rounded-2xl border border-border/50 backdrop-blur-lg lg:px-5')}>
-                    <div className="relative flex items-center justify-between py-3 lg:py-4">
-                        <div className="flex items-center gap-8">
-                            <Link href="/" aria-label="home" className="flex items-center space-x-2">
+                <div className={cn('mx-auto mt-2 max-w-7xl px-6 transition-all duration-300 lg:px-12', isScrolled && 'bg-background/50 max-w-5xl rounded-2xl border backdrop-blur-lg lg:px-5')}>
+                    <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
+                        <div className="flex w-full justify-between lg:w-auto">
+                            <Link
+                                href="/"
+                                aria-label="home"
+                                className="flex items-center space-x-2">
                                 <Logo />
                             </Link>
 
-                            <ul className="hidden lg:flex gap-8 text-sm">
+                            <button
+                                onClick={() => setMenuState(!menuState)}
+                                aria-label={menuState == true ? 'Close Menu' : 'Open Menu'}
+                                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden">
+                                <Menu className="group-data-[state=active]:rotate-180 group-data-[state=active]:scale-0 group-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
+                                <X className="group-data-[state=active]:rotate-0 group-data-[state=active]:scale-100 group-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 duration-200" />
+                            </button>
+                        </div>
+
+                        <div className="absolute inset-0 m-auto hidden size-fit lg:block">
+                            <ul className="flex gap-8 text-sm">
                                 {menuItems.map((item, index) => (
                                     <li key={index}>
-                                        <Link href={item.href} className="text-muted-text hover:text-heading transition-colors">
-                                            {item.name}
+                                        <Link
+                                            href={item.href}
+                                            className="text-muted-text hover:text-heading block duration-150">
+                                            <span>{item.name}</span>
                                         </Link>
                                     </li>
                                 ))}
                             </ul>
                         </div>
 
-                        <div className="flex items-center gap-3">
-                            <div className="hidden lg:flex items-center gap-3">
-                                <ThemeToggle />
-                                <Link href="/login" className="text-sm font-medium text-muted-text hover:text-heading px-4">
-                                    Login
-                                </Link>
-                                <Button asChild size="sm" className="rounded-full shadow-lg shadow-primary/20">
-                                    <Link href="#contact">Book a call</Link>
-                                </Button>
-                            </div>
-
-                            <div className="lg:hidden flex items-center gap-2">
-                                <ThemeToggle />
-                                <Button asChild size="sm" className="h-9 px-4 rounded-full text-xs font-bold">
-                                    <Link href="#contact">Book a call</Link>
-                                </Button>
-                                <button
-                                    onClick={() => setMenuState(!menuState)}
-                                    className="p-2 text-muted-text hover:text-heading transition-colors"
-                                    aria-label="Toggle menu"
-                                >
-                                    {menuState ? <X className="size-6" /> : <Menu className="size-6" />}
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Mobile Menu Overlay */}
-                        {menuState && (
-                            <div className="absolute top-full left-0 right-0 mt-2 p-4 bg-background border border-border/50 rounded-3xl shadow-2xl lg:hidden animate-in slide-in-from-top-2 duration-200">
-                                <ul className="space-y-4 mb-6">
+                        <div className="bg-background group-data-[state=active]:block lg:group-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none dark:shadow-none dark:lg:bg-transparent">
+                            <div className="lg:hidden">
+                                <ul className="space-y-6 text-base">
                                     {menuItems.map((item, index) => (
                                         <li key={index}>
                                             <Link
                                                 href={item.href}
-                                                onClick={() => setMenuState(false)}
-                                                className="text-lg font-medium text-heading block py-2 border-b border-border/10"
-                                            >
-                                                {item.name}
+                                                className="text-muted-text hover:text-heading block duration-150">
+                                                <span>{item.name}</span>
                                             </Link>
                                         </li>
                                     ))}
                                 </ul>
-                                <div className="grid grid-cols-2 gap-3">
-                                    <Button variant="outline" asChild className="rounded-2xl h-11 font-bold">
-                                        <Link href="/login" onClick={() => setMenuState(false)}>Login</Link>
-                                    </Button>
-                                    <Button asChild className="rounded-2xl h-11 font-bold shadow-lg shadow-primary/20">
-                                        <Link href="#contact" onClick={() => setMenuState(false)}>Book a call</Link>
-                                    </Button>
-                                </div>
                             </div>
-                        )}
+                            <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit items-center">
+                                <ThemeToggle />
+                                <Button
+                                    asChild
+                                    size="sm"
+                                    className={cn(isScrolled && 'lg:hidden')}>
+                                    <Link href="/login">
+                                        <span>Login</span>
+                                    </Link>
+                                </Button>
+                                <Button
+                                    asChild
+                                    size="sm"
+                                    className={cn(isScrolled && 'lg:hidden')}>
+                                    <Link href="#contact">
+                                        <span>Book a call</span>
+                                    </Link>
+                                </Button>
+                                <Button
+                                    asChild
+                                    size="sm"
+                                    className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
+                                    <Link href="/#contact">
+                                        <span>Book a call</span>
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </nav>

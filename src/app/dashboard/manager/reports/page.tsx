@@ -48,7 +48,6 @@ import { format } from 'date-fns';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useAuthSync } from '@/components/AuthProvider';
-import { MobileCard, MobileCardHeader, MobileCardTitle, MobileCardDescription, MobileCardContent, MobileCardFooter } from '@/components/mobile/MobileCard';
 
 export default function ManagerReportsPage() {
   const { isSynced, uid, orgId } = useAuthSync();
@@ -214,25 +213,25 @@ export default function ManagerReportsPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
             <Input
-              placeholder="Search reports..."
-              className="pl-9 h-10 md:h-11 text-xs md:text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-muted-text/60 focus:border-primary/50 transition-all rounded-xl md:rounded-lg"
+              placeholder="Search reports by template or location..."
+              className="pl-9 h-11 bg-background text-body"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className={cn(
-                  "h-10 md:h-11 w-10 md:w-auto md:px-4 flex items-center justify-center gap-2 font-bold text-xs border-border/50 rounded-xl md:rounded-lg",
-                  selectedLocation !== 'all' ? "text-primary border-primary/20 bg-primary/5" : "text-[#6b7280]"
+                  "h-11 px-4 gap-2 font-medium text-xs border-border/50",
+                  selectedLocation !== 'all' ? "text-primary border-primary/20 bg-primary/5" : "text-muted-text"
                 )}>
                   <Filter className="h-4 w-4" />
-                  <span className="hidden md:inline">{selectedLocation === 'all' ? 'Filters' : locations.find(l => l.id === selectedLocation)?.name}</span>
+                  {selectedLocation === 'all' ? 'Filters' : locations.find(l => l.id === selectedLocation)?.name}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
@@ -253,136 +252,82 @@ export default function ManagerReportsPage() {
           </div>
         </div>
 
-        {/* Desktop Table View */}
-        <div className="hidden md:block">
-          <Card className="standard-card">
-            <Table>
-              <TableHeader className="standard-table-header">
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="standard-table-head">Template</TableHead>
-                  <TableHead className="standard-table-head">Location</TableHead>
-                  <TableHead className="standard-table-head">Completed On</TableHead>
-                  <TableHead className="standard-table-head text-right">Score</TableHead>
-                  <TableHead className="standard-table-head w-[50px]"></TableHead>
+        {/* Reports Table */}
+        <Card className="standard-card">
+          <Table>
+            <TableHeader className="standard-table-header">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="standard-table-head">Template</TableHead>
+                <TableHead className="standard-table-head">Location</TableHead>
+                <TableHead className="standard-table-head">Completed On</TableHead>
+                <TableHead className="standard-table-head text-right">Score</TableHead>
+                <TableHead className="standard-table-head w-[50px]"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                [1, 2, 3, 4, 5].map(i => (
+                  <TableRow key={i} className="animate-pulse">
+                    <TableCell colSpan={5} className="h-16 bg-muted/5" />
+                  </TableRow>
+                ))
+              ) : filteredReports.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="standard-table-cell h-64 text-center">
+                    <div className="flex flex-col items-center gap-3">
+                      <CheckSquare className="h-10 w-10 opacity-20" />
+                      <p className="font-normal">
+                        {reports.length === 0
+                          ? (locations.length === 0 ? "No locations assigned." : "No completed reports.")
+                          : "No matching reports found."}
+                      </p>
+                    </div>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loading ? (
-                  [1, 2, 3, 4, 5].map(i => (
-                    <TableRow key={i} className="animate-pulse">
-                      <TableCell colSpan={5} className="h-16 bg-muted/5" />
-                    </TableRow>
-                  ))
-                ) : filteredReports.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="standard-table-cell h-64 text-center">
-                      <div className="flex flex-col items-center gap-3">
-                        <CheckSquare className="h-10 w-10 opacity-20" />
-                        <p className="font-normal">
-                          {reports.length === 0
-                            ? (locations.length === 0 ? "No locations assigned." : "No completed reports.")
-                            : "No matching reports found."}
-                        </p>
-                      </div>
+              ) : (
+                filteredReports.map((report) => (
+                  <TableRow
+                    key={report.id}
+                    className="standard-table-row group cursor-pointer"
+                  >
+                    <TableCell className="standard-table-cell">
+                      <Link href={`/dashboard/manager/reports/${report.id}`} className="block">
+                        <span className="text-[14px] font-normal text-body group-hover:text-primary transition-colors">{report.templateTitle}</span>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="standard-table-cell">
+                      <Link href={`/dashboard/manager/reports/${report.id}`} className="block">
+                        <span className="text-[14px] font-normal text-body">{report.locationName}</span>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="standard-table-cell">
+                      <Link href={`/dashboard/manager/reports/${report.id}`} className="block">
+                        <span className="text-[13px] font-normal text-muted-text">{report.completedAt ? format(report.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</span>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="standard-table-cell text-right">
+                      <Link href={`/dashboard/manager/reports/${report.id}`} className="flex justify-end">
+                        <Badge className={cn(
+                          "px-2.5 py-0.5 font-medium text-[11px] rounded-sm",
+                          report.scorePercentage >= 90 ? "bg-success/10 text-success hover:bg-success/20" :
+                            report.scorePercentage >= 70 ? "bg-primary/10 text-primary hover:bg-primary/20" :
+                              "bg-destructive/10 text-destructive hover:bg-destructive/20"
+                        )}>
+                          {report.scorePercentage}%
+                        </Badge>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="standard-table-cell">
+                      <Link href={`/dashboard/manager/reports/${report.id}`} className="flex items-center justify-end text-muted-text/30 group-hover:text-primary transition-colors">
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
                     </TableCell>
                   </TableRow>
-                ) : (
-                  filteredReports.map((report) => (
-                    <TableRow
-                      key={report.id}
-                      className="standard-table-row group cursor-pointer"
-                    >
-                      <TableCell className="standard-table-cell">
-                        <Link href={`/dashboard/manager/reports/${report.id}`} className="block">
-                          <span className="text-[14px] font-normal text-body group-hover:text-primary transition-colors">{report.templateTitle}</span>
-                        </Link>
-                      </TableCell>
-                      <TableCell className="standard-table-cell">
-                        <Link href={`/dashboard/manager/reports/${report.id}`} className="block">
-                          <span className="text-[14px] font-normal text-body">{report.locationName}</span>
-                        </Link>
-                      </TableCell>
-                      <TableCell className="standard-table-cell">
-                        <Link href={`/dashboard/manager/reports/${report.id}`} className="block">
-                          <span className="text-[13px] font-normal text-muted-text">{report.completedAt ? format(report.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</span>
-                        </Link>
-                      </TableCell>
-                      <TableCell className="standard-table-cell text-right">
-                        <Link href={`/dashboard/manager/reports/${report.id}`} className="flex justify-end">
-                          <Badge className={cn(
-                            "px-2.5 py-0.5 font-medium text-[11px] rounded-sm",
-                            report.scorePercentage >= 90 ? "bg-success/10 text-success hover:bg-success/20" :
-                              report.scorePercentage >= 70 ? "bg-primary/10 text-primary hover:bg-primary/20" :
-                                "bg-destructive/10 text-destructive hover:bg-destructive/20"
-                          )}>
-                            {report.scorePercentage}%
-                          </Badge>
-                        </Link>
-                      </TableCell>
-                      <TableCell className="standard-table-cell">
-                        <Link href={`/dashboard/manager/reports/${report.id}`} className="flex items-center justify-end text-muted-text/30 group-hover:text-primary transition-colors">
-                          <ArrowRight className="h-4 w-4" />
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </Card>
-        </div>
-
-        {/* Mobile Card View */}
-        <div className="flex md:hidden flex-col gap-3">
-          {loading ? (
-            [1, 2, 3].map(i => (
-              <Skeleton key={i} className="h-[140px] w-full rounded-2xl" />
-            ))
-          ) : filteredReports.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-4 py-12">
-              <div className="bg-muted/10 p-4 rounded-full">
-                <CheckSquare className="h-8 w-8 opacity-20" />
-              </div>
-              <p className="page-heading opacity-40">No reports found.</p>
-            </div>
-          ) : (
-            filteredReports.map((report) => (
-              <Link key={report.id} href={`/dashboard/manager/reports/${report.id}`}>
-                <MobileCard className="relative overflow-hidden active:scale-[0.98] transition-all">
-                  <MobileCardHeader>
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1">
-                        <MobileCardTitle>{report.templateTitle}</MobileCardTitle>
-                        <MobileCardDescription className="flex items-center gap-1.5 mt-1">
-                          <MapPin className="h-3 w-3 opacity-50" />
-                          {report.locationName}
-                        </MobileCardDescription>
-                      </div>
-                      <div className={cn(
-                        "h-8 rounded-full flex items-center px-3 text-xs font-bold",
-                        report.scorePercentage < 70 ? "bg-destructive/10 text-destructive" : "bg-success/10 text-success"
-                      )}>
-                        {report.scorePercentage}%
-                      </div>
-                    </div>
-                  </MobileCardHeader>
-
-                  <MobileCardContent>
-                    <div className="flex items-center justify-between mt-1">
-                      <div className="flex flex-col gap-1">
-                        <span className="text-[10px] uppercase tracking-wider text-muted-text font-semibold">Completed Date</span>
-                        <span className="text-xs font-medium text-heading">
-                          {report.completedAt ? format(report.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}
-                        </span>
-                      </div>
-                      <ArrowRight className="h-4 w-4 text-muted-text/30" />
-                    </div>
-                  </MobileCardContent>
-                </MobileCard>
-              </Link>
-            ))
-          )}
-        </div>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </Card>
       </div>
     </DashboardShell>
   );

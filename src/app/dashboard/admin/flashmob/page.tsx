@@ -2,226 +2,469 @@
 
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs, orderBy, deleteDoc, doc } from 'firebase/firestore';
-import Image from 'next/image';
+import { collection, query, where, getDocs, addDoc, serverTimestamp, updateDoc, doc, deleteDoc, orderBy } from 'firebase/firestore';
+import { useAuthSync } from '@/components/AuthProvider';
 import DashboardShell from '@/components/DashboardShell';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
-  Play,
-  MapPin,
-  User,
-  Calendar as CalendarIcon,
-  ExternalLink,
-  ChevronRight,
-  Loader2,
-  Video,
-  ImageIcon,
-  Search,
-  Filter,
-  Trash2
-} from 'lucide-react';
-import { format } from 'date-fns';
-import Link from 'next/link';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Plus, Search, User, MapPin, Calendar as CalendarIcon, Clock, Trash2, ExternalLink, Play, Send, CheckCircle2, MoreHorizontal, History, ChevronDown, X } from 'lucide-react';
+import { format, setHours, setMinutes, lastDayOfMonth } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { Skeleton } from "@/components/ui/skeleton";
-import { useAuthSync } from '@/components/AuthProvider';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import Link from 'next/link';
 
 export default function AdminFlashmobPage() {
-  const { isSynced, orgId } = useAuthSync();
-  const [flashmobs, setFlashmobs] = useState<any[]>([]);
+  const { isSynced, orgId, uid } = useAuthSync();
+  const [locations, setLocations] = useState<any[]>([]);
+  const [auditors, setAuditors] = useState<any[]>([]);
+  const [audits, setAudits] = useState<any[]>([]);
+  const [publishedRequests, setPublishedRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [search, setSearch] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // No longer needed
+  // Form State
+  const [selectedAuditor, setSelectedAuditor] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('');
+  
+  // New Date & Time States
+  const [deadlineDate, setDeadlineDate] = useState<Date | undefined>(undefined);
+  const [deadlineHour, setDeadlineHour] = useState('12');
+  const [deadlineMinute, setDeadlineMinute] = useState('00');
+  const [deadlinePeriod, setDeadlinePeriod] = useState('PM');
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!isSynced || !orgId) return;
 
-    const fetchFlashmobs = async () => {
+    const fetchData = async () => {
       try {
-        const q = query(
-          collection(db, 'flashmobAudits'),
-          where('organizationId', '==', orgId),
-          orderBy('submittedAt', 'desc')
-        );
-        const snap = await getDocs(q);
-        const fetched = snap.docs.map((d: any) => ({ id: d.id, ...d.data() }));
-        setFlashmobs(fetched);
-        setLoading(false);
+        const [locSnap, audSnap, auditSnap, reqSnap] = await Promise.all([
+          getDocs(query(collection(db, 'locations'), where('organizationId', '==', orgId), where('isActive', '==', true))),
+          getDocs(query(collection(db, 'users'), where('organizationId', '==', orgId), where('role', '==', 'auditor'), where('isFlashmobEnabled', '==', true))),
+          getDocs(query(collection(db, 'flashmobAudits'), where('organizationId', '==', orgId), orderBy('submittedAt', 'desc'))),
+          getDocs(query(collection(db, 'flashmobAudits'), where('organizationId', '==', orgId), where('status', '==', 'active')))
+        ]);
+
+        setLocations(locSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setAuditors(audSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setAudits(auditSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        
+        const reqDocs = reqSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        reqDocs.sort((a: any, b: any) => {
+          const tA = a.publishedAt?.toMillis?.() || 0;
+          const tB = b.publishedAt?.toMillis?.() || 0;
+          return tB - tA;
+        });
+        setPublishedRequests(reqDocs);
       } catch (err) {
-        console.error('Flashmob fetch error:', err);
+        console.error(err);
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchFlashmobs();
-  }, [orgId, isSynced]);
+    fetchData();
+  }, [isSynced, orgId]);
 
-  const handleDelete = async (id: string) => {
-    if (confirmDeleteId !== id) {
-      setConfirmDeleteId(id);
-      return;
-    }
+  const handlePublish = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedAuditor || !selectedLocation || !deadlineDate) return;
 
-    setIsDeleting(true);
+    setIsSubmitting(true);
     try {
-      await deleteDoc(doc(db, 'flashmobAudits', id));
-      setConfirmDeleteId(null);
-    } catch (error) {
-      console.error('Delete error:', error);
+      const auditor = auditors.find(a => a.id === selectedAuditor);
+      const location = locations.find(l => l.id === selectedLocation);
+
+      // Construct deadline timestamp
+      let hours = parseInt(deadlineHour);
+      if (deadlinePeriod === 'PM' && hours !== 12) hours += 12;
+      if (deadlinePeriod === 'AM' && hours === 12) hours = 0;
+      
+      const deadlineAt = setMinutes(setHours(deadlineDate, hours), parseInt(deadlineMinute));
+
+      const requestData = {
+        organizationId: orgId,
+        locationId: selectedLocation,
+        locationName: location?.name || 'Unknown',
+        auditorId: selectedAuditor,
+        auditorName: auditor?.name || 'Unknown',
+        deadlineAt: deadlineAt,
+        status: 'active',
+        publishedBy: uid,
+        publishedAt: serverTimestamp(),
+        isVisibleToManager: false,
+      };
+
+      const docRef = await addDoc(collection(db, 'flashmobAudits'), requestData);
+      
+      await addDoc(collection(db, 'notifications'), {
+        organizationId: orgId,
+        recipientId: selectedAuditor,
+        recipientRole: 'auditor',
+        type: 'surprise_audit',
+        title: 'Flashmob Verification Required',
+        message: `You have an immediate flashmob verification request for ${location?.name || 'a location'}.`,
+        relatedId: docRef.id,
+        isRead: false,
+        createdAt: serverTimestamp()
+      });
+
+      setPublishedRequests([{ id: docRef.id, ...requestData, publishedAt: new Date() }, ...publishedRequests]);
+      setIsDialogOpen(false);
+      alert('Flashmob request published successfully.');
+      
+      // Reset form
+      setSelectedAuditor('');
+      setSelectedLocation('');
+      setDeadlineDate(undefined);
+      setDeadlineHour('12');
+      setDeadlineMinute('00');
+      setDeadlinePeriod('PM');
+    } catch (err) {
+      console.error(err);
     } finally {
-      setIsDeleting(false);
+      setIsSubmitting(false);
     }
   };
 
-  if (loading) {
-    return (
-      <DashboardShell role="admin">
-        <div className="dashboard-page-container">
-          <div className="page-header-section mb-6">
-            <div className="flex flex-col gap-2">
-              <Skeleton className="h-[32px] w-[200px]" />
-              <Skeleton className="h-[18px] w-[300px]" />
-            </div>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="standard-card flex flex-col gap-4 p-0 overflow-hidden">
-                <Skeleton className="aspect-video w-full rounded-none" />
-                <div className="p-6 space-y-4">
-                  <div className="space-y-2">
-                    <Skeleton className="h-5 w-[140px]" />
-                    <Skeleton className="h-4 w-[180px]" />
-                    <Skeleton className="h-4 w-[160px]" />
-                  </div>
-                  <Skeleton className="h-10 w-full rounded-lg" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </DashboardShell>
-    );
-  }
+  const handleDeleteAudit = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this log?')) return;
+    try {
+      await deleteDoc(doc(db, 'flashmobAudits', id));
+      setAudits(audits.filter(a => a.id !== id));
+    } catch (err) { console.error(err); }
+  };
 
-  const filteredFlashmobs = flashmobs.filter((audit) =>
-    audit.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    audit.auditorName?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredAudits = audits.filter(a =>
+    a.locationName?.toLowerCase().includes(search.toLowerCase()) ||
+    a.auditorName?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <DashboardShell role="admin">
       <div className="dashboard-page-container">
-        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-col gap-2">
-            <h1 className="page-heading">Flashmob</h1>
-            <p className="body-text text-muted-text">View real-time submissions.</p>
+        
+        {/* Header Section */}
+        <div className="page-header-section mb-8">
+          <div className="flex flex-col gap-1">
+            <h1 className="page-heading">Flashmob Verification</h1>
+            <p className="body-text text-muted-text">Monitor real-time video evidence and location check-ins.</p>
           </div>
-        </div>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input
-              placeholder="Search..."
-              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
-        </div>
-
-        {filteredFlashmobs.length === 0 ? (
-          <Card className="standard-card">
-            <CardContent className="flex flex-col items-center justify-center py-24 text-center text-muted-text/40">
-              <div className="bg-muted/10 p-6 rounded-full mb-6">
-                <Video className="h-12 w-12 opacity-20" />
-              </div>
-              <p className="page-heading opacity-40">No reports found.</p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredFlashmobs.map((audit) => (
-              <Card key={audit.id} className="standard-card flex flex-col group hover:scale-[1.01] transition-all duration-300">
-                <div className="relative aspect-video bg-muted overflow-hidden rounded-t-xl">
-                  <video
-                    src={audit.videoUrl}
-                    className="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                    muted
-                    loop
-                    onMouseOver={e => e.currentTarget.play()}
-                    onMouseOut={e => {
-                      e.currentTarget.pause();
-                      e.currentTarget.currentTime = 0;
-                    }}
-                  />
-                  <div className="absolute top-4 right-4 z-10">
-                    <div className="h-10 w-10 rounded-full border-2 border-background overflow-hidden bg-muted shadow-lg ring-4 ring-primary/5 relative">
-                      <Image src={audit.selfieUrl} alt="Selfie" width={40} height={40} className="h-full w-full object-cover" />
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="default" className="shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2 active:scale-95 transition-all">
+                <Plus className="h-4 w-4" /> Publish Flashmob
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-xl border-none shadow-2xl">
+              <div className="bg-card p-6 sm:p-8 space-y-6">
+                <DialogHeader className="space-y-1.5 text-left">
+                  <DialogTitle className="page-heading text-[22px] leading-tight flex items-center justify-between w-full">
+                    Publish Flashmob
+                  </DialogTitle>
+                  <DialogDescription className="body-text text-[14px] text-muted-text/80">
+                    Send an instant verification request to an auditor.
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <form onSubmit={handlePublish} className="space-y-6">
+                  <div className="space-y-5">
+                    <div className="flex flex-col gap-2">
+                      <Label className="section-heading text-[13px] font-medium text-heading">Assign Auditor</Label>
+                      <Select value={selectedAuditor} onValueChange={setSelectedAuditor} required>
+                        <SelectTrigger className="h-11 border-border/50 bg-background text-body text-[14px] focus:ring-primary/20 rounded-md">
+                          <SelectValue placeholder="Select an auditor" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-lg border-border/50">
+                          {auditors.map((auditor) => (
+                            <SelectItem key={auditor.id} value={auditor.id} className="text-body cursor-pointer">{auditor.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
-                  </div>
-                  <div className="absolute bottom-4 left-4 z-10">
-                    <div className="bg-primary/90 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-2 shadow-lg">
-                      <Play className="h-2 w-2 text-white fill-white" />
-                      <span className="text-[10px] font-semibold text-white uppercase tracking-wider">Live Preview</span>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="p-6 flex-1 flex flex-col gap-5">
-                  <div className="space-y-1">
-                    <h3 className="section-heading line-clamp-1 group-hover:text-primary transition-colors text-[16px] font-medium">
-                      {audit.locationName}
-                    </h3>
-                    <div className="flex flex-col gap-1.5 pt-2">
-                      <div className="flex items-center gap-2 text-muted-text/50">
-                        <User className="h-3.5 w-3.5 text-primary/40" />
-                        <span className="text-[13px]">{audit.auditorName || 'Unknown auditor'}</span>
+                    <div className="flex flex-col gap-2">
+                      <Label className="section-heading text-[13px] font-medium text-heading">Site Location</Label>
+                      <Select value={selectedLocation} onValueChange={setSelectedLocation} required>
+                        <SelectTrigger className="h-11 border-border/50 bg-background text-body text-[14px] focus:ring-primary/20 rounded-md">
+                          <SelectValue placeholder="Select a location" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-lg border-border/50">
+                          {locations.map((location) => (
+                            <SelectItem key={location.id} value={location.id} className="text-body cursor-pointer">{location.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="flex flex-col gap-5 sm:grid sm:grid-cols-5 sm:items-end">
+                      {/* Date Selector */}
+                      <div className="flex flex-col gap-2 sm:col-span-3">
+                        <Label className="section-heading text-[13px] font-medium text-heading">Deadline Date</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                              <Button
+                                variant="outline"
+                                className={cn(
+                                  "h-11 w-full justify-start text-left font-normal border-border/50 bg-background text-body text-[14px] focus:ring-primary/20 rounded-md",
+                                  !deadlineDate && "text-muted-text/60"
+                                )}
+                              >
+                                <CalendarIcon className="mr-3 h-4 w-4 opacity-40" />
+                                {deadlineDate ? format(deadlineDate, "PPP") : <span>Pick a date</span>}
+                              </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0 rounded-xl border-border/50 shadow-xl" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={deadlineDate}
+                              onSelect={setDeadlineDate}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
                       </div>
-                      <div className="flex items-center gap-2 text-muted-text/50">
-                        <CalendarIcon className="h-3.5 w-3.5 text-primary/40" />
-                        <span className="text-[13px]">{format(audit.submittedAt?.toDate(), 'MMM d, h:mm a')}</span>
+
+                      {/* Time Selector */}
+                      <div className="flex flex-col gap-2 sm:col-span-2">
+                        <Label className="section-heading text-[13px] font-medium text-heading">Deadline Time</Label>
+                        <div className="flex items-center gap-1.5">
+                          <Select value={deadlineHour} onValueChange={setDeadlineHour}>
+                            <SelectTrigger className="h-11 border-border/50 focus:ring-primary/20 bg-background flex-1 px-2.5 text-body text-[14px] rounded-md">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="min-w-[70px] rounded-lg border-border/50">
+                              {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
+                                <SelectItem key={h} value={h.toString()} className="text-body">{h}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+
+                          <span className="text-muted-text/30 font-medium">:</span>
+
+                          <Select value={deadlineMinute} onValueChange={setDeadlineMinute}>
+                            <SelectTrigger className="h-11 border-border/50 focus:ring-primary/20 bg-background flex-1 px-2.5 text-body text-[14px] rounded-md">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="min-w-[70px] rounded-lg border-border/50">
+                              {['00', '15', '30', '45'].map((m) => (
+                                <SelectItem key={m} value={m} className="text-body">{m}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+
+                          <Select value={deadlinePeriod} onValueChange={setDeadlinePeriod}>
+                            <SelectTrigger className="h-11 border-border/50 focus:ring-primary/20 bg-background w-[68px] px-2 font-semibold text-[11px] text-body uppercase tracking-wider rounded-md">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="min-w-[68px] rounded-lg border-border/50">
+                              <SelectItem value="AM" className="text-body">AM</SelectItem>
+                              <SelectItem value="PM" className="text-body">PM</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 mt-auto">
-                    <Link href={`/dashboard/admin/flashmob/${audit.id}`} passHref className="flex-1">
-                      <Button variant="secondary" className="w-full h-10 shadow-lg shadow-black/5 active:scale-95 transition-all font-medium text-[13px]">
-                        Review <ChevronRight className="ml-1 h-3.5 w-3.5" />
-                      </Button>
-                    </Link>
+                  <div className="pt-2">
                     <Button
-                      variant={confirmDeleteId === audit.id ? "destructive" : "ghost"}
-                      size="icon"
-                      onClick={() => handleDelete(audit.id)}
-                      disabled={isDeleting && confirmDeleteId === audit.id}
-                      className={cn("h-10 w-10 shrink-0", confirmDeleteId === audit.id && "w-fit px-4 gap-2 text-[12px]")}
+                      type="submit"
+                      className="w-full h-12 bg-primary hover:bg-primary/90 text-[15px] text-white shadow-lg shadow-primary/20 active:scale-[0.98] transition-all font-semibold rounded-md uppercase tracking-wide"
+                      disabled={isSubmitting || !deadlineDate}
                     >
-                      {isDeleting && confirmDeleteId === audit.id
-                        ? <Loader2 className="h-4 w-4 animate-spin" />
-                        : confirmDeleteId === audit.id
-                          ? <span className="text-[12px] font-medium">Confirm?</span>
-                          : <Trash2 className="h-4 w-4" />}
+                      {isSubmitting ? 'Publishing...' : 'Dispatch Flashmob'}
                     </Button>
                   </div>
+                </form>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        {/* Filters and Tabs */}
+        <div className="space-y-6">
+          <Tabs defaultValue="all" className="w-full">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <TabsList className="bg-muted/40 border border-border/40 p-1">
+                <TabsTrigger value="all" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm px-4 body-text">
+                  Completed Logs
+                </TabsTrigger>
+                <TabsTrigger value="pending" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm px-4 body-text">
+                  Pending Tasks
+                </TabsTrigger>
+              </TabsList>
+
+              <div className="relative w-full sm:w-72">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text" />
+                <Input
+                  placeholder="Filter by location or auditor..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-10 h-11 border-border/50 bg-background/50 focus-visible:ring-primary/20 shadow-sm"
+                />
+              </div>
+            </div>
+
+            <TabsContent value="all" className="mt-0 animate-in fade-in slide-in-from-bottom-2 duration-500">
+              {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="h-64 rounded-xl bg-muted/20 animate-pulse border border-border/40" />
+                  ))}
                 </div>
-              </Card>
-            ))}
-          </div>
-        )}
+              ) : filteredAudits.length === 0 ? (
+                <div className="standard-card flex flex-col items-center justify-center py-20 text-center">
+                  <div className="h-16 w-16 rounded-2xl bg-muted/30 flex items-center justify-center mb-4">
+                    <History className="h-8 w-8 text-muted-text/30" />
+                  </div>
+                  <h3 className="section-heading text-heading/70">No audit logs found</h3>
+                  <p className="body-text text-muted-text/60 mt-1">Once auditors submit their verifications, they'll appear here.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-aud-md">
+                  {filteredAudits.map((audit) => (
+                    <AuditCard key={audit.id} audit={audit} onDelete={() => handleDeleteAudit(audit.id)} />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="pending" className="mt-0 animate-in fade-in slide-in-from-bottom-2 duration-500">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-aud-md">
+                {publishedRequests.filter(r => r.status === 'active').map((req) => (
+                  <PendingRequestCard key={req.id} request={req} />
+                ))}
+                {publishedRequests.filter(r => r.status === 'active').length === 0 && (
+                  <div className="col-span-full standard-card flex flex-col items-center justify-center py-20 text-center border-dashed">
+                    <History className="h-10 w-10 text-muted-text/20 mb-3" />
+                    <p className="body-text text-muted-text">No pending assignments at the moment.</p>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </DashboardShell>
+  );
+}
+
+function AuditCard({ audit, onDelete }: { audit: any; onDelete: () => void }) {
+  const date = audit.submittedAt?.toDate ? audit.submittedAt.toDate() : new Date();
+  
+  return (
+    <div className="standard-card group overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+      <div className="relative aspect-video bg-muted overflow-hidden">
+        <video 
+          src={audit.videoUrl} 
+          className="w-full h-full object-cover"
+          onMouseOver={e => e.currentTarget.play()}
+          onMouseOut={e => {
+            e.currentTarget.pause();
+            e.currentTarget.currentTime = 0;
+          }}
+          muted
+          loop
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+          <div className="flex items-center gap-2 text-white">
+            <Play className="h-4 w-4 fill-white" />
+            <span className="text-[11px] font-semibold uppercase tracking-wider">Preview Feed</span>
+          </div>
+        </div>
+        <div className="absolute top-3 right-3">
+          <Badge className="bg-black/40 backdrop-blur-md border-white/20 text-white text-[10px] uppercase tracking-widest font-bold py-1">
+            {format(date, 'HH:mm')}
+          </Badge>
+        </div>
+      </div>
+      
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-2 mb-4">
+          <div className="min-w-0">
+            <h3 className="section-heading truncate mb-1">{audit.locationName || 'Unspecified Site'}</h3>
+            <div className="flex items-center gap-1.5 text-muted-text">
+              <User className="h-3.5 w-3.5" />
+              <span className="body-text truncate">{audit.auditorName}</span>
+            </div>
+          </div>
+          <Link href={`/dashboard/admin/flashmob/${audit.id}`}>
+            <Button variant="outline" size="icon" className="h-9 w-9 border-border/50 hover:bg-primary/5 hover:text-primary transition-colors">
+              <ExternalLink className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+
+        <div className="flex items-center justify-between pt-4 border-t border-border/40">
+          <div className="flex items-center gap-2">
+            <CalendarIcon className="h-3.5 w-3.5 text-muted-text/50" />
+            <span className="muted-label">{format(date, 'MMM d, yyyy')}</span>
+          </div>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-8 w-8 text-muted-text/40 hover:text-destructive transition-colors"
+            onClick={onDelete}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PendingRequestCard({ request }: { request: any }) {
+  const publishedAt = request.publishedAt?.toDate ? request.publishedAt.toDate() : new Date();
+  const deadlineAt = request.deadlineAt?.toDate ? request.deadlineAt.toDate() : new Date();
+  const isOverdue = new Date() > deadlineAt;
+
+  return (
+    <div className="standard-card border-dashed p-5 hover:border-primary/40 transition-colors">
+      <div className="flex items-center justify-between mb-4">
+        <Badge variant="outline" className={cn(
+          "px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+          isOverdue ? "bg-destructive/5 text-destructive border-destructive/20" : "bg-primary/5 text-primary border-primary/20"
+        )}>
+          {isOverdue ? 'Overdue' : 'Dispatched'}
+        </Badge>
+        <span className="muted-label text-[11px]">{format(publishedAt, 'MMM d')}</span>
+      </div>
+
+      <h3 className="section-heading mb-1">{request.locationName}</h3>
+      <p className="body-text text-muted-text mb-4">Target: {request.auditorName}</p>
+
+      <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30 border border-border/40">
+        <Clock className={cn("h-4 w-4", isOverdue ? "text-destructive" : "text-muted-text")} />
+        <div className="min-w-0">
+          <p className="text-[10px] text-muted-text font-medium uppercase tracking-tight">Deadline</p>
+          <p className={cn("body-text font-semibold truncate", isOverdue && "text-destructive")}>
+            {format(deadlineAt, 'MMM d, h:mm a')}
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }

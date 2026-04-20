@@ -54,8 +54,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { Switch } from '@/components/ui/switch';
 import { format } from 'date-fns';
-import Link from 'next/link';
-import { MobileCard, MobileCardHeader, MobileCardTitle, MobileCardDescription, MobileCardContent, MobileCardFooter } from '@/components/mobile/MobileCard';
 
 export default function ManagerAuditsPage() {
   const { isSynced, uid, orgId } = useAuthSync();
@@ -130,14 +128,22 @@ export default function ManagerAuditsPage() {
       };
 
       const fetchedAudits = auditSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
-      fetchedAudits.sort((a, b: any) => {
-        const deadA = toDate(a.deadline).getTime();
-        const deadB = toDate(b.deadline).getTime();
-        if (deadA !== deadB) return deadA - deadB;
-        const statusMap: any = { missed: 0, published: 1, assigned: 1, in_progress: 2, completed: 3 };
-        return (statusMap[a.status] ?? 99) - (statusMap[b.status] ?? 99);
+      const incomplete = fetchedAudits.filter((a: any) => a.status !== 'completed');
+      const complete = fetchedAudits.filter((a: any) => a.status === 'completed');
+
+      incomplete.sort((a: any, b: any) => {
+        const dateA = toDate(a.scheduledDate).getTime();
+        const dateB = toDate(b.scheduledDate).getTime();
+        return dateA - dateB;
       });
-      setAudits(fetchedAudits);
+
+      complete.sort((a: any, b: any) => {
+        const dateA = toDate(a.completedAt).getTime();
+        const dateB = toDate(b.completedAt).getTime();
+        return dateB - dateA;
+      });
+
+      setAudits([...incomplete, ...complete]);
 
       // 3. Fetch Auditors
       const qAuditors = query(
@@ -361,189 +367,186 @@ export default function ManagerAuditsPage() {
   return (
   <DashboardShell role="manager">
     <div className="dashboard-page-container">
-        <div className="page-header-section mb-6">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-col">
-              <h1 className="page-heading">Audits</h1>
-              <p className="body-text text-muted-text hidden md:block">Manage ongoing and upcoming audits for your locations.</p>
-            </div>
-            
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button 
-                  size="default" 
-                  className="shadow-lg shadow-primary/20 h-10 md:h-11 px-4 md:px-5 text-xs md:text-[14px] font-bold gap-2 active:scale-95 transition-all shrink-0"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>New Audit</span>
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-lg p-0 overflow-hidden border-none shadow-2xl max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:max-h-[85vh] max-md:overflow-y-auto">
-                <DialogHeader className="p-6 pb-2">
-                  <DialogTitle className="text-xl font-bold text-heading">New Audit</DialogTitle>
-                  <DialogDescription className="text-sm text-muted-text">Schedule a new audit for your branches.</DialogDescription>
-                </DialogHeader>
+      <div className="page-header-section mb-6">
+        <div className="flex flex-col gap-2">
+          <h1 className="page-heading">Audits</h1>
+          <p className="body-text">Manage ongoing and upcoming audits for your locations.</p>
+        </div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button size="default" className="shadow-lg shadow-primary/20 h-11 px-5 text-[14px] font-medium gap-2 active:scale-95 transition-all">
+              <Plus className="mr-2 h-4 w-4" /> New audit
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-lg p-6">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-semibold text-heading">New audit</DialogTitle>
+              <DialogDescription className="text-sm text-muted-text">Schedule a new audit for your branches.</DialogDescription>
+            </DialogHeader>
 
-                <div className="p-6 pt-2 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Template</Label>
-                      <Select value={formData.templateId} onValueChange={(val) => updateFormField('templateId', val)}>
-                        <SelectTrigger className="h-11 text-body bg-muted/5 border-border/50">
-                          <SelectValue placeholder="Select template" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {templates.map(t => (
-                            <SelectItem key={t.id} value={t.id} className="text-body">{t.title}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                      <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Location</Label>
-                      <Select value={formData.locationId} onValueChange={(val) => updateFormField('locationId', val)}>
-                        <SelectTrigger className="h-11 text-body bg-muted/5 border-border/50">
-                          <SelectValue placeholder="Select location" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {locations.map(l => (
-                            <SelectItem key={l.id} value={l.id} className="text-body">{l.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Scheduled date</Label>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.scheduledDate && "text-muted-text")}>
-                            <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
-                            {formData.scheduledDate ? format(formData.scheduledDate, "PPP") : "Pick a date"}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
-                          <Calendar mode="single" selected={formData.scheduledDate} onSelect={(date: any) => {
-                            updateFormField('scheduledDate', date);
-                            if (date && (!formData.deadline || date > formData.deadline)) {
-                              const newDeadline = new Date(date);
-                              newDeadline.setHours(23, 59, 59);
-                              updateFormField('deadline', newDeadline);
-                            }
-                          }} initialFocus />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Deadline</Label>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.deadline && "text-muted-text")}>
-                            <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
-                            {formData.deadline ? format(formData.deadline, "PPP") : "Pick a date"}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="end">
-                          <Calendar mode="single" selected={formData.deadline} onSelect={(date) => updateFormField('deadline', date)} disabled={(date: any) => formData.scheduledDate ? date < formData.scheduledDate : false} initialFocus />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <Label htmlFor="recurring" className="text-xs font-semibold text-muted-text uppercase tracking-wider">Frequency</Label>
-                    <Select value={formData.recurring} onValueChange={(val: any) => updateFormField('recurring', val)}>
-                      <SelectTrigger id="recurring" className="h-11 text-body bg-muted/5 border-border/50">
-                        <SelectValue placeholder="Frequency" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">One-time</SelectItem>
-                        <SelectItem value="daily">Daily</SelectItem>
-                        <SelectItem value="weekly">Weekly</SelectItem>
-                        <SelectItem value="monthly">Monthly</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {formData.recurring !== 'none' && (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex flex-col gap-1.5">
-                        <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Repeat until</Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button variant="outline" className={cn("h-11 w-full justify-start text-left font-normal text-body border-border/50 bg-background", !formData.repeatUntil && "text-muted-text")}>
-                              <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
-                              {formData.repeatUntil ? format(formData.repeatUntil, "PPP") : "Pick a date"}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
-                            <Calendar mode="single" selected={formData.repeatUntil} onSelect={(date) => updateFormField('repeatUntil', date)} disabled={(date: any) => formData.scheduledDate ? date < formData.scheduledDate : false} initialFocus />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex items-center justify-between py-2 border-t border-border/50">
-                    <Label htmlFor="isSurprise" className="text-sm font-medium">Surprise audit</Label>
-                    <Switch id="isSurprise" checked={formData.isSurprise} onCheckedChange={(val) => updateFormField('isSurprise', val)} />
-                  </div>
+            <div className="space-y-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="template" className="text-xs text-muted-foreground">Template</Label>
+                  <Select value={formData.templateId} onValueChange={(val) => updateFormField('templateId', val)}>
+                    <SelectTrigger id="template" className="h-10 text-body bg-muted/5 border-border/50">
+                      <SelectValue placeholder="Select template" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {templates.map(t => (
+                        <SelectItem key={t.id} value={t.id} className="text-body">{t.title}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
-                <DialogFooter className="p-6 pt-2 bg-muted/5 border-t border-border/50">
-                  <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="h-11 font-bold">Cancel</Button>
-                  <Button
-                    onClick={handlePublish}
-                    className="h-11 font-bold shadow-lg shadow-primary/20 flex-1"
-                    disabled={loading || !formData.templateId || !formData.locationId || !formData.scheduledDate || !formData.deadline}
-                  >
-                    {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : 'Publish Audit'}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="location" className="text-xs text-muted-foreground">Location</Label>
+                  <Select value={formData.locationId} onValueChange={(val) => updateFormField('locationId', val)}>
+                    <SelectTrigger id="location" className="h-10 text-body bg-muted/5 border-border/50">
+                      <SelectValue placeholder="Select location" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {locations.map(l => (
+                        <SelectItem key={l.id} value={l.id} className="text-body">{l.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
 
-        {selectedAuditIds.length > 0 && (
-          <div className="flex items-center gap-3 mb-6 p-4 rounded-2xl bg-primary/5 border border-primary/20 animate-in slide-in-from-top-2 duration-200">
-            <p className="text-xs font-bold text-primary uppercase tracking-widest">{selectedAuditIds.length} Audits Selected</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-2">
+                  <Label className="text-xs text-muted-foreground">Scheduled date</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.scheduledDate && "text-muted-text")}>
+                        <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
+                        {formData.scheduledDate ? format(formData.scheduledDate, "PPP") : "Pick a date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
+                      <Calendar mode="single" selected={formData.scheduledDate} onSelect={(date: any) => {
+                        updateFormField('scheduledDate', date);
+                        if (date && (!formData.deadline || date > formData.deadline)) {
+                          const newDeadline = new Date(date);
+                          newDeadline.setHours(23, 59, 59);
+                          updateFormField('deadline', newDeadline);
+                        }
+                      }} initialFocus />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label className="text-xs text-muted-foreground">Deadline</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.deadline && "text-muted-text")}>
+                        <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
+                        {formData.deadline ? format(formData.deadline, "PPP") : "Pick a date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="end">
+                      <Calendar mode="single" selected={formData.deadline} onSelect={(date) => updateFormField('deadline', date)} disabled={(date: any) => formData.scheduledDate ? date < formData.scheduledDate : false} initialFocus />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="recurring" className="text-xs text-muted-foreground">Frequency</Label>
+                <Select value={formData.recurring} onValueChange={(val: any) => updateFormField('recurring', val)}>
+                  <SelectTrigger id="recurring" className="h-10 text-body bg-muted/5 border-border/50">
+                    <SelectValue placeholder="Frequency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">One-time</SelectItem>
+                    <SelectItem value="daily">Daily</SelectItem>
+                    <SelectItem value="weekly">Weekly</SelectItem>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {formData.recurring !== 'none' && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-2">
+                    <Label className="text-xs text-muted-foreground">Repeat until</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-background", !formData.repeatUntil && "text-muted-text")}>
+                          <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
+                          {formData.repeatUntil ? format(formData.repeatUntil, "PPP") : "Pick a date"}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0 border-border/50 shadow-2xl" align="start">
+                        <Calendar mode="single" selected={formData.repeatUntil} onSelect={(date) => updateFormField('repeatUntil', date)} disabled={(date: any) => formData.scheduledDate ? date < formData.scheduledDate : false} initialFocus />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between py-2 border-t border-border/50">
+                <Label htmlFor="isSurprise" className="text-sm font-medium">Surprise audit</Label>
+                <Switch id="isSurprise" checked={formData.isSurprise} onCheckedChange={(val) => updateFormField('isSurprise', val)} />
+              </div>
+            </div>
+
+            <DialogFooter className="gap-2">
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+              <Button
+                onClick={handlePublish}
+                disabled={loading || !formData.templateId || !formData.locationId || !formData.scheduledDate || !formData.deadline}
+              >
+                {loading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                Publish audit
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Global Controls */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="relative flex-1 group max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+          <Input
+            placeholder="Search audits by template, location, manager or status..."
+            className="pl-9 h-11 text-body font-normal bg-background border border-border/50 placeholder:text-muted-text/60"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          {selectedAuditIds.length > 0 && (
             <Button
               variant="default"
               size="sm"
-              className="h-9 px-4 gap-2 font-bold text-[11px] bg-primary text-white shadow-lg shadow-primary/20 ml-auto active:scale-95 transition-all"
+              className="h-11 px-4 gap-2 font-medium text-xs bg-primary text-white shadow-lg shadow-primary/20 hover:scale-105 transition-all"
               onClick={() => setBulkDialogOpen(true)}
             >
-              <UserPlus className="h-3.5 w-3.5" /> Bulk Assign
+              <UserPlus className="h-4 w-4" /> Bulk assign ({selectedAuditIds.length})
             </Button>
-            <Button variant="ghost" size="sm" className="h-9 w-9 p-0 text-muted-text" onClick={() => setSelectedAuditIds([])}>
-              <X className="h-4 w-4" />
+          )}
+          {(statusFilter !== 'all' || assigneeFilter !== 'all') && (
+            <Button
+              variant="ghost"
+              onClick={() => { setStatusFilter('all'); setAssigneeFilter('all'); }}
+              className="h-11 px-3 text-[11px] font-medium text-muted-text hover:text-destructive transition-colors group"
+            >
+              <X className="h-3 w-3 mr-1.5 opacity-40 group-hover:opacity-100" />
+              Clear
             </Button>
-          </div>
-        )}
-
-        <div className="flex items-center gap-2 mb-6">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input
-              placeholder="Search audits..."
-              className="pl-9 h-10 md:h-11 text-xs md:text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-muted-text/60 focus:border-primary/50 transition-all rounded-xl md:rounded-lg"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className={cn(
-                "h-10 md:h-11 w-10 md:w-auto md:px-4 flex items-center justify-center gap-2 font-bold text-xs border-border/50 rounded-xl md:rounded-lg",
-                (statusFilter !== 'all' || assigneeFilter !== 'all') ? "text-primary border-primary/20 bg-primary/5" : "text-[#6b7280]"
+                "h-11 px-4 gap-2 font-medium text-xs border-border/50",
+                (statusFilter !== 'all' || assigneeFilter !== 'all') ? "text-primary border-primary/20 bg-primary/5" : "text-muted-text"
               )}>
                 <Filter className="h-4 w-4" />
-                <span className="hidden md:inline">Filters</span>
+                Filters
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
@@ -568,242 +571,160 @@ export default function ManagerAuditsPage() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+      </div>
 
-      {/* Desktop Table View */}
-      <div className="hidden md:block">
-        <Card className="standard-card">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader className="standard-table-header">
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="w-[50px] pl-6">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-border"
-                      checked={selectedAuditIds.length === filteredAudits.filter(a => !a.status || a.status === 'published' || a.status === 'assigned').length && filteredAudits.length > 0}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedAuditIds(filteredAudits.filter(a => !a.status || a.status === 'published' || a.status === 'assigned').map(a => a.id));
-                        } else {
-                          setSelectedAuditIds([]);
-                        }
-                      }}
-                    />
-                  </TableHead>
-                  <TableHead className="standard-table-head">Template</TableHead>
-                  <TableHead className="standard-table-head">Location</TableHead>
-                  <TableHead className="standard-table-head">Deadline</TableHead>
-                  <TableHead className="standard-table-head">Status</TableHead>
-                  <TableHead className="standard-table-head">Assignee</TableHead>
-                  <TableHead className="standard-table-head text-right pr-6">Action</TableHead>
+      <Card className="standard-card">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader className="standard-table-header">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="w-[50px] pl-6">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 rounded border-border"
+                    checked={selectedAuditIds.length === filteredAudits.filter(a => !a.status || a.status === 'published' || a.status === 'assigned').length && filteredAudits.length > 0}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedAuditIds(filteredAudits.filter(a => !a.status || a.status === 'published' || a.status === 'assigned').map(a => a.id));
+                      } else {
+                        setSelectedAuditIds([]);
+                      }
+                    }}
+                  />
+                </TableHead>
+                <TableHead className="standard-table-head">Template</TableHead>
+                <TableHead className="standard-table-head">Location</TableHead>
+                <TableHead className="standard-table-head">Deadline</TableHead>
+                <TableHead className="standard-table-head">Status</TableHead>
+                <TableHead className="standard-table-head">Assignee</TableHead>
+                <TableHead className="standard-table-head text-right pr-6">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredAudits.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="standard-table-cell h-32 text-center text-muted-text">
+                    No audits found matching your criteria.
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredAudits.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="standard-table-cell h-32 text-center text-muted-text">
-                      No audits found matching your criteria.
+              ) : (
+                filteredAudits.map((a) => (
+                  <TableRow key={a.id} className={cn("standard-table-row group", selectedAuditIds.includes(a.id) && "bg-primary/5")}>
+                    <TableCell className="pl-6">
+                      <input
+                        type="checkbox"
+                        className="h-4 w-4 rounded border-border"
+                        checked={selectedAuditIds.includes(a.id)}
+                        disabled={a.status && a.status !== 'published' && a.status !== 'assigned'}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedAuditIds(prev => [...prev, a.id]);
+                          } else {
+                            setSelectedAuditIds(prev => prev.filter(id => id !== a.id));
+                          }
+                        }}
+                      />
                     </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredAudits.map((a) => (
-                    <TableRow key={a.id} className={cn("standard-table-row group", selectedAuditIds.includes(a.id) && "bg-primary/5")}>
-                      <TableCell className="pl-6">
-                        <input
-                          type="checkbox"
-                          className="h-4 w-4 rounded border-border"
-                          checked={selectedAuditIds.includes(a.id)}
-                          disabled={a.status && a.status !== 'published' && a.status !== 'assigned'}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedAuditIds(prev => [...prev, a.id]);
-                            } else {
-                              setSelectedAuditIds(prev => prev.filter(id => id !== a.id));
-                            }
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell className="standard-table-cell">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
-                          {a.recurring && a.recurring !== 'none' && (
-                            <div className="h-5 rounded-full bg-primary/10 text-primary px-2 flex items-center gap-1 w-fit text-[11px] font-normal capitalize shrink-0">
-                              <span>{a.recurring}</span>
-                            </div>
-                          )}
-                        </div>
-                        {a.isSurprise && (
-                          <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-warning font-medium">
-                            <span>Surprise</span>
+                    <TableCell className="standard-table-cell">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
+                        {a.recurring && a.recurring !== 'none' && (
+                          <div className="h-5 rounded-full bg-primary/10 text-primary px-2 flex items-center gap-1 w-fit text-[11px] font-normal capitalize shrink-0">
+                            <span>{a.recurring}</span>
                           </div>
                         )}
-                      </TableCell>
-                      <TableCell className="standard-table-cell">
-                        <span className="text-[14px] font-normal text-body">{a.locationName}</span>
-                      </TableCell>
-                      <TableCell className="standard-table-cell">
-                        <span className="text-[13px] font-normal text-muted-text">
-                          {a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                        </span>
-                      </TableCell>
-                      <TableCell className="standard-table-cell">{getStatusBadge(a.status)}</TableCell>
-                      <TableCell className="standard-table-cell">
-                        {a.assignedAuditorId ? (
-                          <span className="text-[14px] font-normal text-body">
-                            {auditors.find(aud => aud.id === a.assignedAuditorId)?.name || 'Assigned'}
-                          </span>
-                        ) : (
-                          <span className="text-[13px] font-normal text-muted-text/60 italic">Unassigned</span>
-                        )}
-                      </TableCell>
-                      <TableCell className="standard-table-cell text-right pr-6">
-                        {(!a.status || a.status.toLowerCase() !== 'completed') && (
-                          <Dialog open={open && selectedAudit?.id === a.id} onOpenChange={(val) => {
-                            if (!val) {
-                              setOpen(false);
-                              setSelectedAudit(null);
-                            }
-                          }}>
-                            <DialogTrigger asChild>
-                              <Button variant="default" size="sm" className={cn(
-                                "h-8 text-xs font-medium shadow-sm transition-all",
-                                a.assignedAuditorId ? "bg-muted hover:bg-muted/80 text-muted-foreground shadow-none" : ""
-                              )} onClick={() => {
-                                setSelectedAudit(a);
-                                setOpen(true);
-                              }}>
-                                <UserPlus className="h-3.5 w-3.5 mr-1.5" />
-                                {a.assignedAuditorId ? 'Reassign' : 'Assign auditor'}
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-[450px]">
-                              <DialogHeader>
-                                <DialogTitle className="font-semibold text-heading">
-                                  {a.assignedAuditorId ? 'Reassign auditor' : 'Assign auditor'}
-                                </DialogTitle>
-                                <DialogDescription className="text-muted-text text-sm">
-                                  Assigning <strong className="text-heading font-medium">{a.templateTitle}</strong> to {a.locationName}
-                                </DialogDescription>
-                              </DialogHeader>
-                              <div className="space-y-4 py-4">
-                                <div className="space-y-2">
-                                  <Label className="text-body font-normal">Select auditor</Label>
-                                  <Select value={selectedAuditor} onValueChange={setSelectedAuditor}>
-                                    <SelectTrigger className="h-10 text-body bg-background border-border/50">
-                                      <SelectValue placeholder="Choose an auditor" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      {auditors.map(aud => (
-                                        <SelectItem key={aud.id} value={aud.id}>{aud.name}</SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                              </div>
-                              <DialogFooter>
-                                <Button variant="outline" onClick={() => setOpen(false)} className="font-normal text-sm">Cancel</Button>
-                                <Button onClick={handleAssign} disabled={loading || !selectedAuditor} className="font-normal text-sm">
-                                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                  Assign
-                                </Button>
-                              </DialogFooter>
-                            </DialogContent>
-                          </Dialog>
-                        )}
-                        {a.status === 'completed' && (
-                          <Button size="sm" variant="ghost" className="h-8 text-[11px] font-normal text-muted-text hover:text-primary" asChild>
-                            <Link href={`/dashboard/manager/reports/${a.id}`}>
-                              Review report
-                            </Link>
-                          </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </Card>
-      </div>
-
-      {/* Mobile Card View */}
-      <div className="flex md:hidden flex-col gap-3">
-        {filteredAudits.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-4 py-12">
-            <div className="bg-muted/10 p-4 rounded-full">
-              <CheckSquare className="h-8 w-8 opacity-20" />
-            </div>
-            <p className="page-heading opacity-40">No audits found.</p>
-          </div>
-        ) : (
-          filteredAudits.map((a) => (
-            <MobileCard key={a.id} className="relative overflow-hidden">
-              <MobileCardHeader>
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1">
-                    <MobileCardTitle>{a.templateTitle}</MobileCardTitle>
-                    <MobileCardDescription className="flex items-center gap-1.5 mt-1">
-                      <MapPin className="h-3 w-3 opacity-50" />
-                      {a.locationName}
-                    </MobileCardDescription>
-                  </div>
-                  {getStatusBadge(a.status)}
-                </div>
-              </MobileCardHeader>
-
-              <MobileCardContent>
-                <div className="grid grid-cols-2 gap-y-3 gap-x-2 mt-1">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[10px] uppercase tracking-wider text-muted-text font-semibold">Deadline</span>
-                    <span className="text-xs font-medium text-heading">
-                      {a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-1 items-end">
-                    <span className="text-[10px] uppercase tracking-wider text-muted-text font-semibold">Assignee</span>
-                    <span className="text-xs font-medium text-heading truncate max-w-[120px]">
-                      {a.assignedAuditorId ? (
-                        auditors.find(aud => aud.id === a.assignedAuditorId)?.name || 'Assigned'
-                      ) : (
-                        <span className="italic opacity-50">Unassigned</span>
+                      </div>
+                      {a.isSurprise && (
+                        <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-warning font-medium">
+                          <span>Surprise</span>
+                        </div>
                       )}
-                    </span>
-                  </div>
-                </div>
-              </MobileCardContent>
-
-              <MobileCardFooter className="mt-3">
-                {(!a.status || a.status.toLowerCase() !== 'completed') ? (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="w-full h-9 text-xs font-semibold"
-                    onClick={() => {
-                      setSelectedAudit(a);
-                      setOpen(true);
-                    }}
-                  >
-                    <UserPlus className="h-3.5 w-3.5 mr-2" />
-                    {a.assignedAuditorId ? 'Reassign' : 'Assign Auditor'}
-                  </Button>
-                ) : (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="w-full h-9 text-xs font-semibold" 
-                    asChild
-                  >
-                    <Link href={`/dashboard/manager/reports/${a.id}`}>
-                      View Report
-                    </Link>
-                  </Button>
-                )}
-              </MobileCardFooter>
-            </MobileCard>
-          ))
-        )}
-      </div>
+                    </TableCell>
+                    <TableCell className="standard-table-cell">
+                      <span className="text-[14px] font-normal text-body">{a.locationName}</span>
+                    </TableCell>
+                    <TableCell className="standard-table-cell">
+                      <span className="text-[13px] font-normal text-muted-text">
+                        {a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    </TableCell>
+                    <TableCell className="standard-table-cell">{getStatusBadge(a.status)}</TableCell>
+                    <TableCell className="standard-table-cell">
+                      {a.assignedAuditorId ? (
+                        <span className="text-[14px] font-normal text-body">
+                          {auditors.find(aud => aud.id === a.assignedAuditorId)?.name || 'Assigned'}
+                        </span>
+                      ) : (
+                        <span className="text-[13px] font-normal text-muted-text/60 italic">Unassigned</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="standard-table-cell text-right pr-6">
+                      {(!a.status || a.status.toLowerCase() !== 'completed') && (
+                        <Dialog open={open && selectedAudit?.id === a.id} onOpenChange={(val) => {
+                          if (!val) {
+                            setOpen(false);
+                            setSelectedAudit(null);
+                          }
+                        }}>
+                          <DialogTrigger asChild>
+                            <Button variant="default" size="sm" className={cn(
+                              "h-8 text-xs font-medium shadow-sm transition-all",
+                              a.assignedAuditorId ? "bg-muted hover:bg-muted/80 text-muted-foreground shadow-none" : ""
+                            )} onClick={() => {
+                              setSelectedAudit(a);
+                              setOpen(true);
+                            }}>
+                              <UserPlus className="h-3.5 w-3.5 mr-1.5" />
+                              {a.assignedAuditorId ? 'Reassign' : 'Assign auditor'}
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[450px]">
+                            <DialogHeader>
+                              <DialogTitle className="font-semibold text-heading">
+                                {a.assignedAuditorId ? 'Reassign auditor' : 'Assign auditor'}
+                              </DialogTitle>
+                              <DialogDescription className="text-muted-text text-sm">
+                                Assigning <strong className="text-heading font-medium">{a.templateTitle}</strong> to {a.locationName}
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-4 py-4">
+                              <div className="space-y-2">
+                                <Label className="text-body font-normal">Select auditor</Label>
+                                <Select value={selectedAuditor} onValueChange={setSelectedAuditor}>
+                                  <SelectTrigger className="h-10 text-body bg-background border-border/50">
+                                    <SelectValue placeholder="Choose an auditor" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {auditors.map(aud => (
+                                      <SelectItem key={aud.id} value={aud.id}>{aud.name}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                            <DialogFooter>
+                              <Button variant="outline" onClick={() => setOpen(false)} className="font-normal text-sm">Cancel</Button>
+                              <Button onClick={handleAssign} disabled={loading || !selectedAuditor} className="font-normal text-sm">
+                                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                Assign
+                              </Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                      {a.status === 'completed' && (
+                        <Button size="sm" variant="ghost" className="h-8 text-[11px] font-normal text-muted-text hover:text-primary">
+                          Review report
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </Card>
       {/* Bulk Assign Dialog */}
       <Dialog open={bulkDialogOpen} onOpenChange={setBulkDialogOpen}>
         <DialogContent className="sm:max-w-[450px]">

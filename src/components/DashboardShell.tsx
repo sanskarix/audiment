@@ -45,8 +45,6 @@ import {
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
 import NotificationBell from './NotificationBell';
-import { MobileBottomNav } from './mobile/MobileBottomNav';
-import { MobileAppBar } from './mobile/MobileAppBar';
 import { useAuthSync } from './AuthProvider';
 
 interface DashboardShellProps {
@@ -241,16 +239,114 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
       </div>
 
       {/* ── Mobile layout ─────────────────────────────────── */}
-      <div className="flex md:hidden flex-col h-[100dvh] bg-background">
-        <MobileAppBar title={role.charAt(0).toUpperCase() + role.slice(1)} />
-        
+      <div className="flex md:hidden flex-col h-[100dvh] bg-background typography-scope">
+
+        {/* Mobile top bar */}
+        <header className="shrink-0 h-14 px-4 border-b border-border/80 flex items-center justify-between bg-background z-20">
+          <span className="font-semibold tracking-tighter text-heading" style={{ fontSize: '20px' }}>Audiment</span>
+          <div className="flex items-center gap-2">
+            {/* Removed mobile top bar notification bell */}
+            {/* Avatar / profile */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="h-9 w-9 rounded-full border border-border/50 flex items-center justify-center bg-primary/10 shrink-0 overflow-hidden relative">
+                  {userState?.photoUrl ? (
+                    <Image
+                      src={userState.photoUrl}
+                      alt="User"
+                      width={32}
+                      height={32}
+                      priority={false}
+                      className="h-full w-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <User2 className="h-4 w-4 text-primary" />
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="bottom" align="end" className="min-w-52">
+                <DropdownMenuLabel className="font-normal flex flex-col space-y-0.5">
+                  <span className="text-sm font-medium text-heading">{userState?.name}</span>
+                  <span className="text-xs text-muted-text">{userState?.email}</span>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer" asChild>
+                  <Link
+                    href={
+                      role === 'admin' ? '/dashboard/admin/settings' :
+                        role === 'manager' ? '/dashboard/manager/settings' :
+                          '/dashboard/auditor/settings'
+                    }
+                    className="flex items-center w-full"
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+                  <div className="relative mr-2 h-4 w-4 flex items-center justify-center">
+                    <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="absolute h-4 w-4 rotate-0 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  </div>
+                  <span>{theme === 'light' ? 'Dark mode' : 'Light mode'}</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:bg-destructive/10 cursor-pointer font-medium">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </header>
+
         {/* Scrollable content */}
-        <main className="flex-1 overflow-y-auto pb-16">
+        <main className="flex-1 overflow-y-auto pb-20">
           {children}
         </main>
 
-        {/* New Mobile Bottom Navigation */}
-        <MobileBottomNav role={role} />
+        {/* Bottom navigation bar */}
+        <nav className="shrink-0 fixed bottom-0 left-0 right-0 z-30 h-16 bg-background border-t border-border/80 flex items-center justify-around px-2">
+          {mobileNavItems.map((item: any) => {
+            const isActive = pathname === item.href;
+
+            if (item.component) {
+              const Comp = item.component;
+              return (
+                <div key={item.title} className="flex flex-col items-center justify-center gap-1 flex-1 h-full rounded-xl transition-colors text-muted-text/60">
+                  <div className="h-10 w-12 flex items-center justify-center">
+                    <Comp variant="sidebar-item" userRole={role} />
+                  </div>
+                  <span className="text-[10px] font-medium leading-none">{item.title}</span>
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex flex-col items-center justify-center gap-1 flex-1 h-full rounded-xl transition-colors",
+                  isActive ? "text-primary" : "text-muted-text/60 hover:text-muted-text"
+                )}
+              >
+                <div className={cn(
+                  "h-8 w-12 rounded-2xl flex items-center justify-center transition-all",
+                  isActive ? "bg-primary/10" : ""
+                )}>
+                  <item.icon className={cn("h-5 w-5 transition-all", isActive ? "text-primary" : "")} />
+                </div>
+                <span className={cn(
+                  "text-[10px] font-medium leading-none",
+                  isActive ? "text-primary" : "text-muted-text/60"
+                )}>
+                  {item.title}
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
       </div>
     </>
   );

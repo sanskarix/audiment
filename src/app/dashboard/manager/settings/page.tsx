@@ -7,7 +7,7 @@ import {
   getDoc,
   setDoc,
 } from 'firebase/firestore';
-import { updatePassword, updateEmail, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import { updatePassword, updateEmail, reauthenticateWithCredential, EmailAuthProvider, getIdToken } from 'firebase/auth';
 import DashboardShell from '@/components/DashboardShell';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -99,7 +99,9 @@ export default function ManagerSettingsPage() {
       const image = new Image();
       image.addEventListener('load', () => resolve(image));
       image.addEventListener('error', error => reject(error));
-      image.setAttribute('crossOrigin', 'anonymous');
+      if (!url.startsWith('data:')) {
+        image.setAttribute('crossOrigin', 'anonymous');
+      }
       image.src = url;
     });
 
@@ -121,29 +123,50 @@ export default function ManagerSettingsPage() {
       pixelCrop.width,
       pixelCrop.height
     );
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {
-        resolve(new File([blob!], 'cropped.jpg', { type: 'image/jpeg' }));
+        if (!blob) {
+          reject(new Error('Canvas is empty'));
+          return;
+        }
+        resolve(new File([blob], 'cropped.jpg', { type: 'image/jpeg' }));
       }, 'image/jpeg');
     });
   };
 
   const handleCropSave = async () => {
     if (!imageToCrop || !croppedAreaPixels || !uid) return;
-    setCropModalOpen(false);
     setUploadingPhoto(true);
     try {
       const croppedFile = await getCroppedImg(imageToCrop, croppedAreaPixels);
       const fd = new FormData();
       fd.append('file', croppedFile);
-      const res = await fetch('/api/upload', { method: 'POST', body: fd });
-      if (!res.ok) throw new Error('Upload failed');
+      
+      const authHeaders: any = {};
+      if (auth.currentUser) {
+        const idToken = await getIdToken(auth.currentUser);
+        authHeaders['Authorization'] = `Bearer ${idToken}`;
+      }
+
+      const res = await fetch('/api/upload', { 
+        method: 'POST', 
+        body: fd,
+        headers: authHeaders
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: 'Upload failed' }));
+        throw new Error(errorData.error || 'Upload failed');
+      }
+      
       const { url } = await res.json();
       await setDoc(doc(db, 'users', uid!), { photoUrl: url }, { merge: true });
       setUserDoc((prev: any) => ({ ...prev, photoUrl: url }));
       flashSuccess('profile-photo');
-    } catch (err) {
+      setCropModalOpen(false);
+    } catch (err: any) {
       console.error(err);
+      alert(`Upload failed: ${err.message || 'Please try again.'}`);
     } finally {
       setUploadingPhoto(false);
       setImageToCrop(null);
@@ -401,8 +424,11 @@ export default function ManagerSettingsPage() {
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCropModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleCropSave}>Save Image</Button>
+            <Button variant="outline" onClick={() => setCropModalOpen(false)} disabled={uploadingPhoto}>Cancel</Button>
+            <Button onClick={handleCropSave} disabled={uploadingPhoto}>
+               {uploadingPhoto ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+               {uploadingPhoto ? 'Uploading...' : 'Save Image'}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

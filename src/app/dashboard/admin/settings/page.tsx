@@ -14,7 +14,7 @@ import {
   getDocs,
   orderBy
 } from 'firebase/firestore';
-import { updatePassword, updateEmail, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import { updatePassword, updateEmail, reauthenticateWithCredential, EmailAuthProvider, getIdToken } from 'firebase/auth';
 import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
@@ -42,6 +42,7 @@ import {
   Lock
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 import Cropper from 'react-easy-crop';
 
 const TIMEZONES = [
@@ -112,7 +113,7 @@ function SettingsContent() {
 
   const [profileForm, setProfileForm] = useState({ name: '', email: '' });
   const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-  const [orgForm, setOrgForm] = useState({ name: '', timezone: 'UTC' });
+  const [orgForm, setOrgForm] = useState({ name: '', timezone: 'UTC', defaultStartTime: '10:00', defaultEndTime: '22:00' });
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
   const { isSynced, uid, orgId } = useAuthSync();
@@ -133,7 +134,12 @@ function SettingsContent() {
         if (oSnap.exists()) {
           const d = oSnap.data();
           setOrgDoc(d);
-          setOrgForm({ name: d.name || '', timezone: d.timezone || 'UTC' });
+          setOrgForm({ 
+            name: d.name || '', 
+            timezone: d.timezone || 'UTC',
+            defaultStartTime: d.defaultStartTime || '10:00',
+            defaultEndTime: d.defaultEndTime || '22:00'
+          });
         }
         const nSnap = await getDoc(doc(db, 'organizations', orgId!, 'settings', 'notifications'));
         if (nSnap.exists()) {
@@ -170,7 +176,9 @@ function SettingsContent() {
       const image = new window.Image();
       image.addEventListener('load', () => resolve(image));
       image.addEventListener('error', error => reject(error));
-      image.setAttribute('crossOrigin', 'anonymous');
+      if (!url.startsWith('data:')) {
+        image.setAttribute('crossOrigin', 'anonymous');
+      }
       image.src = url;
     });
 
@@ -192,33 +200,56 @@ function SettingsContent() {
       pixelCrop.width,
       pixelCrop.height
     );
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {
-        resolve(new File([blob!], 'cropped.jpg', { type: 'image/jpeg' }));
+        if (!blob) {
+          reject(new Error('Canvas is empty'));
+          return;
+        }
+        resolve(new File([blob], 'cropped.jpg', { type: 'image/jpeg' }));
       }, 'image/jpeg');
     });
   };
 
   const handleCropSave = async () => {
     if (!imageToCrop || !croppedAreaPixels || !cropTarget || !uid || !orgId) return;
-    setCropModalOpen(false);
     setUploadingPhoto(true);
     try {
       const croppedFile = await getCroppedImg(imageToCrop, croppedAreaPixels);
       const fd = new FormData();
       fd.append('file', croppedFile);
-      const res = await fetch('/api/upload', { method: 'POST', body: fd });
-      if (!res.ok) throw new Error('Upload failed');
+      
+      const authHeaders: any = {};
+      if (auth.currentUser) {
+        const idToken = await getIdToken(auth.currentUser);
+        authHeaders['Authorization'] = `Bearer ${idToken}`;
+      }
+
+      const res = await fetch('/api/upload', { 
+        method: 'POST', 
+        body: fd,
+        headers: authHeaders
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: 'Upload failed' }));
+        throw new Error(errorData.error || 'Upload failed');
+      }
+      
       const { url } = await res.json();
       if (cropTarget === 'user') {
         await setDoc(doc(db, 'users', uid), { photoUrl: url }, { merge: true });
         setUserDoc((prev: any) => ({ ...prev, photoUrl: url }));
+        flashSuccess('profile');
       } else {
         await setDoc(doc(db, 'organizations', orgId), { logoUrl: url }, { merge: true });
         setOrgDoc((prev: any) => ({ ...prev, logoUrl: url }));
+        flashSuccess('org');
       }
-    } catch (err) {
+      setCropModalOpen(false);
+    } catch (err: any) {
       console.error(err);
+      alert(`Upload failed: ${err.message || 'Please try again.'}`);
     } finally {
       setUploadingPhoto(false);
       setImageToCrop(null);
@@ -293,7 +324,12 @@ function SettingsContent() {
     if (!orgId) return;
     setUpdating('org');
     try {
-      await setDoc(doc(db, 'organizations', orgId), { name: orgForm.name, timezone: orgForm.timezone }, { merge: true });
+      await setDoc(doc(db, 'organizations', orgId), { 
+        name: orgForm.name, 
+        timezone: orgForm.timezone,
+        defaultStartTime: orgForm.defaultStartTime,
+        defaultEndTime: orgForm.defaultEndTime
+      }, { merge: true });
       setOrgDoc((prev: any) => ({ ...prev, ...orgForm }));
       flashSuccess('org');
     } catch (err: any) { alert(err.message || 'Failed to update'); }
@@ -318,24 +354,71 @@ function SettingsContent() {
         where('organizationId', '==', orgId),
         orderBy('createdAt', 'desc')
       ));
-      const audits = snap.docs.map(d => d.data());
+      const audits = snap.docs.map(d => ({ id: d.id, ...d.data() })) as any[];
       if (!audits.length) { alert('No data to export'); return; }
-      const headers = ['Audit Title', 'Location', 'Auditor', 'Score', 'Date', 'Status'];
-      const rows = audits.map(a => [
-        `"${a.templateName || 'Audit'}"`,
-        `"${a.locationName || 'N/A'}"`,
-        `"${a.auditorName || 'N/A'}"`,
-        a.scorePercentage ? `${a.scorePercentage}%` : 'N/A',
-        a.createdAt?.toDate ? a.createdAt.toDate().toLocaleDateString() : 'N/A',
-        a.status
-      ]);
-      const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-      a.download = `audiment_${new Date().toISOString().split('T')[0]}.csv`;
-      a.click();
-    } catch (err) { console.error(err); }
-    finally { setUpdating(null); }
+
+      // 1. Collect unique user IDs to fetch names
+      const userIds = new Set<string>();
+      audits.forEach(a => {
+        if (a.assignedAuditorId) userIds.add(a.assignedAuditorId);
+        if (a.assignedManagerId) userIds.add(a.assignedManagerId);
+      });
+
+      const userLookup: Record<string, string> = { 'System': 'System' };
+      
+      // 2. Fetch users in batches of 30 (Firestore limit for 'in' query)
+      const userIdArray = Array.from(userIds).filter(id => id && id !== 'System');
+      const batchSize = 30;
+      for (let i = 0; i < userIdArray.length; i += batchSize) {
+        const batchIds = userIdArray.slice(i, i + batchSize);
+        const userSnaps = await getDocs(query(
+          collection(db, 'users'),
+          where('uid', 'in', batchIds)
+        ));
+        userSnaps.forEach(d => {
+          const u = d.data();
+          userLookup[u.uid] = u.name || 'Unknown';
+        });
+      }
+
+      // 3. Build CSV with correct order and formatting
+      const headers = ['Audit Title', 'Location', 'Manager', 'Auditor', 'Score', 'Date', 'Status'];
+      const rows = audits.map(a => {
+        const auditorName = userLookup[a.assignedAuditorId] || 'Unassigned';
+        const managerName = userLookup[a.assignedManagerId] || 'Unassigned';
+        const score = a.scorePercentage !== undefined ? `${Math.round(a.scorePercentage)}%` : 'N/A';
+        const date = a.createdAt?.toDate ? format(a.createdAt.toDate(), 'dd/MM/yyyy') : 'N/A';
+        
+        // Capitalise status: published -> Published, in_progress -> In Progress
+        const statusStr = a.status ? a.status.split('_').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : 'N/A';
+
+        return [
+          `"${(a.templateTitle || a.templateName || 'Audit').replace(/"/g, '""')}"`,
+          `"${(a.locationName || 'N/A').replace(/"/g, '""')}"`,
+          `"${managerName.replace(/"/g, '""')}"`,
+          `"${auditorName.replace(/"/g, '""')}"`,
+          `"${score}"`,
+          `"${date}"`,
+          `"${statusStr}"`
+        ];
+      });
+
+      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `audiment_audit_export_${format(new Date(), 'yyyyMMdd')}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) { 
+      console.error('[Settings] Export failed:', err);
+      alert('Failed to export data. Check console for details.');
+    } finally { 
+      setUpdating(null); 
+    }
   };
 
   if (loading) {
@@ -563,6 +646,20 @@ function SettingsContent() {
                       </Select>
                     </div>
                   </div>
+
+                  <div className="grid gap-4 mt-6 pt-6 border-t border-border/50">
+                    <h3 className="text-[13px] font-semibold text-heading">Audit Time Defaults</h3>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="grid gap-1.5">
+                        <Label className="text-[11px] font-semibold text-muted-text uppercase tracking-wider">Audit Start Time</Label>
+                        <Input type="time" value={orgForm.defaultStartTime} onChange={e => setOrgForm(p => ({ ...p, defaultStartTime: e.target.value }))} className="h-10" />
+                      </div>
+                      <div className="grid gap-1.5">
+                        <Label className="text-[11px] font-semibold text-muted-text uppercase tracking-wider">Audit Deadline (EOD)</Label>
+                        <Input type="time" value={orgForm.defaultEndTime} onChange={e => setOrgForm(p => ({ ...p, defaultEndTime: e.target.value }))} className="h-10" />
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
                 <CardFooter className="bg-muted/5 border-t border-border/30 py-3 px-6 justify-end">
                   <Button onClick={updateOrganization} disabled={updating === 'org'} className="h-9 px-4 gap-2 text-[13px]">
@@ -676,8 +773,11 @@ function SettingsContent() {
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCropModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleCropSave}>Save Image</Button>
+            <Button variant="outline" onClick={() => setCropModalOpen(false)} disabled={uploadingPhoto}>Cancel</Button>
+            <Button onClick={handleCropSave} disabled={uploadingPhoto}>
+               {uploadingPhoto ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+               {uploadingPhoto ? 'Uploading...' : 'Save Image'}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

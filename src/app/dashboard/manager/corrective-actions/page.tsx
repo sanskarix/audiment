@@ -3,7 +3,8 @@
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
-import { db } from '@/lib/firebase';
+import { db, auth } from '@/lib/firebase';
+import { getIdToken } from 'firebase/auth';
 import {
   collection,
   query,
@@ -28,6 +29,7 @@ import {
   Calendar,
   X,
   Camera,
+  ImagePlus,
   MessageSquare,
   AlertCircle,
   TrendingDown,
@@ -81,7 +83,97 @@ export default function ManagerCorrectiveActionsPage() {
   const [resolutionPhotos, setResolutionPhotos] = useState<string[]>([]);
   const [isResolving, setIsResolving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+
+  // Camera state
+  const [isCameraActive, setIsCameraActive] = useState(false);
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [capturedBlob, setCapturedBlob] = useState<Blob | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (!selectedCA) {
+      stopCamera();
+      setCapturedImage(null);
+      setCapturedBlob(null);
+      setResolutionNote('');
+      setResolutionPhotos([]);
+    }
+  }, [selectedCA]);
+
+  useEffect(() => {
+    return () => {
+      stopCamera();
+    };
+  }, []);
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }
+      });
+      setCameraStream(stream);
+      setIsCameraActive(true);
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play().catch(e => console.error("Video play error:", e));
+        }
+      }, 100);
+    } catch (error) {
+      console.error("Error accessing camera:", error);
+      alert("Could not access camera.");
+    }
+  };
+
+  const stopCamera = () => {
+    setIsCameraActive(false);
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      setCameraStream(null);
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  };
+
+  const capturePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          if (blob) {
+            setCapturedBlob(blob);
+            setCapturedImage(URL.createObjectURL(blob));
+            stopCamera();
+          }
+        }, 'image/jpeg', 0.8);
+      }
+    }
+  };
+
+  const retakePhoto = () => {
+    setCapturedImage(null);
+    setCapturedBlob(null);
+    startCamera();
+  };
+
+  const usePhoto = async () => {
+    if (capturedBlob) {
+      const blobToUpload = capturedBlob;
+      setCapturedImage(null);
+      setCapturedBlob(null);
+      await handleFileUpload(undefined, blobToUpload);
+    }
+  };
 
 
   const fetchActions = async () => {
@@ -155,15 +247,26 @@ export default function ManagerCorrectiveActionsPage() {
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleFileUpload = async (e?: React.ChangeEvent<HTMLInputElement>, blob?: Blob) => {
+    const file = e ? e.target.files?.[0] : blob;
     if (!file) return;
 
     setIsUploading(true);
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      
+      let authHeaders: any = {};
+      if (auth.currentUser) {
+        const idToken = await getIdToken(auth.currentUser);
+        authHeaders['Authorization'] = `Bearer ${idToken}`;
+      }
+
+      const res = await fetch('/api/upload', { 
+        method: 'POST', 
+        body: formData,
+        headers: authHeaders
+      });
       if (!res.ok) throw new Error('Upload failed');
       const data = await res.json();
       setResolutionPhotos(prev => [...prev, data.url]);
@@ -414,25 +517,65 @@ export default function ManagerCorrectiveActionsPage() {
                   </div>
                 ))}
                 {(resolutionPhotos.length < 4) && (
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="aspect-square rounded-lg border-2 border-dashed border-border/50 flex flex-col items-center justify-center gap-1.5 hover:bg-muted/10 hover:border-primary/30 transition-all text-muted-text/40 hover:text-primary"
-                    disabled={isUploading}
-                  >
-                    {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
-                      <>
-                        <Camera className="h-5 w-5" />
-                        <span className="text-[10px] font-medium">Add photo</span>
-                      </>
-                    )}
-                  </button>
+                  <div className="grid grid-cols-2 gap-2 col-span-4 sm:col-span-2">
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="aspect-square rounded-lg border-2 border-dashed border-border/50 flex flex-col items-center justify-center gap-1.5 hover:bg-muted/10 hover:border-primary/30 transition-all text-muted-text/40 hover:text-primary"
+                      disabled={isUploading || isCameraActive || !!capturedImage}
+                    >
+                      {isUploading && !isCameraActive && !capturedImage ? <Loader2 className="h-4 w-4 animate-spin" /> : (
+                        <>
+                          <ImagePlus className="h-5 w-5" />
+                          <span className="text-[10px] font-medium text-center leading-tight">Upload<br/>Photo</span>
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={startCamera}
+                      className="aspect-square rounded-lg border-2 border-dashed border-border/50 flex flex-col items-center justify-center gap-1.5 hover:bg-muted/10 hover:border-primary/30 transition-all text-muted-text/40 hover:text-primary"
+                      disabled={isUploading || isCameraActive || !!capturedImage}
+                    >
+                      <Camera className="h-5 w-5" />
+                      <span className="text-[10px] font-medium text-center leading-tight">Take<br/>Photo</span>
+                    </button>
+                  </div>
                 )}
               </div>
+
+              {isCameraActive && (
+                <div className="mt-4 space-y-3 p-4 bg-muted/5 rounded-xl border border-border/50">
+                  <div className="relative aspect-video md:aspect-[4/3] bg-black rounded-lg overflow-hidden flex items-center justify-center">
+                    <video ref={videoRef} playsInline muted className="h-full w-full object-cover" />
+                    <canvas ref={canvasRef} className="hidden" />
+                  </div>
+                  <div className="flex gap-2 justify-end">
+                    <Button variant="outline" onClick={stopCamera}>Cancel</Button>
+                    <Button onClick={capturePhoto} className="gap-2"><Camera className="h-4 w-4"/> Capture</Button>
+                  </div>
+                </div>
+              )}
+
+              {capturedImage && (
+                <div className="mt-4 space-y-3 p-4 bg-muted/5 rounded-xl border border-border/50">
+                  <div className="relative aspect-video md:aspect-[4/3] bg-black rounded-lg overflow-hidden flex items-center justify-center">
+                    <Image src={capturedImage} alt="Captured preview" fill className="object-cover" />
+                  </div>
+                  <div className="flex gap-2 justify-end">
+                    <Button variant="outline" onClick={retakePhoto}>Retake</Button>
+                    <Button onClick={usePhoto} className="gap-2" disabled={isUploading}>
+                      {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4"/>} 
+                      Use Photo
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               <input
                 type="file"
                 ref={fileInputRef}
                 className="hidden"
                 accept="image/*"
+                capture={undefined}
                 onChange={handleFileUpload}
               />
             </div>

@@ -52,8 +52,6 @@ import {
   UploadCloud,
   FlipHorizontal,
   MapPin,
-  Plus,
-  FileText
 } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from '@/lib/utils';
@@ -104,10 +102,9 @@ export default function AuditExecutionPage() {
   // Geolocation popup state
   const [showLocationErrorDialog, setShowLocationErrorDialog] = useState(false);
   const [showInitialLocationPrompt, setShowInitialLocationPrompt] = useState(false);
-  const [showPermissionErrorDialog, setShowPermissionErrorDialog] = useState(false);
 
-  // State and refs already defined above
- 
+  // No longer needed
+
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
@@ -189,31 +186,6 @@ export default function AuditExecutionPage() {
     notes: '',
     photoUrls: []
   }) : null;
-
-  const getLocation = useCallback(async (): Promise<{ locationCaptured: boolean; latitude: number | null; longitude: number | null }> => {
-    if (typeof window === 'undefined') {
-      return { locationCaptured: false, latitude: null, longitude: null };
-    }
-    if (!('geolocation' in navigator)) {
-      return { locationCaptured: false, latitude: null, longitude: null };
-    }
-
-    return await new Promise((resolve) => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve({
-            locationCaptured: true,
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        },
-        () => {
-          resolve({ locationCaptured: false, latitude: null, longitude: null });
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-      );
-    });
-  }, []);
 
   const handleAnswer = (answer: string, score: number) => {
     if (!currentQuestion) return;
@@ -297,22 +269,33 @@ export default function AuditExecutionPage() {
     }
   }, []);
 
-  const openCamera = async () => {
-    try {
-      setCapturing(true); // Loading state while requesting
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false
-      });
-      cameraStreamRef.current = stream;
-      setCameraFacing('environment');
-      setCameraOpen(true);
-    } catch (err) {
-      console.error('Camera error:', err);
-      setShowPermissionErrorDialog(true);
-    } finally {
-      setCapturing(false);
-    }
+  const cameraVideoCallbackRef = useCallback((videoEl: HTMLVideoElement | null) => {
+    // Always keep cameraVideoRef in sync – capturePhoto reads from it
+    cameraVideoRef.current = videoEl;
+    if (!videoEl) return;
+    const attach = async () => {
+      try {
+        if (!cameraStreamRef.current) {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: cameraFacing }, width: { ideal: 1280 }, height: { ideal: 720 } },
+            audio: false
+          });
+          cameraStreamRef.current = stream;
+        }
+        videoEl.srcObject = cameraStreamRef.current;
+        try { await videoEl.play(); } catch (e: any) { if (e.name !== 'AbortError') console.error(e); }
+      } catch (err) {
+        console.error('Camera error:', err);
+        alert('Could not access camera. Please allow camera permissions.');
+        setCameraOpen(false);
+      }
+    };
+    attach();
+  }, [cameraFacing]);
+
+  const openCamera = () => {
+    setCameraFacing('environment');
+    setCameraOpen(true);
   };
 
   const closeCamera = () => {
@@ -321,38 +304,23 @@ export default function AuditExecutionPage() {
   };
 
   const flipCamera = async () => {
-    try {
-      stopCameraStream();
-      const newFacing = cameraFacing === 'environment' ? 'user' : 'environment';
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: newFacing }, width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false
-      });
-      cameraStreamRef.current = stream;
-      setCameraFacing(newFacing);
-      if (cameraVideoRef.current) {
-        cameraVideoRef.current.srcObject = stream;
-      }
-    } catch (err) {
-      console.error('Flip camera error:', err);
-    }
+    stopCameraStream();
+    setCameraFacing(f => f === 'environment' ? 'user' : 'environment');
+    // The cameraVideoCallbackRef will re-fire when the video element remounts due to key change
   };
-
-  const cameraVideoCallbackRef = useCallback((videoEl: HTMLVideoElement | null) => {
-    cameraVideoRef.current = videoEl;
-    if (videoEl && cameraStreamRef.current) {
-      videoEl.srcObject = cameraStreamRef.current;
-      videoEl.play().catch(e => {
-        if (e.name !== 'AbortError') console.error('Video play error:', e);
-      });
-    }
-  }, []);
 
   const capturePhoto = async () => {
     if (!cameraVideoRef.current || !cameraStreamRef.current || !currentQuestion || !uid) return;
     setCapturing(true);
     try {
       const video = cameraVideoRef.current;
+
+      if (video.readyState < 2 || video.videoWidth === 0 || video.videoHeight === 0) {
+        alert('Camera stream is not fully ready. Please wait a second and try again.');
+        setCapturing(false);
+        return;
+      }
+
       const canvas = document.createElement('canvas');
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
@@ -365,15 +333,34 @@ export default function AuditExecutionPage() {
       ctx.drawImage(video, 0, 0);
 
       canvas.toBlob(async (blob) => {
-        if (!blob) return;
+        if (!blob) {
+          console.error('Canvas produced an empty blob');
+          alert('Photo capture failed: image data is empty.');
+          setCapturing(false);
+          return;
+        }
         try {
           const formData = new FormData();
           formData.append('file', blob, `photo_${Date.now()}.jpg`);
           setUploading(currentQuestion.id);
           closeCamera();
 
-          const response = await fetch('/api/upload', { method: 'POST', body: formData });
-          if (!response.ok) throw new Error('Upload failed');
+          let authHeaders: any = {};
+          if (auth.currentUser) {
+            const idToken = await getIdToken(auth.currentUser);
+            authHeaders['Authorization'] = `Bearer ${idToken}`;
+          }
+
+          const response = await fetch('/api/upload', { 
+            method: 'POST', 
+            body: formData,
+            headers: authHeaders
+          });
+          
+          if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.error || `Upload failed with status ${response.status}`);
+          }
           const data = await response.json();
 
           setResponses(prev => ({
@@ -391,22 +378,52 @@ export default function AuditExecutionPage() {
           setHasUnsavedChanges(true);
         } catch (err: any) {
           if (err.name === 'AbortError') return;
-          console.error('Upload failed', err);
+          console.error('Upload failed:', err);
           posthog.captureException(err);
-          alert('Photo upload failed. Please try again.');
+          alert(`Photo upload failed: ${err.message || 'Please try again.'}`);
         } finally {
           setUploading(null);
           setCapturing(false);
         }
       }, 'image/jpeg', 0.9);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Capture error:', err);
+      alert(`Photo capture error: ${err.message || 'Unknown error'}`);
       setCapturing(false);
     }
   };
 
   // Cleanup camera on unmount
   useEffect(() => { return () => { stopCameraStream(); }; }, [stopCameraStream]);
+
+  const getLocation = (): Promise<{ latitude: number; longitude: number; locationCaptured: boolean }> => {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
+        resolve({ latitude: 0, longitude: 0, locationCaptured: false });
+        return;
+      }
+
+      const timeout = setTimeout(() => {
+        resolve({ latitude: 0, longitude: 0, locationCaptured: false });
+      }, 8000);
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          clearTimeout(timeout);
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            locationCaptured: true
+          });
+        },
+        () => {
+          clearTimeout(timeout);
+          resolve({ latitude: 0, longitude: 0, locationCaptured: false });
+        },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+      );
+    });
+  };
 
   const saveProgress = async (isFinal = false) => {
     console.log(`[AuditSubmission] Starting saveProgress. isFinal: ${isFinal}`);
@@ -631,48 +648,39 @@ export default function AuditExecutionPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background overflow-x-hidden">
       {/* Header with Progress Bar */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl px-4 md:px-6 py-3 md:py-4 shadow-sm">
+      <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl px-6 py-4 shadow-sm">
         <div className="mx-auto max-w-2xl w-full">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex flex-col">
-              <p className="text-[10px] md:text-[11px] font-bold text-muted-text/60 uppercase tracking-widest truncate max-w-[150px] md:max-w-none">
-                {audit?.templateTitle} • {audit?.locationName}
+          <div className="flex items-center justify-between mb-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                if (hasUnsavedChanges) {
+                  setShowExitDialog(true);
+                } else {
+                  router.push('/dashboard/auditor');
+                }
+              }}
+              className="gap-2 font-medium text-muted-text hover:text-destructive hover:bg-destructive/10 text-xs tracking-tight p-0 h-auto"
+            >
+              <ChevronLeft className="h-4 w-4" /> Back
+            </Button>
+            <div className="text-center">
+              <p className="text-sm font-semibold text-heading">
+                Question {currentIndex + 1} <span className="text-muted-text/40 font-normal">of {questions.length}</span>
               </p>
-              <h1 className="text-sm md:text-base font-bold text-heading">
-                Step {currentIndex + 1} <span className="text-muted-text/40 font-normal">of {questions.length}</span>
-              </h1>
             </div>
-            
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => saveProgress(false)}
-                disabled={saving}
-                className="h-8 px-2 md:px-3 text-primary hover:bg-primary/5 font-semibold text-xs transition-all"
-              >
-                {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <UploadCloud className="h-3.5 w-3.5 mr-1" />}
-                <span className="hidden md:inline">Save progress</span>
-                <span className="md:hidden">Save</span>
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  if (hasUnsavedChanges) {
-                    setShowExitDialog(true);
-                  } else {
-                    router.push('/dashboard/auditor');
-                  }
-                }}
-                className="h-8 w-8 md:w-auto md:px-3 p-0 text-muted-text hover:text-destructive hover:bg-destructive/5"
-              >
-                <X className="h-4 w-4 md:mr-1" />
-                <span className="hidden md:inline">Exit</span>
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => saveProgress(false)}
+              disabled={saving}
+              className="h-8 px-3 gap-2 font-medium text-xs border-primary/20 text-primary hover:bg-primary/5 active:scale-95"
+            >
+              {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <UploadCloud className="h-3.5 w-3.5" />} Save
+            </Button>
           </div>
-          <div className="relative h-1 w-full bg-muted rounded-full overflow-hidden">
+          <div className="relative h-1.5 w-full bg-muted rounded-full overflow-hidden">
             <div
               className="absolute top-0 left-0 h-full bg-primary transition-all duration-500 ease-out"
               style={{ width: `${progressValue}%` }}
@@ -681,72 +689,70 @@ export default function AuditExecutionPage() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col px-4 md:px-6 py-6 md:py-12 max-w-2xl mx-auto w-full">
-        <div className="flex-1 flex flex-col justify-center space-y-8 md:space-y-12">
-          <div className="space-y-4 md:space-y-6">
+      <main className="flex-1 flex flex-col justify-center px-6 py-8 max-w-2xl mx-auto w-full">
+        <div className="space-y-8">
+          <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Badge
                 variant={currentQuestion.severity === 'critical' ? 'destructive' : 'secondary'}
                 className={cn(
-                  "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md",
+                  "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5",
                   currentQuestion.severity !== 'critical' && "bg-muted text-muted-text"
                 )}
               >
                 {currentQuestion.severity}
               </Badge>
               {currentQuestion.requiresPhoto && (
-                <Badge variant="outline" className="text-[10px] font-bold text-amber-600 border-amber-200 bg-amber-50 tracking-wider px-2 py-0.5 rounded-md">
+                <Badge variant="outline" className="text-[10px] font-bold text-warning border-warning/30 bg-warning/5 tracking-wider px-2 py-0.5">
                   PHOTO REQUIRED
                 </Badge>
               )}
             </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-heading leading-tight">
+            <h2 className="text-xl md:text-2xl font-bold text-heading leading-tight mb-6">
               {currentQuestion.questionText}
             </h2>
           </div>
 
-          <div className="space-y-8 md:space-y-12">
+          <div className="space-y-10">
             {/* Question Input */}
-            <div className="w-full">
+            <div>
               {currentQuestion.questionType === 'yes_no' ? (
-                <div className="flex flex-col sm:flex-row gap-4 w-full">
+                <div className="flex gap-3 w-full">
                   <Button
                     variant={currentResponse?.answer === 'yes' ? 'default' : 'outline'}
                     className={cn(
-                      "flex-1 h-16 md:h-20 text-xl font-bold rounded-2xl border-2 transition-all active:scale-[0.97]",
+                      "flex-1 h-14 text-lg font-semibold rounded-xl border-2 transition-all",
                       currentResponse?.answer === 'yes'
-                        ? "bg-success hover:bg-success/90 text-success-foreground border-success shadow-lg shadow-success/20"
-                        : "hover:bg-success/5 border-border text-muted-text"
+                        ? "bg-success hover:bg-success/90 text-success-foreground border-success shadow-lg active:scale-95"
+                        : "hover:bg-success/5 border-border active:scale-95"
                     )}
                     onClick={() => handleAnswer('yes', 1)}
-                   >
-                    <CheckCircle2 className={cn("mr-2 h-6 w-6", currentResponse?.answer === 'yes' ? "opacity-100" : "opacity-20")} />
+                  >
                     Yes
                   </Button>
                   <Button
                     variant={currentResponse?.answer === 'no' ? 'default' : 'outline'}
                     className={cn(
-                      "flex-1 h-16 md:h-20 text-xl font-bold rounded-2xl border-2 transition-all active:scale-[0.97]",
+                      "flex-1 h-14 text-lg font-semibold rounded-xl border-2 transition-all",
                       currentResponse?.answer === 'no'
-                        ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground border-destructive shadow-lg shadow-destructive/20"
-                        : "hover:bg-destructive/5 border-border text-muted-text"
+                        ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground border-destructive shadow-lg active:scale-95"
+                        : "hover:bg-destructive/5 border-border active:scale-95"
                     )}
                     onClick={() => handleAnswer('no', 0)}
                   >
-                    <X className={cn("mr-2 h-6 w-6", currentResponse?.answer === 'no' ? "opacity-100" : "opacity-20")} />
                     No
                   </Button>
                 </div>
               ) : (
-                <div className="grid grid-cols-5 gap-2 md:gap-3">
+                <div className="flex flex-wrap gap-2">
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                     <Button
                       key={num}
                       variant={currentResponse?.score === num ? 'default' : 'outline'}
                       className={cn(
-                        "h-12 md:h-14 p-0 font-bold text-lg transition-all rounded-xl active:scale-95",
+                        "w-10 h-10 p-0 font-bold text-sm transition-all rounded-lg active:scale-95",
                         currentResponse?.score === num
-                          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                          ? "bg-primary text-primary-foreground shadow-md"
                           : "hover:bg-primary/10 hover:border-primary/30 text-muted-text"
                       )}
                       onClick={() => handleAnswer(num.toString(), num)}
@@ -758,67 +764,55 @@ export default function AuditExecutionPage() {
               )}
             </div>
 
-            {/* Photo & Notes Group */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pt-8 border-t border-border/50">
-              {/* Photo Attachment Area */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs font-bold text-muted-text uppercase tracking-widest flex items-center gap-2">
-                    <Camera className="h-3.5 w-3.5" /> Evidence photos
-                  </Label>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={openCamera}
-                    disabled={!!uploading}
-                    className="h-8 md:h-9 px-3 gap-2 font-bold text-xs text-primary hover:bg-primary/5 rounded-full"
-                  >
-                    {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
-                    Add photo
-                  </Button>
-                </div>
-
-                {isPhotoRequired && !hasPhoto && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/5 border border-destructive/10 text-destructive animate-pulse">
-                    <AlertCircle className="h-4 w-4" />
-                    <span className="text-[11px] font-bold uppercase tracking-tight">Photo evidence required</span>
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-3">
-                  {currentResponse?.photoUrls.map((url, i) => (
-                    <div key={i} className="group relative w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border border-border/50 shadow-sm">
-                      <Image src={url} alt="Evidence" width={80} height={80} className="h-full w-full object-cover" unoptimized />
-                      <button
-                        onClick={() => removePhoto(url)}
-                        className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-all"
-                      >
-                        <X className="h-5 w-5 text-white" />
-                      </button>
-                    </div>
-                  ))}
-                  <button 
-                    onClick={openCamera}
-                    className="w-16 h-16 md:w-20 md:h-20 rounded-xl border-2 border-dashed border-muted flex items-center justify-center text-muted-text/40 hover:text-primary/40 hover:border-primary/20 transition-all"
-                  >
-                    <Plus className="h-6 w-6" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Notes Area */}
-              <div className="space-y-4">
-                <Label className="text-xs font-bold text-muted-text uppercase tracking-widest flex items-center gap-2">
-                  <FileText className="h-3.5 w-3.5" /> Additional notes
+            {/* Photo Attachment Area */}
+            <div className="mt-6 pt-6 border-t border-border/50">
+              <div className="flex items-center justify-between mb-4">
+                <Label className="text-sm font-semibold text-heading flex items-center gap-2">
+                  <ImageIcon className="h-4 w-4 opacity-70" /> Photos
                 </Label>
-                <Textarea
-                  placeholder="Describe what you see..."
-                  value={currentResponse?.notes || ''}
-                  onChange={(e) => handleNoteChange(e.target.value)}
-                  className="min-h-[100px] md:min-h-[120px] border-border/50 bg-muted/5 focus:bg-background focus:ring-1 focus:ring-primary/20 transition-all rounded-xl text-body text-[14px] resize-none"
-                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={openCamera}
+                  disabled={!!uploading}
+                  className="h-9 gap-2 font-semibold text-xs border-primary/20 text-primary hover:bg-primary/5 active:scale-95"
+                >
+                  {uploading ? <Loader2 className="h-4 w-4 animate-spin text-primary" /> : <Camera className="h-4 w-4 text-primary" />}
+                  {uploading ? 'Uploading…' : 'Take Photo'}
+                </Button>
               </div>
+
+              {isPhotoRequired && !hasPhoto && (
+                <p className="text-xs font-semibold text-destructive mb-4 animate-pulse">
+                  * Evidence photo is required for this question.
+                </p>
+              )}
+
+              <div className="flex flex-wrap gap-3">
+                {currentResponse?.photoUrls.map((url, i) => (
+                  <div key={i} className="group relative w-20 h-20 rounded-xl overflow-hidden border border-border/50 bg-muted/30">
+                    <Image src={url} alt="Evidence" width={80} height={80} className="h-full w-full object-cover" unoptimized />
+                    <button
+                      onClick={() => removePhoto(url)}
+                      className="absolute right-1 top-1 rounded-full bg-destructive shadow-lg p-1 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Notes Area */}
+            <div className="mt-4 space-y-3">
+              <Label className="text-sm font-semibold text-heading">Notes</Label>
+              <Textarea
+                placeholder="Observed discrepancies, context or details..."
+                value={currentResponse?.notes || ''}
+                onChange={(e) => handleNoteChange(e.target.value)}
+                className="min-h-[100px] border-border/50 bg-muted/5 focus:bg-background transition-all rounded-xl text-body text-[14px]"
+              />
             </div>
           </div>
         </div>
@@ -904,24 +898,7 @@ export default function AuditExecutionPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Camera Permission Error Dialog */}
-      <AlertDialog open={showPermissionErrorDialog} onOpenChange={setShowPermissionErrorDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
-              <Camera className="h-5 w-5" /> Camera Access Denied
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Audiment needs camera access to capture evidence photos. Please enable camera permissions in your browser or device settings and try again.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <Button onClick={() => setShowPermissionErrorDialog(false)}>
-              Got it
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* Unsaved Changes Guard Dialog */}
       <AlertDialog open={showExitDialog} onOpenChange={setShowExitDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>

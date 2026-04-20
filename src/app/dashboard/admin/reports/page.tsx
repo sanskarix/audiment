@@ -52,8 +52,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { format, startOfDay, endOfDay } from 'date-fns';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { MapPin } from 'lucide-react';
-import { MobileCard, MobileCardHeader, MobileCardTitle, MobileCardDescription, MobileCardContent } from '@/components/mobile/MobileCard';
 import { useAuthSync } from '@/components/AuthProvider';
 
 export default function AdminReportsPage() {
@@ -205,122 +203,72 @@ export default function AdminReportsPage() {
 
 
 
-        {/* Desktop Table View */}
-        <div className="hidden md:block">
-          <Card className="standard-card">
-            <Table>
-              <TableHeader className="standard-table-header">
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="standard-table-head">Template</TableHead>
-                  <TableHead className="standard-table-head">Location</TableHead>
-                  <TableHead className="standard-table-head">Date</TableHead>
-                  <TableHead className="standard-table-head text-right">Score</TableHead>
-                  <TableHead className="standard-table-head w-[50px]"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredReports.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="standard-table-cell py-24 text-center bg-muted/5">
-                      <div className="flex flex-col items-center gap-4">
-                        <div className="bg-muted/10 p-4 rounded-full">
-                          <FileText className="h-8 w-8 opacity-20" />
-                        </div>
-                        <p className="page-heading opacity-40">No matching reports found.</p>
+        {/* Reports Table */}
+        <Card className="standard-card">
+          <Table>
+            <TableHeader className="standard-table-header">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="standard-table-head">Template</TableHead>
+                <TableHead className="standard-table-head">Location</TableHead>
+                <TableHead className="standard-table-head">Date</TableHead>
+                <TableHead className="standard-table-head text-right">Score</TableHead>
+                <TableHead className="standard-table-head w-[50px]"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredReports.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="standard-table-cell py-24 text-center bg-muted/5">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="bg-muted/10 p-4 rounded-full">
+                        <FileText className="h-8 w-8 opacity-20" />
                       </div>
+                      <p className="page-heading opacity-40">No matching reports found.</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredReports.map((report) => (
+                  <TableRow
+                    key={report.id}
+                    className="standard-table-row group"
+                  >
+                    <TableCell className="standard-table-cell">
+                      <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
+                        <span className="text-[14px] font-normal text-body group-hover:text-primary transition-colors">{report.templateTitle}</span>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="standard-table-cell">
+                      <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
+                        <span className="text-[14px] font-normal text-body">{report.locationName}</span>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="standard-table-cell">
+                      <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
+                        <span className="text-[14px] font-normal text-body">{report.completedAt ? format(report.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</span>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="standard-table-cell text-right">
+                      <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
+                        <span className={cn(
+                          "text-[14px] font-medium tabular-nums",
+                          report.scorePercentage < 70 ? "text-destructive" : report.scorePercentage >= 90 ? "text-success" : "text-primary"
+                        )}>
+                          {report.scorePercentage}%
+                        </span>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-right">
+                      <Link href={`/dashboard/admin/reports/${report.id}`} className="flex items-center justify-end text-muted-text/30 group-hover:text-primary group-hover:translate-x-1 transition-all">
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
                     </TableCell>
                   </TableRow>
-                ) : (
-                  filteredReports.map((report) => (
-                    <TableRow
-                      key={report.id}
-                      className="standard-table-row group"
-                    >
-                      <TableCell className="standard-table-cell">
-                        <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
-                          <span className="text-[14px] font-normal text-body group-hover:text-primary transition-colors">{report.templateTitle}</span>
-                        </Link>
-                      </TableCell>
-                      <TableCell className="standard-table-cell">
-                        <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
-                          <span className="text-[14px] font-normal text-body">{report.locationName}</span>
-                        </Link>
-                      </TableCell>
-                      <TableCell className="standard-table-cell">
-                        <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
-                          <span className="text-[14px] font-normal text-body">{report.completedAt ? format(report.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</span>
-                        </Link>
-                      </TableCell>
-                      <TableCell className="standard-table-cell text-right">
-                        <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
-                          <span className={cn(
-                            "text-[14px] font-medium tabular-nums",
-                            report.scorePercentage < 70 ? "text-destructive" : report.scorePercentage >= 90 ? "text-success" : "text-primary"
-                          )}>
-                            {report.scorePercentage}%
-                          </span>
-                        </Link>
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-right">
-                        <Link href={`/dashboard/admin/reports/${report.id}`} className="flex items-center justify-end text-muted-text/30 group-hover:text-primary group-hover:translate-x-1 transition-all">
-                          <ArrowRight className="h-4 w-4" />
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </Card>
-        </div>
-
-        {/* Mobile Card View */}
-        <div className="flex md:hidden flex-col gap-3">
-          {filteredReports.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-4 py-12">
-              <div className="bg-muted/10 p-4 rounded-full">
-                <FileText className="h-8 w-8 opacity-20" />
-              </div>
-              <p className="page-heading opacity-40">No reports found.</p>
-            </div>
-          ) : (
-            filteredReports.map((report) => (
-              <Link key={report.id} href={`/dashboard/admin/reports/${report.id}`}>
-                <MobileCard className="relative overflow-hidden active:scale-[0.98] transition-all">
-                  <MobileCardHeader>
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1">
-                        <MobileCardTitle>{report.templateTitle}</MobileCardTitle>
-                        <MobileCardDescription className="flex items-center gap-1.5 mt-1">
-                          <MapPin className="h-3 w-3 opacity-50" />
-                          {report.locationName}
-                        </MobileCardDescription>
-                      </div>
-                      <div className={cn(
-                        "h-8 rounded-full flex items-center px-3 text-xs font-bold",
-                        report.scorePercentage < 70 ? "bg-destructive/10 text-destructive" : "bg-success/10 text-success"
-                      )}>
-                        {report.scorePercentage}%
-                      </div>
-                    </div>
-                  </MobileCardHeader>
-
-                  <MobileCardContent>
-                    <div className="flex items-center justify-between mt-1">
-                      <div className="flex flex-col gap-1">
-                        <span className="text-[10px] uppercase tracking-wider text-muted-text font-semibold">Completed Date</span>
-                        <span className="text-xs font-medium text-heading">
-                          {report.completedAt ? format(report.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}
-                        </span>
-                      </div>
-                      <ArrowRight className="h-4 w-4 text-muted-text/30" />
-                    </div>
-                  </MobileCardContent>
-                </MobileCard>
-              </Link>
-            ))
-          )}
-        </div>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </Card>
       </div>
     </DashboardShell>
   );

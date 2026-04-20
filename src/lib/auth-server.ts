@@ -61,19 +61,31 @@ export async function getCallerInfo(request: Request): Promise<CallerInfo | null
       const role = ((session.role as string) || '').toLowerCase() as CallerRole;
       const organizationId: string = session.organizationId;
 
-      if (!uid || !role || !organizationId) return null;
-      if (!['admin', 'manager', 'auditor'].includes(role)) return null;
+      if (!uid || !role || !organizationId) {
+        console.warn('[auth-server] Session missing fields:', { uid: !!uid, role: !!role, org: !!organizationId });
+        return null;
+      }
+      if (!['admin', 'manager', 'auditor'].includes(role)) {
+        console.warn('[auth-server] Invalid role in session:', role);
+        return null;
+      }
 
       // Re-verify the uid is still a valid Firebase user (not deleted/disabled).
-      // This is a lightweight check — getUser() throws if the user doesn't exist.
-      await adminAuth.getUser(uid);
+      try {
+        await adminAuth.getUser(uid);
+      } catch (getUserErr) {
+        console.error('[auth-server] getUser(uid) failed — user potentially deleted/disabled:', uid);
+        return null;
+      }
 
       return { uid, role, organizationId };
-    } catch {
+    } catch (err) {
+      console.error('[auth-server] Session parsing error:', err);
       return null;
     }
   }
 
+  console.warn('[auth-server] No auth header or audiment_session cookie found.');
   return null; // No credentials found
 }
 

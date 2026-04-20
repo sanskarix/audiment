@@ -27,7 +27,9 @@ service cloud.firestore {
 
     // Token-based org check — no Firestore lookup required
     function myOrgId() {
-      return request.auth.token.organizationId;
+      return request.auth.token.organizationId != null
+        ? request.auth.token.organizationId
+        : request.auth.token.orgId;
     }
 
 
@@ -165,6 +167,22 @@ service cloud.firestore {
         request.resource.data.auditorId == request.auth.uid &&
         request.resource.data.isVisibleToManager == false;
       allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ─── FLASHMOB AUDIT REQUESTS COLLECTION ─────────────────────────────────
+    // Admin: publish directly to auditors (no manager involvement)
+    // Auditor: read only their own published requests
+    // Managers: no access
+
+    match /flashmobAuditRequests/{requestId} {
+      allow read: if isAdmin() ||
+        (isAuditor() && resource.data.auditorId == request.auth.uid);
+      allow create: if isAdmin() &&
+        request.resource.data.organizationId == myOrgId() &&
+        request.resource.data.status == 'published';
+      allow update: if isAdmin() ||
+        (isAuditor() && resource.data.auditorId == request.auth.uid);
       allow delete: if isAdmin();
     }
 

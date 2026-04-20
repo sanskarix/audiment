@@ -44,7 +44,7 @@ locations / {locationId}
   - city: string
   - latitude: number
   - longitude: number
-  - assignedManagerId: string
+  - assignedManagerIds: array of strings (userIds)
   - isActive: boolean
   - createdAt: timestamp
 ```

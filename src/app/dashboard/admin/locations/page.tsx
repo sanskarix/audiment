@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import DashboardShell from '@/components/DashboardShell';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -14,17 +14,69 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Card } from '@/components/ui/card';
-import { MoreHorizontal, Pencil, Plus, MapPin, Search } from 'lucide-react';
+import { MoreHorizontal, Pencil, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import {
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxValue,
+  useComboboxAnchor,
+} from "@/components/ui/combobox"
 import { useAuthSync } from '@/components/AuthProvider';
 import posthog from 'posthog-js';
-import { MobileCard, MobileCardHeader, MobileCardTitle, MobileCardDescription, MobileCardContent } from '@/components/mobile/MobileCard';
+
+export function ManagerMultiSelect({ managers, value, onChange }: { managers: any[], value: string[], onChange: (val: string[]) => void }) {
+  const anchor = useComboboxAnchor()
+
+  const selectedManagers = managers.filter(m => value.includes(m.id));
+
+  return (
+    <Combobox
+      multiple
+      autoHighlight
+      items={managers}
+      itemToString={(item: any) => item ? item.name : ''}
+      value={selectedManagers}
+      onValueChange={(val: any[]) => onChange(val.map(v => v.id))}
+    >
+      <ComboboxChips ref={anchor} className="w-full min-h-11 border-border/50 bg-background hover:bg-muted/5 p-1 px-1.5 transition-colors">
+        <ComboboxValue placeholder="Select managers...">
+          {(values: any) => (
+            <>
+              {values.map((manager: any) => (
+                <ComboboxChip key={manager.id} className="text-xs px-2 py-0.5 bg-muted/50 border border-border/50 text-body font-medium hover:bg-muted duration-150">
+                  {manager.name}
+                </ComboboxChip>
+              ))}
+              <ComboboxChipsInput placeholder={values.length === 0 ? "Select managers..." : ""} className="text-[13px] font-normal" />
+            </>
+          )}
+        </ComboboxValue>
+      </ComboboxChips>
+      <ComboboxContent anchor={anchor} align="start" className="max-h-64 h-auto">
+        <ComboboxEmpty className="py-6 px-4">No managers found.</ComboboxEmpty>
+        <ComboboxList>
+          {(manager: any) => (
+            <ComboboxItem key={manager.id} value={manager} className="text-[13px] font-normal py-1.5 cursor-pointer">
+              {manager.name}
+            </ComboboxItem>
+          )}
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
+  )
+}
 
 export default function AdminLocationsPage() {
   const { isSynced, orgId } = useAuthSync();
   const [locations, setLocations] = useState<any[]>([]);
   const [managers, setManagers] = useState<any[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
 
 
   // Form states
@@ -41,6 +93,8 @@ export default function AdminLocationsPage() {
     address: '',
     city: '',
     assignedManagerIds: [] as string[],
+    defaultStartTime: '',
+    defaultEndTime: '',
   });
 
   const [editFormData, setEditFormData] = useState({
@@ -48,6 +102,8 @@ export default function AdminLocationsPage() {
     address: '',
     city: '',
     assignedManagerIds: [] as string[],
+    defaultStartTime: '',
+    defaultEndTime: '',
   });
 
   // No longer needed
@@ -126,6 +182,8 @@ export default function AdminLocationsPage() {
         latitude: 0,
         longitude: 0,
         assignedManagerIds: formData.assignedManagerIds,
+        defaultStartTime: formData.defaultStartTime || null,
+        defaultEndTime: formData.defaultEndTime || null,
         isActive: true,
         createdAt: serverTimestamp(),
       });
@@ -135,9 +193,9 @@ export default function AdminLocationsPage() {
         city: formData.city,
         assigned_manager_count: formData.assignedManagerIds.length,
       });
-      
+
       await fetchData();
-      setFormData({ name: '', address: '', city: '', assignedManagerIds: [] });
+      setFormData({ name: '', address: '', city: '', assignedManagerIds: [], defaultStartTime: '', defaultEndTime: '' });
       setIsCreateOpen(false);
     } catch (err: any) {
       setError(err.message || 'Failed to create location');
@@ -157,7 +215,24 @@ export default function AdminLocationsPage() {
         address: editFormData.address,
         city: editFormData.city,
         assignedManagerIds: editFormData.assignedManagerIds,
+        defaultStartTime: editFormData.defaultStartTime || null,
+        defaultEndTime: editFormData.defaultEndTime || null,
       });
+
+      if (selectedLocation.name !== editFormData.name) {
+        const batch = writeBatch(db);
+        const collectionsToUpdate = ['audits', 'correctiveActions', 'flashmobAudits'];
+
+        for (const collName of collectionsToUpdate) {
+          const q = query(collection(db, collName), where('locationId', '==', selectedLocation.id));
+          const snap = await getDocs(q);
+          snap.forEach((docSnap) => {
+            batch.update(docSnap.ref, { locationName: editFormData.name });
+          });
+        }
+
+        await batch.commit();
+      }
 
       posthog.capture('location_updated', {
         location_id: selectedLocation.id,
@@ -165,7 +240,7 @@ export default function AdminLocationsPage() {
         city: editFormData.city,
         assigned_manager_count: editFormData.assignedManagerIds.length,
       });
-      
+
       await fetchData();
       setIsEditOpen(false);
       setSelectedLocation(null);
@@ -205,219 +280,127 @@ export default function AdminLocationsPage() {
     }
   };
 
-  const filteredLocations = locations.filter(loc => 
-    loc.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    loc.city.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
     <DashboardShell role="admin">
       <div className="dashboard-page-container">
-        {/* ── Page Header ── */}
-        <div className="page-header-section mb-6">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-col">
-              <h1 className="page-heading">Locations</h1>
-              <p className="body-text text-muted-text hidden md:block">Manage organization locations.</p>
-            </div>
-            
-            <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-              <DialogTrigger asChild>
-                <Button 
-                  size="default" 
-                  className="shadow-lg shadow-primary/20 h-10 md:h-11 px-4 md:px-5 text-xs md:text-[14px] font-bold gap-2 active:scale-95 transition-all"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>Add Location</span>
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-auto max-md:max-h-[85vh] max-md:overflow-y-auto">
-                <DialogHeader className="max-md:pb-2">
-                  <DialogTitle className="text-lg md:text-xl font-bold text-heading">Add Location</DialogTitle>
-                </DialogHeader>
-                <form onSubmit={handleCreateLocation} className="space-y-4 py-2">
-                  <div className="flex flex-col gap-1.5">
-                    <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Location Name</Label>
-                    <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required placeholder="Store #101" className="h-11" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Address</Label>
-                    <Input value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} required placeholder="123 Street Name" className="h-11" />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">City</Label>
-                    <Input value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} required placeholder="City" className="h-11" />
+        <div className="page-header-section mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col gap-2">
+            <h1 className="page-heading">Locations</h1>
+            <p className="body-text text-muted-text">Manage locations and add assign managers.</p>
+          </div>
+
+          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+            <DialogTrigger asChild>
+              <Button size="default" className="shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2 active:scale-95 transition-all">
+                <Plus className="mr-2 h-4 w-4" /> Add Location
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle className="font-semibold text-heading">Add Location</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleCreateLocation} className="space-y-4 py-6">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="name" className="text-body font-normal">Location Name</Label>
+                  <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required placeholder="Downtown Branch" className="text-body" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="address" className="text-body font-normal">Address</Label>
+                  <Input value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} required placeholder="123 Main St" className="text-body" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="city" className="text-body font-normal">City</Label>
+                  <Input value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} required placeholder="Megacity" className="text-body" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-2">
+                    <Label className="text-body font-normal">Start Time (Optional)</Label>
+                    <Input type="time" value={formData.defaultStartTime} onChange={(e) => setFormData({ ...formData, defaultStartTime: e.target.value })} className="text-body" />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Label className="text-xs font-semibold text-muted-text uppercase tracking-wider">Assign Managers</Label>
-                    <div className="grid grid-cols-2 gap-2 border rounded-xl p-3 bg-muted/5 max-h-[160px] overflow-y-auto">
-                      {managers.map(m => (
-                        <div key={m.id} className="flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            id={`mgr-${m.id}`}
-                            checked={formData.assignedManagerIds.includes(m.id)}
-                            onChange={() => toggleManagerSelection(m.id, false)}
-                            className="h-4 w-4 rounded border-gray-300"
-                          />
-                          <Label htmlFor={`mgr-${m.id}`} className="text-xs truncate cursor-pointer">{m.name}</Label>
-                        </div>
-                      ))}
-                    </div>
+                    <Label className="text-body font-normal">EOD / Deadline (Optional)</Label>
+                    <Input type="time" value={formData.defaultEndTime} onChange={(e) => setFormData({ ...formData, defaultEndTime: e.target.value })} className="text-body" />
                   </div>
-                  {error && <p className="text-xs text-destructive font-medium">{error}</p>}
-                  <DialogFooter className="max-md:pb-4">
-                    <Button type="submit" disabled={loading} className="w-full h-11 font-bold shadow-lg shadow-primary/20">
-                      {loading ? 'Adding...' : 'Add Location'}
-                    </Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 mb-6">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
-            <Input
-              placeholder="Search locations..."
-              className="pl-9 h-10 md:h-11 text-xs md:text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70 focus:border-primary/50 transition-all rounded-xl md:rounded-lg"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <Label className="text-body font-normal">Managers</Label>
+                  <ManagerMultiSelect
+                    managers={managers}
+                    value={formData.assignedManagerIds}
+                    onChange={(val) => setFormData({ ...formData, assignedManagerIds: val })}
+                  />
+                </div>
+                {error && <p className="text-sm text-destructive">{error}</p>}
+                <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Adding...' : 'Add Location'}</Button></DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
 
 
 
-        <div className="hidden md:block">
-          <Card className="standard-card">
-            <Table>
-              <TableHeader className="standard-table-header">
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="standard-table-head">Name</TableHead>
-                  <TableHead className="standard-table-head">City</TableHead>
-                  <TableHead className="standard-table-head">Managers</TableHead>
-                  <TableHead className="standard-table-head">Status</TableHead>
-                  <TableHead className="standard-table-head text-right w-[100px]">Actions</TableHead>
+        <Card className="standard-card">
+          <Table>
+            <TableHeader className="standard-table-header">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="standard-table-head">Name</TableHead>
+                <TableHead className="standard-table-head">City</TableHead>
+                <TableHead className="standard-table-head">Managers</TableHead>
+                <TableHead className="standard-table-head">Status</TableHead>
+                <TableHead className="standard-table-head text-right w-[100px]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {locations.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="standard-table-cell h-32 text-center">
+                    No locations found. Add your first location to get started.
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {locations.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="standard-table-cell h-32 text-center">
-                      No locations found. Add your first location to get started.
+              ) : (
+                locations.map((location: any) => (
+                  <TableRow key={location.id} className="standard-table-row group">
+                    <TableCell className="standard-table-cell font-normal text-sm text-body">
+                      {location.name}
+                    </TableCell>
+                    <TableCell className="standard-table-cell text-body font-normal">{location.city}</TableCell>
+                    <TableCell className="standard-table-cell text-body font-normal">{getManagerNames(location.assignedManagerIds, location.assignedManagerId)}</TableCell>
+                    <TableCell className="standard-table-cell">
+                      <Switch checked={location.isActive} onCheckedChange={() => handleToggleActive(location.id, location.isActive)} />
+                    </TableCell>
+                    <TableCell className="standard-table-cell text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => {
+                            setSelectedLocation(location);
+                            setEditFormData({
+                              name: location.name,
+                              address: location.address || '',
+                              city: location.city || '',
+                              assignedManagerIds: location.assignedManagerIds || (location.assignedManagerId ? [location.assignedManagerId] : []),
+                              defaultStartTime: location.defaultStartTime || '',
+                              defaultEndTime: location.defaultEndTime || ''
+                            });
+                            setIsEditOpen(true);
+                          }}>
+                            <Pencil className="mr-2 h-4 w-4" /> Edit
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
-                ) : (
-                  locations.map((location: any) => (
-                    <TableRow key={location.id} className="standard-table-row group">
-                      <TableCell className="standard-table-cell font-normal text-sm text-body">
-                        {location.name}
-                      </TableCell>
-                      <TableCell className="standard-table-cell text-body font-normal">{location.city}</TableCell>
-                      <TableCell className="standard-table-cell text-body font-normal">{getManagerNames(location.assignedManagerIds, location.assignedManagerId)}</TableCell>
-                      <TableCell className="standard-table-cell">
-                        <Switch checked={location.isActive} onCheckedChange={() => handleToggleActive(location.id, location.isActive)} />
-                      </TableCell>
-                      <TableCell className="standard-table-cell text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => {
-                              setSelectedLocation(location);
-                              setEditFormData({
-                                name: location.name,
-                                address: location.address || '',
-                                city: location.city || '',
-                                assignedManagerIds: location.assignedManagerIds || (location.assignedManagerId ? [location.assignedManagerId] : [])
-                              });
-                              setIsEditOpen(true);
-                            }}>
-                              <Pencil className="mr-2 h-4 w-4" /> Edit
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </Card>
-        </div>
-
-        {/* Mobile View */}
-        <div className="flex flex-col gap-3 md:hidden">
-          {locations.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-              <div className="bg-muted/10 p-4 rounded-full mb-4">
-                <MapPin className="h-8 w-8 opacity-20" />
-              </div>
-              <p className="text-muted-text">No locations found. Add one to get started.</p>
-            </div>
-          ) : (
-            locations.map((location: any) => (
-              <MobileCard key={location.id} className="relative overflow-hidden">
-                <MobileCardHeader>
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1">
-                      <MobileCardTitle>{location.name}</MobileCardTitle>
-                      <MobileCardDescription>{location.city}, {location.address}</MobileCardDescription>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Switch 
-                        checked={location.isActive} 
-                        onCheckedChange={() => handleToggleActive(location.id, location.isActive)} 
-                        className="scale-90"
-                      />
-                      <Badge variant={location.isActive ? "secondary" : "outline"} className={cn(
-                        "text-[10px] font-bold px-2 py-0",
-                        location.isActive ? "bg-success/10 text-success border-none" : "text-muted-text"
-                      )}>
-                        {location.isActive ? "ACTIVE" : "INACTIVE"}
-                      </Badge>
-                    </div>
-                  </div>
-                </MobileCardHeader>
-                <MobileCardContent>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[10px] uppercase tracking-wider text-muted-text font-semibold">Assigned Managers</span>
-                    <span className="text-xs font-medium text-heading">
-                      {getManagerNames(location.assignedManagerIds, location.assignedManagerId)}
-                    </span>
-                  </div>
-                </MobileCardContent>
-                <div className="absolute bottom-2 right-2">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-8 w-8 text-muted-text"
-                    onClick={() => {
-                      setSelectedLocation(location);
-                      setEditFormData({
-                        name: location.name,
-                        address: location.address || '',
-                        city: location.city || '',
-                        assignedManagerIds: location.assignedManagerIds || (location.assignedManagerId ? [location.assignedManagerId] : [])
-                      });
-                      setIsEditOpen(true);
-                    }}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                </div>
-              </MobileCard>
-            ))
-          )}
-        </div>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </Card>
 
         {/* Edit Dialog */}
         <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-          <DialogContent className="sm:max-w-[425px] max-md:fixed max-md:bottom-0 max-md:top-auto max-md:left-1/2 max-md:-translate-x-1/2 max-md:translate-y-0 max-md:rounded-b-none max-md:rounded-t-3xl max-md:max-w-full max-md:h-auto max-md:max-h-[85vh] max-md:overflow-y-auto">
+          <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle className="font-semibold text-heading">Edit Location</DialogTitle>
               <DialogDescription className="text-muted-text">Update the details for {selectedLocation?.name}.</DialogDescription>
@@ -435,22 +418,23 @@ export default function AdminLocationsPage() {
                 <Label htmlFor="edit-city" className="text-body font-normal">City</Label>
                 <Input id="edit-city" value={editFormData.city} onChange={(e) => setEditFormData({ ...editFormData, city: e.target.value })} required className="text-body" />
               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-body font-normal">Start Time (Optional)</Label>
+                  <Input type="time" value={editFormData.defaultStartTime} onChange={(e) => setEditFormData({ ...editFormData, defaultStartTime: e.target.value })} className="text-body" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-body font-normal">EOD / Deadline (Optional)</Label>
+                  <Input type="time" value={editFormData.defaultEndTime} onChange={(e) => setEditFormData({ ...editFormData, defaultEndTime: e.target.value })} className="text-body" />
+                </div>
+              </div>
               <div className="space-y-4">
                 <Label className="text-body font-normal">Assigned Managers</Label>
-                <div className="grid grid-cols-2 gap-4 border rounded-md p-4 bg-muted/20">
-                  {managers.map(m => (
-                    <div key={m.id} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id={`edit-mgr-${m.id}`}
-                        checked={editFormData.assignedManagerIds.includes(m.id)}
-                        onChange={() => toggleManagerSelection(m.id, true)}
-                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                      />
-                      <Label htmlFor={`edit-mgr-${m.id}`} className="text-sm font-normal cursor-pointer line-clamp-1">{m.name}</Label>
-                    </div>
-                  ))}
-                </div>
+                <ManagerMultiSelect
+                  managers={managers}
+                  value={editFormData.assignedManagerIds}
+                  onChange={(val) => setEditFormData({ ...editFormData, assignedManagerIds: val })}
+                />
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}
               <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Updating...' : 'Save Changes'}</Button></DialogFooter>

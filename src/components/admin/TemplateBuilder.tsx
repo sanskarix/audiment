@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -134,25 +133,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
     setQuestions(newQ);
   };
 
-  const [isDirty, setIsDirty] = useState(false);
-  const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
-
-  useEffect(() => {
-    if (title || questions.length > 0) {
-      setIsDirty(true);
-    }
-  }, [title, questions]);
-
-  const handleBack = () => {
-    if (isDirty) {
-      setShowDiscardConfirm(true);
-    } else {
-      router.back();
-    }
-  };
-
   const saveTemplate = async () => {
-    // ... existing validation
     if (!title.trim() || questions.length === 0 || !orgId) {
       setError('Title and at least 1 question required.');
       return;
@@ -203,7 +184,6 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
       });
 
       await batch.commit();
-      setIsDirty(false); // Clear dirty state after save
       posthog.capture('template_saved', {
         is_new: !templateId,
         template_title: title,
@@ -242,49 +222,46 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
 
   return (
     <div className="flex flex-col gap-6">
+
       {/* ── Sticky Top Bar ── */}
-      <div className="sticky top-0 z-50 -mx-4 md:-mx-6 -mt-6 md:-mt-8 px-4 md:px-6 py-3 md:py-4 bg-background/95 backdrop-blur-xl border-b border-border/50 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-0">
-        <div className="flex items-center gap-3">
-          <button onClick={handleBack} className="h-9 w-9 flex items-center justify-center rounded-full text-muted-text hover:bg-muted/10 transition-colors">
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-          <div className="h-5 w-[1px] bg-border/80 hidden md:block"></div>
-          <h1 className="text-lg md:text-xl font-bold text-heading truncate pr-2">
-            {templateId ? (title || 'Edit Template') : (title || 'New Template')}
-          </h1>
+      <div className="sticky top-0 z-50 -mx-6 -mt-8 px-6 py-4 bg-background/95 backdrop-blur-xl border-b border-border/50 flex items-center justify-between">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-4">
+            <button onClick={() => router.back()} className="text-muted-text hover:text-primary transition-colors flex items-center">
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <div className="h-5 w-[1px] bg-border/80"></div>
+            <h1 className="text-xl font-semibold text-heading">
+              {templateId ? (title || 'Edit Template') : (title || 'New Template')}
+            </h1>
+          </div>
         </div>
 
-        <div className="flex items-center justify-between md:justify-end gap-2 w-full md:w-auto">
-          <div className="flex-1 md:flex-none flex items-center gap-2">
-            {error && (
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-destructive/5 border border-destructive/20 rounded-md text-destructive text-[11px] font-medium md:animate-in md:slide-in-from-right max-w-[150px] md:max-w-none truncate">
-                <AlertCircle className="h-3 w-3 shrink-0" />
-                <span className="truncate">{error}</span>
-              </div>
-            )}
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBack}
-              className="h-10 px-3 font-semibold text-muted-text hover:text-foreground text-xs md:text-sm"
-            >
-              Discard
-            </Button>
-            <Button
-              size="sm"
-              onClick={saveTemplate}
-              disabled={loading}
-              className="h-10 px-4 md:px-5 font-bold shadow-lg shadow-primary/20 gap-2 active:scale-95 transition-all text-xs md:text-sm"
-            >
-              {loading
-                ? <div className="h-3 w-3 md:h-4 md:w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                : <Save className="h-4 w-4" />
-              }
-              {loading ? 'Saving...' : 'Save Template'}
-            </Button>
-          </div>
+        <div className="flex items-center gap-3">
+          {error && (
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-destructive/5 border border-destructive/20 rounded-lg text-destructive text-sm font-normal animate-in slide-in-from-right">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+          <Button
+            variant="ghost"
+            onClick={() => router.back()}
+            className="h-11 px-4 font-medium text-muted-text hover:text-foreground"
+          >
+            Discard
+          </Button>
+          <Button
+            onClick={saveTemplate}
+            disabled={loading}
+            className="h-11 px-5 font-medium shadow-lg shadow-primary/20 gap-2 active:scale-95 transition-all"
+          >
+            {loading
+              ? <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              : <Save className="h-4 w-4" />
+            }
+            {loading ? 'Saving...' : 'Save Template'}
+          </Button>
         </div>
       </div>
 
@@ -296,7 +273,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
       )}
 
       {/* ── Main Layout ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-20">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
         {/* ── Left Column: Config ── */}
         <div className="lg:col-span-4 space-y-6">
@@ -413,16 +390,20 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                   key={q.order}
                   className="standard-card rounded-xl overflow-hidden group border border-border/50 data-[state=open]:border-primary/20"
                 >
+                  {/* ── Question Header (trigger) ── */}
                   <AccordionTrigger className="hover:no-underline px-5 py-4 data-[state=open]:bg-muted/20 transition-colors">
                     <div className="flex items-center gap-4 text-left w-full pr-4">
+                      {/* Order number */}
                       <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-muted/60 font-medium text-sm tabular-nums text-heading border border-border/50 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                         {q.order}
                       </div>
+                      {/* Question text */}
                       <div className="flex-1 min-w-0">
                         <span className="body-text text-[14px] font-normal text-heading block truncate group-hover:text-primary transition-colors">
                           {q.questionText || 'New question...'}
                         </span>
                       </div>
+                      {/* Badges */}
                       <div className="flex items-center gap-2 shrink-0">
                         {q.requiresPhoto && (
                           <Badge variant="outline" className="text-[11px] font-normal px-2 py-0.5 gap-1 text-muted-text">
@@ -446,8 +427,11 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                     </div>
                   </AccordionTrigger>
 
+                  {/* ── Question Body ── */}
                   <AccordionContent className="px-5 py-5 border-t border-border/50 bg-muted/10">
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+
+                      {/* Question text */}
                       <div className="md:col-span-12 flex flex-col gap-2">
                         <Label className="text-body font-normal">Question</Label>
                         <Input
@@ -457,6 +441,8 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                           className="text-body"
                         />
                       </div>
+
+                      {/* Response type */}
                       <div className="md:col-span-4 flex flex-col gap-2">
                         <Label className="text-body font-normal">Response Type</Label>
                         <Select value={q.questionType} onValueChange={val => updateQuestion(idx, 'questionType', val)}>
@@ -469,6 +455,8 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                           </SelectContent>
                         </Select>
                       </div>
+
+                      {/* Severity */}
                       <div className="md:col-span-4 flex flex-col gap-2">
                         <Label className="text-body font-normal">Severity</Label>
                         <Select value={q.severity} onValueChange={val => updateQuestion(idx, 'severity', val)}>
@@ -482,9 +470,16 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                           </SelectContent>
                         </Select>
                       </div>
+
+                      {/* Photo toggle */}
                       <div className="md:col-span-4 flex items-end">
                         <div className="flex items-center justify-between w-full h-11 px-4 rounded-md border border-border bg-background">
-                          <Label className="text-body font-normal cursor-pointer" htmlFor={`photo-${idx}`}>Require Photo</Label>
+                          <Label
+                            className="text-body font-normal cursor-pointer"
+                            htmlFor={`photo-${idx}`}
+                          >
+                            Require Photo
+                          </Label>
                           <Switch
                             id={`photo-${idx}`}
                             checked={q.requiresPhoto}
@@ -492,12 +487,38 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                           />
                         </div>
                       </div>
+
+                      {/* Row actions */}
                       <div className="md:col-span-12 pt-3 flex justify-between items-center border-t border-border/50">
                         <div className="flex gap-2">
-                          <Button variant="outline" size="icon-sm" disabled={idx === 0} onClick={() => moveQuestion(idx, 'up')} aria-label="Move question up"><ArrowUp className="w-3.5 h-3.5" /></Button>
-                          <Button variant="outline" size="icon-sm" disabled={idx === questions.length - 1} onClick={() => moveQuestion(idx, 'down')} aria-label="Move question down"><ArrowDown className="w-3.5 h-3.5" /></Button>
+                          <Button
+                            variant="outline"
+                            size="icon-sm"
+                            disabled={idx === 0}
+                            onClick={() => moveQuestion(idx, 'up')}
+                            aria-label="Move question up"
+                          >
+                            <ArrowUp className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon-sm"
+                            disabled={idx === questions.length - 1}
+                            onClick={() => moveQuestion(idx, 'down')}
+                            aria-label="Move question down"
+                          >
+                            <ArrowDown className="w-3.5 h-3.5" />
+                          </Button>
                         </div>
-                        <Button variant="ghost" size="sm" className="text-destructive hover:bg-destructive/10 gap-1.5 font-medium" onClick={() => removeQuestion(idx)}><Trash2 className="w-3.5 h-3.5" /> Remove</Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-destructive hover:bg-destructive/10 gap-1.5 font-medium"
+                          onClick={() => removeQuestion(idx)}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          Remove
+                        </Button>
                       </div>
                     </div>
                   </AccordionContent>
@@ -507,37 +528,6 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
           )}
         </div>
       </div>
-
-      {/* ── Discard Confirmation Dialog ── */}
-      <Dialog open={showDiscardConfirm} onOpenChange={setShowDiscardConfirm}>
-        <DialogContent className="sm:max-w-[400px] p-0 overflow-hidden rounded-2xl border-none shadow-2xl">
-          <div className="bg-destructive/10 p-6 flex flex-col items-center text-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-destructive/20 flex items-center justify-center text-destructive">
-              <AlertCircle className="w-6 h-6" />
-            </div>
-            <div className="space-y-1">
-              <h2 className="text-lg font-bold text-heading">Discard Changes?</h2>
-              <p className="text-sm text-body px-4">You have unsaved changes. Leaving this page will permanently lose your work.</p>
-            </div>
-          </div>
-          <div className="p-4 bg-background flex flex-col gap-2">
-            <Button 
-               variant="destructive" 
-               className="w-full h-11 font-bold rounded-xl shadow-lg shadow-destructive/10" 
-               onClick={() => router.back()}
-            >
-              Discard Changes
-            </Button>
-            <Button 
-               variant="ghost" 
-               className="w-full h-11 font-semibold text-muted-text hover:text-foreground" 
-               onClick={() => setShowDiscardConfirm(false)}
-            >
-              Continue Editing
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

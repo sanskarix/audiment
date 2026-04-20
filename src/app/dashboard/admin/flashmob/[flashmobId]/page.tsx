@@ -7,6 +7,7 @@ import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import Image from 'next/image';
 import DashboardShell from '@/components/DashboardShell';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, MapPin, Calendar, Clock, Loader2, Trash2, ShieldCheck, ExternalLink, User, Video, Camera, History } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';

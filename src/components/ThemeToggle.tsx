@@ -3,11 +3,21 @@
 import * as React from "react"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
+import { usePathname } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
+  const pathname = usePathname() || ""
+
+  const isDashboard = pathname.startsWith('/dashboard')
+  const isBlog = pathname.startsWith('/blog')
+  const allowDarkMode = isDashboard || isBlog
+
+  if (!allowDarkMode) {
+    return null
+  }
 
   return (
     <Button

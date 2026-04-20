@@ -39,9 +39,6 @@ export function ManagerMultiSelect({ managers, value, onChange }: { managers: an
   return (
     <Combobox
       multiple
-      autoHighlight
-      items={managers}
-      itemToString={(item: any) => item ? item.name : ''}
       value={selectedManagers}
       onValueChange={(val: any[]) => onChange(val.map(v => v.id))}
     >

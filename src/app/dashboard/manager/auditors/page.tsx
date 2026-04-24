@@ -82,7 +82,7 @@ interface Auditor {
   role: string;
   status?: 'active' | 'inactive';
   isActive?: boolean;
-  flashmobAccess?: boolean;
+  isFlashmobEnabled?: boolean;
   lastActive?: any;
   createdAt?: any;
   assignedLocations?: string[];
@@ -186,7 +186,7 @@ export default function AuditorsPage() {
         managerId: uid,
         status: 'active' as const,
         isActive: true,
-        flashmobAccess: false,
+        isFlashmobEnabled: false,
         createdAt: serverTimestamp(),
       };
       await addDoc(collection(db, 'users'), newAuditor);
@@ -375,14 +375,13 @@ export default function AuditorsPage() {
                   <TableHead className="standard-table-head pl-6 py-5">Name</TableHead>
                   <TableHead className="standard-table-head py-5">Email</TableHead>
                   <TableHead className="standard-table-head text-center py-5">Status</TableHead>
-                  <TableHead className="standard-table-head text-center py-5">Flash Audit</TableHead>
                   <TableHead className="standard-table-head text-right pr-6 py-5 w-[80px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredAuditors.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="standard-table-cell h-32 text-center text-muted-text">
+                    <TableCell colSpan={4} className="standard-table-cell h-32 text-center text-muted-text">
                       No auditors found in your reporting list.
                     </TableCell>
                   </TableRow>
@@ -406,16 +405,6 @@ export default function AuditorsPage() {
                             onCheckedChange={() => toggleField(auditor.id, 'isActive', auditor.isActive ?? true)}
                             disabled={isUpdating === auditor.id + 'isActive'}
                             className="data-[state=checked]:bg-success"
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell className="standard-table-cell">
-                        <div className="flex justify-center" onClick={(e) => e.stopPropagation()}>
-                          <Switch 
-                            checked={auditor.flashmobAccess ?? false}
-                            onCheckedChange={() => toggleField(auditor.id, 'flashmobAccess', auditor.flashmobAccess ?? false)}
-                            disabled={isUpdating === auditor.id + 'flashmobAccess'}
-                            className="data-[state=checked]:bg-primary"
                           />
                         </div>
                       </TableCell>

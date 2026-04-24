@@ -40,6 +40,7 @@ export default function AdminFlashmobPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [managers, setManagers] = useState<any[]>([]);
 
   // Form State
   const [selectedAuditor, setSelectedAuditor] = useState('');
@@ -52,30 +53,26 @@ export default function AdminFlashmobPage() {
   const [deadlinePeriod, setDeadlinePeriod] = useState('PM');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isSynced || !orgId) return;
 
     const fetchData = async () => {
       try {
-        const [locSnap, audSnap, auditSnap, reqSnap] = await Promise.all([
+        const [locSnap, audSnap, managerSnap, completedSnap, activeSnap] = await Promise.all([
           getDocs(query(collection(db, 'locations'), where('organizationId', '==', orgId), where('isActive', '==', true))),
-          getDocs(query(collection(db, 'users'), where('organizationId', '==', orgId), where('role', '==', 'auditor'), where('isFlashmobEnabled', '==', true))),
-          getDocs(query(collection(db, 'flashmobAudits'), where('organizationId', '==', orgId), orderBy('submittedAt', 'desc'))),
-          getDocs(query(collection(db, 'flashmobAudits'), where('organizationId', '==', orgId), where('status', '==', 'active')))
+          getDocs(query(collection(db, 'users'), where('organizationId', '==', orgId), where('role', '==', 'AUDITOR'), where('isFlashmobEnabled', '==', true))),
+          getDocs(query(collection(db, 'users'), where('organizationId', '==', orgId), where('role', '==', 'MANAGER'), where('isActive', '==', true))),
+          getDocs(query(collection(db, 'flashmobAudits'), where('organizationId', '==', orgId), where('status', '==', 'completed'), orderBy('submittedAt', 'desc'))),
+          getDocs(query(collection(db, 'flashmobAudits'), where('organizationId', '==', orgId), where('status', '==', 'active'), orderBy('publishedAt', 'desc')))
         ]);
 
         setLocations(locSnap.docs.map(d => ({ id: d.id, ...d.data() })));
         setAuditors(audSnap.docs.map(d => ({ id: d.id, ...d.data() })));
-        setAudits(auditSnap.docs.map(d => ({ id: d.id, ...d.data() })));
-        
-        const reqDocs = reqSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-        reqDocs.sort((a: any, b: any) => {
-          const tA = a.publishedAt?.toMillis?.() || 0;
-          const tB = b.publishedAt?.toMillis?.() || 0;
-          return tB - tA;
-        });
-        setPublishedRequests(reqDocs);
+        setManagers(managerSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setAudits(completedSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setPublishedRequests(activeSnap.docs.map(d => ({ id: d.id, ...d.data() })));
       } catch (err) {
         console.error(err);
       } finally {
@@ -112,7 +109,8 @@ export default function AdminFlashmobPage() {
         status: 'active',
         publishedBy: uid,
         publishedAt: serverTimestamp(),
-        isVisibleToManager: false,
+        managerId: auditor?.managerId || null,
+        isVisibleToManager: !!auditor?.managerId,
       };
 
       const docRef = await addDoc(collection(db, 'flashmobAudits'), requestData);
@@ -131,7 +129,9 @@ export default function AdminFlashmobPage() {
 
       setPublishedRequests([{ id: docRef.id, ...requestData, publishedAt: new Date() }, ...publishedRequests]);
       setIsDialogOpen(false);
-      alert('Flashmob request published successfully.');
+      const auditorName = auditor?.name || 'Auditor';
+      setSuccessMessage(`Flashmob dispatched to ${auditorName} successfully.`);
+      setTimeout(() => setSuccessMessage(null), 5000);
       
       // Reset form
       setSelectedAuditor('');
@@ -171,137 +171,188 @@ export default function AdminFlashmobPage() {
             <p className="body-text text-muted-text">Monitor real-time video evidence and location check-ins.</p>
           </div>
 
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog open={isDialogOpen} onOpenChange={(open) => {
+            setIsDialogOpen(open);
+            if (!open) {
+              setSelectedAuditor('');
+              setSelectedLocation('');
+              setDeadlineDate(undefined);
+              setDeadlineHour('12');
+              setDeadlineMinute('00');
+              setDeadlinePeriod('PM');
+            }
+          }}>
             <DialogTrigger asChild>
               <Button size="default" className="shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2 active:scale-95 transition-all">
                 <Plus className="h-4 w-4" /> Publish Flashmob
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[480px] p-0 overflow-hidden rounded-xl border-none shadow-2xl">
-              <div className="bg-card p-6 sm:p-8 space-y-6">
-                <DialogHeader className="space-y-1.5 text-left">
-                  <DialogTitle className="page-heading text-[22px] leading-tight flex items-center justify-between w-full">
-                    Publish Flashmob
-                  </DialogTitle>
-                  <DialogDescription className="body-text text-[14px] text-muted-text/80">
-                    Send an instant verification request to an auditor.
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <form onSubmit={handlePublish} className="space-y-6">
-                  <div className="space-y-5">
-                    <div className="flex flex-col gap-2">
-                      <Label className="section-heading text-[13px] font-medium text-heading">Assign Auditor</Label>
-                      <Select value={selectedAuditor} onValueChange={setSelectedAuditor} required>
-                        <SelectTrigger className="h-11 border-border/50 bg-background text-body text-[14px] focus:ring-primary/20 rounded-md">
-                          <SelectValue placeholder="Select an auditor" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-lg border-border/50">
-                          {auditors.map((auditor) => (
-                            <SelectItem key={auditor.id} value={auditor.id} className="text-body cursor-pointer">{auditor.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                      <Label className="section-heading text-[13px] font-medium text-heading">Site Location</Label>
-                      <Select value={selectedLocation} onValueChange={setSelectedLocation} required>
-                        <SelectTrigger className="h-11 border-border/50 bg-background text-body text-[14px] focus:ring-primary/20 rounded-md">
-                          <SelectValue placeholder="Select a location" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-lg border-border/50">
-                          {locations.map((location) => (
-                            <SelectItem key={location.id} value={location.id} className="text-body cursor-pointer">{location.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="flex flex-col gap-5 sm:grid sm:grid-cols-5 sm:items-end">
-                      {/* Date Selector */}
-                      <div className="flex flex-col gap-2 sm:col-span-3">
-                        <Label className="section-heading text-[13px] font-medium text-heading">Deadline Date</Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                className={cn(
-                                  "h-11 w-full justify-start text-left font-normal border-border/50 bg-background text-body text-[14px] focus:ring-primary/20 rounded-md",
-                                  !deadlineDate && "text-muted-text/60"
-                                )}
-                              >
-                                <CalendarIcon className="mr-3 h-4 w-4 opacity-40" />
-                                {deadlineDate ? format(deadlineDate, "PPP") : <span>Pick a date</span>}
-                              </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0 rounded-xl border-border/50 shadow-xl" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={deadlineDate}
-                              onSelect={setDeadlineDate}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-
-                      {/* Time Selector */}
-                      <div className="flex flex-col gap-2 sm:col-span-2">
-                        <Label className="section-heading text-[13px] font-medium text-heading">Deadline Time</Label>
-                        <div className="flex items-center gap-1.5">
-                          <Select value={deadlineHour} onValueChange={setDeadlineHour}>
-                            <SelectTrigger className="h-11 border-border/50 focus:ring-primary/20 bg-background flex-1 px-2.5 text-body text-[14px] rounded-md">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="min-w-[70px] rounded-lg border-border/50">
-                              {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
-                                <SelectItem key={h} value={h.toString()} className="text-body">{h}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-
-                          <span className="text-muted-text/30 font-medium">:</span>
-
-                          <Select value={deadlineMinute} onValueChange={setDeadlineMinute}>
-                            <SelectTrigger className="h-11 border-border/50 focus:ring-primary/20 bg-background flex-1 px-2.5 text-body text-[14px] rounded-md">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="min-w-[70px] rounded-lg border-border/50">
-                              {['00', '15', '30', '45'].map((m) => (
-                                <SelectItem key={m} value={m} className="text-body">{m}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-
-                          <Select value={deadlinePeriod} onValueChange={setDeadlinePeriod}>
-                            <SelectTrigger className="h-11 border-border/50 focus:ring-primary/20 bg-background w-[68px] px-2 font-semibold text-[11px] text-body uppercase tracking-wider rounded-md">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="min-w-[68px] rounded-lg border-border/50">
-                              <SelectItem value="AM" className="text-body">AM</SelectItem>
-                              <SelectItem value="PM" className="text-body">PM</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-2">
-                    <Button
-                      type="submit"
-                      className="w-full h-12 bg-primary hover:bg-primary/90 text-[15px] text-white shadow-lg shadow-primary/20 active:scale-[0.98] transition-all font-semibold rounded-md uppercase tracking-wide"
-                      disabled={isSubmitting || !deadlineDate}
-                    >
-                      {isSubmitting ? 'Publishing...' : 'Dispatch Flashmob'}
-                    </Button>
-                  </div>
-                </form>
+            <DialogContent className="sm:max-w-[460px] gap-0 p-0 overflow-hidden rounded-2xl border border-border/60 shadow-2xl">
+              {/* Header */}
+              <div className="px-6 pt-6 pb-5 border-b border-border/40">
+                <DialogTitle className="text-[18px] font-semibold text-heading leading-tight tracking-tight">Publish Flashmob</DialogTitle>
+                <DialogDescription className="text-[13px] text-muted-text mt-1">
+                  Dispatch an instant verification request to an auditor.
+                </DialogDescription>
               </div>
+
+              {/* Body */}
+              <form onSubmit={handlePublish}>
+                <div className="px-6 py-5 space-y-4">
+
+                  {/* Location */}
+                  <div className="space-y-1.5">
+                    <Label className="text-body font-normal">Site location</Label>
+                    <Select value={selectedLocation} onValueChange={(val) => {
+                      setSelectedLocation(val);
+                      setSelectedAuditor('');
+                    }} required>
+                      <SelectTrigger className="h-10 border-border/50 bg-muted/30 text-body text-[13px] rounded-lg focus:ring-primary/20">
+                        <SelectValue placeholder="Select a location" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border-border/50">
+                        {locations.map((location) => (
+                          <SelectItem key={location.id} value={location.id} className="text-body text-[13px]">{location.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Auditor */}
+                  <div className="space-y-1.5">
+                    <Label className="text-body font-normal">Auditor</Label>
+                    <Select 
+                      value={selectedAuditor} 
+                      onValueChange={setSelectedAuditor} 
+                      required
+                      disabled={!selectedLocation}
+                    >
+                      <SelectTrigger className={cn(
+                        "h-10 border-border/50 bg-muted/30 text-body text-[13px] rounded-lg focus:ring-primary/20",
+                        !selectedLocation && "opacity-50 cursor-not-allowed"
+                      )}>
+                        <SelectValue placeholder={selectedLocation ? "Select an auditor" : "Select a location first"} />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border-border/50">
+                        {auditors
+                          .filter(auditor => {
+                            if (!selectedLocation) return false;
+                            const loc = locations.find(l => l.id === selectedLocation);
+                            if (!loc) return false;
+                            const assignedIds = loc.assignedManagerIds || (loc.assignedManagerId ? [loc.assignedManagerId] : []);
+                            return assignedIds.includes(auditor.managerId);
+                          })
+                          .map((auditor) => (
+                            <SelectItem key={auditor.id} value={auditor.id} className="text-body text-[13px]">{auditor.name}</SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="border-t border-border/40 pt-1" />
+
+                  {/* Deadline */}
+                  <div className="space-y-1.5">
+                    <Label className="text-body font-normal">Deadline</Label>
+                    <div className="flex items-center gap-2">
+                      {/* Date picker */}
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "flex-1 h-10 justify-start text-left font-normal border-border/50 bg-muted/30 text-[13px] rounded-lg focus:ring-primary/20",
+                              !deadlineDate ? "text-muted-text/60" : "text-body"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40 shrink-0" />
+                            {deadlineDate ? format(deadlineDate, "MMM d, yyyy") : "Pick a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0 rounded-xl border-border/50 shadow-xl" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={deadlineDate}
+                            onSelect={setDeadlineDate}
+                            disabled={(date) => {
+                              const today = new Date();
+                              today.setHours(0, 0, 0, 0);
+                              return date < today;
+                            }}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+
+                      {/* Time selects — compact */}
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Select value={deadlineHour} onValueChange={setDeadlineHour}>
+                          <SelectTrigger className="h-10 w-[52px] border-border/50 bg-muted/30 px-1.5 text-[13px] text-body rounded-lg focus:ring-primary/20">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="min-w-[64px] rounded-xl border-border/50">
+                            {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
+                              <SelectItem key={h} value={h.toString()} className="text-body text-[13px]">{String(h).padStart(2, '0')}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <span className="text-muted-text/40 font-bold text-[14px] select-none">:</span>
+                        <Select value={deadlineMinute} onValueChange={setDeadlineMinute}>
+                          <SelectTrigger className="h-10 w-[52px] border-border/50 bg-muted/30 px-1.5 text-[13px] text-body rounded-lg focus:ring-primary/20">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="min-w-[64px] rounded-xl border-border/50">
+                            {['00', '15', '30', '45'].map((m) => (
+                              <SelectItem key={m} value={m} className="text-body text-[13px]">{m}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <Select value={deadlinePeriod} onValueChange={setDeadlinePeriod}>
+                          <SelectTrigger className="h-10 w-[52px] border-border/50 bg-muted/30 px-1.5 text-[11px] font-semibold uppercase tracking-wider text-body rounded-lg focus:ring-primary/20">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="min-w-[60px] rounded-xl border-border/50">
+                            <SelectItem value="AM" className="text-body text-[13px]">AM</SelectItem>
+                            <SelectItem value="PM" className="text-body text-[13px]">PM</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="px-6 pb-6 flex gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="flex-1 h-10 border-border/50 text-[13px] font-medium text-muted-text hover:text-heading rounded-lg"
+                    onClick={() => setIsDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="flex-1 h-10 bg-primary hover:bg-primary/90 text-[13px] text-white shadow-lg shadow-primary/20 active:scale-[0.98] transition-all font-semibold rounded-lg gap-2"
+                    disabled={isSubmitting || !deadlineDate || !selectedAuditor || !selectedLocation}
+                  >
+                    <Send className="h-3.5 w-3.5" />
+                    {isSubmitting ? 'Publishing…' : 'Dispatch'}
+                  </Button>
+                </div>
+              </form>
             </DialogContent>
           </Dialog>
         </div>
+
+        {/* Success banner */}
+        {successMessage && (
+          <div className="bg-success/10 border border-success/30 text-success px-4 py-3 rounded-xl text-[13px] font-medium animate-in fade-in slide-in-from-top-1 flex items-center gap-2.5">
+            <CheckCircle2 className="h-4 w-4 shrink-0" />
+            {successMessage}
+          </div>
+        )}
 
         {/* Filters and Tabs */}
         <div className="space-y-6">

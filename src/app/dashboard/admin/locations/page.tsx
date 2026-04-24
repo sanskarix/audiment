@@ -16,59 +16,110 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Card } from '@/components/ui/card';
 import { MoreHorizontal, Pencil, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import {
-  Combobox,
-  ComboboxChip,
-  ComboboxChips,
-  ComboboxChipsInput,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxItem,
-  ComboboxList,
-  ComboboxValue,
-  useComboboxAnchor,
-} from "@/components/ui/combobox"
 import { useAuthSync } from '@/components/AuthProvider';
 import posthog from 'posthog-js';
 
+import { Check, Search, X, ChevronDownIcon } from 'lucide-react';
+
 export function ManagerMultiSelect({ managers, value, onChange }: { managers: any[], value: string[], onChange: (val: string[]) => void }) {
-  const anchor = useComboboxAnchor()
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   const selectedManagers = managers.filter(m => value.includes(m.id));
+  const filteredManagers = managers.filter(m => 
+    m.name.toLowerCase().includes(search.toLowerCase()) ||
+    m.email?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const toggleManager = (id: string) => {
+    const newValue = value.includes(id)
+      ? value.filter(v => v !== id)
+      : [...value, id];
+    onChange(newValue);
+  };
 
   return (
-    <Combobox
-      multiple
-      value={selectedManagers}
-      onValueChange={(val: any[]) => onChange(val.map(v => v.id))}
-    >
-      <ComboboxChips ref={anchor} className="w-full min-h-11 border-border/50 bg-background hover:bg-muted/5 p-1 px-1.5 transition-colors">
-        <ComboboxValue placeholder="Select managers...">
-          {(values: any) => (
-            <>
-              {values.map((manager: any) => (
-                <ComboboxChip key={manager.id} className="text-xs px-2 py-0.5 bg-muted/50 border border-border/50 text-body font-medium hover:bg-muted duration-150">
-                  {manager.name}
-                </ComboboxChip>
-              ))}
-              <ComboboxChipsInput placeholder={values.length === 0 ? "Select managers..." : ""} className="text-[13px] font-normal" />
-            </>
-          )}
-        </ComboboxValue>
-      </ComboboxChips>
-      <ComboboxContent anchor={anchor} align="start" className="max-h-64 h-auto">
-        <ComboboxEmpty className="py-6 px-4">No managers found.</ComboboxEmpty>
-        <ComboboxList>
-          {(manager: any) => (
-            <ComboboxItem key={manager.id} value={manager} className="text-[13px] font-normal py-1.5 cursor-pointer">
-              {manager.name}
-            </ComboboxItem>
-          )}
-        </ComboboxList>
-      </ComboboxContent>
-    </Combobox>
-  )
+    <div className="flex flex-col gap-2">
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button 
+            variant="outline" 
+            role="combobox" 
+            aria-expanded={open}
+            className="w-full min-h-11 h-auto justify-between border-border/50 bg-background hover:bg-muted/5 p-2 px-3 transition-colors active:scale-[0.98]"
+          >
+            <div className="flex flex-wrap gap-1.5 items-center">
+              {selectedManagers.length > 0 ? (
+                selectedManagers.map(m => (
+                  <Badge 
+                    key={m.id} 
+                    variant="secondary" 
+                    className="rounded-md font-medium text-[11px] px-1.5 py-0 bg-muted/80 hover:bg-muted border-border/30 text-body animate-in fade-in zoom-in-95 duration-200"
+                  >
+                    {m.name}
+                    <X 
+                      className="ml-1 h-3 w-3 cursor-pointer hover:text-destructive transition-colors" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleManager(m.id);
+                      }}
+                    />
+                  </Badge>
+                ))
+              ) : (
+                <span className="text-muted-text text-sm font-normal">Select managers...</span>
+              )}
+            </div>
+            <ChevronDownIcon className="h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[400px] p-0 overflow-hidden gap-0">
+          <div className="flex items-center border-b border-border/50 px-3">
+            <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+            <input
+              className="flex h-11 w-full bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+              placeholder="Search managers..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <div className="max-h-[300px] overflow-y-auto p-1 custom-scrollbar">
+            {filteredManagers.length === 0 ? (
+              <div className="py-6 text-center text-sm text-muted-foreground">
+                No manager found.
+              </div>
+            ) : (
+              <div className="space-y-1">
+                {filteredManagers.map((manager) => (
+                  <div
+                    key={manager.id}
+                    className={cn(
+                      "flex items-center gap-2 rounded-md px-2 py-2 text-sm cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors",
+                      value.includes(manager.id) ? "bg-accent/50" : ""
+                    )}
+                    onClick={() => toggleManager(manager.id)}
+                  >
+                    <div className={cn(
+                      "flex h-4 w-4 items-center justify-center rounded border border-primary/50 transition-colors",
+                      value.includes(manager.id) ? "bg-primary border-primary" : "bg-transparent"
+                    )}>
+                      {value.includes(manager.id) && <Check className="h-3 w-3 text-primary-foreground" />}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-medium">{manager.name}</span>
+                      <span className="text-[10px] text-muted-text">{manager.email}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
 }
+
 
 export default function AdminLocationsPage() {
   const { isSynced, orgId } = useAuthSync();
@@ -320,7 +371,7 @@ export default function AdminLocationsPage() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-4">
-                  <Label className="text-body font-normal">Managers</Label>
+                  <span className="text-body font-normal text-sm">Managers</span>
                   <ManagerMultiSelect
                     managers={managers}
                     value={formData.assignedManagerIds}
@@ -426,7 +477,7 @@ export default function AdminLocationsPage() {
                 </div>
               </div>
               <div className="space-y-4">
-                <Label className="text-body font-normal">Assigned Managers</Label>
+                <span className="text-body font-normal text-sm">Assigned Managers</span>
                 <ManagerMultiSelect
                   managers={managers}
                   value={editFormData.assignedManagerIds}

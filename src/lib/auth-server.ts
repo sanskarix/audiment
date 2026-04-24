@@ -1,4 +1,5 @@
 import { adminAuth } from '@/lib/firebase-admin';
+import { cookies as nextCookies } from 'next/headers';
 
 export type CallerRole = 'admin' | 'manager' | 'auditor';
 
@@ -41,32 +42,46 @@ export async function getCallerInfo(request: Request): Promise<CallerInfo | null
     try {
       const decoded = await adminAuth.verifyIdToken(idToken);
       const role = ((decoded.role as string) || '').toLowerCase() as CallerRole;
-      const organizationId = (decoded.organizationId as string) || '';
-      if (!role || !organizationId) return null;
-      return { uid: decoded.uid, role, organizationId };
-    } catch {
-      return null; // Invalid or expired token
+      const organizationId = (decoded.organizationId as string) || (decoded.orgId as string) || '';
+      if (role && organizationId) {
+        return { uid: decoded.uid, role, organizationId };
+      }
+    } catch (err: any) {
+      console.warn('[auth-server] Bearer token verification failed, checking cookies:', err.message);
     }
   }
 
   // ── 2. Fallback: audiment_session cookie ───────────────────────────────────
-  // Parse by hand — we cannot use next/headers inside the App Router route
-  // handler context safely across all Next.js versions.
-  const cookieHeader = request.headers.get('cookie') || '';
-  const match = cookieHeader.match(/audiment_session=([^;]+)/);
-  if (match) {
+  // Use next/headers if possible, then fallback to manual parsing.
+  let sessionCookieValue: string | undefined;
+  
+  try {
+    const cookieStore = await nextCookies();
+    sessionCookieValue = cookieStore.get('audiment_session')?.value;
+  } catch (err) {
+    // Falls back to manual header parsing below
+  }
+
+  if (!sessionCookieValue) {
+    const cookieHeader = request.headers.get('cookie') || '';
+    const match = cookieHeader.match(/audiment_session=([^;]+)/);
+    if (match) {
+      sessionCookieValue = match[1];
+    }
+  }
+
+  if (sessionCookieValue) {
     try {
-      const session = JSON.parse(decodeURIComponent(match[1]));
+      const decodedValue = decodeURIComponent(sessionCookieValue);
+      const session = JSON.parse(decodedValue);
       const uid: string = session.uid;
       const role = ((session.role as string) || '').toLowerCase() as CallerRole;
-      const organizationId: string = session.organizationId;
+      const organizationId: string = session.organizationId || session.orgId || '';
 
       if (!uid || !role || !organizationId) {
-        console.warn('[auth-server] Session missing fields:', { uid: !!uid, role: !!role, org: !!organizationId });
         return null;
       }
       if (!['admin', 'manager', 'auditor'].includes(role)) {
-        console.warn('[auth-server] Invalid role in session:', role);
         return null;
       }
 
@@ -74,13 +89,11 @@ export async function getCallerInfo(request: Request): Promise<CallerInfo | null
       try {
         await adminAuth.getUser(uid);
       } catch (getUserErr) {
-        console.error('[auth-server] getUser(uid) failed — user potentially deleted/disabled:', uid);
         return null;
       }
 
       return { uid, role, organizationId };
-    } catch (err) {
-      console.error('[auth-server] Session parsing error:', err);
+    } catch (err: any) {
       return null;
     }
   }

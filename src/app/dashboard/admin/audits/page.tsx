@@ -348,17 +348,16 @@ export default function AdminAuditsPage() {
                   repeatUntil: undefined,
                 });
               } else if (!editingAuditId) {
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
+                const today = new Date();
                 
                 const { start: st, end: et } = getDefaultTimes();
                 const [startH, startM] = st.split(':').map(Number);
                 const [endH, endM] = et.split(':').map(Number);
                 
-                const start = new Date(tomorrow);
+                const start = new Date(today);
                 start.setHours(startH, startM, 0, 0);
 
-                const end = new Date(tomorrow);
+                const end = new Date(today);
                 end.setHours(endH, endM, 0, 0);
 
                 setFormData(prev => ({
@@ -432,19 +431,28 @@ export default function AdminAuditsPage() {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="manager" className="text-body font-normal">Manager</Label>
-                    <Select value={formData.managerId} onValueChange={(val) => updateFormField('managerId', val)}>
-                      <SelectTrigger id="manager" className="!h-11 text-body bg-muted/5 border-border/50">
-                        <SelectValue placeholder="Select manager" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {managers.map(m => (
-                          <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  {formData.locationId && (
+                    <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2">
+                      <Label htmlFor="manager" className="text-body font-normal">Manager</Label>
+                      <Select value={formData.managerId} onValueChange={(val) => updateFormField('managerId', val)}>
+                        <SelectTrigger id="manager" className="!h-11 text-body bg-muted/5 border-border/50">
+                          <SelectValue placeholder="Select manager" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {managers
+                            .filter(m => {
+                              const loc = locations.find(l => l.id === formData.locationId);
+                              if (!loc) return false;
+                              const assignedIds = loc.assignedManagerIds || (loc.assignedManagerId ? [loc.assignedManagerId] : []);
+                              return assignedIds.includes(m.id);
+                            })
+                            .map(m => (
+                              <SelectItem key={m.id} value={m.id} className="text-body">{m.name}</SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-2">
@@ -480,10 +488,9 @@ export default function AdminAuditsPage() {
                               updateFormField('deadline', newDeadline);
                             }
                           }} disabled={(date: Date) => {
-                            const tomorrow = new Date();
-                            tomorrow.setDate(tomorrow.getDate() + 1);
-                            tomorrow.setHours(0, 0, 0, 0);
-                            return date < tomorrow;
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            return date < today;
                           }} initialFocus />
                         </PopoverContent>
                       </Popover>
@@ -515,7 +522,6 @@ export default function AdminAuditsPage() {
                             updateFormField('deadline', date);
                           }} disabled={(date: Date) => {
                             let minDate = new Date();
-                            minDate.setDate(minDate.getDate() + 1);
                             minDate.setHours(0, 0, 0, 0);
                             if (formData.scheduledDate) {
                               const sched = new Date(formData.scheduledDate);
@@ -607,7 +613,6 @@ export default function AdminAuditsPage() {
                               updateFormField('repeatUntil', date);
                             }} disabled={(date: Date) => {
                               let minDate = new Date();
-                              minDate.setDate(minDate.getDate() + 1);
                               minDate.setHours(0, 0, 0, 0);
                               if (formData.scheduledDate) {
                                 const sched = new Date(formData.scheduledDate);

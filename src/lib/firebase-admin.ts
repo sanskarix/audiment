@@ -6,9 +6,16 @@ if (!admin.apps.length) {
 
     // Safely parse the service account JSON
     const serviceAccountVar = process.env.FIREBASE_SERVICE_ACCOUNT;
-    const serviceAccount = serviceAccountVar 
-      ? JSON.parse(serviceAccountVar) 
-      : {};
+    let serviceAccount: any = {};
+    if (serviceAccountVar) {
+      // Remove potential wrapping quotes from some env loaders
+      const sanitized = serviceAccountVar.trim().replace(/^['"]|['"]$/g, '');
+      try {
+        serviceAccount = JSON.parse(sanitized);
+      } catch (e) {
+        console.error('Failed to parse FIREBASE_SERVICE_ACCOUNT JSON:', e);
+      }
+    }
 
     if (serviceAccount && serviceAccount.project_id) {
       credential = admin.credential.cert(serviceAccount);

@@ -135,7 +135,7 @@ export default function FlashmobAuditPage() {
         if (d.exists()) {
           const data = d.data();
           setUserData(data);
-          if (data?.hasFlashmobAccess === false) setLoading(false);
+          if (data?.isFlashmobEnabled === false) setLoading(false);
         }
       } catch (err) {
         console.error(err);
@@ -444,7 +444,7 @@ export default function FlashmobAuditPage() {
     );
   }
 
-  if (userData && !userData.hasFlashmobAccess) {
+  if (userData && !userData.isFlashmobEnabled) {
     return (
       <DashboardShell role="auditor">
         <div className="dashboard-page-container max-w-2xl mx-auto flex flex-col items-center justify-center py-24 text-center">

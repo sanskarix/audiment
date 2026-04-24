@@ -97,8 +97,8 @@ const UserFormFields = React.memo(({ formData, setFormData, activeManagers, isEd
                 <p className="text-xs text-muted-text">Allow auditor to record flashmob videos</p>
               </div>
               <Switch
-                checked={formData.hasFlashmobAccess}
-                onCheckedChange={(checked) => setFormData({ ...formData, hasFlashmobAccess: checked })}
+                checked={formData.isFlashmobEnabled}
+                onCheckedChange={(checked) => setFormData({ ...formData, isFlashmobEnabled: checked })}
               />
             </div>
           )}
@@ -154,7 +154,7 @@ export default function AdminUsersPage() {
   const [editFormData, setEditFormData] = useState({
     name: '',
     managerId: '',
-    hasFlashmobAccess: false,
+    isFlashmobEnabled: false,
   });
 
 
@@ -474,7 +474,7 @@ export default function AdminUsersPage() {
                             setEditFormData({
                               name: user.name,
                               managerId: user.managerId || '',
-                              hasFlashmobAccess: user.hasFlashmobAccess === true
+                              isFlashmobEnabled: user.isFlashmobEnabled === true
                             });
                             setIsEditOpen(true);
                           }} disabled={user.role === 'ADMIN'}>

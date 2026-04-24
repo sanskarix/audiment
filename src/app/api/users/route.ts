@@ -89,7 +89,7 @@ export async function PATCH(req: Request) {
 
   try {
     const body = await req.json();
-    const { uid, name, role, managerId, hasFlashmobAccess, isActive } = body;
+    const { uid, name, role, managerId, isFlashmobEnabled, isActive } = body;
 
     if (!uid) {
       return NextResponse.json({ error: 'Missing user UID' }, { status: 400 });
@@ -125,7 +125,7 @@ export async function PATCH(req: Request) {
     if (name) updateData.name = name;
     if (role) updateData.role = role.toUpperCase();
     if (managerId !== undefined) updateData.managerId = managerId;
-    if (hasFlashmobAccess !== undefined) updateData.hasFlashmobAccess = hasFlashmobAccess;
+    if (isFlashmobEnabled !== undefined) updateData.isFlashmobEnabled = isFlashmobEnabled;
     if (isActive !== undefined) {
       updateData.isActive = isActive;
       await adminAuth.updateUser(uid, { disabled: !isActive });

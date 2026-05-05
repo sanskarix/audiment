@@ -21,6 +21,7 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
+    const resourceType = formData.get('type') as string || 'auto';
     
     if (!file) {
       return NextResponse.json(
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           folder: 'audits',
-          resource_type: 'auto',
+          resource_type: resourceType as any,
         },
         (error, result) => {
           if (error) return reject(error);

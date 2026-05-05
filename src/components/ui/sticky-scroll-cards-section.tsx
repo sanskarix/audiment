@@ -14,7 +14,7 @@ const features = [
     title: "Photo and video evidence enforcement",
     heading: "No evidence, no submission.",
     description: "Every audit question can require mandatory photo or video proof before the auditor can proceed. No evidence, no submission.",
-    imageUrl: "https://images.unsplash.com/photo-1606857521015-7f9fcf423740?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "/images/photoevidence.jpeg",
   },
   {
     icon: AlertTriangle,
@@ -22,7 +22,7 @@ const features = [
     title: "Automated corrective action tracking",
     heading: "Failed items become assigned tasks – instantly.",
     description: "Critical failures automatically generate assigned resolution tasks with 48-hour SLAs, mandatory notes, and photo proof of resolution.",
-    imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "/images/action.jpeg",
   },
   {
     icon: TrendingDown,
@@ -30,7 +30,7 @@ const features = [
     title: "Instant low-score and trend alerts",
     heading: "Catch declining branches before they become a problem.",
     description: "Automatic alerts when a branch scores below threshold. Trend detection flags locations that score poorly on three consecutive audits.",
-    imageUrl: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "/images/lowscore.jpeg",
   },
   {
     icon: Video,
@@ -38,7 +38,7 @@ const features = [
     title: "Flash verification – prove your auditor was there",
     heading: "1 minute of uneditable truth.",
     description: "Auditors record a 1-minute geo-tagged video and verified selfie from the field. Tamper-proof proof of presence at every location.",
-    imageUrl: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "/images/flash.jpeg",
   },
   {
     icon: LayoutTemplate,
@@ -46,7 +46,7 @@ const features = [
     title: "Standardized audit blueprints",
     heading: "Build once. Deploy to every location.",
     description: "Build reusable audit templates with custom questions, scoring weights, and severity levels. Share blueprints across your entire organization.",
-    imageUrl: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
   },
   {
     icon: FileCheck2,
@@ -54,7 +54,7 @@ const features = [
     title: "FSSAI-ready compliance templates",
     heading: "Pass your next inspection on the first attempt.",
     description: "Pre-built FSSAI hygiene and safety audit templates load with one click. Purpose-built for food businesses under Indian compliance standards.",
-    imageUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "/images/compliance.jpeg",
   },
   {
     icon: Eye,
@@ -62,7 +62,7 @@ const features = [
     title: "One-click PDF audit reports",
     heading: "See how branches run when no one's watching.",
     description: "Export complete audit reports as high-fidelity PDFs including all questions, answers, photo evidence, scores, and corrective action status.",
-    imageUrl: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "/images/reports.jpeg",
   },
   {
     icon: MapPin,
@@ -70,7 +70,7 @@ const features = [
     title: "Permanent audit trail",
     heading: "Proof they were actually there.",
     description: "Every audit, photo, score, and corrective action is permanently stored and searchable. Full compliance history at your fingertips.",
-    imageUrl: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070&auto=format&fit=crop",
   },
 ];
 
@@ -207,20 +207,13 @@ const FeatureCard = React.forwardRef<HTMLDivElement, FeatureCardProps>(
             <div
               className="relative h-full min-h-[300px] md:min-h-full rounded-2xl overflow-hidden transition-all duration-700 ease-out delay-100 opacity-100 scale-100 border border-neutral-200/60 bg-neutral-50 shadow-2xl shadow-neutral-900/5 group"
             >
-              {/* Mockup Toolbar */}
-              <div className="absolute top-0 left-0 right-0 h-8 bg-neutral-100/80 backdrop-blur-md border-b border-neutral-200/60 z-20 flex items-center px-4 gap-1.5 grayscale opacity-40 group-hover:opacity-100 transition-opacity">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-              </div>
-
-              <div className="pt-8 h-full relative">
+              <div className="h-full relative">
                 <Image
                   src={feature.imageUrl}
                   alt={feature.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  className="object-cover"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 ring-1 ring-inset ring-black/5 pointer-events-none" />

@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { motion } from "framer-motion";
 
 // --- Types ---
@@ -15,58 +14,52 @@ interface Testimonial {
 // --- Data ---
 const testimonials: Testimonial[] = [
   {
-    text: "We rolled Audiment out across 50+ outlets in two weeks. GPS-tagged evidence and instant corrective action alerts changed how we do operations oversight – permanently.",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "Ananya S.",
-    role: "Operations Manager, BiryaniBlues",
+    text: "Audiment helped us enforce brand standards across our properties without flying area managers out every week. The GPS-verified photos are completely foolproof.",
+    image: "",
+    name: "Rahul S.",
+    role: "Regional Director, Best Western Plus",
   },
   {
-    text: "Our auditors used to spend 30 minutes filling paper checklists after the fact. Now they complete the same audit in 12 minutes on mobile – with photo proof on every question.",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "Vikram R.",
-    role: "Head of Growth, WowMomo",
+    text: "Maintaining a luxury experience means every detail counts. With Audiment, we transitioned from paper reports to verifiable daily digital checklists for our sprawling resort grounds.",
+    image: "",
+    name: "Rajeev S.",
+    role: "General Manager, Ayatana Resorts",
   },
   {
-    text: "We are at the very beginning of our journey with Audiment, yet we can already see its transformative potential in reshaping how we monitor our outlets.",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "Neha K.",
-    role: "Regional Director, Theobroma",
+    text: "Managing compliance across hundreds of fleet hubs was a nightmare. Now, safety and equipment checks are completed on time, and every corrective action is tracked to closure.",
+    image: "",
+    name: "Anil P.",
+    role: "Fleet Operations Head, VRL Logistics",
   },
   {
-    text: "The corrective action workflow is what sold us. Managers can no longer close a failure with a note – they have to upload before-and-after photo evidence. That accountability alone is worth it.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "Rohit M.",
-    role: "COO, Chai Point",
+    text: "We rolled out Audiment to all our franchise locations in under a month. It's given us ground-truth visibility into food safety and cleanliness, ensuring a consistent customer experience.",
+    image: "",
+    name: "Sneha K.",
+    role: "VP of Operations, Tom & Chee",
   },
   {
-    text: "We went from 25% audit completion on paper to 100% digital completion in the first month. Managers no longer have missing reports to hide behind.",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "Priya D.",
-    role: "Quality Head, Lenskart Stores",
+    text: "Housekeeping and maintenance audits are no longer just a checkbox exercise. We can see real-time conditions of our rooms and facilities right from the dashboard.",
+    image: "",
+    name: "Pooja V.",
+    role: "Operations Manager, Best Western Plus",
   },
   {
-    text: "The FSSAI-ready templates made our regulatory prep effortless. Every property passed its inspection on the first attempt – twelve months running.",
-    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "Arjun T.",
-    role: "Hotel GM, Sarovar Hotels",
+    text: "The offline capability is a lifesaver. Our auditors can inspect remote villas where Wi-Fi is spotty, and everything syncs up perfectly once they're back in range.",
+    image: "",
+    name: "Priya N.",
+    role: "Quality Assurance Lead, Ayatana Resorts",
   },
   {
-    text: "Surprise audits used to tip off managers because someone would call ahead. With Audiment, the audit is invisible until the auditor arrives. The data is honest now.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "Sunita B.",
-    role: "Franchise Head, Wow! Burgers",
+    text: "The 48-hour SLA for critical issues changed everything. If a warehouse fails a safety inspection, the facility manager has to fix it and upload photo proof.",
+    image: "",
+    name: "Vivek D.",
+    role: "Supply Chain Director, VRL Logistics",
   },
   {
-    text: "Average resolution time for critical failures dropped from 5 days to under 48 hours after we switched. The SLA enforcement built into the platform is what made the difference.",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "Meera V.",
-    role: "Operations Lead, Fabindia",
-  },
-  {
-    text: "Offline capability was non-negotiable for our warehouse auditors. Audiment syncs everything the moment they're back on network – nothing is lost.",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "Kiran P.",
-    role: "Logistics Manager, Delhivery",
+    text: "No more pencil-whipping. The mandatory photo evidence feature ensures our teams are actually verifying temperatures and prep stations, not just signing off.",
+    image: "",
+    name: "Aditya M.",
+    role: "Food Safety Manager, Tom & Chee",
   },
 ];
 
@@ -97,7 +90,7 @@ const TestimonialsColumn = (props: {
         {[
           ...new Array(2).fill(0).map((_, index) => (
             <React.Fragment key={index}>
-              {props.testimonials.map(({ text, image, name, role }, i) => (
+              {props.testimonials.map(({ text, name, role }, i) => (
                 <motion.li
                   key={`${index}-${i}`}
                   aria-hidden={index === 1 ? "true" : "false"}
@@ -121,14 +114,6 @@ const TestimonialsColumn = (props: {
                       {text}
                     </p>
                     <footer className="flex items-center gap-3 mt-6">
-                      <Image
-                        width={40}
-                        height={40}
-                        src={image}
-                        alt={`Avatar of ${name}`}
-                        className="h-10 w-10 rounded-full object-cover ring-2 ring-neutral-100 dark:ring-neutral-800 group-hover:ring-primary/30 transition-all duration-300 ease-in-out"
-                        unoptimized
-                      />
                       <div className="flex flex-col">
                         <cite className="font-semibold not-italic tracking-tight leading-5 text-neutral-900 dark:text-white transition-colors duration-300">
                           {name}

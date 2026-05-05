@@ -31,6 +31,7 @@ const securityHeaders = [
       "img-src 'self' data: blob: https://res.cloudinary.com https://*.googleapis.com https://*.googleusercontent.com https://firebasestorage.googleapis.com",
       "connect-src 'self' https://api.cloudinary.com https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net wss://*.firebaseio.com https://us.i.posthog.com https://us-assets.i.posthog.com",
       "frame-src 'self' https://*.firebaseapp.com",
+      "media-src 'self' blob:;",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",

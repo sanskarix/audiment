@@ -120,6 +120,7 @@ export default function FlashmobAuditPage() {
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(60);
+  const [recordingError, setRecordingError] = useState<string | null>(null);
 
   const [selfieBlob, setSelfieBlob] = useState<Blob | null>(null);
   const [selfieUrl, setSelfieUrl] = useState<string | null>(null);
@@ -220,24 +221,35 @@ export default function FlashmobAuditPage() {
   const recordingVideoCallbackRef = useCallback((videoEl: HTMLVideoElement | null) => {
     if (!videoEl) return;
     const attachStream = async () => {
+      setRecordingError(null);
       try {
+
+        let stream: MediaStream;
+
         if (!recordingStreamRef.current) {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
-            audio: false
-          });
+          // Request audio too — audio-less streams cause many browsers/codecs
+          // to silently produce empty chunks. Fall back to video-only if mic denied.
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+              audio: false,
+            });
+          } catch (err: any) {
+            console.error('Camera access error:', err);
+            throw err;
+          }
           recordingStreamRef.current = stream;
         }
         videoEl.srcObject = recordingStreamRef.current;
+        videoEl.muted = true; // mute preview so there's no echo
         try {
           await videoEl.play();
         } catch (playErr: any) {
-          if (playErr.name !== 'AbortError') {
-            console.error('Video play error:', playErr);
-          }
+          if (playErr.name !== 'AbortError') console.error('Video play error:', playErr);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Recording camera error:', err);
+        setRecordingError('Camera access was denied or is unavailable. Please allow camera access and try again.');
       }
     };
     attachStream();
@@ -282,29 +294,53 @@ export default function FlashmobAuditPage() {
 
     const pickMime = () => {
       if (typeof MediaRecorder === 'undefined') return undefined;
-      const candidates = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm', 'video/mp4'];
-      return candidates.find(t => MediaRecorder.isTypeSupported(t));
+      const types = [
+        'video/webm;codecs=vp8',
+        'video/webm;codecs=vp9',
+        'video/webm;codecs=h264',
+        'video/mp4;codecs=avc1',
+        'video/mp4',
+        'video/webm'
+      ];
+      return types.find(t => MediaRecorder.isTypeSupported(t));
     };
 
     chunksRef.current = [];
     const mimeType = pickMime();
-    const recorder = mimeType
-      ? new MediaRecorder(recordingStreamRef.current, { mimeType })
-      : new MediaRecorder(recordingStreamRef.current);
+    let recorder: MediaRecorder;
+    try {
+      recorder = mimeType
+        ? new MediaRecorder(recordingStreamRef.current, { mimeType, videoBitsPerSecond: 2500000 })
+        : new MediaRecorder(recordingStreamRef.current, { videoBitsPerSecond: 2500000 });
+    } catch (err) {
+      console.error('MediaRecorder init failed:', err);
+      return;
+    }
     mediaRecorderRef.current = recorder;
 
     recorder.ondataavailable = (e) => {
-      if (e.data.size > 0) chunksRef.current.push(e.data);
+      if (e.data && e.data.size > 0) chunksRef.current.push(e.data);
     };
 
     recorder.onstop = () => {
-      const blob = new Blob(chunksRef.current, mimeType ? { type: mimeType } : undefined);
+      // Safely stop tracks now that recording is fully finalized
+      stopRecordingCamera();
+
+      const chunks = chunksRef.current;
+      if (chunks.length === 0 || chunks.every(c => c.size === 0)) {
+        console.error('Recording produced empty blob. MimeType tried:', mimeType);
+        setRecordingError('Recording failed — no video data was captured. Please try again.');
+        setRecording(false);
+        setStep('video');
+        return;
+      }
+      const blob = new Blob(chunks, { type: chunks[0]?.type || 'video/webm' });
       setVideoBlob(blob);
       setVideoUrl(URL.createObjectURL(blob));
       setStep('review');
     };
 
-    recorder.start(100);
+    recorder.start();
     setRecording(true);
     setCountdown(60);
 
@@ -315,7 +351,7 @@ export default function FlashmobAuditPage() {
           if (mediaRecorderRef.current?.state === 'recording') {
             mediaRecorderRef.current.stop();
             setRecording(false);
-            stopRecordingCamera();
+            // Camera stopped in onstop
           }
           return 0;
         }
@@ -328,7 +364,7 @@ export default function FlashmobAuditPage() {
     if (mediaRecorderRef.current?.state === 'recording') {
       mediaRecorderRef.current.stop();
       setRecording(false);
-      stopRecordingCamera();
+      // Camera stopped in onstop
     }
   };
 
@@ -365,7 +401,9 @@ export default function FlashmobAuditPage() {
       } catch (e) { console.warn('Geo failed'); }
 
       const videoFormData = new FormData();
-      videoFormData.append('file', videoBlob, 'flashmob_video.webm');
+      const extension = videoBlob.type.includes('mp4') ? 'mp4' : 'webm';
+      videoFormData.append('file', videoBlob, `flashmob_video.${extension}`);
+      videoFormData.append('type', 'video');
       const vRes = await fetch('/api/upload', { method: 'POST', body: videoFormData });
       if (vRes.status === 0) return;
       const vData = await vRes.json();
@@ -373,6 +411,7 @@ export default function FlashmobAuditPage() {
 
       const selfieFormData = new FormData();
       selfieFormData.append('file', selfieBlob, 'selfie.jpg');
+      selfieFormData.append('type', 'image');
       const sRes = await fetch('/api/upload', { method: 'POST', body: selfieFormData });
       if (sRes.status === 0) return;
       const sData = await sRes.json();
@@ -397,7 +436,8 @@ export default function FlashmobAuditPage() {
         visibleTo: [uid],
         publishedRequestId: sourceRequest?.id || null,
         publishedByAdminId: sourceRequest?.publishedByAdminId || null,
-        publicationType: sourceRequest ? 'published' : 'self'
+        publicationType: sourceRequest ? 'published' : 'self',
+        status: 'completed'
       });
 
       if (sourceRequest?.id) {
@@ -468,7 +508,7 @@ export default function FlashmobAuditPage() {
     return (
       <DashboardShell role="auditor">
         <div className="dashboard-page-container max-w-2xl mx-auto">
-          
+
           {/* Header */}
           <div className="page-header-section mb-8">
             <div className="flex flex-col gap-1">
@@ -701,7 +741,7 @@ export default function FlashmobAuditPage() {
                     REC: {countdown}s
                   </Badge>
                 </div>
-                
+
                 <div className="relative aspect-video bg-black">
                   <video
                     ref={recordingVideoCallbackRef}
@@ -739,6 +779,12 @@ export default function FlashmobAuditPage() {
                   <p className="muted-label tracking-widest text-[10px] uppercase font-bold">
                     {recording ? 'Recording in progress...' : 'Tap for start pan'}
                   </p>
+                  {recordingError && (
+                    <div className="mx-4 mt-2 flex items-start gap-2 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-left">
+                      <AlertCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+                      <p className="text-[12px] text-destructive leading-relaxed">{recordingError}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -755,7 +801,7 @@ export default function FlashmobAuditPage() {
                   </Badge>
                 </div>
                 <div className="aspect-video bg-black">
-                  <video src={videoUrl} controls autoPlay loop className="h-full w-full" />
+                  <video src={videoUrl} controls autoPlay muted loop playsInline className="h-full w-full" />
                 </div>
                 <div className="p-6 grid grid-cols-2 gap-4">
                   <Button
@@ -810,57 +856,57 @@ export default function FlashmobAuditPage() {
           {/* STEP 5: FINAL SUBMIT */}
           {step === 'submitting' && (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-               <div className="standard-card p-0 overflow-hidden shadow-2xl">
-                  <div className="p-6 text-center border-b border-border/40">
-                    <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4 border border-primary/20">
-                      <UploadCloud className="h-8 w-8 text-primary" />
+              <div className="standard-card p-0 overflow-hidden shadow-2xl">
+                <div className="p-6 text-center border-b border-border/40">
+                  <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4 border border-primary/20">
+                    <UploadCloud className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="section-heading">Final Verification</h3>
+                  <p className="body-text text-muted-text">Encryption in progress. Review and upload.</p>
+                </div>
+
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center justify-between p-4 rounded-xl bg-muted/30 border border-border/40">
+                    <div className="flex items-center gap-3">
+                      <MapPin className="h-4 w-4 text-primary opacity-60" />
+                      <span className="body-text font-bold text-heading truncate max-w-[180px]">{selectedLocationName}</span>
                     </div>
-                    <h3 className="section-heading">Final Verification</h3>
-                    <p className="body-text text-muted-text">Encryption in progress. Review and upload.</p>
+                    <Badge className="bg-success text-white border-none py-0.5 h-4 text-[9px] font-bold uppercase tracking-widest">Verified</Badge>
                   </div>
 
-                  <div className="p-6 space-y-4">
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-muted/30 border border-border/40">
-                      <div className="flex items-center gap-3">
-                        <MapPin className="h-4 w-4 text-primary opacity-60" />
-                        <span className="body-text font-bold text-heading truncate max-w-[180px]">{selectedLocationName}</span>
-                      </div>
-                      <Badge className="bg-success text-white border-none py-0.5 h-4 text-[9px] font-bold uppercase tracking-widest">Verified</Badge>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4 h-32">
-                      <div className="standard-card p-0 relative overflow-hidden bg-black rounded-xl">
-                        {videoUrl && <video src={videoUrl} className="h-full w-full object-cover opacity-60" muted loop autoPlay />}
-                        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
-                          <p className="text-white text-[9px] font-bold uppercase tracking-wider text-center">Video Proof</p>
-                        </div>
-                      </div>
-                      <div className="standard-card p-0 relative overflow-hidden bg-muted rounded-xl">
-                        {selfieUrl && <Image src={selfieUrl} alt="Selfie" fill className="object-cover opacity-80" />}
-                        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
-                          <p className="text-white text-[9px] font-bold uppercase tracking-wider text-center">ID Proof</p>
-                        </div>
+                  <div className="grid grid-cols-2 gap-4 h-32">
+                    <div className="standard-card p-0 relative overflow-hidden bg-black rounded-xl">
+                      {videoUrl && <video src={videoUrl} className="h-full w-full object-cover opacity-60" muted loop autoPlay />}
+                      <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                        <p className="text-white text-[9px] font-bold uppercase tracking-wider text-center">Video Proof</p>
                       </div>
                     </div>
-
-                    <Button
-                      className="w-full h-11 px-8 bg-primary shadow-lg shadow-primary/20 active:scale-95 transition-all text-[15px] font-bold gap-2"
-                      disabled={saving}
-                      onClick={handleSubmit}
-                    >
-                      {saving ? (
-                        <>
-                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                          Publishing Log...
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle2 className="h-4 w-4" /> Finalize & Submit
-                        </>
-                      )}
-                    </Button>
+                    <div className="standard-card p-0 relative overflow-hidden bg-muted rounded-xl">
+                      {selfieUrl && <Image src={selfieUrl} alt="Selfie" fill className="object-cover opacity-80" />}
+                      <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                        <p className="text-white text-[9px] font-bold uppercase tracking-wider text-center">ID Proof</p>
+                      </div>
+                    </div>
                   </div>
-               </div>
+
+                  <Button
+                    className="w-full h-11 px-8 bg-primary shadow-lg shadow-primary/20 active:scale-95 transition-all text-[15px] font-bold gap-2"
+                    disabled={saving}
+                    onClick={handleSubmit}
+                  >
+                    {saving ? (
+                      <>
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        Publishing Log...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="h-4 w-4" /> Finalize & Submit
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
 
@@ -873,7 +919,7 @@ export default function FlashmobAuditPage() {
                 </div>
                 <h1 className="page-heading mb-2">Audit Published</h1>
                 <p className="body-text text-muted-text mb-10 max-w-xs">Site verification successfully logged and shared with your administrator.</p>
-                
+
                 <div className="w-full space-y-3">
                   <Button
                     className="w-full h-11 bg-primary shadow-lg shadow-primary/20 active:scale-95 transition-all font-bold"

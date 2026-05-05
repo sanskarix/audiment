@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs, addDoc, serverTimestamp, updateDoc, doc, deleteDoc, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, serverTimestamp, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 import { useAuthSync } from '@/components/AuthProvider';
 import DashboardShell from '@/components/DashboardShell';
 import { Button } from '@/components/ui/button';
@@ -60,24 +60,46 @@ export default function AdminFlashmobPage() {
 
     const fetchData = async () => {
       try {
-        const [locSnap, audSnap, managerSnap, completedSnap, activeSnap] = await Promise.all([
+        // Fetch core data (locations, users) — these must not fail
+        const [locSnap, audSnap, managerSnap] = await Promise.all([
           getDocs(query(collection(db, 'locations'), where('organizationId', '==', orgId), where('isActive', '==', true))),
-          getDocs(query(collection(db, 'users'), where('organizationId', '==', orgId), where('role', '==', 'AUDITOR'), where('isFlashmobEnabled', '==', true))),
+          getDocs(query(collection(db, 'users'), where('organizationId', '==', orgId), where('role', '==', 'AUDITOR'), where('isActive', '==', true))),
           getDocs(query(collection(db, 'users'), where('organizationId', '==', orgId), where('role', '==', 'MANAGER'), where('isActive', '==', true))),
-          getDocs(query(collection(db, 'flashmobAudits'), where('organizationId', '==', orgId), where('status', '==', 'completed'), orderBy('submittedAt', 'desc'))),
-          getDocs(query(collection(db, 'flashmobAudits'), where('organizationId', '==', orgId), where('status', '==', 'active'), orderBy('publishedAt', 'desc')))
         ]);
-
         setLocations(locSnap.docs.map(d => ({ id: d.id, ...d.data() })));
         setAuditors(audSnap.docs.map(d => ({ id: d.id, ...d.data() })));
         setManagers(managerSnap.docs.map(d => ({ id: d.id, ...d.data() })));
-        setAudits(completedSnap.docs.map(d => ({ id: d.id, ...d.data() })));
-        setPublishedRequests(activeSnap.docs.map(d => ({ id: d.id, ...d.data() })));
       } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
+        console.error('[flashmob] Failed to load core data:', err);
       }
+
+      try {
+        // Fetch completed audit logs — sort client-side to avoid composite index
+        const completedSnap = await getDocs(
+          query(collection(db, 'flashmobAudits'), where('organizationId', '==', orgId), where('status', '==', 'completed'))
+        );
+        const completed = completedSnap.docs
+          .map(d => ({ id: d.id, ...d.data() } as any))
+          .sort((a, b) => (b.submittedAt?.toMillis?.() ?? 0) - (a.submittedAt?.toMillis?.() ?? 0));
+        setAudits(completed);
+      } catch (err) {
+        console.error('[flashmob] Failed to load completed audits:', err);
+      }
+
+      try {
+        // Fetch active dispatched requests — sort client-side to avoid composite index
+        const activeSnap = await getDocs(
+          query(collection(db, 'flashmobAuditRequests'), where('organizationId', '==', orgId), where('status', '==', 'published'))
+        );
+        const active = activeSnap.docs
+          .map(d => ({ id: d.id, ...d.data() } as any))
+          .sort((a, b) => (b.publishedAt?.toMillis?.() ?? 0) - (a.publishedAt?.toMillis?.() ?? 0));
+        setPublishedRequests(active);
+      } catch (err) {
+        console.error('[flashmob] Failed to load active requests:', err);
+      }
+
+      setLoading(false);
     };
 
     fetchData();
@@ -106,14 +128,13 @@ export default function AdminFlashmobPage() {
         auditorId: selectedAuditor,
         auditorName: auditor?.name || 'Unknown',
         deadlineAt: deadlineAt,
-        status: 'active',
+        status: 'published',
         publishedBy: uid,
+        publishedByAdminId: uid,
         publishedAt: serverTimestamp(),
-        managerId: auditor?.managerId || null,
-        isVisibleToManager: !!auditor?.managerId,
       };
 
-      const docRef = await addDoc(collection(db, 'flashmobAudits'), requestData);
+      const docRef = await addDoc(collection(db, 'flashmobAuditRequests'), requestData);
       
       await addDoc(collection(db, 'notifications'), {
         organizationId: orgId,
@@ -221,32 +242,62 @@ export default function AdminFlashmobPage() {
                   {/* Auditor */}
                   <div className="space-y-1.5">
                     <Label className="text-body font-normal">Auditor</Label>
-                    <Select 
-                      value={selectedAuditor} 
-                      onValueChange={setSelectedAuditor} 
-                      required
-                      disabled={!selectedLocation}
-                    >
-                      <SelectTrigger className={cn(
-                        "h-10 border-border/50 bg-muted/30 text-body text-[13px] rounded-lg focus:ring-primary/20",
-                        !selectedLocation && "opacity-50 cursor-not-allowed"
-                      )}>
-                        <SelectValue placeholder={selectedLocation ? "Select an auditor" : "Select a location first"} />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl border-border/50">
-                        {auditors
-                          .filter(auditor => {
-                            if (!selectedLocation) return false;
-                            const loc = locations.find(l => l.id === selectedLocation);
-                            if (!loc) return false;
-                            const assignedIds = loc.assignedManagerIds || (loc.assignedManagerId ? [loc.assignedManagerId] : []);
-                            return assignedIds.includes(auditor.managerId);
-                          })
-                          .map((auditor) => (
-                            <SelectItem key={auditor.id} value={auditor.id} className="text-body text-[13px]">{auditor.name}</SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
+                    {(() => {
+                      const loc = selectedLocation ? locations.find(l => l.id === selectedLocation) : null;
+                      const assignedIds: string[] = loc
+                        ? (loc.assignedManagerIds || (loc.assignedManagerId ? [loc.assignedManagerId] : []))
+                        : [];
+                      const locationAuditors = assignedIds.length > 0
+                        ? auditors.filter(a => assignedIds.includes(a.managerId))
+                        : auditors;
+                      const selectedAuditorData = selectedAuditor ? auditors.find(a => a.id === selectedAuditor) : null;
+                      const selectedLacksAccess = selectedAuditorData && !selectedAuditorData.isFlashmobEnabled;
+
+                      return (
+                        <>
+                          <Select
+                            value={selectedAuditor}
+                            onValueChange={setSelectedAuditor}
+                            required
+                            disabled={!selectedLocation}
+                          >
+                            <SelectTrigger className={cn(
+                              "h-10 border-border/50 bg-muted/30 text-body text-[13px] rounded-lg focus:ring-primary/20",
+                              !selectedLocation && "opacity-50 cursor-not-allowed"
+                            )}>
+                              <SelectValue placeholder={selectedLocation ? "Select an auditor" : "Select a location first"} />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-xl border-border/50">
+                              {locationAuditors.length === 0 && (
+                                <div className="px-3 py-4 text-[12px] text-muted-text text-center">No auditors assigned to this location.</div>
+                              )}
+                              {locationAuditors.map((auditor) => (
+                                <SelectItem key={auditor.id} value={auditor.id} className="text-body text-[13px]">
+                                  <span className={!auditor.isFlashmobEnabled ? 'text-muted-text' : ''}>
+                                    {auditor.name}{!auditor.isFlashmobEnabled ? ' (No flashmob access)' : ''}
+                                  </span>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {selectedLacksAccess && (
+                            <div className="mt-2 flex items-start gap-2 p-2.5 rounded-lg bg-destructive/5 border border-destructive/20">
+                              <span className="text-destructive mt-0.5 shrink-0">⚠️</span>
+                              <p className="text-[11px] text-destructive leading-relaxed">
+                                <strong>{selectedAuditorData.name}</strong> does not have flashmob access and cannot receive dispatches.{' '}
+                                <Link
+                                  href="/dashboard/admin/users"
+                                  className="underline underline-offset-2 font-semibold hover:opacity-70 transition-opacity"
+                                  onClick={() => setIsDialogOpen(false)}
+                                >
+                                  Enable it in Users →
+                                </Link>
+                              </p>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
                   </div>
 
                   {/* Divider */}
@@ -335,7 +386,7 @@ export default function AdminFlashmobPage() {
                   <Button
                     type="submit"
                     className="flex-1 h-10 bg-primary hover:bg-primary/90 text-[13px] text-white shadow-lg shadow-primary/20 active:scale-[0.98] transition-all font-semibold rounded-lg gap-2"
-                    disabled={isSubmitting || !deadlineDate || !selectedAuditor || !selectedLocation}
+                    disabled={isSubmitting || !deadlineDate || !selectedAuditor || !selectedLocation || !auditors.find(a => a.id === selectedAuditor)?.isFlashmobEnabled}
                   >
                     <Send className="h-3.5 w-3.5" />
                     {isSubmitting ? 'Publishing…' : 'Dispatch'}
@@ -404,10 +455,10 @@ export default function AdminFlashmobPage() {
 
             <TabsContent value="pending" className="mt-0 animate-in fade-in slide-in-from-bottom-2 duration-500">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-aud-md">
-                {publishedRequests.filter(r => r.status === 'active').map((req) => (
+                {publishedRequests.map((req) => (
                   <PendingRequestCard key={req.id} request={req} />
                 ))}
-                {publishedRequests.filter(r => r.status === 'active').length === 0 && (
+                {publishedRequests.length === 0 && (
                   <div className="col-span-full standard-card flex flex-col items-center justify-center py-20 text-center border-dashed">
                     <History className="h-10 w-10 text-muted-text/20 mb-3" />
                     <p className="body-text text-muted-text">No pending assignments at the moment.</p>

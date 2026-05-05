@@ -53,17 +53,17 @@ service cloud.firestore {
 
 
     // ─── USERS COLLECTION ────────────────────────────────────────────────────
-    // Admin: full access
-    // Manager: read any user in the system (to resolve names, auditors, etc.)
-    // Auditor: read + update own document
-    // Any user: update their own document (profile info, photo, etc.)
+    // Admin: full access within own org
+    // Manager: read users within own org (to resolve names, auditors, etc.)
+    // Auditor: read users within own org + update own document
+    // Any user: always read + update their own document (profile, photo, etc.)
 
     match /users/{userId} {
       allow read: if isAuth() && (
-        isAdmin() ||
-        isManager() ||
-        isAuditor() ||
-        request.auth.uid == userId
+        request.auth.uid == userId ||
+        (isAdmin() && resource.data.organizationId == myOrgId()) ||
+        (isManager() && resource.data.organizationId == myOrgId()) ||
+        (isAuditor() && resource.data.organizationId == myOrgId())
       );
       allow create: if isAdmin();
       allow update: if isAdmin() || request.auth.uid == userId;
@@ -145,11 +145,19 @@ service cloud.firestore {
     // ─── CORRECTIVE ACTIONS COLLECTION ───────────────────────────────────────
     // Admin: full access
     // Manager: read + create + update (managing actions from their branches)
-    // Auditor: create (auto-generated from audit submission batch)
+    // Auditor: read own submissions; create org-scoped (auto-generated from audit batch)
 
     match /correctiveActions/{actionId} {
-      allow read: if isAuth() && (isAdmin() || isManager() || isAuditor());
-      allow create: if isAuth() && (isAdmin() || isManager() || isAuditor());
+      allow read: if isAuth() && (
+        isAdmin() ||
+        isManager() ||
+        (isAuditor() && resource.data.auditorId == request.auth.uid)
+      );
+      allow create: if isAuth() && (
+        isAdmin() ||
+        isManager() ||
+        (isAuditor() && request.resource.data.organizationId == myOrgId())
+      );
       allow update: if isAdmin() || isManager();
       allow delete: if isAdmin();
     }
@@ -171,8 +179,8 @@ service cloud.firestore {
     }
 
     // ─── FLASHMOB AUDIT REQUESTS COLLECTION ─────────────────────────────────
-    // Admin: publish directly to auditors (no manager involvement)
-    // Auditor: read only their own published requests
+    // Admin: publish requests directly to auditors (no manager involvement)
+    // Auditor: read only their own published requests; update to mark completed
     // Managers: no access
 
     match /flashmobAuditRequests/{requestId} {
@@ -189,7 +197,7 @@ service cloud.firestore {
 
     // ─── NOTIFICATIONS COLLECTION ────────────────────────────────────────────
     // Admin: full access
-    // Any authenticated user: create notifications (for system events, batch ops)
+    // Any authenticated user: create notifications scoped to their own org only
     // Users: read their own notifications
     // Users: update ONLY the isRead field on their own notifications
     // Users: delete their own notifications
@@ -197,11 +205,9 @@ service cloud.firestore {
     match /notifications/{notificationId} {
       allow read: if isAuth() && (
         isAdmin() ||
-        isManager() ||
-        isAuditor() ||
         resource.data.recipientId == request.auth.uid
       );
-      allow create: if isAuth();
+      allow create: if isAuth() && request.resource.data.organizationId == myOrgId();
       allow update: if isAuth() && (
         isAdmin() ||
         (resource.data.recipientId == request.auth.uid &&

@@ -104,7 +104,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
           return;
         }
         setUserState(prev => prev ? { ...prev, ...uData } : { name: uData.name, email: uData.email, photoUrl: uData.photoUrl });
-        if (role === 'auditor') setHasFlashmobAccess(uData.hasFlashmobAccess === true);
+        if (role === 'auditor') setHasFlashmobAccess(uData.isFlashmobEnabled === true);
       }
     }, (err: any) => {
       if (err.name === 'AbortError') return;

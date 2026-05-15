@@ -1,8 +1,8 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 
 export const metadata = {
-  title: 'Mobile Audit App – Run Compliance Audits from Any Device | Audiment',
-  description: 'Audiment is the intuitive mobile audit app empowering managers and frontline staff to run complex operational audits from smartphones quickly.',
+  title: 'Audiment | Mobile audit app with no-download, no-hardware verified compliance',
+  description: 'Audiment runs on any smartphone browser – no app installation needed. Field auditors get GPS-locked, photo-verified checklists with offline-first execution and instant CAPA triggers.',
   alternates: { canonical: 'https://audiment.com/use-cases/mobile-audit-app' }
 }
 

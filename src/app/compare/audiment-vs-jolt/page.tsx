@@ -1,8 +1,8 @@
 import CompareTemplate from '@/components/compare/CompareTemplate'
 
 export const metadata = {
-  title: 'Audiment vs Jolt – Restaurant Compliance Software Compared',
-  description: 'Audiment vs Jolt comparison for restaurant operators deciding on the best digital checklist and compliance software.',
+  title: 'Audiment vs Jolt | Hardware-free verified audits for restaurant operators',
+  description: 'Audiment vs Jolt – BYOD Flash Verification and enterprise multi-location analytics vs Jolt\'s hardware-bundled single-store approach. A clear comparison for QSR and restaurant compliance teams.',
   alternates: { canonical: 'https://audiment.com/compare/audiment-vs-jolt' }
 }
 

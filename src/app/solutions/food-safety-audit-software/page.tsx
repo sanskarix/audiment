@@ -1,8 +1,8 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'Food Safety Audit Software – FSSAI-Ready Photo-Verified Compliance | Audiment',
-  description: 'Automate your food safety audits with photo-verified compliance checks, ensuring your multi-location food business is always FSSAI-ready.',
+  title: 'Audiment for food safety | FSSAI-ready audits with photo-verified compliance',
+  description: 'Audiment gives food businesses un-falsifiable FSSAI compliance trails – mandatory photo evidence per check, Schedule 4-mapped templates, automated non-conformance alerts, and tamper-proof audit archives.',
   alternates: { canonical: 'https://audiment.com/solutions/food-safety-audit-software' }
 }
 

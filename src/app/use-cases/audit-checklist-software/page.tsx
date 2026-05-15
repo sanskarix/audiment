@@ -1,8 +1,8 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 
 export const metadata = {
-  title: 'Digital Audit Checklist Software – Replace Paper Checklists | Audiment',
-  description: 'Audiment is an advanced digital audit checklist software. Build dynamic, intelligent checklists and distribute them instantly to thousands of locations.',
+  title: 'Audiment | Digital audit checklists that enforce photo evidence, not just tick-boxes',
+  description: 'Audiment replaces paper checklists with smart digital audit forms – conditional logic, mandatory photo requirements, weighted scoring, and instant distribution to every location.',
   alternates: { canonical: 'https://audiment.com/use-cases/audit-checklist-software' }
 }
 

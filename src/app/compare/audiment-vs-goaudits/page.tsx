@@ -1,8 +1,8 @@
 import CompareTemplate from '@/components/compare/CompareTemplate'
 
 export const metadata = {
-  title: 'Audiment vs GoAudits – Feature-by-Feature Comparison',
-  description: 'Comparing Audiment and GoAudits. See why top operations teams prefer Audiment for scaling their compliance checks globally.',
+  title: 'Audiment vs GoAudits | Flash Verification vs basic photo attachment',
+  description: 'Audiment vs GoAudits – how verified audit ground truth, automated CAPA with photo-proof closure, and FSSAI-ready templates compare against GoAudits for multi-location operators.',
   alternates: { canonical: 'https://audiment.com/compare/audiment-vs-goaudits' }
 }
 

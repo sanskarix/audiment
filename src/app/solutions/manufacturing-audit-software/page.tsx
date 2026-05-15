@@ -1,8 +1,8 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'Manufacturing Audit Software – Quality and Safety Compliance Across Facilities | Audiment',
-  description: 'Audiment replaces complex paper-based manufacturing safety and quality audits with rapid, verifiable digital execution.',
+  title: 'Audiment for manufacturing | Safety and quality audits with full evidence trails',
+  description: 'Audiment gives manufacturing operations verified quality and safety compliance – LOTO digitisation, photo-evidence equipment checks, automated non-conformance escalation, and multi-facility dashboards.',
   alternates: { canonical: 'https://audiment.com/solutions/manufacturing-audit-software' }
 }
 

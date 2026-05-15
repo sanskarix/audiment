@@ -35,7 +35,7 @@ interface TemplateBuilderProps {
 }
 
 export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
-  // orgId and uid come from Firebase ID token claims via AuthProvider —
+  // orgId and uid come from Firebase ID token claims via AuthProvider –
   // these are always authoritative and do not depend on the session cookie.
   const { isSynced, uid, orgId } = useAuthSync();
   const router = useRouter();

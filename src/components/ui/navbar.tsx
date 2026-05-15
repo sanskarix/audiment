@@ -6,10 +6,11 @@ import { cn } from '@/lib/utils'
 import Link from 'next/link'
 
 const menuItems = [
-    { name: 'Features', href: '/#features' },
+    { name: 'Solutions', href: '/solutions/restaurant-audit-software' },
     { name: 'How it works', href: '/#how-it-works' },
     { name: 'Use cases', href: '/#use-cases' },
     { name: 'Blog', href: '/blog' },
+    { name: 'About', href: '/about' },
 ]
 
 export function Navbar({ userRole }: { userRole?: string | null }) {

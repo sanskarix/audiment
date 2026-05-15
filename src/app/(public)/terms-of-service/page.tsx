@@ -4,7 +4,7 @@ import { Footer } from "@/components/ui/modem-animated-footer";
 import { Navbar } from "@/components/ui/navbar";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — Audiment",
+  title: "Terms of Service – Audiment",
   description: "Terms and conditions governing your use of the Audiment platform.",
   robots: "index, follow",
 };
@@ -49,7 +49,7 @@ export default function TermsOfServicePage() {
             <p className="text-base text-neutral-500 leading-relaxed mb-6">
               Audiment is a cloud-based audit management platform designed for multi-location businesses. It enables
               organizations to create, assign, and track operational audits across multiple branches and locations.
-              Users can manage audit templates, assign auditors, monitor compliance status, and generate reports — all
+              Users can manage audit templates, assign auditors, monitor compliance status, and generate reports – all
               from a centralized dashboard.
             </p>
             <p className="text-base text-neutral-500 leading-relaxed mb-6">
@@ -394,7 +394,7 @@ export default function TermsOfServicePage() {
             </p>
           </section>
 
-          {/* Section 22 — Contact */}
+          {/* Section 22 – Contact */}
           <section className="mt-16 scroll-mt-24">
             <span className="text-xs font-bold tracking-widest text-emerald-600 block mb-3 uppercase">22</span>
             <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900 mb-6">Contact Us</h2>
@@ -402,7 +402,7 @@ export default function TermsOfServicePage() {
               To resolve a complaint or receive further information regarding use of the Services, please contact us:
             </p>
             <div className="p-6 rounded-xl bg-neutral-50 border border-neutral-100">
-              <h3 className="text-lg font-semibold mb-4 text-neutral-900 border-b border-neutral-200 pb-4">Audiment — Legal Team</h3>
+              <h3 className="text-lg font-semibold mb-4 text-neutral-900 border-b border-neutral-200 pb-4">Audiment – Legal Team</h3>
               <div className="space-y-2 text-base text-neutral-600">
                 <div><strong className="font-semibold text-neutral-900">Company</strong> &nbsp;Asellus LLP (doing business as Audiment)</div>
                 <div><strong className="font-semibold text-neutral-900">Address</strong> &nbsp;82 A Galaxy Homes, Indore, Madhya Pradesh 452007, India</div>

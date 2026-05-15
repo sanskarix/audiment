@@ -1,8 +1,8 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'Retail Audit Software – Standardize Store Compliance Across Your Chain | Audiment',
-  description: 'Audiment empowers retail operations leaders to enforce visual merchandising, staff compliance, and safety standards across hundreds of locations.',
+  title: 'Audiment for retail | Consistent brand standards across every store',
+  description: 'Audiment gives retail ops leaders photo-verified compliance across every store – promotional display checks, visual merchandising audits, and automated corrective actions that close without excuses.',
   alternates: { canonical: 'https://audiment.com/solutions/retail-audit-software' }
 }
 

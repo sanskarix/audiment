@@ -227,7 +227,7 @@ export default function FlashmobAuditPage() {
         let stream: MediaStream;
 
         if (!recordingStreamRef.current) {
-          // Request audio too — audio-less streams cause many browsers/codecs
+          // Request audio too – audio-less streams cause many browsers/codecs
           // to silently produce empty chunks. Fall back to video-only if mic denied.
           try {
             stream = await navigator.mediaDevices.getUserMedia({
@@ -329,7 +329,7 @@ export default function FlashmobAuditPage() {
       const chunks = chunksRef.current;
       if (chunks.length === 0 || chunks.every(c => c.size === 0)) {
         console.error('Recording produced empty blob. MimeType tried:', mimeType);
-        setRecordingError('Recording failed — no video data was captured. Please try again.');
+        setRecordingError('Recording failed – no video data was captured. Please try again.');
         setRecording(false);
         setStep('video');
         return;

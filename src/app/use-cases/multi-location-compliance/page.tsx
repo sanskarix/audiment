@@ -1,8 +1,8 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 
 export const metadata = {
-  title: 'Multi-Location Compliance Software – One Platform for Every Branch | Audiment',
-  description: 'Audiment is the comprehensive multi-location compliance software driving absolute quality oversight comprehensively across entire franchised operations.',
+  title: 'Audiment | One compliance platform for every branch, every location',
+  description: 'Audiment gives multi-location operators a single verified view of compliance across all branches – comparative dashboards, role-based access, and real-time trend alerts across your entire network.',
   alternates: { canonical: 'https://audiment.com/use-cases/multi-location-compliance' }
 }
 

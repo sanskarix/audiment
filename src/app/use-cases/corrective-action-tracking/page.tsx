@@ -1,8 +1,8 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 
 export const metadata = {
-  title: 'Corrective Action Tracking Software – Automate Your CAPA Workflow | Audiment',
-  description: 'Audiment is the leading corrective action tracking software designed to automate problem resolution and prevent recurring failures.',
+  title: 'Audiment | Automate corrective actions from every audit failure',
+  description: 'Audiment auto-generates CAPA tasks the moment an audit fails – with 48-hour SLAs, photo-proof closure requirements, and escalation to regional directors for overdue issues.',
   alternates: { canonical: 'https://audiment.com/use-cases/corrective-action-tracking' }
 }
 

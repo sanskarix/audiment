@@ -4,10 +4,10 @@
 The wizard has completed a deep integration of PostHog into the Audiment Next.js App Router project. Here is a summary of all changes made:
 
 **Infrastructure (already in place):**
-- `instrumentation-client.ts` — Initializes PostHog client-side using the Next.js 15.3+ `instrumentation-client` approach. Enables session replay, autocapture, and exception tracking via `capture_exceptions: true`.
-- `src/lib/posthog-server.ts` — Singleton PostHog Node.js client for server-side event capture in API routes.
-- `next.config.ts` — `/ingest` reverse proxy rewrites route PostHog traffic through the app (avoids ad blockers); `skipTrailingSlashRedirect: true`; Content Security Policy includes PostHog hosts.
-- `.env.local` — `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` confirmed and updated.
+- `instrumentation-client.ts` – Initializes PostHog client-side using the Next.js 15.3+ `instrumentation-client` approach. Enables session replay, autocapture, and exception tracking via `capture_exceptions: true`.
+- `src/lib/posthog-server.ts` – Singleton PostHog Node.js client for server-side event capture in API routes.
+- `next.config.ts` – `/ingest` reverse proxy rewrites route PostHog traffic through the app (avoids ad blockers); `skipTrailingSlashRedirect: true`; Content Security Policy includes PostHog hosts.
+- `.env.local` – `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` confirmed and updated.
 
 **New event tracking added in this session (3 files):**
 
@@ -42,7 +42,7 @@ The wizard has completed a deep integration of PostHog into the Audiment Next.js
 
 We've built a dashboard and 5 insights for you to keep an eye on user behavior:
 
-- **Dashboard — Analytics basics**: https://us.posthog.com/project/380029/dashboard/1464302
+- **Dashboard – Analytics basics**: https://us.posthog.com/project/380029/dashboard/1464302
 - **Audit completion funnel** (`audit_started` → `audit_submitted`): https://us.posthog.com/project/380029/insights/0QrEaDC9
 - **Login success vs failure** (daily trend): https://us.posthog.com/project/380029/insights/EUelk41a
 - **Corrective action resolution funnel** (assigned → completed → resolved): https://us.posthog.com/project/380029/insights/CdutkEy2

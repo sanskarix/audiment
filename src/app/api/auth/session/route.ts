@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing idToken' }, { status: 400 });
     }
 
-    // Verify the ID token with Firebase Admin — this throws if the token
+    // Verify the ID token with Firebase Admin – this throws if the token
     // is invalid, expired, or revoked.
     let decoded;
     try {
@@ -48,11 +48,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Build the session payload — same shape as before so the rest of the app
+    // Build the session payload – same shape as before so the rest of the app
     // (middleware, server components) can parse it unchanged.
     const sessionPayload = JSON.stringify({ uid, role, email, organizationId });
 
-    // Set the cookie server-side with HttpOnly — JavaScript in the browser
+    // Set the cookie server-side with HttpOnly – JavaScript in the browser
     // cannot read or modify this cookie.
     const cookieStore = await cookies();
     cookieStore.set(SESSION_COOKIE_NAME, encodeURIComponent(sessionPayload), {

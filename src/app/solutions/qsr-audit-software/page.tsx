@@ -1,8 +1,8 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'QSR Audit Software – Speed, Compliance and Consistency Across Every Outlet | Audiment',
-  description: 'Control your quick service restaurant empire. Standardize speed of service, hygiene, and brand compliance effortlessly with Audiment.',
+  title: 'Audiment for QSR | Speed and compliance across every outlet, every shift',
+  description: 'Audiment helps QSR chains enforce brand standards, food safety, and shift accountability at every outlet – shift-by-shift digital checklists, mandatory photo evidence, and automated corrective actions.',
   alternates: { canonical: 'https://audiment.com/solutions/qsr-audit-software' }
 }
 

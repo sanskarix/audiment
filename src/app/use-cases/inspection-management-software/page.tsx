@@ -1,8 +1,8 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 
 export const metadata = {
-  title: 'Inspection Management Software – Manage All Your Inspections in One Place | Audiment',
-  description: 'Audiment offers enterprise inspection management software. Efficiently plan, execute, and analyze massive volumes of field inspections.',
+  title: 'Audiment | Inspection management that schedules, verifies, and closes the loop',
+  description: 'Audiment manages the full inspection lifecycle – automated scheduling, GPS-verified execution, SLA-tracked corrective actions, and predictive analytics across every branch.',
   alternates: { canonical: 'https://audiment.com/use-cases/inspection-management-software' }
 }
 

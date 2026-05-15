@@ -6,20 +6,20 @@ import { Footer } from '@/components/ui/modem-animated-footer'
 import { Search } from 'lucide-react'
 
 export const metadata = {
-  title: 'Blog – Audit Management Insights | Audiment',
-  description: 'Expert insights on audit management, FSSAI compliance, multi-location operations, and corrective action tracking for operations leaders.',
+  title: 'Audiment blog | Audit insights for operations leaders',
+  description: 'Expert field guides on multi-location audit management, FSSAI compliance, corrective action workflows, and verified audit practices – written for operations leaders who run distributed teams.',
   alternates: { canonical: 'https://audiment.com/blog' },
   openGraph: {
-    title: 'Audiment blog – field audit insights',
-    description: 'Expert insights on audit management, FSSAI compliance, multi-location operations, and corrective action tracking for field operations leaders.',
+    title: 'Audiment blog | Audit insights for operations leaders',
+    description: 'Expert field guides on multi-location audit management, FSSAI compliance, corrective action workflows, and verified audit practices – written for operations leaders who run distributed teams.',
     url: 'https://audiment.com/blog',
     type: 'website',
     images: [{ url: 'https://audiment.com/opengraph-image', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Audiment blog – field audit insights',
-    description: 'Expert insights on audit management, FSSAI compliance, multi-location operations, and corrective action tracking for field operations leaders.',
+    title: 'Audiment blog | Audit insights for operations leaders',
+    description: 'Expert field guides on multi-location audit management, FSSAI compliance, corrective action workflows, and verified audit practices – written for operations leaders who run distributed teams.',
   },
   keywords: ['audit software', 'restaurant compliance', 'field audits', 'multi-location operations'],
 }
@@ -48,7 +48,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
       <div className="max-w-7xl mx-auto px-6 pt-32 pb-24">
         {/* Header Section */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">Our blog</h1>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">Audiment blog</h1>
           <p className="text-lg text-muted-foreground leading-relaxed font-medium">
             Insights on audit management, compliance, and operational excellence for multi-location businesses.
           </p>

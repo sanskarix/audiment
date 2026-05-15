@@ -173,12 +173,12 @@ export function proxy(request: NextRequest) {
 
       // Only enforce on /dashboard/* sub-routes (leave /admin, /manager, /auditor top-levels alone)
       if (correctBase && dashboardPath.startsWith('/dashboard/')) {
-        const isAdmin   = dashboardPath.startsWith('/dashboard/admin');
+        const isAdmin = dashboardPath.startsWith('/dashboard/admin');
         const isManager = dashboardPath.startsWith('/dashboard/manager');
         const isAuditor = dashboardPath.startsWith('/dashboard/auditor');
 
         const wrongDashboard =
-          (isAdmin   && role !== 'admin')   ||
+          (isAdmin && role !== 'admin') ||
           (isManager && role !== 'manager') ||
           (isAuditor && role !== 'auditor');
 
@@ -187,7 +187,7 @@ export function proxy(request: NextRequest) {
         }
       }
     } catch {
-      // Cookie parse error already handled above — safe to continue
+      // Cookie parse error already handled above – safe to continue
     }
     // ──────────────────────────────────────────────────────────────────────
   }

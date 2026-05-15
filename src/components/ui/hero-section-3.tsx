@@ -33,9 +33,9 @@ const transitionVariants = {
 import { Navbar } from '@/components/ui/navbar'
 
 export function HeroSection({ userRole }: { userRole?: string | null }) {
-    // Track window scroll progress — no target needed, works reliably with overflow-hidden
+    // Track window scroll progress – no target needed, works reliably with overflow-hidden
     const { scrollY } = useScroll()
-    // Map raw scroll pixels to a small upward drift — 60px scroll = -8px image shift
+    // Map raw scroll pixels to a small upward drift – 60px scroll = -8px image shift
     const imageY = useTransform(scrollY, [0, 300], [0, -24])
 
     return (

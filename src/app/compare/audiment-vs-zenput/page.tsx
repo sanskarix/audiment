@@ -1,8 +1,8 @@
 import CompareTemplate from '@/components/compare/CompareTemplate'
 
 export const metadata = {
-  title: 'Audiment vs Zenput – Which Is Better for Multi-Location Compliance?',
-  description: 'Comparing Audiment and Zenput to determine the best multi-location software for restaurants, retail, and convenience stores.',
+  title: 'Audiment vs Zenput | FSSAI-native audits vs a US-centric enterprise suite',
+  description: 'Audiment vs Zenput (Crunchtime) – how Audiment\'s Flash Verification, native FSSAI templates, and agile deployment compare against Zenput for Indian and Asian multi-location operators.',
   alternates: { canonical: 'https://audiment.com/compare/audiment-vs-zenput' }
 }
 

@@ -6,7 +6,7 @@ import { getCallerInfo, unauthorized, forbidden } from '@/lib/auth-server';
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-// POST: Create a new user — Admin only
+// POST: Create a new user – Admin only
 export async function POST(req: Request) {
   // ── Security: verify caller is an Admin ────────────────────────────────────
   const caller = await getCallerInfo(req);
@@ -80,7 +80,7 @@ export async function POST(req: Request) {
   }
 }
 
-// PATCH: Update a user — Admin only
+// PATCH: Update a user – Admin only
 export async function PATCH(req: Request) {
   // ── Security: verify caller is an Admin ────────────────────────────────────
   const caller = await getCallerInfo(req);
@@ -140,7 +140,7 @@ export async function PATCH(req: Request) {
   }
 }
 
-// DELETE: Permanent deletion — Admin only
+// DELETE: Permanent deletion – Admin only
 export async function DELETE(req: Request) {
   // ── Security: verify caller is an Admin ────────────────────────────────────
   const caller = await getCallerInfo(req);

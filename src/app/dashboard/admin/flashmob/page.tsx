@@ -45,7 +45,7 @@ export default function AdminFlashmobPage() {
   // Form State
   const [selectedAuditor, setSelectedAuditor] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
-  
+
   // New Date & Time States
   const [deadlineDate, setDeadlineDate] = useState<Date | undefined>(undefined);
   const [deadlineHour, setDeadlineHour] = useState('12');
@@ -60,7 +60,7 @@ export default function AdminFlashmobPage() {
 
     const fetchData = async () => {
       try {
-        // Fetch core data (locations, users) — these must not fail
+        // Fetch core data (locations, users) – these must not fail
         const [locSnap, audSnap, managerSnap] = await Promise.all([
           getDocs(query(collection(db, 'locations'), where('organizationId', '==', orgId), where('isActive', '==', true))),
           getDocs(query(collection(db, 'users'), where('organizationId', '==', orgId), where('role', '==', 'AUDITOR'), where('isActive', '==', true))),
@@ -74,7 +74,7 @@ export default function AdminFlashmobPage() {
       }
 
       try {
-        // Fetch completed audit logs — sort client-side to avoid composite index
+        // Fetch completed audit logs – sort client-side to avoid composite index
         const completedSnap = await getDocs(
           query(collection(db, 'flashmobAudits'), where('organizationId', '==', orgId), where('status', '==', 'completed'))
         );
@@ -87,7 +87,7 @@ export default function AdminFlashmobPage() {
       }
 
       try {
-        // Fetch active dispatched requests — sort client-side to avoid composite index
+        // Fetch active dispatched requests – sort client-side to avoid composite index
         const activeSnap = await getDocs(
           query(collection(db, 'flashmobAuditRequests'), where('organizationId', '==', orgId), where('status', '==', 'published'))
         );
@@ -118,7 +118,7 @@ export default function AdminFlashmobPage() {
       let hours = parseInt(deadlineHour);
       if (deadlinePeriod === 'PM' && hours !== 12) hours += 12;
       if (deadlinePeriod === 'AM' && hours === 12) hours = 0;
-      
+
       const deadlineAt = setMinutes(setHours(deadlineDate, hours), parseInt(deadlineMinute));
 
       const requestData = {
@@ -135,7 +135,7 @@ export default function AdminFlashmobPage() {
       };
 
       const docRef = await addDoc(collection(db, 'flashmobAuditRequests'), requestData);
-      
+
       await addDoc(collection(db, 'notifications'), {
         organizationId: orgId,
         recipientId: selectedAuditor,
@@ -153,7 +153,7 @@ export default function AdminFlashmobPage() {
       const auditorName = auditor?.name || 'Auditor';
       setSuccessMessage(`Flashmob dispatched to ${auditorName} successfully.`);
       setTimeout(() => setSuccessMessage(null), 5000);
-      
+
       // Reset form
       setSelectedAuditor('');
       setSelectedLocation('');
@@ -184,7 +184,7 @@ export default function AdminFlashmobPage() {
   return (
     <DashboardShell role="admin">
       <div className="dashboard-page-container">
-        
+
         {/* Header Section */}
         <div className="page-header-section mb-8">
           <div className="flex flex-col gap-1">
@@ -336,7 +336,7 @@ export default function AdminFlashmobPage() {
                         </PopoverContent>
                       </Popover>
 
-                      {/* Time selects — compact */}
+                      {/* Time selects – compact */}
                       <div className="flex items-center gap-1 shrink-0">
                         <Select value={deadlineHour} onValueChange={setDeadlineHour}>
                           <SelectTrigger className="h-10 w-[52px] border-border/50 bg-muted/30 px-1.5 text-[13px] text-body rounded-lg focus:ring-primary/20">
@@ -475,12 +475,12 @@ export default function AdminFlashmobPage() {
 
 function AuditCard({ audit, onDelete }: { audit: any; onDelete: () => void }) {
   const date = audit.submittedAt?.toDate ? audit.submittedAt.toDate() : new Date();
-  
+
   return (
     <div className="standard-card group overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
       <div className="relative aspect-video bg-muted overflow-hidden">
-        <video 
-          src={audit.videoUrl} 
+        <video
+          src={audit.videoUrl}
           className="w-full h-full object-cover"
           onMouseOver={e => e.currentTarget.play()}
           onMouseOut={e => {
@@ -502,7 +502,7 @@ function AuditCard({ audit, onDelete }: { audit: any; onDelete: () => void }) {
           </Badge>
         </div>
       </div>
-      
+
       <div className="p-5">
         <div className="flex items-start justify-between gap-2 mb-4">
           <div className="min-w-0">
@@ -524,9 +524,9 @@ function AuditCard({ audit, onDelete }: { audit: any; onDelete: () => void }) {
             <CalendarIcon className="h-3.5 w-3.5 text-muted-text/50" />
             <span className="muted-label">{format(date, 'MMM d, yyyy')}</span>
           </div>
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             className="h-8 w-8 text-muted-text/40 hover:text-destructive transition-colors"
             onClick={onDelete}
           >

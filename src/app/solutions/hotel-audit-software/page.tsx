@@ -1,8 +1,8 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'Hotel Audit Software – Maintain Guest Experience Standards at Every Property | Audiment',
-  description: 'Unify housekeeping, maintenance, and guest service standards across your entire hotel portfolio with Audiment digital audits.',
+  title: 'Audiment for hotels | Guest-experience standards enforced at every property',
+  description: 'Audiment gives hotel groups verified compliance across housekeeping, F&B, and safety – photo-evidenced inspections, automated maintenance corrective actions, and real-time portfolio dashboards.',
   alternates: { canonical: 'https://audiment.com/solutions/hotel-audit-software' }
 }
 

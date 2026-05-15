@@ -24,35 +24,35 @@ const SITE_URL = "https://audiment.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Audiment – Audit Management Software for Multi-Location Compliance",
+  title: 'Audiment | Ground truth for multi-location audits',
   description:
-    "Audiment is an enterprise-grade audit management platform for distributed locations. Photo evidence enforcement, automated corrective action workflows, geo-tagged field verification, real-time scoring and alerts, and role-based dashboards for admins, managers, and field auditors.",
+    'Audiment gives multi-location operators verified ground truth on every audit – mandatory photo evidence, Flash Verification presence checks, automated CAPA workflows, and real-time compliance dashboards.',
   keywords: [
-    "audit management software",
-    "multi-location compliance",
-    "field audit app",
-    "corrective action tracking",
-    "FSSAI audit software",
-    "evidence-based audit",
-    "mobile audit app",
-    "compliance dashboard",
+    'audit management software',
+    'multi-location compliance',
+    'field audit app',
+    'corrective action tracking',
+    'FSSAI audit software',
+    'evidence-based audit',
+    'mobile audit app',
+    'compliance dashboard',
   ],
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    type: "website",
+    type: 'website',
     url: SITE_URL,
-    siteName: "Audiment",
-    title: "Audiment – Audit Management Software for Multi-Location Compliance",
+    siteName: 'Audiment',
+    title: 'Audiment | Ground truth for multi-location audits',
     description:
-      "Audiment is an enterprise-grade audit management platform for distributed locations. Photo evidence enforcement, automated corrective action workflows, geo-tagged field verification, real-time scoring and alerts, and role-based dashboards for admins, managers, and field auditors.",
+      'Audiment gives multi-location operators verified ground truth on every audit – mandatory photo evidence, Flash Verification presence checks, automated CAPA workflows, and real-time compliance dashboards.',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Audiment – Audit Management Software for Multi-Location Compliance",
+    card: 'summary_large_image',
+    title: 'Audiment | Ground truth for multi-location audits',
     description:
-      "Audiment is an enterprise-grade audit management platform for distributed locations. Photo evidence enforcement, automated corrective action workflows, geo-tagged field verification, real-time scoring and alerts, and role-based dashboards for admins, managers, and field auditors.",
+      'Audiment gives multi-location operators verified ground truth on every audit – mandatory photo evidence, Flash Verification presence checks, automated CAPA workflows, and real-time compliance dashboards.',
   },
   robots: {
     index: true,

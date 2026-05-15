@@ -1,8 +1,8 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'FSSAI Compliance Software – Digitize Hygiene Audits with Photo Evidence | Audiment',
-  description: 'Audiment is the ultimate FSSAI compliance software for Indian food businesses, ensuring regulatory readiness and eliminating paperwork.',
+  title: 'Audiment for FSSAI compliance | Digitise hygiene audits, pass every inspection',
+  description: 'Audiment maps your audit checklists to FSSAI Schedule 4, enforces photo evidence on every hygiene check, and generates inspection-ready reports – so you pass every regulatory visit on the first attempt.',
   alternates: { canonical: 'https://audiment.com/solutions/fssai-compliance-software' }
 }
 

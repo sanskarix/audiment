@@ -7,11 +7,11 @@ import Link from 'next/link'
 import { ThemeToggle } from '@/components/theme-toggle'
 
 const menuItems = [
-    { name: 'Restaurant Audits', href: '/solutions/restaurant-operations' },
-    { name: 'Retail Audits', href: '/solutions/retail-operations' },
-    { name: 'Franchise Compliance', href: '/solutions/franchise-operations' },
-    { name: 'Features', href: '/#features' },
+    { name: 'Solutions', href: '/solutions/restaurant-audit-software' },
+    { name: 'Restaurants', href: '/solutions/restaurant-operations' },
+    { name: 'Franchise', href: '/solutions/franchise-operations' },
     { name: 'Blog', href: '/blog' },
+    { name: 'About', href: '/about' },
 ]
 
 export const Navbar = () => {

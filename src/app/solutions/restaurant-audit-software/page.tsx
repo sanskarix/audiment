@@ -1,8 +1,8 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'Restaurant Audit Software – Ensure Hygiene, Safety and Brand Standards | Audiment',
-  description: 'Audiment is the premier restaurant audit software helping multi-location food businesses maintain food safety, hygiene, and brand consistency.',
+  title: 'Audiment for restaurants | Stop fake hygiene audits across your chain',
+  description: 'Audiment gives restaurant chains verified audit ground truth – mandatory photo evidence per question, GPS-confirmed auditor presence, FSSAI-ready templates, and automated corrective actions with 48-hour SLAs.',
   alternates: { canonical: 'https://audiment.com/solutions/restaurant-audit-software' }
 }
 

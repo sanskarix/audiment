@@ -17,21 +17,21 @@ import { TestimonialsSection } from "@/components/ui/testimonial-v2";
 import { ContactSection } from "@/components/ui/contact-section";
 
 export const metadata: Metadata = {
-  title: 'Audiment – verified audit software for multi-location ops',
-  description: 'Stop pencil-whipping across your locations. Audiment enforces photo evidence, verifies auditor presence, and delivers ground-truth visibility.',
-  keywords: ['audit management software', 'restaurant brand standard audit app', 'software to prevent fake audits', 'franchise quality control software', 'CAPA software'],
+  title: 'Audiment | Ground truth for multi-location audits',
+  description: 'Audiment gives multi-location operators verified ground truth on every audit – mandatory photo evidence, Flash Verification presence checks, and automated corrective actions with 48-hour SLAs. No more pencil-whipping.',
+  keywords: ['audit management software', 'multi-location audit software', 'restaurant brand standard audit app', 'software to prevent fake audits', 'franchise quality control software', 'CAPA software', 'field audit app India', 'FSSAI compliance software'],
   alternates: { canonical: 'https://audiment.com' },
   openGraph: {
-    title: 'Audiment – verified audit software for multi-location ops',
-    description: 'Stop pencil-whipping across your locations. Audiment enforces photo evidence, verifies auditor presence, and delivers ground-truth visibility.',
+    title: 'Audiment | Ground truth for multi-location audits',
+    description: 'Audiment gives multi-location operators verified ground truth on every audit – mandatory photo evidence, Flash Verification presence checks, and automated corrective actions with 48-hour SLAs. No more pencil-whipping.',
     url: 'https://audiment.com',
     siteName: 'Audiment',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Audiment – verified audit software for multi-location ops',
-    description: 'Stop pencil-whipping across your locations. Audiment enforces photo evidence, verifies auditor presence, and delivers ground-truth visibility.',
+    title: 'Audiment | Ground truth for multi-location audits',
+    description: 'Audiment gives multi-location operators verified ground truth on every audit – mandatory photo evidence, Flash Verification presence checks, and automated corrective actions with 48-hour SLAs. No more pencil-whipping.',
   },
 };
 

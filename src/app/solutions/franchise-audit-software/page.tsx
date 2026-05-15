@@ -1,8 +1,8 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'Franchise Audit Software – Protect Brand Standards Across Every Franchisee | Audiment',
-  description: 'Audiment is the definitive franchise audit software. Keep rogue franchisees in line, protect your brand, and automate compliance tracking.',
+  title: 'Audiment for franchises | Protect brand standards across every franchisee',
+  description: 'Audiment gives franchise networks undeniable audit evidence – GPS-confirmed presence, mandatory photo proof, franchisee scorecards, and instant SOP distribution so every unit runs to corporate standard.',
   alternates: { canonical: 'https://audiment.com/solutions/franchise-audit-software' }
 }
 

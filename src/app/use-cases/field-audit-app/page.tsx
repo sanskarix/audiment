@@ -1,8 +1,8 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 
 export const metadata = {
-  title: 'Field Audit App – Mobile Audits with Photo Evidence | Audiment',
-  description: 'Audiment is the ultimate field audit app. Replace clipboard inspections with mobile-first, photo-verified checklists from any smartphone.',
+  title: 'Audiment | Field audit app with photo evidence and GPS verification',
+  description: 'Audiment turns any smartphone into a verified field audit tool – mandatory live-camera photo evidence, GPS location lock, offline-first execution, and instant corrective action triggers.',
   alternates: { canonical: 'https://audiment.com/use-cases/field-audit-app' }
 }
 

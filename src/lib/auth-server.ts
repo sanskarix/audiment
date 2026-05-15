@@ -13,13 +13,13 @@ export interface CallerInfo {
  * Securely verify the caller of an API route using Firebase Admin SDK.
  *
  * Extraction order:
- *  1. Authorization: Bearer <Firebase ID token>  (preferred — cryptographically signed)
- *  2. Cookie: audiment_session=<JSON blob>        (fallback — read-only, set server-side at login)
+ *  1. Authorization: Bearer <Firebase ID token>  (preferred – cryptographically signed)
+ *  2. Cookie: audiment_session=<JSON blob>        (fallback – read-only, set server-side at login)
  *
  * The cookie path is a CONVENIENCE fallback for browser-originated requests.
  * It is safe only because:
  *  - The cookie is HttpOnly in production (set by the server and not accessible to JS).
- *  - We do NOT verify custom claims from the cookie — we re-verify the uid against
+ *  - We do NOT verify custom claims from the cookie – we re-verify the uid against
  *    Firebase Admin to get the authoritative role from the token's custom claims.
  *
  * NOTE: If the cookie does not carry a Firebase ID token (it carries session JSON),
@@ -31,7 +31,7 @@ export interface CallerInfo {
  */
 export async function getCallerInfo(request: Request): Promise<CallerInfo | null> {
   if (!adminAuth) {
-    console.error('[auth-server] Firebase Admin not initialised — rejecting request.');
+    console.error('[auth-server] Firebase Admin not initialised – rejecting request.');
     return null;
   }
 
@@ -54,7 +54,7 @@ export async function getCallerInfo(request: Request): Promise<CallerInfo | null
   // ── 2. Fallback: audiment_session cookie ───────────────────────────────────
   // Use next/headers if possible, then fallback to manual parsing.
   let sessionCookieValue: string | undefined;
-  
+
   try {
     const cookieStore = await nextCookies();
     sessionCookieValue = cookieStore.get('audiment_session')?.value;

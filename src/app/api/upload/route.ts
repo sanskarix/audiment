@@ -12,7 +12,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// POST: Upload a file — any authenticated user (auditor, manager, admin)
+// POST: Upload a file – any authenticated user (auditor, manager, admin)
 export async function POST(request: Request) {
   // ── Security: verify caller is authenticated ───────────────────────────────
   const caller = await getCallerInfo(request);
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const resourceType = formData.get('type') as string || 'auto';
-    
+
     if (!file) {
       return NextResponse.json(
         { error: 'No file provided' },
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
           resolve(result);
         }
       );
-      
+
       const { Readable } = require('stream');
       const readableTrack = new Readable({
         read() {
@@ -56,9 +56,9 @@ export async function POST(request: Request) {
       readableTrack.pipe(uploadStream);
     });
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       // @ts-ignore
-      url: uploadResult.secure_url 
+      url: uploadResult.secure_url
     }, { status: 200 });
 
   } catch (error) {

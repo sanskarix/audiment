@@ -16,7 +16,7 @@ export async function loginUser(email: string, password: string): Promise<AuthUs
   const credential = await signInWithEmailAndPassword(auth, email, password);
 
   // Force a token refresh so custom claims (role, orgId) set by the Admin SDK
-  // are included immediately — without this, the cached token may be stale.
+  // are included immediately – without this, the cached token may be stale.
   const idToken = await credential.user.getIdToken(true);
 
   const uid = credential.user.uid;
@@ -50,7 +50,7 @@ export async function loginUser(email: string, password: string): Promise<AuthUs
 
   if (!sessionRes.ok) {
     // Non-fatal: the Firebase auth is valid; we just couldn't set the HttpOnly cookie.
-    // Log it but don't block the login — the Bearer token flow will still work.
+    // Log it but don't block the login – the Bearer token flow will still work.
     console.error('[loginUser] Failed to set server session cookie:', await sessionRes.text());
   }
 
@@ -82,12 +82,12 @@ export function getSessionFromCookie(cookieString: string): { uid: string; role:
   try {
     const data = JSON.parse(decodeURIComponent(match[1]));
     if (!data.organizationId) return null;
-    return { 
-      uid: data.uid, 
-      role: data.role, 
-      name: data.name, 
+    return {
+      uid: data.uid,
+      role: data.role,
+      name: data.name,
       email: data.email,
-      organizationId: data.organizationId 
+      organizationId: data.organizationId
     };
   } catch {
     return null;

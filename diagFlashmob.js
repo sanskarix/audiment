@@ -44,9 +44,9 @@ async function run() {
     const matchingAuditors = auditors.filter(a => assignedIds.includes(a.managerId));
 
     console.log(`📍 ${loc.name}`);
-    console.log(`   assignedManagerIds : [${assignedIds.join(', ') || 'EMPTY — THIS IS THE BUG'}]`);
+    console.log(`   assignedManagerIds : [${assignedIds.join(', ') || 'EMPTY – THIS IS THE BUG'}]`);
     console.log(`   Assigned Managers  : ${assignedNames.length ? assignedNames.join(', ') : '⚠️  NONE'}`);
-    console.log(`   Matching Auditors  : ${matchingAuditors.length ? matchingAuditors.map(a => `${a.name} (managerId=${a.managerId})`).join(', ') : '⚠️  NONE — dropdown will be empty'}`);
+    console.log(`   Matching Auditors  : ${matchingAuditors.length ? matchingAuditors.map(a => `${a.name} (managerId=${a.managerId})`).join(', ') : '⚠️  NONE – dropdown will be empty'}`);
     console.log();
   });
 
@@ -66,7 +66,7 @@ async function run() {
   // 6. Print all managers for reference
   console.log("─── ALL MANAGERS ────────────────────────────────────\n");
   managerSnap.forEach(d => {
-    console.log(`🧑‍💼 ${d.data().name} — ID: ${d.id}`);
+    console.log(`🧑‍💼 ${d.data().name} – ID: ${d.id}`);
   });
 }
 

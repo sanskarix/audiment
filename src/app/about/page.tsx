@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'About Audiment – Enterprise Audit Management Software for Multi-Location Businesses',
-  description: 'Audiment is an enterprise platform transforming how multi-location businesses execute audits, track compliance, and enforce brand standards worldwide.',
+  title: 'Audiment | Built to end pencil-whipping at scale',
+  description: 'Learn how Audiment was built to give multi-location operators verified ground truth – replacing paper checklists, fake audits, and WhatsApp chaos with photo-verified, GPS-confirmed compliance workflows.',
   alternates: { canonical: 'https://audiment.com/about' }
 }
 
@@ -26,7 +26,7 @@ export default function AboutPage() {
       <section className="pt-32 pb-20 border-b border-border text-center bg-muted/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-balance text-heading">
-            About Audiment
+            Audiment – built to end pencil-whipping at scale
           </h1>
           <p className="text-xl text-muted-foreground mb-8 text-balance">
             Enterprise Audit Management Software for Multi-Location Businesses

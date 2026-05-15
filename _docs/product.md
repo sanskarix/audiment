@@ -6,11 +6,11 @@
 
 ## 1. What Is Audiment?
 
-Audiment is an enterprise-grade, high-trust compliance and operational audit platform for multi-outlet businesses. It digitises the entire audit workflow — from publishing audits to reviewing results — through a transparent, role-based system accessible from any browser on any device.
+Audiment is an enterprise-grade, high-trust compliance and operational audit platform for multi-outlet businesses. It digitises the entire audit workflow – from publishing audits to reviewing results – through a transparent, role-based system accessible from any browser on any device.
 
 **Tagline:** Audit smarter. Manage better.
 
-**The core idea:** replace physical presence with a trusted digital system that creates accountability at every level — owner, manager, and auditor — by coupling checklist-style audits with mandatory photo/video evidence and geo-verified presence checks.
+**The core idea:** replace physical presence with a trusted digital system that creates accountability at every level – owner, manager, and auditor – by coupling checklist-style audits with mandatory photo/video evidence and geo-verified presence checks.
 
 ---
 
@@ -18,7 +18,7 @@ Audiment is an enterprise-grade, high-trust compliance and operational audit pla
 
 Multi-outlet restaurant owners and operations heads cannot be physically present at every branch. They rely on managers and field staff who may not always report transparently.
 
-**The real pain: pencil-whipping.** Field workers fake audits, fill checklists without visiting locations, send WhatsApp photos from yesterday. Operations heads have no ground-truth visibility into what is actually happening at their branches. Physical or scattered audit records are unreliable, easy to falsify, and hard to track over time. Critical hygiene or operational issues go unnoticed until they become serious problems — regulatory fines, health violations, brand damage.
+**The real pain: pencil-whipping.** Field workers fake audits, fill checklists without visiting locations, send WhatsApp photos from yesterday. Operations heads have no ground-truth visibility into what is actually happening at their branches. Physical or scattered audit records are unreliable, easy to falsify, and hard to track over time. Critical hygiene or operational issues go unnoticed until they become serious problems – regulatory fines, health violations, brand damage.
 
 ---
 
@@ -47,12 +47,12 @@ Audiment gives owners and operations teams:
 
 ## 5. Brand & Positioning
 
-- **Category:** High-Trust Accountability Engine — not generic compliance software.
-- **Tone:** Punchy and outcome-driven. "Stop pencil-whipping" not "Improve compliance." Relatable to franchise owners — reference real pain like "the WhatsApp black hole." Never robotic SEO text in visible UI. Sentence case on all headings — never Title Case.
+- **Category:** High-Trust Accountability Engine – not generic compliance software.
+- **Tone:** Punchy and outcome-driven. "Stop pencil-whipping" not "Improve compliance." Relatable to franchise owners – reference real pain like "the WhatsApp black hole." Never robotic SEO text in visible UI. Sentence case on all headings – never Title Case.
 - **Key differentiators to use in all copy:**
   - Flash Verification: geo-tagged video + selfie proves auditor was physically present
   - 48-hour auto-CAPA: critical failures auto-generate corrective tasks with mandatory photo proof
-  - Mandatory photo evidence: enforced per question — no photo, no submission
+  - Mandatory photo evidence: enforced per question – no photo, no submission
   - Surprise audits: managers never know when one is coming
   - Trend detection: 3 consecutive poor audits trigger a priority alert
 
@@ -70,7 +70,7 @@ Audiment gives owners and operations teams:
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js (App Router) — single codebase for UI + server logic |
+| Framework | Next.js (App Router) – single codebase for UI + server logic |
 | Language | TypeScript |
 | Styling | Tailwind CSS 4 + Shadcn UI (preset: `b1D5T6KA`) |
 | Animations | Framer Motion + tw-animate |
@@ -85,7 +85,7 @@ Audiment gives owners and operations teams:
 - API routes handle all backend operations
 - Server components for performance; client components only for interactivity
 - Mobile-first approach for auditor interface; web dashboard for managers and admins
-- No native app in the testing phase — fully browser-based
+- No native app in the testing phase – fully browser-based
 
 ---
 
@@ -258,7 +258,7 @@ A covert, unannounced video-based audit to prove physical presence at a location
 finalPercentage = (Σ normalizedScore × weight) / (Σ weight) × 100
 ```
 
-**Critical failure:** Triggered when severity = critical AND (yes_no answer = No) OR (rating < 6). Tracked separately from the percentage — a critical_fail grade overrides any percentage-based grade.
+**Critical failure:** Triggered when severity = critical AND (yes_no answer = No) OR (rating < 6). Tracked separately from the percentage – a critical_fail grade overrides any percentage-based grade.
 
 **Grade thresholds:**
 | Score | Grade |
@@ -269,7 +269,7 @@ finalPercentage = (Σ normalizedScore × weight) / (Σ weight) × 100
 | 60–74 | `needs_improvement` |
 | 0–59 | `fail` |
 
-All scoring must go through the single centralised function in `src/lib/scoring.ts`. The same formula is used at submission, in reports, on dashboards, and in PDF exports — never diverge.
+All scoring must go through the single centralised function in `src/lib/scoring.ts`. The same formula is used at submission, in reports, on dashboards, and in PDF exports – never diverge.
 
 ---
 
@@ -308,7 +308,7 @@ All scoring must go through the single centralised function in `src/lib/scoring.
 | Flashmob 20-second video | Browser MediaRecorder | Cloudinary | Supports WebM and MP4 for browser compatibility |
 | Flashmob selfie | Browser camera capture | Cloudinary | Circular "Face Guide" viewfinder UI |
 
-**Photo enforcement:** Per-question `requiresPhoto` toggle — if set, the auditor cannot advance past that question or submit the audit without providing a photo. This is the core anti-pencil-whipping mechanism.
+**Photo enforcement:** Per-question `requiresPhoto` toggle – if set, the auditor cannot advance past that question or submit the audit without providing a photo. This is the core anti-pencil-whipping mechanism.
 
 **Video recording UI:** Real-time countdown timer and animated "REC" indicator during flashmob recording. Auditor reviews video before submission.
 
@@ -330,7 +330,7 @@ All scoring must go through the single centralised function in `src/lib/scoring.
 | Feature | Detail |
 |---|---|
 | Dynamic headings | Subheaders adapt to provide context-aware, action-oriented instructions based on current state |
-| Skeleton loading system | Custom-designed skeleton placeholders for every data-heavy component — no blank screens |
+| Skeleton loading system | Custom-designed skeleton placeholders for every data-heavy component – no blank screens |
 | Smart geo-tagging | 5-second location capture with fallback logic for connectivity issues |
 | Abort protection | Confirmation modal prevents data loss when leaving an active audit |
 | Interactive badges | Status chips with role-specific iconography and color-coded severity |
@@ -338,7 +338,7 @@ All scoring must go through the single centralised function in `src/lib/scoring.
 | Score color-coding | All score displays (cards, charts, lists) use dynamic color: green (≥90), amber (60–89), red (<60) |
 | FSSAI one-click loader | Admin can load a pre-built FSSAI food hygiene template in one click |
 | Resume mid-audit | Auditor can exit and return to any in-progress audit without losing answers |
-| Password self-service | Admin triggers password reset email from the member directory — auditors don't need to contact support |
+| Password self-service | Admin triggers password reset email from the member directory – auditors don't need to contact support |
 | PDF export engine | jsPDF + html2canvas with custom CSS stripping for 100% rendering compatibility in exported documents |
 | Video countdown UI | Real-time timer and animated REC badge during flashmob recording |
 | HLS streaming support | Cloudinary HLS for smooth video playback of flashmob recordings in the admin review UI |
@@ -351,8 +351,8 @@ All scoring must go through the single centralised function in `src/lib/scoring.
 - **Role-based rules:** Auditors can only read audits assigned to their `userId`. Managers can only read locations assigned to their `userId`. Only admins can create/modify templates, locations, and users.
 - **MediaRecorder MIME support:** Flashmob recording uses multiple candidate types (`video/webm;codecs=vp9`, `video/webm`, `video/mp4`) to maximize browser compatibility.
 - **Scoring version field:** Every scored audit stores `scoringVersion` for future migration compatibility.
-- **Geo-lock:** Auditor's GPS coordinates are captured at submission time and stored immutably — cannot be edited after the fact.
-- **Timestamp lock:** All submissions record `submittedAt` server-side — cannot be backdated.
+- **Geo-lock:** Auditor's GPS coordinates are captured at submission time and stored immutably – cannot be edited after the fact.
+- **Timestamp lock:** All submissions record `submittedAt` server-side – cannot be backdated.
 
 ---
 
@@ -373,7 +373,7 @@ Role-based routing is enforced in Next.js middleware: on login, the app reads th
 ## 17. GEO / SEO Strategy
 
 - **Invisible SEO:** Sleek UI for humans; structured data for AI crawlers.
-- **JSON-LD schema** injected per-page via `next/script` — never global.
+- **JSON-LD schema** injected per-page via `next/script` – never global.
 - **Semantic HTML** tables used for all comparison matrices.
 - `llms.txt` entity definition at `public/llms.txt`.
 - AI crawlers explicitly allowed in `robots.txt`.

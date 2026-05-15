@@ -148,7 +148,7 @@ export default function AuditExecutionPage() {
         setQuestions(fetchedQuestions);
 
         const rSnap = await getDocs(query(
-          collection(db, 'auditResponses'), 
+          collection(db, 'auditResponses'),
           where('auditId', '==', auditId),
           where('auditorId', '==', uid)
         ));
@@ -351,12 +351,12 @@ export default function AuditExecutionPage() {
             authHeaders['Authorization'] = `Bearer ${idToken}`;
           }
 
-          const response = await fetch('/api/upload', { 
-            method: 'POST', 
+          const response = await fetch('/api/upload', {
+            method: 'POST',
             body: formData,
             headers: authHeaders
           });
-          
+
           if (!response.ok) {
             const errData = await response.json().catch(() => ({}));
             throw new Error(errData.error || `Upload failed with status ${response.status}`);
@@ -435,7 +435,7 @@ export default function AuditExecutionPage() {
 
     try {
       const batch = writeBatch(db);
-      
+
       // Calculate final scores first for consistency
       const scoringInput: ScoreInputQuestion[] = questions.map(q => ({
         questionId: q.id,
@@ -545,7 +545,7 @@ export default function AuditExecutionPage() {
       // ── Post-commit: fire-and-forget low-score & trend alert notifications ──
       // This runs AFTER the main batch succeeds so it can never block submission.
       // Notifications are generated server-side (Admin SDK) to avoid Firestore
-      // security-rule denials — auditors cannot query other auditors' completed
+      // security-rule denials – auditors cannot query other auditors' completed
       // audit docs from the client, which caused "Missing or insufficient permissions".
       if (isFinal && updateData.scorePercentage < 60) {
         console.log('[AuditSubmission] Low score detected, dispatching server notification job...');
@@ -573,7 +573,7 @@ export default function AuditExecutionPage() {
             }).catch(err => console.warn('[AuditSubmission] Notification job failed (non-blocking):', err));
           }
         } catch (notifErr) {
-          // Non-blocking: log but do not rethrow — the audit itself already succeeded.
+          // Non-blocking: log but do not rethrow – the audit itself already succeeded.
           console.warn('[AuditSubmission] Could not dispatch notification job:', notifErr);
         }
       }

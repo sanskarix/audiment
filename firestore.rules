@@ -8,7 +8,7 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Role helpers — purely from token claims (no Firestore lookups = no quota limits)
+    // Role helpers – purely from token claims (no Firestore lookups = no quota limits)
     function isAdmin() {
       return isAuth() && request.auth.token.role.lower() == 'admin';
     }
@@ -25,7 +25,7 @@ service cloud.firestore {
       return isAdmin() || isManager();
     }
 
-    // Token-based org check — no Firestore lookup required
+    // Token-based org check – no Firestore lookup required
     function myOrgId() {
       return request.auth.token.organizationId != null
         ? request.auth.token.organizationId

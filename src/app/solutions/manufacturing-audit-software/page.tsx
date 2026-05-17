@@ -3,7 +3,7 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 export const metadata = {
   title: 'Audiment for manufacturing | Safety and quality audits with full evidence trails',
   description: 'Audiment gives manufacturing operations verified quality and safety compliance – LOTO digitisation, photo-evidence equipment checks, automated non-conformance escalation, and multi-facility dashboards.',
-  alternates: { canonical: 'https://audiment.com/solutions/manufacturing-audit-software' }
+  alternates: { canonical: 'https://audiment.in/solutions/manufacturing-audit-software' }
 }
 
 export default function ManufacturingAuditSoftware() {
@@ -36,9 +36,21 @@ export default function ManufacturingAuditSoftware() {
           description: "Enable incoming shift supervisors to review the outgoing shift's digital safety and equipment logs instantaneously, preventing communication breakdowns."
         },
         {
-          title: "Flash Verification for Patrols",
+          title: "Proof of Presence for Patrols",
           description: "Prove beyond a shadow of a doubt that safety managers actually walked the factory floor by requiring geo-tagged, live-video check-ins."
         }
+      ]}
+      operationalBottlenecks={[
+        "Safety walks completed quickly without genuine equipment verification.",
+        "5S standards drifting over time as paper logs are ignored.",
+        "Quality control issues spotted too late in the production line.",
+        "Corrective actions for safety hazards lacking strict accountability paths."
+      ]}
+      workflowSteps={[
+        { title: "Safety Walk", description: "Floor supervisor logs a missing safety guard on a machine." },
+        { title: "Hazard Escalation", description: "Production is flagged, and the safety team gets an immediate alert." },
+        { title: "Action Required", description: "An SLA-bound task forces maintenance to install a new guard." },
+        { title: "Verification & Resume", description: "Maintenance uploads proof, and production resumes safely." }
       ]}
       sampleChecklist={[
         { area: "PPE Compliance", question: "Are absolutely all personnel on the active floor wearing steel-toed boots, high-vis vests, and safety goggles?" },

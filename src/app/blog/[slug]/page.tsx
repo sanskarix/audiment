@@ -22,14 +22,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${post.title.slice(0, 47)} | Audiment`,
     description: post.description,
     alternates: { 
-      canonical: `https://audiment.com/blog/${resolvedParams.slug}` 
+      canonical: `https://audiment.in/blog/${resolvedParams.slug}` 
     },
     openGraph: {
       title: post.title,
       description: post.description,
-      url: `https://audiment.com/blog/${resolvedParams.slug}`,
+      url: `https://audiment.in/blog/${resolvedParams.slug}`,
       type: 'article',
-      images: [{ url: 'https://audiment.com/opengraph-image', width: 1200, height: 630 }],
+      images: [{ url: 'https://audiment.in/opengraph-image', width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -168,7 +168,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             publisher: { "@type": "Organization", "name": "Audiment" },
             datePublished: post.date,
             dateModified: post.date,
-            image: "https://audiment.com/opengraph-image"
+            image: "https://audiment.in/opengraph-image"
           })
         }}
       />

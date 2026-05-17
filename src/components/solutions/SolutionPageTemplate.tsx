@@ -1,6 +1,7 @@
 import { Navbar } from '@/components/ui/navbar'
 import { SolutionsHero } from '@/components/ui/solutions-hero'
 import Link from 'next/link'
+import { Footer } from '@/components/ui/modem-animated-footer'
 
 interface PainPoint {
   title: string
@@ -22,6 +23,11 @@ interface FAQ {
   answer: string
 }
 
+interface WorkflowStep {
+  title: string
+  description: string
+}
+
 interface Props {
   industry: string
   heroH1: string
@@ -33,6 +39,8 @@ interface Props {
   relatedBlogLink: string
   relatedBlogTitle: string
   relatedIndustryLinks: { title: string, href: string }[]
+  workflowSteps?: WorkflowStep[]
+  operationalBottlenecks?: string[]
 }
 
 export default function SolutionPageTemplate({
@@ -46,6 +54,8 @@ export default function SolutionPageTemplate({
   relatedBlogLink,
   relatedBlogTitle,
   relatedIndustryLinks,
+  workflowSteps,
+  operationalBottlenecks,
 }: Props) {
   // Schema for FAQ
   const faqSchema = {
@@ -116,6 +126,42 @@ export default function SolutionPageTemplate({
           </div>
         </div>
       </section>
+
+      {/* Operational Bottlenecks & Workflows */}
+      {(operationalBottlenecks || workflowSteps) && (
+        <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16">
+            {operationalBottlenecks && (
+              <div>
+                <h2 className="text-3xl font-bold mb-8 text-heading">Managerial Bottlenecks We Remove</h2>
+                <ul className="space-y-4">
+                  {operationalBottlenecks.map((bottleneck, idx) => (
+                    <li key={idx} className="flex items-start gap-4 p-4 rounded-xl bg-card border border-border">
+                      <div className="w-8 h-8 rounded-full bg-destructive/10 text-destructive flex items-center justify-center shrink-0 mt-0.5">!</div>
+                      <p className="text-muted-foreground leading-relaxed font-medium">{bottleneck}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
+            {workflowSteps && (
+              <div>
+                <h2 className="text-3xl font-bold mb-8 text-heading">The Issue-Resolution Workflow</h2>
+                <div className="space-y-6">
+                  {workflowSteps.map((step, idx) => (
+                    <div key={idx} className="relative pl-8 border-l-2 border-border last:border-transparent pb-6 last:pb-0">
+                      <div className="absolute w-4 h-4 rounded-full bg-primary -left-[9px] top-1"></div>
+                      <h4 className="font-bold text-lg mb-2 text-heading">{step.title}</h4>
+                      <p className="text-muted-foreground">{step.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Sample Checklist */}
       <section className="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -188,6 +234,20 @@ export default function SolutionPageTemplate({
            </div>
         </div>
       </section>
+
+      <Footer
+        brandName="Audiment"
+        navLinks={[
+          { label: "Features", href: "/#features" },
+          { label: "How it works", href: "/#how-it-works" },
+          { label: "Use cases", href: "/#use-cases" },
+          { label: "Blog", href: "/blog" },
+          { label: "Contact", href: "/#contact" },
+          { label: "Privacy policy", href: "/privacy-policy" },
+          { label: "Cookie policy", href: "/cookie-policy" },
+          { label: "Terms of service", href: "/terms-of-service" },
+        ]}
+      />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
     </div>

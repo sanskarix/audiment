@@ -17,21 +17,21 @@ import { TestimonialsSection } from "@/components/ui/testimonial-v2";
 import { ContactSection } from "@/components/ui/contact-section";
 
 export const metadata: Metadata = {
-  title: 'Audiment | Ground truth for multi-location audits',
-  description: 'Audiment gives multi-location operators verified ground truth on every audit – mandatory photo evidence, Flash Verification presence checks, and automated corrective actions with 48-hour SLAs. No more pencil-whipping.',
+  title: 'Proof-Based Audit Software for Multi-Location Businesses | Audiment',
+  description: 'Audiment gives multi-location operators trustworthy operational visibility on every audit – mandatory photo evidence, proof of presence checks, and automated corrective actions with 48-hour SLAs. No more operational blind spots.',
   keywords: ['audit management software', 'multi-location audit software', 'restaurant brand standard audit app', 'software to prevent fake audits', 'franchise quality control software', 'CAPA software', 'field audit app India', 'FSSAI compliance software'],
-  alternates: { canonical: 'https://audiment.com' },
+  alternates: { canonical: 'https://audiment.in' },
   openGraph: {
-    title: 'Audiment | Ground truth for multi-location audits',
-    description: 'Audiment gives multi-location operators verified ground truth on every audit – mandatory photo evidence, Flash Verification presence checks, and automated corrective actions with 48-hour SLAs. No more pencil-whipping.',
-    url: 'https://audiment.com',
+    title: 'Proof-Based Audit Software for Multi-Location Businesses | Audiment',
+    description: 'Audiment gives multi-location operators trustworthy operational visibility on every audit – mandatory photo evidence, proof of presence checks, and automated corrective actions with 48-hour SLAs. No more operational blind spots.',
+    url: 'https://audiment.in',
     siteName: 'Audiment',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Audiment | Ground truth for multi-location audits',
-    description: 'Audiment gives multi-location operators verified ground truth on every audit – mandatory photo evidence, Flash Verification presence checks, and automated corrective actions with 48-hour SLAs. No more pencil-whipping.',
+    title: 'Proof-Based Audit Software for Multi-Location Businesses | Audiment',
+    description: 'Audiment gives multi-location operators trustworthy operational visibility on every audit – mandatory photo evidence, proof of presence checks, and automated corrective actions with 48-hour SLAs. No more operational blind spots.',
   },
 };
 
@@ -44,7 +44,7 @@ function StructuredData() {
         "name": "Audiment",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Web, Mobile",
-        "description": "High-trust audit and operations platform for multi-unit franchises, featuring Flash Verification, photo evidence enforcement, and automated corrective actions.",
+        "description": "Proof-based audit and operations platform for multi-unit franchises, featuring proof of presence, photo evidence enforcement, and automated corrective actions.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -54,12 +54,12 @@ function StructuredData() {
       {
         "@type": "WebSite",
         "name": "Audiment",
-        "url": "https://audiment.com",
+        "url": "https://audiment.in",
         "potentialAction": {
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://audiment.com/blog?q={search_term_string}"
+            "urlTemplate": "https://audiment.in/blog?q={search_term_string}"
           },
           "query-input": "required name=search_term_string"
         }
@@ -67,8 +67,8 @@ function StructuredData() {
       {
         "@type": "Organization",
         "name": "Audiment",
-        "url": "https://audiment.com",
-        "logo": "https://audiment.com/logo.png",
+        "url": "https://audiment.in",
+        "logo": "https://audiment.in/logo.png",
         "sameAs": [
           "https://www.linkedin.com/company/audiment"
         ]
@@ -78,10 +78,10 @@ function StructuredData() {
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "How does Audiment prevent fake field audits?",
+            "name": "How does Audiment ensure verified field audits?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Audiment uses Flash Verification, which requires auditors to capture a geo-tagged, 1-minute environmental video and a verified selfie to prove they are physically on-site."
+              "text": "Audiment uses proof of presence checks, which require auditors to capture a geo-tagged, 1-minute environmental video and a verified selfie to prove they are physically on-site."
             }
           },
           {
@@ -110,33 +110,33 @@ function StructuredData() {
 const steps = [
   {
     number: "01",
-    title: "Create audit blueprints",
-    desc: "Admin builds a standardized audit template with questions, scoring logic, and severity levels.",
+    title: "Audit scheduled & assigned",
+    desc: "HQ automatically deploys a new FSSAI or operational checklist. Branch managers are instantly notified.",
   },
   {
     number: "02",
-    title: "Define locations and assign managers",
-    desc: "Create your branch network, assign managers to locations, and configure your organizational structure.",
+    title: "Audit executed on-site",
+    desc: "Field managers walk the floor, completing the audit on mobile with offline-first support.",
   },
   {
     number: "03",
-    title: "Schedule and assign audits",
-    desc: "Publish scheduled or surprise audits to specific branches and assign them to field auditors.",
+    title: "Evidence captured & verified",
+    desc: "Every critical question requires geo-tagged photo evidence. No bypassing, no gallery uploads.",
   },
   {
     number: "04",
-    title: "Execute with photo evidence",
-    desc: "Auditors complete audits on their phones with mandatory photo evidence enforced per question.",
+    title: "Issues detected instantly",
+    desc: "When a standard fails–like a missed temp log–the system flags it immediately.",
   },
   {
     number: "05",
-    title: "Resolve corrective actions",
-    desc: "Critical failures auto-generate tasks for managers with 48-hour deadlines and mandatory resolution proof.",
+    title: "Corrective action generated",
+    desc: "An SLA-bound task is automatically created and assigned to the branch manager for resolution.",
   },
   {
     number: "06",
-    title: "Export stakeholder-ready reports",
-    desc: "Generate high-fidelity PDF audit reports with scores, evidence, and corrective action status.",
+    title: "Resolution & leadership visibility",
+    desc: "Manager uploads proof of the fix. HQ sees the exact trend and resolution time across the region.",
   },
 ];
 
@@ -152,7 +152,7 @@ const comparisonRows = [
     capability: "Geo-tagged verification",
     paper: { icon: <X className="w-4 h-4 text-red-400 mx-auto" />, label: "None" },
     generic: { icon: <X className="w-4 h-4 text-red-400 mx-auto" />, label: "None" },
-    audiment: { icon: <Check className="w-4 h-4 text-green-500 mx-auto" />, label: "With Flash video" },
+    audiment: { icon: <Check className="w-4 h-4 text-green-500 mx-auto" />, label: "With proof of presence" },
   },
   {
     capability: "Auto corrective actions",
@@ -264,18 +264,18 @@ export default async function Home() {
             {[
               {
                 icon: MapPinIcon,
-                title: "You can't be at every branch",
-                desc: "With multiple outlets, you rely on managers to report accurately. But without a system, you only hear what they want you to hear.",
+                title: "WhatsApp reporting chaos",
+                desc: "Photos scattered across group chats, impossible to track, and instantly lost. No way to verify when or where the photo was actually taken.",
               },
               {
                 icon: FileText,
-                title: "Checklists that nobody reviews",
-                desc: "Checklists get lost, forgotten, or filled in after the fact. There is no way to know if an audit actually happened.",
+                title: "Inconsistent manager reporting",
+                desc: "Area managers develop regional blind spots, scoring their locations easily and hiding real operational failures from corporate leadership.",
               },
               {
                 icon: Shield,
-                title: "No accountability trail",
-                desc: "When something goes wrong, there is no record of who checked what, when, and what was done about it.",
+                title: "Unresolved corrective actions",
+                desc: "Finding the issue is only step one. Checklists on paper mean critical failures are forgotten by Tuesday, leaving you exposed.",
               },
             ].map((card, i) => (
               <div
@@ -298,7 +298,7 @@ export default async function Home() {
           <div className="max-w-3xl mb-16">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 leading-[1.15] mb-6">
               Audiment gives you<br />
-              <span className="text-neutral-400">ground truth.</span>
+              <span className="text-neutral-400">operational clarity.</span>
             </h2>
             <p className="text-lg text-neutral-500 leading-relaxed">
               Live photos, GPS location, and server-verified timestamps on every audit. Nothing can be faked – every failure becomes a task that must be closed with proof.
@@ -308,18 +308,18 @@ export default async function Home() {
             {[
               {
                 icon: CameraIcon,
-                title: "Evidence-based audits",
-                desc: 'Photos, videos, and notes attached to every question. No more "trust me, it looked fine."',
+                title: "Execution consistency",
+                desc: 'Standardize operations across 5 or 500 branches with mandatory evidence. Ensure the opening checklist is never ignored.',
               },
               {
                 icon: MapPinIcon,
-                title: "Location-verified",
-                desc: "GPS confirms the auditor was physically at the branch. Not in their living room.",
+                title: "Branch-level visibility",
+                desc: "Know exactly which location is failing hygiene standards repeatedly without waiting for the end-of-month regional report.",
               },
               {
                 icon: RefreshCw,
-                title: "Failures become tasks",
-                desc: "Every failed item creates a corrective action. Managers must fix it and upload proof. Admins verify before closing.",
+                title: "Accountability & issue escalation",
+                desc: "If a fridge temp fails, an escalation flow begins. Branch managers are held accountable for resolutions with verified proof.",
               },
             ].map((pillar, i) => (
               <div
@@ -376,39 +376,35 @@ export default async function Home() {
             {[
               {
                 icon: Crown,
-                role: "Admin",
-                subtitle: "Owner / head office",
+                role: "HQ Leadership",
+                subtitle: "Corporate / Executive",
                 color: "bg-neutral-900",
                 items: [
-                  "Full visibility across all locations",
-                  "Create and manage audit blueprints with scoring logic",
-                  "Add users, manage branches and team assignments",
-                  "View trend reports and comparative location performance",
-                  "Approve or reject corrective action resolutions",
+                  "Cross-location trend tracking and risk visibility",
+                  "Standardize operational blueprints network-wide",
+                  "Identify systemic bottlenecks and repeat failures",
                 ],
               },
               {
                 icon: Users,
-                role: "Manager",
-                subtitle: "Branch / regional level",
+                role: "Regional Managers",
+                subtitle: "Multi-Unit Leaders",
                 color: "bg-neutral-700",
                 items: [
-                  "Receives published audits and assigns them to auditors",
-                  "Responsible for fixing failed items with photo proof",
-                  "Tracks auditor progress and scores for their locations",
-                  "Resolves corrective actions within the 48-hour SLA",
+                  "Monitor branch-level execution across their territory",
+                  "Review and approve corrective action resolutions",
+                  "Track compliance scores and auditor performance",
                 ],
               },
               {
                 icon: ClipboardList,
-                role: "Auditor",
-                subtitle: "Field level",
+                role: "Branch Managers & Auditors",
+                subtitle: "Field Execution",
                 color: "bg-neutral-500",
                 items: [
-                  "Mobile-first interface, one question at a time",
-                  "Captures mandatory photos, videos, GPS, and notes",
-                  "Flash Verification for identity and location proof",
-                  "Works fully offline – syncs automatically when back online",
+                  "Execute daily/weekly audits with mandatory evidence",
+                  "Receive automated corrective action tasks",
+                  "Fix issues and submit photo proof before the SLA expires",
                 ],
               },
             ].map((role, i) => (
@@ -441,6 +437,33 @@ export default async function Home() {
 
       {/* ── Key Features Section (§4) ─────────────────────────────────────── */}
       <StickyFeatureSection />
+
+      {/* ── Operational Failures Section (§5) ─────────────────────────────── */}
+      <section className="py-24 bg-white px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-6">
+              The operational blind spots<br />
+              <span className="text-neutral-400">Audiment eliminates</span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              "Temperature logs skipped during the morning rush",
+              "Opening checklists ignored until the end of the day",
+              "Critical SOP violations in food prep areas",
+              "Repeat hygiene failures across specific regions",
+              "Corrective actions marked as 'done' without actual fixes",
+              "Outdated promotional materials left on the floor"
+            ].map((failure, i) => (
+              <div key={i} className="flex items-center gap-4 p-6 rounded-xl bg-neutral-50 border border-neutral-100">
+                <AlertTriangle className="w-6 h-6 text-amber-500 flex-shrink-0" />
+                <span className="text-lg text-neutral-700 font-medium">{failure}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ── Industry Use Cases Section (§5 – 6 cards) ────────────────────── */}
       <section id="use-cases" className="py-24 md:py-32 bg-neutral-50 px-6 border-y border-neutral-200/60">
@@ -688,7 +711,7 @@ export default async function Home() {
                 }
                 className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
               >
-                Go to app
+                Dashboard
                 <ArrowRight className="w-5 h-5" />
               </Link>
             ) : (

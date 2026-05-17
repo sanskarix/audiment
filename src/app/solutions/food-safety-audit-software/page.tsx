@@ -3,7 +3,7 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 export const metadata = {
   title: 'Audiment for food safety | FSSAI-ready audits with photo-verified compliance',
   description: 'Audiment gives food businesses un-falsifiable FSSAI compliance trails – mandatory photo evidence per check, Schedule 4-mapped templates, automated non-conformance alerts, and tamper-proof audit archives.',
-  alternates: { canonical: 'https://audiment.com/solutions/food-safety-audit-software' }
+  alternates: { canonical: 'https://audiment.in/solutions/food-safety-audit-software' }
 }
 
 export default function FoodSafetyAuditSoftware() {
@@ -40,6 +40,18 @@ export default function FoodSafetyAuditSoftware() {
           description: "Automatically generate a task to fix a broken hygiene station. Keep a complete log of exactly when the fault was found and when it was resolved."
         }
       ]}
+      operationalBottlenecks={[
+        "Temperature logs filled out retrospectively at the end of the shift.",
+        "Critical CCP (Critical Control Point) failures not escalated to HQ immediately.",
+        "Inspectors requesting historical records that are physically damaged or illegible.",
+        "Pest control issues reported but lost in a WhatsApp chat."
+      ]}
+      workflowSteps={[
+        { title: "CCP Check Failed", description: "Line cook records a hot-holding temperature below 60°C." },
+        { title: "Corrective Action Forced", description: "System requires immediate reheating or disposal logging." },
+        { title: "Manager Sign-off", description: "Branch manager must physically review and sign off on the corrective action with photo proof." },
+        { title: "Leadership Dashboard Updated", description: "HQ compliance team sees a real-time log of the incident and resolution." }
+      ]}
       sampleChecklist={[
         { area: "Personal Hygiene", question: "Are all food handlers wearing required gloves, hairnets, and exhibiting no signs of illness?" },
         { area: "Temperature Logs", question: "Is the walk-in refrigerator running stably below 4°C? Provide photo evidence of internal thermometer." },
@@ -73,7 +85,7 @@ export default function FoodSafetyAuditSoftware() {
       relatedBlogTitle="FSSAI Compliance Complete Guide"
       relatedIndustryLinks={[
         { title: "Restaurant Audit Software", href: "/solutions/restaurant-audit-software" },
-        { title: "FSSAI Compliance Software", href: "/solutions/fssai-compliance-software" }
+        { title: "QSR Audit Software", href: "/solutions/qsr-audit-software" }
       ]}
     />
   )

@@ -17,18 +17,18 @@ Multi-location QSRs, restaurant groups, franchise operations, and retail chains.
 Unlike legacy paper checklists or generic tools like GoAudits, iAuditor (SafetyCulture), or POPProbe, Audiment enforces location-verified evidence and automates the issue resolution loop. 
 
 ## Official Links
-- Website: https://audiment.com
+- Website: https://audiment.in
 - Application Category: BusinessApplication / SoftwareApplication
 
 ## Solutions
-- https://audiment.com/solutions/restaurant-operations
-- https://audiment.com/solutions/retail-operations
-- https://audiment.com/solutions/franchise-operations
+- https://audiment.in/solutions/restaurant-operations
+- https://audiment.in/solutions/retail-operations
+- https://audiment.in/solutions/franchise-operations
 
 ## Blog
-- https://audiment.com/blog/fssai-compliance-guide
-- https://audiment.com/blog/capa-management-guide
-- https://audiment.com/blog/audit-management-guide
-- https://audiment.com/blog/flash-verification-in-audits
-- https://audiment.com/blog/multi-location-compliance-guide
-- https://audiment.com/blog/restaurant-audit-guide
+- https://audiment.in/blog/fssai-compliance-guide
+- https://audiment.in/blog/capa-management-guide
+- https://audiment.in/blog/audit-management-guide
+- https://audiment.in/blog/flash-verification-in-audits
+- https://audiment.in/blog/multi-location-compliance-guide
+- https://audiment.in/blog/restaurant-audit-guide

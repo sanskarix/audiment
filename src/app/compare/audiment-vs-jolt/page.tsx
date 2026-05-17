@@ -2,8 +2,8 @@ import CompareTemplate from '@/components/compare/CompareTemplate'
 
 export const metadata = {
   title: 'Audiment vs Jolt | Hardware-free verified audits for restaurant operators',
-  description: 'Audiment vs Jolt – BYOD Flash Verification and enterprise multi-location analytics vs Jolt\'s hardware-bundled single-store approach. A clear comparison for QSR and restaurant compliance teams.',
-  alternates: { canonical: 'https://audiment.com/compare/audiment-vs-jolt' }
+  description: 'Audiment vs Jolt – BYOD proof of presence and enterprise multi-location analytics vs Jolt\'s hardware-bundled single-store approach. A clear comparison for QSR and restaurant compliance teams.',
+  alternates: { canonical: 'https://audiment.in/compare/audiment-vs-jolt' }
 }
 
 export default function CompareJolt() {
@@ -13,7 +13,7 @@ export default function CompareJolt() {
       heroH1="Audiment vs Jolt – Restaurant Compliance Software Compared"
       features={{
         audiment: {
-          photoEvidence: "Flash Verification ensures un-falsifiable photos",
+          photoEvidence: "Proof of presence ensures un-falsifiable photo evidence",
           geoTagged: "Strict perimeter lock execution",
           autoCA: "SLA tracked Corrective Actions securely closed-looped",
           trendDetection: "Board-ready regional benchmarking",

@@ -81,6 +81,35 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/solutions/restaurant-operations',
+        destination: '/solutions/restaurant-audit-software',
+        permanent: true,
+      },
+      {
+        source: '/solutions/retail-operations',
+        destination: '/solutions/retail-audit-software',
+        permanent: true,
+      },
+      {
+        source: '/solutions/franchise-operations',
+        destination: '/solutions/franchise-audit-software',
+        permanent: true,
+      },
+      {
+        source: '/solutions/fssai-compliance-software',
+        destination: '/solutions/food-safety-audit-software',
+        permanent: true,
+      },
+      {
+        source: '/use-cases/mobile-audit-app',
+        destination: '/use-cases/field-audit-app',
+        permanent: true,
+      },
+    ];
+  },
   skipTrailingSlashRedirect: true,
 };
 

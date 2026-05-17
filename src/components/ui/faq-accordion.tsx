@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: "How does Audiment ensure auditors actually visit the location?",
-    a: "Audiment uses Flash Verification – a mandatory 1-minute live video recorded inside the app – combined with GPS geo-tagging. If the auditor is more than 50 metres from the registered branch location, the audit is flagged with a Location Mismatch warning. A selfie is also captured simultaneously to prevent proxy auditing.",
+    a: "Audiment enforces proof of presence – a mandatory 1-minute live video recorded inside the app – combined with GPS geo-tagging. If the auditor is more than 50 metres from the registered branch location, the audit is flagged with a Location Mismatch warning. A selfie is also captured simultaneously to prevent proxy auditing.",
   },
   {
     q: "Can I customise the audit templates?",
@@ -34,7 +34,7 @@ const faqs = [
   },
   {
     q: "How is Audiment different from iAuditor or generic tools?",
-    a: "Unlike generic tools, Audiment enforces mandatory photo evidence per question (not optional), includes Flash Verification with live geo-tagged video to confirm auditor presence, automatically creates corrective actions with a 48-hour SLA, detects declining trends across the last 3 audits and escalates, and ships with FSSAI-ready templates out of the box.",
+    a: "Unlike generic tools, Audiment enforces mandatory photo evidence per question (not optional), includes proof of presence checks with live geo-tagged video to confirm auditor presence, automatically creates corrective actions with a 48-hour SLA, detects declining trends across the last 3 audits and escalates, and ships with FSSAI-ready templates out of the box.",
   },
   {
     q: "Who can see what?",

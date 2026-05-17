@@ -3,7 +3,7 @@ import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 export const metadata = {
   title: 'Audiment | Automate corrective actions from every audit failure',
   description: 'Audiment auto-generates CAPA tasks the moment an audit fails – with 48-hour SLAs, photo-proof closure requirements, and escalation to regional directors for overdue issues.',
-  alternates: { canonical: 'https://audiment.com/use-cases/corrective-action-tracking' }
+  alternates: { canonical: 'https://audiment.in/use-cases/corrective-action-tracking' }
 }
 
 export default function CorrectiveActionTracking() {

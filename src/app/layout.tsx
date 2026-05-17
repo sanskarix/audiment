@@ -20,13 +20,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/components/AuthProvider";
 
-const SITE_URL = "https://audiment.com";
+const SITE_URL = "https://audiment.in";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'Audiment | Ground truth for multi-location audits',
+  applicationName: 'Audiment',
+  title: 'Proof-Based Audit Software for Multi-Location Businesses | Audiment',
   description:
-    'Audiment gives multi-location operators verified ground truth on every audit – mandatory photo evidence, Flash Verification presence checks, automated CAPA workflows, and real-time compliance dashboards.',
+    'Audiment gives multi-location operators trustworthy operational visibility on every audit – mandatory photo evidence, proof of presence checks, automated CAPA workflows, and real-time compliance dashboards.',
   keywords: [
     'audit management software',
     'multi-location compliance',
@@ -44,15 +45,15 @@ export const metadata: Metadata = {
     type: 'website',
     url: SITE_URL,
     siteName: 'Audiment',
-    title: 'Audiment | Ground truth for multi-location audits',
+    title: 'Proof-Based Audit Software for Multi-Location Businesses | Audiment',
     description:
-      'Audiment gives multi-location operators verified ground truth on every audit – mandatory photo evidence, Flash Verification presence checks, automated CAPA workflows, and real-time compliance dashboards.',
+      'Audiment gives multi-location operators trustworthy operational visibility on every audit – mandatory photo evidence, proof of presence checks, automated CAPA workflows, and real-time compliance dashboards.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Audiment | Ground truth for multi-location audits',
+    title: 'Proof-Based Audit Software for Multi-Location Businesses | Audiment',
     description:
-      'Audiment gives multi-location operators verified ground truth on every audit – mandatory photo evidence, Flash Verification presence checks, automated CAPA workflows, and real-time compliance dashboards.',
+      'Audiment gives multi-location operators trustworthy operational visibility on every audit – mandatory photo evidence, proof of presence checks, automated CAPA workflows, and real-time compliance dashboards.',
   },
   robots: {
     index: true,

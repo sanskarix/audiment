@@ -8,13 +8,13 @@ import { Search } from 'lucide-react'
 export const metadata = {
   title: 'Audiment blog | Audit insights for operations leaders',
   description: 'Expert field guides on multi-location audit management, FSSAI compliance, corrective action workflows, and verified audit practices – written for operations leaders who run distributed teams.',
-  alternates: { canonical: 'https://audiment.com/blog' },
+  alternates: { canonical: 'https://audiment.in/blog' },
   openGraph: {
     title: 'Audiment blog | Audit insights for operations leaders',
     description: 'Expert field guides on multi-location audit management, FSSAI compliance, corrective action workflows, and verified audit practices – written for operations leaders who run distributed teams.',
-    url: 'https://audiment.com/blog',
+    url: 'https://audiment.in/blog',
     type: 'website',
-    images: [{ url: 'https://audiment.com/opengraph-image', width: 1200, height: 630 }],
+    images: [{ url: 'https://audiment.in/opengraph-image', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',

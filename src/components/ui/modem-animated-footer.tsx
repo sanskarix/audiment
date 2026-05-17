@@ -27,7 +27,7 @@ interface FooterProps {
 
 export const Footer = ({
   brandName = "Audiment",
-  brandDescription = "High-trust audit software for multi-location operations. Enforce truth and stop pencil-whipping with photo evidence and flash verification.",
+  brandDescription = "Proof-based audit software for multi-location operations. Enforce truth and stop pencil-whipping with photo evidence and proof of presence checks.",
   socialLinks = [],
   navLinks = [],
   className,
@@ -69,18 +69,32 @@ export const Footer = ({
             <div className="flex flex-row gap-8 flex-wrap lg:gap-16">
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-heading mb-2">Solutions</h3>
-                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/restaurant-operations">Restaurant Operations</Link>
-                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/retail-operations">Retail Operations</Link>
-                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/franchise-operations">Franchise Operations</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/restaurant-audit-software">Restaurant Audit</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/retail-audit-software">Retail Audit</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/franchise-audit-software">Franchise Audit</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/manufacturing-audit-software">Manufacturing Audit</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/hotel-audit-software">Hotel Audit</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/qsr-audit-software">QSR Audit</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/solutions/food-safety-audit-software">Food Safety Audit</Link>
               </div>
               <div className="flex flex-col gap-4">
-                <h3 className="font-medium text-heading mb-2">Platform</h3>
-                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/#features">Features</Link>
-                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/#how-it-works">How it works</Link>
-                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/#use-cases">Use cases</Link>
+                <h3 className="font-medium text-heading mb-2">Use Cases</h3>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/use-cases/field-audit-app">Field Audit App</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/use-cases/corrective-action-tracking">Corrective Actions</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/use-cases/multi-location-compliance">Multi-Location Compliance</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/use-cases/inspection-management-software">Inspection Management</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/use-cases/audit-checklist-software">Audit Checklists</Link>
+              </div>
+              <div className="flex flex-col gap-4">
+                <h3 className="font-medium text-heading mb-2">Comparisons</h3>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/compare/audiment-vs-safetyculture">vs SafetyCulture</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/compare/audiment-vs-goaudits">vs GoAudits</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/compare/audiment-vs-zenput">vs Zenput</Link>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/compare/audiment-vs-jolt">vs Jolt</Link>
               </div>
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-heading mb-2">Company</h3>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/about">About Us</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/blog">Blog</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/#contact">Contact</Link>
               </div>

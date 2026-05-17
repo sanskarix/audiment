@@ -1,9 +1,9 @@
 import CompareTemplate from '@/components/compare/CompareTemplate'
 
 export const metadata = {
-  title: 'Audiment vs GoAudits | Flash Verification vs basic photo attachment',
-  description: 'Audiment vs GoAudits – how verified audit ground truth, automated CAPA with photo-proof closure, and FSSAI-ready templates compare against GoAudits for multi-location operators.',
-  alternates: { canonical: 'https://audiment.com/compare/audiment-vs-goaudits' }
+  title: 'Audiment vs GoAudits | Proof of presence vs basic photo attachment',
+  description: 'Audiment vs GoAudits – how trustworthy operational visibility, automated CAPA with photo-proof closure, and FSSAI-ready templates compare against GoAudits for multi-location operators.',
+  alternates: { canonical: 'https://audiment.in/compare/audiment-vs-goaudits' }
 }
 
 export default function CompareGoAudits() {
@@ -13,8 +13,8 @@ export default function CompareGoAudits() {
       heroH1="Audiment vs GoAudits – Feature-by-Feature Comparison"
       features={{
         audiment: {
-          photoEvidence: "Mandatory enforcement via Flash Verification",
-          geoTagged: "GPS perimeter locking restricts fake audits",
+          photoEvidence: "Mandatory enforcement via proof of presence",
+          geoTagged: "GPS perimeter locking ensures verified execution",
           autoCA: "SLA-driven, forces photo-verified resolution",
           trendDetection: "Predictive AI spots systemic brand standard failures",
           fssaiReady: "Native FSSAI Schedule 4 configurations",
@@ -37,16 +37,16 @@ export default function CompareGoAudits() {
       }}
       whereAudimentWins={[
         {
-          title: "Modern UI for Better Adoption",
-          text: "If a platform requires extensive training, your store managers won't use it. Audiment boasts a consumer-grade user experience that frontline workers intuitively understand instantly."
+          title: "Manager Adoption & Rollout",
+          text: "If a platform feels like corporate surveillance, your managers will fight it. Audiment is designed as a daily operational assistant that saves branch managers time, turning hostile rollouts into frictionless adoption."
         },
         {
-          title: "Automated Resolution",
-          text: "We focus on the 'fix' just as much as the 'find'. Audiment automatically closes the loop on Corrective Actions using strict SLA countdowns, whereas GoAudits relies heavily on manual administrative tracking."
+          title: "Corrective Action Accountability",
+          text: "We don't just log failures; we enforce resolutions. While others rely on manual follow-ups, Audiment uses strict SLA countdowns and requires photo-proof to close the loop, shifting the burden off HQ."
         },
         {
-          title: "Defensive Data Integrity",
-          text: "When facing a critical health inspection, you need absolute proof. Our Flash Verification ensures your digital logs stand up to regulatory scrutiny effortlessly."
+          title: "Audit Reliability & Visibility",
+          text: "When facing a critical health inspection, you need absolute proof. Our geo-locked evidence ensures the data flowing to the leadership dashboard reflects actual store conditions, not pencil-whipped assumptions."
         }
       ]}
       whoShouldChooseCompetitor={[

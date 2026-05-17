@@ -3,7 +3,7 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 export const metadata = {
   title: 'Audiment for hotels | Guest-experience standards enforced at every property',
   description: 'Audiment gives hotel groups verified compliance across housekeeping, F&B, and safety – photo-evidenced inspections, automated maintenance corrective actions, and real-time portfolio dashboards.',
-  alternates: { canonical: 'https://audiment.com/solutions/hotel-audit-software' }
+  alternates: { canonical: 'https://audiment.in/solutions/hotel-audit-software' }
 }
 
 export default function HotelAuditSoftware() {
@@ -39,6 +39,18 @@ export default function HotelAuditSoftware() {
           title: "Brand Audit Protection",
           description: "Arm your Area General Managers with standardized corporate iPad audits, ensuring local managers cannot hide operational deficiencies."
         }
+      ]}
+      operationalBottlenecks={[
+        "Disconnected departments (housekeeping vs maintenance) missing issues until a guest complains.",
+        "Area managers rating properties subjectively during high-level walkthroughs.",
+        "Preventative maintenance schedules not being physically verified.",
+        "Shift handovers leaving unresolved issues for the next shift to discover."
+      ]}
+      workflowSteps={[
+        { title: "Room Inspection", description: "Housekeeping supervisor logs a damaged carpet during standard check." },
+        { title: "Department Handoff", description: "A maintenance task is auto-generated and assigned to engineering." },
+        { title: "Proof of Repair", description: "Engineer logs the repair with a geo-tagged photo." },
+        { title: "Executive Visibility", description: "General manager sees the closed loop on the daily property dashboard." }
       ]}
       sampleChecklist={[
         { area: "Room Cleanliness", question: "Are absolutely all bathroom surfaces, including shower glass and mirrors, free from water spots and dust?" },

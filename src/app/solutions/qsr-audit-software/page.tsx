@@ -3,7 +3,7 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 export const metadata = {
   title: 'Audiment for QSR | Speed and compliance across every outlet, every shift',
   description: 'Audiment helps QSR chains enforce brand standards, food safety, and shift accountability at every outlet – shift-by-shift digital checklists, mandatory photo evidence, and automated corrective actions.',
-  alternates: { canonical: 'https://audiment.com/solutions/qsr-audit-software' }
+  alternates: { canonical: 'https://audiment.in/solutions/qsr-audit-software' }
 }
 
 export default function QSRAuditSoftware() {
@@ -39,6 +39,18 @@ export default function QSRAuditSoftware() {
           title: "Shift-by-Shift Accountability",
           description: "Force morning, afternoon, and night shift managers to conduct rapid 5-minute photo-verified walkthroughs to ensure handovers are perfect."
         }
+      ]}
+      operationalBottlenecks={[
+        "Speed of service metrics overriding hygiene compliance during peak hours.",
+        "Shift handovers happening without physical verification of equipment status.",
+        "New staff violating standard operating procedures due to lack of enforced guidance.",
+        "Area coaches missing critical equipment issues during rushed visits."
+      ]}
+      workflowSteps={[
+        { title: "Pre-Rush Audit Executed", description: "Shift manager completes the pre-rush checklist on their mobile device." },
+        { title: "Standard Conflict Detected", description: "Handwashing station marked as unstocked, photo captured as evidence." },
+        { title: "Immediate Escalation", description: "Shift leader receives a notification to restock immediately." },
+        { title: "Resolution Verified", description: "Area coach reviews the photo verification log to ensure compliance before the rush begins." }
       ]}
       sampleChecklist={[
         { area: "Food Preparation Standards", question: "Are sandwiches assembled specifically according to the current brand schematic and portion controls?" },

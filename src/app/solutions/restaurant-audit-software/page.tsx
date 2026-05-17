@@ -1,16 +1,16 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'Audiment for restaurants | Stop fake hygiene audits across your chain',
-  description: 'Audiment gives restaurant chains verified audit ground truth – mandatory photo evidence per question, GPS-confirmed auditor presence, FSSAI-ready templates, and automated corrective actions with 48-hour SLAs.',
-  alternates: { canonical: 'https://audiment.com/solutions/restaurant-audit-software' }
+  title: 'Restaurant Audits You Can Actually Trust | Audiment',
+  description: 'Audiment gives restaurant chains trustworthy operational visibility – mandatory photo evidence per question, GPS-confirmed auditor presence, FSSAI-ready templates, and automated corrective actions with 48-hour SLAs.',
+  alternates: { canonical: 'https://audiment.in/solutions/restaurant-audit-software' }
 }
 
 export default function RestaurantAuditSoftware() {
   return (
     <SolutionPageTemplate
       industry="Restaurants"
-      heroH1="Restaurant Audit Software – Ensure Hygiene, Safety and Brand Standards Across Every Location"
+      heroH1="Restaurant Audits You Can Actually Trust"
       heroSubheadline="Protect your guests, empower your managers, and replace chaotic paper checklists with intelligent digital workflows designed explicitly for multi-location restaurant operators."
       painPoints={[
         {
@@ -22,8 +22,8 @@ export default function RestaurantAuditSoftware() {
           description: "Keeping paper records for temperature logs and pest control leaves you vulnerable during unannounced regulatory inspections. Documents get lost or faked."
         },
         {
-          title: "Managers Hiding Problems",
-          description: "Area managers check boxes without thoroughly walking the floor (pencil-whipping). When a real equipment failure happens, corporate is entirely unaware until disaster strikes."
+          title: "Subjective Area Management",
+          description: "Area managers check boxes without thoroughly walking the floor, leading to a lack of operational clarity. When a real equipment failure happens, corporate is entirely unaware until disaster strikes."
         }
       ]}
       features={[
@@ -39,6 +39,18 @@ export default function RestaurantAuditSoftware() {
           title: "Corrective Action Tracking",
           description: "When an audit fails, a task is instantly created. If a fridge temperature is too high, the responsible manager has a strict SLA to fix it, closing the operational loop."
         }
+      ]}
+      operationalBottlenecks={[
+        "Store managers covering up equipment failures to avoid corporate scrutiny.",
+        "Area managers completing audits from their cars without walking the floor.",
+        "Paper checklists getting lost before the FSSAI inspector arrives.",
+        "Corporate finding out about hygiene failures through customer reviews instead of internal systems."
+      ]}
+      workflowSteps={[
+        { title: "Standard Fails", description: "Auditor marks the walk-in freezer temperature as non-compliant." },
+        { title: "Evidence Captured", description: "Auditor takes a mandatory live photo of the thermometer reading." },
+        { title: "Manager Alerted", description: "The branch manager receives an instant notification with a 24-hour SLA to fix it." },
+        { title: "Resolution Verified", description: "Manager logs the fix and uploads a new photo of the corrected temperature." }
       ]}
       sampleChecklist={[
         { area: "Kitchen Hygiene", question: "Are absolutely all food contact surfaces sanitized, clean, and free of food debris from the previous shift?" },

@@ -1,9 +1,11 @@
 import Link from 'next/link'
+import { Navbar } from '@/components/ui/navbar'
+import { Footer } from '@/components/ui/modem-animated-footer'
 
 export const metadata = {
-  title: 'Audiment | Built to end pencil-whipping at scale',
-  description: 'Learn how Audiment was built to give multi-location operators verified ground truth – replacing paper checklists, fake audits, and WhatsApp chaos with photo-verified, GPS-confirmed compliance workflows.',
-  alternates: { canonical: 'https://audiment.com/about' }
+  title: 'Audiment | Built for operational clarity at scale',
+  description: 'Learn the story behind Audiment. Built by Asellus LLP to digitize operational checks, ensure verified visibility, and deliver operational clarity for multi-location operators.',
+  alternates: { canonical: 'https://audiment.in/about' }
 }
 
 export default function AboutPage() {
@@ -11,8 +13,8 @@ export default function AboutPage() {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Audiment",
-    "url": "https://audiment.com",
-    "logo": "https://audiment.com/logo.png",
+    "url": "https://audiment.in",
+    "logo": "https://audiment.in/logo.png",
     "email": "hello@audiment.com",
     "sameAs": [
       "https://www.linkedin.com/company/audiment",
@@ -22,11 +24,12 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <Navbar />
       {/* Hero Section */}
       <section className="pt-32 pb-20 border-b border-border text-center bg-muted/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-balance text-heading">
-            Audiment – built to end pencil-whipping at scale
+            Audiment – built for operational clarity at scale
           </h1>
           <p className="text-xl text-muted-foreground mb-8 text-balance">
             Enterprise Audit Management Software for Multi-Location Businesses
@@ -48,13 +51,13 @@ export default function AboutPage() {
 
           <h2>The Problem We Solve</h2>
           <p>
-            When a business scales beyond a single location, entropy inevitably sets in. Corporate leadership loses physical visibility, relying heavily on delayed reports and subjective regional manager assessments that are often fraught with "pencil whipping"–the act of falsifying compliance checklists to avoid scrutiny. Audiment solves this execution gap. By mandating geo-tagged photo evidence and automating corrective interventions immediately when a standard fails, Audiment ensures that what corporate dictates is definitively what occurs on the front line.
+            When a business scales beyond a single location, entropy inevitably sets in. Corporate leadership loses physical visibility, relying heavily on delayed reports and subjective regional manager assessments that are often lacking in operational clarity–where subjective reporting replaces verified execution. Audiment solves this execution gap. By mandating geo-tagged photo evidence and automating corrective interventions immediately when a standard fails, Audiment ensures that what corporate dictates is definitively what occurs on the front line.
           </p>
 
           <h2>Key Features</h2>
           <ul>
             <li><strong>Intelligent Mobile Checklists:</strong> Dynamic logical branches that adapt to auditor input efficiently.</li>
-            <li><strong>Flash Verification:</strong> Undeniable geo-fenced and facial recognition integration actively preventing forged inspections.</li>
+            <li><strong>Proof of Presence:</strong> Undeniable geo-fenced and verified selfie checks actively ensuring verified execution.</li>
             <li><strong>Automated CAPA Workflows:</strong> Strict SLA-tracked Corrective and Preventive Action generation natively integrated.</li>
             <li><strong>Real-Time Analytics Dashboard:</strong> Instantaneous regional comparative scoring empowering data-driven executive oversight.</li>
             <li><strong>Offline-First Execution:</strong> Flawless auditing in deep freezers or remote industrial locations securely.</li>
@@ -82,6 +85,20 @@ export default function AboutPage() {
         </div>
 
       </section>
+
+      <Footer
+        brandName="Audiment"
+        navLinks={[
+          { label: "Features", href: "/#features" },
+          { label: "How it works", href: "/#how-it-works" },
+          { label: "Use cases", href: "/#use-cases" },
+          { label: "Blog", href: "/blog" },
+          { label: "Contact", href: "/#contact" },
+          { label: "Privacy policy", href: "/privacy-policy" },
+          { label: "Cookie policy", href: "/cookie-policy" },
+          { label: "Terms of service", href: "/terms-of-service" },
+        ]}
+      />
 
       {/* Organization Schema */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />

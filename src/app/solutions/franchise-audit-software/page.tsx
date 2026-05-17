@@ -3,7 +3,7 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 export const metadata = {
   title: 'Audiment for franchises | Protect brand standards across every franchisee',
   description: 'Audiment gives franchise networks undeniable audit evidence – GPS-confirmed presence, mandatory photo proof, franchisee scorecards, and instant SOP distribution so every unit runs to corporate standard.',
-  alternates: { canonical: 'https://audiment.com/solutions/franchise-audit-software' }
+  alternates: { canonical: 'https://audiment.in/solutions/franchise-audit-software' }
 }
 
 export default function FranchiseAuditSoftware() {
@@ -39,6 +39,18 @@ export default function FranchiseAuditSoftware() {
           title: "Centralized SOP Distribution",
           description: "Push new brand standards instantly. The moment you update the core brand checklist, 100% of your franchisees are auditing against the new standard."
         }
+      ]}
+      operationalBottlenecks={[
+        "Franchisees cutting corners on brand standards to save operational costs.",
+        "Head office finding out about compliance issues through customer complaints.",
+        "Subjective auditing by field consultants leading to friction with franchise owners.",
+        "Corrective actions requested by HQ being ignored or delayed indefinitely."
+      ]}
+      workflowSteps={[
+        { title: "Compliance Check", description: "Field consultant visits a franchise location and logs a standard failure." },
+        { title: "Objective Evidence", description: "Consultant captures geo-tagged photo evidence of the violation." },
+        { title: "Escalation & SLA", description: "Franchise owner receives an automated task with a clear resolution deadline." },
+        { title: "Verification & Closure", description: "Franchise owner submits proof of the fix, which HQ reviews and approves." }
       ]}
       sampleChecklist={[
         { area: "Brand Signage", question: "Is all exterior and interior promotional signage current and matching the corporate Q3 marketing blueprint?" },

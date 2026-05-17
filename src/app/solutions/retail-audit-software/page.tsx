@@ -3,7 +3,7 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 export const metadata = {
   title: 'Audiment for retail | Consistent brand standards across every store',
   description: 'Audiment gives retail ops leaders photo-verified compliance across every store – promotional display checks, visual merchandising audits, and automated corrective actions that close without excuses.',
-  alternates: { canonical: 'https://audiment.com/solutions/retail-audit-software' }
+  alternates: { canonical: 'https://audiment.in/solutions/retail-audit-software' }
 }
 
 export default function RetailAuditSoftware() {
@@ -39,6 +39,18 @@ export default function RetailAuditSoftware() {
           title: "Regional Dashboard Analytics",
           description: "Stop waiting for month-end reports. Instantly see which retail district is failing loss-prevention audits the most and deploy targeted training to fix it."
         }
+      ]}
+      operationalBottlenecks={[
+        "Visual merchandising (VM) guidelines being interpreted subjectively by store managers.",
+        "Area managers relying on sales metrics to assume operational compliance.",
+        "Outdated promotional displays left on the floor after a campaign ends.",
+        "Store opening checklists checked off before the manager even arrives."
+      ]}
+      workflowSteps={[
+        { title: "Audit Executed", description: "Store manager completes the daily opening checklist." },
+        { title: "Merchandising Conflict Detected", description: "End-cap display is missing the current promotional signage." },
+        { title: "Immediate Escalation", description: "Area manager is notified and a task is generated for the store team." },
+        { title: "Resolution Verified", description: "Store manager uploads a photo of the corrected end-cap display." }
       ]}
       sampleChecklist={[
         { area: "Store Presentation", question: "Are front window displays correctly set up strictly according to the current month's visual merchandising guide?" },

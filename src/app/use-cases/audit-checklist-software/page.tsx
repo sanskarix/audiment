@@ -3,7 +3,7 @@ import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 export const metadata = {
   title: 'Audiment | Digital audit checklists that enforce photo evidence, not just tick-boxes',
   description: 'Audiment replaces paper checklists with smart digital audit forms – conditional logic, mandatory photo requirements, weighted scoring, and instant distribution to every location.',
-  alternates: { canonical: 'https://audiment.com/use-cases/audit-checklist-software' }
+  alternates: { canonical: 'https://audiment.in/use-cases/audit-checklist-software' }
 }
 
 export default function AuditChecklistSoftware() {
@@ -11,56 +11,56 @@ export default function AuditChecklistSoftware() {
     <UseCaseTemplate
       title="Digital Audit Checklist Software"
       heroH1="Digital Audit Checklist Software – Build, Assign and Track Checklists at Scale"
-      heroSubheadline="Retire the clipboard permanently. Accelerate compliance data collection using smart logic checklists explicitly designed for operational enterprise environments."
+      heroSubheadline="Retire paper clipboards permanently. Build, distribute, and track digital audit checklists that enforce photo evidence and prove physical presence."
       primaryKeyword="digital audit checklist software"
       features={[
         {
-          title: "Drag-and-Drop Form Builder",
-          description: "Build incredibly complex inspections using an intuitive editor devoid of heavy coding requirements. Create checklists, sections, and logic trees natively."
+          title: "Operational Logic Builders",
+          description: "Build dynamic workflows. If a fridge fails a temp check, the checklist automatically expands to trigger the spoilage reporting protocol."
         },
         {
-          title: "Conditional Smart Logic",
-          description: "Configure dynamic paths. If an inspector answers 'No' to a fire safety standard, instantly prompt them for mandatory photo documentation and comments."
+          title: "Proof-Enforced Questions",
+          description: "Mark high-risk items as evidence-mandatory. The audit cannot be submitted without a live, timestamped photo proving the physical state."
         },
         {
-          title: "Centralized Version Control",
-          description: "Update the corporate SOP checklist on the backend dashboard and push the standardized version to every tablet instantly."
+          title: "Tamper-Proof Timestamps",
+          description: "Every interaction is logged against server time and GPS coordinates, creating an airtight accountability trail that cannot be pencil-whipped."
         }
       ]}
       benefits={[
         {
-          title: "Instant Standardization",
-          description: "Mitigate version control nightmares. Eliminate the chance of regional outlets evaluating compliance against deprecated or severely modified checklists."
+          title: "Actionable Data, Not Dead Forms",
+          description: "Paper checklists go into a cabinet to die. Digital checklists feed live trend dashboards showing you exactly where systemic failures occur."
         },
         {
-          title: "Advanced Scoring Engines",
-          description: "Assign weightings securely. Deduct heavy percentages for critical health failures compared to minor cosmetic deviations for highly accurate performance grading."
+          title: "Instant Root-Cause Identification",
+          description: "Stop guessing why customer complaints are rising on weekends. Cross-reference shift audit scores with performance data instantly."
         },
         {
-          title: "Massive Data Aggregation",
-          description: "Instead of staring at dusty filing cabinets, instantly identify which questions are failed most across global networks via interactive analytics."
+          title: "Frictionless Staff Adoption",
+          description: "Front-line employees don't need extensive training. The mobile interface guides them step-by-step through the exact operational standard required."
         }
       ]}
       faqs={[
         {
-          question: "Are pre-built templates available?",
-          answer: "Yes, Audiment comes fully equipped with a vast library of industry-standard templates spanning FSSAI, ISO, OSHA, and global retail mandates."
+          question: "How do we import our existing Excel sheets or PDFs?",
+          answer: "Our onboarding team routinely imports legacy spreadsheets and paper checklists, digitizing them into smart, interactive Audiment templates in under 48 hours."
         },
         {
-          question: "Can we migrate our current Excel sheets?",
-          answer: "Absolutely. Our onboarding suite permits large-scale CSV imports natively converting spreadsheets to interactive checklists instantly."
+          question: "Can we block managers from using their gallery images?",
+          answer: "Yes. Gallery uploads are completely blocked by default. Auditors must use the live in-app camera to prove the audit is happening in real time."
         },
         {
-          question: "Does the platform support multiple languages?",
-          answer: "Yes, checklists can be rapidly deployed in multiple localized languages permitting global adoption while aggregating data cleanly into English dashboards."
+          question: "Does it support offline audit runs?",
+          answer: "Absolutely. Auditors can carry out full checklist runs without cell service or Wi-Fi. The device pings the internal clock and hardware GPS, syncing once online."
         },
         {
-          question: "Can we mandate specific response formats?",
-          answer: "You strictly govern input parameters. Choose from numeric boundaries, constrained drop-downs, or mandatory rich media attachments to avoid arbitrary entries."
+          question: "How does scoring work?",
+          answer: "You can assign custom weights to each question. The software aggregates individual responses into a clean percentage score, flagging critical compliance failures."
         },
         {
-          question: "Is data exportable to PDF?",
-          answer: "Completed and historically verified inspection reports can instantly be exported as branded, highly legible PDFs for regulators or external partners."
+          question: "Can reports be shared with supervisors or health inspectors?",
+          answer: "Yes. Completed checklist runs instantly generate a clean PDF report containing all photos, notes, timestamps, and locations, ready to export or print."
         }
       ]}
     />

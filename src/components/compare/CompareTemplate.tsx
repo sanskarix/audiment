@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { Navbar } from '@/components/ui/navbar'
+import { Footer } from '@/components/ui/modem-animated-footer'
 
 interface CompareProps {
   competitor: string
@@ -68,6 +70,7 @@ export default function CompareTemplate({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <Navbar />
       {/* Hero Section */}
       <section className="pt-32 pb-20 bg-muted/20 border-b border-border text-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -155,6 +158,20 @@ export default function CompareTemplate({
           </Link>
         </div>
       </section>
+
+      <Footer
+        brandName="Audiment"
+        navLinks={[
+          { label: "Features", href: "/#features" },
+          { label: "How it works", href: "/#how-it-works" },
+          { label: "Use cases", href: "/#use-cases" },
+          { label: "Blog", href: "/blog" },
+          { label: "Contact", href: "/#contact" },
+          { label: "Privacy policy", href: "/privacy-policy" },
+          { label: "Cookie policy", href: "/cookie-policy" },
+          { label: "Terms of service", href: "/terms-of-service" },
+        ]}
+      />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
     </div>

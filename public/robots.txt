@@ -21,7 +21,7 @@ User-agent: CCBot
 Allow: /
 
 # Sitemap
-Sitemap: https://audiment.com/sitemap.xml
+Sitemap: https://audiment.in/sitemap.xml
 Disallow: /admin/
 Disallow: /manager/
 Disallow: /auditor/

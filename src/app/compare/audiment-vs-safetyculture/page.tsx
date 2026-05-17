@@ -3,7 +3,7 @@ import CompareTemplate from '@/components/compare/CompareTemplate'
 export const metadata = {
   title: 'Audiment vs SafetyCulture | Verified multi-location audits vs a generic platform',
   description: 'Audiment vs SafetyCulture (iAuditor) – see why franchise operators and multi-location food businesses choose Audiment for GPS-verified auditor presence, 48-hour CAPA SLAs, and FSSAI-ready templates.',
-  alternates: { canonical: 'https://audiment.com/compare/audiment-vs-safetyculture' }
+  alternates: { canonical: 'https://audiment.in/compare/audiment-vs-safetyculture' }
 }
 
 export default function CompareSafetyCulture() {
@@ -13,7 +13,7 @@ export default function CompareSafetyCulture() {
       heroH1="Audiment vs SafetyCulture (iAuditor) – Software Comparison"
       features={{
         audiment: {
-          photoEvidence: "Strict enforcement; utilizes Flash Verification",
+          photoEvidence: "Strict enforcement; utilizes proof of presence checks",
           geoTagged: "Yes, blocks submission if off-site natively",
           autoCA: "Yes, advanced SLA logic built-in natively",
           trendDetection: "Yes, specifically tailored for multi-location",
@@ -24,7 +24,7 @@ export default function CompareSafetyCulture() {
           pricing: "Transparent per-location pricing (unlimited users)"
         },
         competitor: {
-          photoEvidence: "Supported, but lacks Flash Verification enforcement",
+          photoEvidence: "Supported, but lacks proof of presence enforcement",
           geoTagged: "Basic tagging, easily bypassed on some devices",
           autoCA: "Yes, but often requires manual review processes",
           trendDetection: "Strong, though generalized across all industries",
@@ -38,7 +38,7 @@ export default function CompareSafetyCulture() {
       whereAudimentWins={[
         {
           title: "Auditor Accountability",
-          text: "SafetyCulture trusts the inspector; Audiment mathematically verifies them. Our Flash Verification system totally eliminates the possibility of off-site 'pencil whipping' ensuring your data is ironclad."
+          text: "SafetyCulture trusts the inspector; Audiment mathematically verifies them. Our proof of presence checks totally eliminate the possibility of off-site 'pencil whipping' ensuring your data is ironclad."
         },
         {
           title: "Multi-Location Native Focus",

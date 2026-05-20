@@ -7,11 +7,11 @@ import { Search } from 'lucide-react'
 
 export const metadata = {
   title: 'Audiment blog | Audit insights for operations leaders',
-  description: 'Expert field guides on multi-location audit management, FSSAI compliance, corrective action workflows, and verified audit practices – written for operations leaders who run distributed teams.',
+  description: 'Operator-focused field guides on multi-location audit management, operational consistency, FSSAI compliance, corrective actions, and proof-based audits.',
   alternates: { canonical: 'https://audiment.in/blog' },
   openGraph: {
     title: 'Audiment blog | Audit insights for operations leaders',
-    description: 'Expert field guides on multi-location audit management, FSSAI compliance, corrective action workflows, and verified audit practices – written for operations leaders who run distributed teams.',
+    description: 'Operator-focused field guides on multi-location audit management, operational consistency, FSSAI compliance, corrective actions, and proof-based audits.',
     url: 'https://audiment.in/blog',
     type: 'website',
     images: [{ url: 'https://audiment.in/opengraph-image', width: 1200, height: 630 }],
@@ -19,17 +19,22 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Audiment blog | Audit insights for operations leaders',
-    description: 'Expert field guides on multi-location audit management, FSSAI compliance, corrective action workflows, and verified audit practices – written for operations leaders who run distributed teams.',
+    description: 'Operator-focused field guides on multi-location audit management, operational consistency, FSSAI compliance, corrective actions, and proof-based audits.',
   },
   keywords: ['audit software', 'restaurant compliance', 'field audits', 'multi-location operations'],
 }
 
-export default async function BlogPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+export default async function BlogPage({ searchParams }: { searchParams: Promise<{ q?: string; c?: string }> }) {
   const posts = getAllPosts()
   const resolvedSearchParams = await searchParams
   const searchQuery = resolvedSearchParams?.q?.toLowerCase()
+  const categoryQuery = resolvedSearchParams?.c
 
   let filteredPosts = posts
+
+  if (categoryQuery) {
+    filteredPosts = filteredPosts.filter(p => p.category === categoryQuery)
+  }
 
   if (searchQuery) {
     filteredPosts = filteredPosts.filter(p =>
@@ -40,7 +45,18 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
   }
 
   const featuredPost = searchQuery ? null : posts.find(p => p.featured)
-  const displayPosts = searchQuery ? filteredPosts : filteredPosts.filter(p => p.slug !== featuredPost?.slug)
+  const displayPosts = searchQuery || categoryQuery ? filteredPosts : filteredPosts.filter(p => p.slug !== featuredPost?.slug)
+  const semanticOrder = [
+    "Operational Control",
+    "Operational Drift",
+    "Quality Consistency",
+    "Accountability",
+    "Compliance",
+    "Corrective Actions",
+    "Proof-Based Audits",
+  ]
+  const availableCategories = Array.from(new Set(posts.map(p => p.category)))
+  const semanticCategories = semanticOrder.filter(c => availableCategories.includes(c))
 
   return (
     <main id="main-content" className="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -50,7 +66,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">Audiment blog</h1>
           <p className="text-lg text-muted-foreground leading-relaxed font-medium">
-            Insights on audit management, compliance, and operational excellence for multi-location businesses.
+            Insights on audit management, quality consistency, and staying ahead of compliance for multi-location businesses.
           </p>
         </div>
 
@@ -84,6 +100,32 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
             <Link href="/blog" className="text-xs font-bold uppercase tracking-widest text-primary hover:text-primary/80 transition-colors">Clear Search</Link>
           </div>
         )}
+
+        {/* Semantic Categories */}
+        <div className="mb-14">
+          <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground mb-5">Explore by Topic</h2>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/blog"
+              className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+                !categoryQuery ? 'bg-primary/10 text-primary border-primary/20' : 'bg-card text-foreground border-border hover:border-primary/30'
+              }`}
+            >
+              All topics
+            </Link>
+            {semanticCategories.map((category) => (
+              <Link
+                key={category}
+                href={`/blog?c=${encodeURIComponent(category)}`}
+                className={`px-4 py-2 rounded-full text-xs font-semibold border transition-colors ${
+                  categoryQuery === category ? 'bg-primary/10 text-primary border-primary/20' : 'bg-card text-foreground border-border hover:border-primary/30'
+                }`}
+              >
+                {category}
+              </Link>
+            ))}
+          </div>
+        </div>
 
         {/* Featured Post Card */}
         {!searchQuery && featuredPost && (

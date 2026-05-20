@@ -25,18 +25,19 @@ const SITE_URL = "https://audiment.in";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: 'Audiment',
-  title: 'Proof-Based Audit Software for Multi-Location Businesses | Audiment',
+  title: 'Audit and Inspection Software for Multi-Location Businesses | Audiment',
   description:
-    'Audiment gives multi-location operators trustworthy operational visibility on every audit – mandatory photo evidence, proof of presence checks, automated CAPA workflows, and real-time compliance dashboards.',
+    'Audiment is audit and inspection software for multi-location businesses. Stay on top of quality and compliance across locations through proof-based audits, issue tracking, and corrective actions.',
   keywords: [
-    'audit management software',
-    'multi-location compliance',
-    'field audit app',
+    'audit and inspection software',
+    'multi-location audit software',
+    'quality consistency',
+    'operational consistency',
+    'proof-based audits',
     'corrective action tracking',
     'FSSAI audit software',
-    'evidence-based audit',
-    'mobile audit app',
-    'compliance dashboard',
+    'field audit app',
+    'multi-location compliance',
   ],
   alternates: {
     canonical: '/',
@@ -45,15 +46,15 @@ export const metadata: Metadata = {
     type: 'website',
     url: SITE_URL,
     siteName: 'Audiment',
-    title: 'Proof-Based Audit Software for Multi-Location Businesses | Audiment',
+    title: 'Audit and Inspection Software for Multi-Location Businesses | Audiment',
     description:
-      'Audiment gives multi-location operators trustworthy operational visibility on every audit – mandatory photo evidence, proof of presence checks, automated CAPA workflows, and real-time compliance dashboards.',
+      'Audiment is audit and inspection software for multi-location businesses. Stay on top of quality and compliance across locations through proof-based audits, issue tracking, and corrective actions.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Proof-Based Audit Software for Multi-Location Businesses | Audiment',
+    title: 'Audit and Inspection Software for Multi-Location Businesses | Audiment',
     description:
-      'Audiment gives multi-location operators trustworthy operational visibility on every audit – mandatory photo evidence, proof of presence checks, automated CAPA workflows, and real-time compliance dashboards.',
+      'Audiment is audit and inspection software for multi-location businesses. Stay on top of quality and compliance across locations through proof-based audits, issue tracking, and corrective actions.',
   },
   robots: {
     index: true,

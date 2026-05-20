@@ -1,0 +1,490 @@
+# Audiment — SEO, AEO & GEO Implementation Plan
+
+> **Reference:** `_docs/seo_aeo_guide.md` (Final CTO v2)
+> **Based on site audit of:** `src/app/` as of May 2026
+> **Rule:** No hallucination. No new categories. No enterprise jargon. No repositioning.
+
+---
+
+## What the guide establishes (non-negotiable)
+
+Before any work begins, these two sentences must be treated as locked:
+
+> **Positioning:** Audiment helps multi-location businesses stay on top of quality and compliance across locations.
+>
+> **Category:** Audiment is audit and inspection software for multi-location businesses.
+
+Every page, every metadata field, every FAQ answer, every schema block must reinforce this — and nothing else.
+
+---
+
+## Current State: What Already Exists
+
+| Asset | Status | Gap vs. Guide |
+|---|---|---|
+| Homepage (`page.tsx`) | ✅ Built | Title is "Audit Management Software" — guide says use discovery keyword + operational outcome formula. Hero H1 is in HeroSection component (unknown). No `Organization` schema with logo URL that resolves. Schema exists but `SoftwareApplication` description drifts from canonical. |
+| Root layout metadata | ✅ Built | Title/desc mostly aligned but not using the title formula from the guide. |
+| Solutions pages | ✅ 7 built | URLs are under `/solutions/` — guide recommends flat `/restaurant-audit-software`. These are commercial SEO pages; they exist but are thin: no question-based sections, no AEO FAQ blocks in-page, no internal links to operational-problem pages. |
+| Use-cases pages | ✅ 4 built | Under `/use-cases/` — guide recommends these map to **operational problem pages** (`/operational-drift`, `/hidden-operational-issues`, etc.). Current slugs are feature-named, not problem-named. |
+| Comparison pages | ✅ 4 built | Guide includes `/audiment-vs-checklist-apps` — not yet built. |
+| Platform pages | ❌ Missing | Guide calls for `/platform/proof-based-audits`, `/platform/issue-tracking`, etc. None exist. |
+| Operational problem pages | ❌ Missing | `/operational-drift`, `/hidden-operational-issues`, `/maintaining-standards-across-locations`, `/staying-ahead-of-compliance`, `/improving-accountability` — none exist. |
+| Commercial SEO pages | ⚠️ Partial | `/solutions/restaurant-audit-software` exists but guide also wants `/multi-location-audit-software`, `/fssai-audit-software`, `/healthcare-audit-software`. |
+| Internal linking | ❌ Missing | No systematic cross-linking between commercial pages → platform pages → operational problem pages. |
+| FAQ schema | ✅ Homepage only | Guide requires FAQ blocks on commercial pages, feature pages, and operational problem pages too. |
+| Breadcrumb schema | ❌ Missing | Required on all non-home pages. |
+| Sitemap | ✅ Built | Missing new pages (platform, operational problems). |
+| robots.txt | ❌ Unknown | Not found in audit — needs verification. |
+| Canonical tags | ✅ Partial | Present on some pages, needs audit across all. |
+
+---
+
+## Phase 1 — Foundation
+**Goal:** Fix what's broken and standardize what exists. No new pages. No content drift.
+
+### 1.1 Metadata System Rewrite
+
+**File:** `src/app/layout.tsx` and each page's `metadata` export.
+
+The guide defines a clear formula:
+```
+Title = [Discovery Keyword] + [Operational Outcome]
+Description = category + operational problem + operational mechanism + operational outcome
+```
+
+**What to change:**
+
+| Page | Current Title | Correct Title |
+|---|---|---|
+| Homepage | `Audit Management Software for Multi-Location Businesses \| Audiment` | `Audit and Inspection Software for Multi-Location Businesses \| Audiment` |
+| `/solutions/restaurant-audit-software` | `Restaurant Audit Software \| Audiment` | `Restaurant Audit Software \| Stay on Top of Operations Across Locations` |
+| `/solutions/franchise-audit-software` | `Franchise Audit Software \| Audiment` | `Franchise Compliance Software \| Maintain Standards Across Every Outlet` |
+| `/solutions/retail-audit-software` | `Retail Audit Software \| Audiment` | `Retail Audit Software \| Improve Operational Consistency Across Stores` |
+| `/solutions/hotel-audit-software` | `Hotel Audit Software \| Audiment` | `Hotel Audit Software \| Maintain Quality Standards Across Properties` |
+| `/solutions/food-safety-audit-software` | *(unknown)* | `Food Safety Audit Software \| Stay Ahead of Compliance Across Locations` |
+| `/solutions/qsr-audit-software` | *(unknown)* | `QSR Audit Software \| Operational Consistency for Quick Service Chains` |
+| `/solutions/manufacturing-audit-software` | *(unknown)* | `Manufacturing Audit Software \| Maintain Standards Across Facilities` |
+
+**Root layout description** (applies as fallback to all pages):
+> Audiment is audit and inspection software for multi-location businesses. Stay on top of quality and consistency across locations through proof-based audits, issue tracking, and accountability systems.
+
+**All meta descriptions must follow this four-part structure:**
+1. Category: "Audiment is audit and inspection software for..."
+2. Operational problem: "...where standards become harder to maintain as you scale."
+3. Mechanism: "Proof-based audits, issue tracking, and corrective actions..."
+4. Outcome: "...keep you on top of operations across every location."
+
+---
+
+### 1.2 Schema Cleanup and Completion
+
+**File:** `src/app/page.tsx` — `StructuredData()` function
+
+**Organization schema** — currently has `logo: "https://audiment.in/logo.png"` which does not resolve. Fix to use the actual `icon.svg` path or a public PNG.
+
+**SoftwareApplication schema** — current description says "evidence-backed audits" — this is fine mechanistically but the canonical description from the guide is:
+> "Audit and inspection software for multi-location businesses."
+
+Update `applicationCategory` to `"BusinessApplication"` (already correct) and add:
+```json
+"keywords": "multi-location audit software, inspection software, quality consistency, proof-based audits, corrective action tracking"
+```
+
+**Add `BreadcrumbList` schema** to every non-home page. Each solutions, use-cases, and compare page needs this. Structure:
+```json
+{
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://audiment.in" },
+    { "@type": "ListItem", "position": 2, "name": "Solutions", "item": "https://audiment.in/solutions" },
+    { "@type": "ListItem", "position": 3, "name": "Restaurant Audit Software", "item": "https://audiment.in/solutions/restaurant-audit-software" }
+  ]
+}
+```
+
+**FAQ schema** — currently only on homepage. Add to every solutions page using the existing `SolutionPageTemplate` — pass schema-ready FAQ data and inject a `<Script>` block with `FAQPage` schema from each page's `faqs` prop.
+
+---
+
+### 1.3 Homepage Narrative Alignment
+
+**File:** `src/app/page.tsx`
+
+The homepage is well-built structurally. The narrative flow mostly matches the guide. These are the specific corrections:
+
+**Section 1 — Hero**
+The actual H1 lives in `HeroSection` (`src/components/ui/hero-section-3.tsx`). Verify it matches one of these directions from the guide:
+- "Stay on top of operations across every location."
+- "Audit and inspection software for multi-location businesses."
+- "Manage quality and compliance across locations."
+
+Do NOT use "Transform your operations" or anything motivational.
+
+**Section 2 — Problem** (`id="problem"`)
+Current H2: *"Why multi-location audits break down"* — acceptable. 
+Current three problem cards cover WhatsApp chaos, inconsistent reporting, unresolved corrective actions — these map directly to guide items. ✅
+
+**Section 3 — Solution**
+Current H2: *"Audiment gives you operational clarity."* — this is fine.
+Current three pillars: Execution consistency, Branch-level visibility, Issue resolution — these are aligned. ✅
+
+**Section 4 — How It Works**
+Current: 6-step audit lifecycle — this is the "mechanism" section the guide calls for. ✅
+
+**Missing from homepage:** An explicit section connecting the concepts the guide wants reinforced:
+- proof-based audits → reliable operational inputs
+- operational inputs → operational patterns
+- operational patterns → earlier issue detection
+- earlier issue detection → operational control
+
+This relationship chain should appear as a short visual/textual block somewhere between the problem and mechanism sections. It doesn't need to be complex — 4 connected statements is enough.
+
+**Section 5 — Operational Failures**
+The six failure scenarios (temperature logs skipped, etc.) are good. They match "hidden operational issues" territory. ✅
+
+**Footer nav links** — currently points only to `#features`, `#how-it-works`, `#use-cases`, `#blog`, `#contact`. Once new pages exist (Phase 2), add links to solutions index and key commercial pages.
+
+---
+
+### 1.4 Technical SEO Baseline
+
+These are infrastructure items that need confirmation before Phase 2 begins:
+
+**robots.txt**
+- Verify `public/robots.txt` exists and is correct.
+- Must allow all crawlers, reference sitemap URL.
+
+**Sitemap**
+- `src/app/sitemap.ts` exists and covers current pages. ✅
+- Will need updates as Phase 2 adds new routes.
+
+**Canonical tags**
+- Audit every page for `alternates: { canonical: '...' }` in metadata.
+- Homepage has it. Solutions pages have it. Verify use-cases and compare pages.
+
+**Image alt text**
+- Any `<img>` or `next/image` without `alt` must be fixed.
+- All decorative images should have `alt=""`.
+
+**Heading hierarchy**
+- Each page must have exactly one `<h1>`. Solutions pages use `SolutionPageTemplate` — verify that component produces a single H1.
+
+---
+
+### Phase 1 Deliverables Checklist
+
+- [ ] Root layout metadata updated (title formula + canonical description)
+- [ ] All 7 solutions pages: titles rewritten to guide formula
+- [ ] All solutions pages: meta descriptions follow 4-part structure
+- [ ] Homepage structured data: Organization logo fixed
+- [ ] Breadcrumb schema added to all solutions pages
+- [ ] FAQ schema added to all solutions pages (from existing `faqs` prop)
+- [ ] Hero H1 verified and aligned
+- [ ] Concept-chain block added to homepage
+- [ ] robots.txt confirmed present and correct
+- [ ] Canonical tags audited across all pages
+- [ ] Image alt text audit complete
+- [ ] Heading hierarchy verified on all pages
+
+**Estimated effort:** 2–3 focused sessions. No new pages, no new components.
+
+---
+
+## Phase 2 — Semantic Expansion
+**Goal:** Build the missing content layer. Add pages the guide requires. Establish internal linking.
+
+> [!IMPORTANT]
+> Do not start Phase 2 until Phase 1 is complete and verified. Phase 2 pages depend on correct internal link targets from Phase 1 pages.
+
+### 2.1 Platform Pages (Feature Pages)
+
+The guide calls for `/platform/` pages. These explain the operational system components — not marketing copy. Think: accountability systems, visibility tools, consistency mechanisms.
+
+**Pages to create:**
+
+| Route | Primary topic | Connects to |
+|---|---|---|
+| `/platform/proof-based-audits` | What proof-based audits are, why they matter, how they work | All solutions pages |
+| `/platform/issue-tracking` | How issue tracking works end-to-end | Solutions + corrective actions use-case |
+| `/platform/corrective-actions` | Corrective action workflows, SLA system | Solutions pages |
+| `/platform/operational-dashboards` | What visibility looks like from each role | Solutions pages |
+| `/platform/geo-verified-audits` | Geo-verification, why it matters | Solutions pages |
+
+**Page structure per the guide (Commercial SEO Page layers):**
+1. Discovery match — what this feature is
+2. Operational pain — why it matters at scale
+3. Hidden failure — what happens without it
+4. Operational system — how Audiment solves it
+5. Operational outcome — what you can do now
+
+**Tone:** Operationally mature. Not a feature spec sheet. Not startup copy. These pages should feel like product documentation written by someone who understands operations.
+
+**AEO requirement on every platform page:**
+- Minimum one question-based section heading (e.g. "What is a proof-based audit?")
+- A concise direct answer block (2–4 sentences, no jargon)
+- FAQ schema block (3–5 questions)
+
+---
+
+### 2.2 Operational Problem Pages
+
+The guide explicitly requires these. They are not feature pages — they describe operational realities that operators recognize.
+
+**Pages to create:**
+
+| Route | What it covers |
+|---|---|
+| `/operational-drift` | What operational drift is, how it happens silently, how to detect and stop it |
+| `/hidden-operational-issues` | Why problems stay hidden until escalation, what enables that, what prevents it |
+| `/maintaining-standards-across-locations` | The core challenge of multi-location consistency |
+| `/staying-ahead-of-compliance` | Proactive vs. reactive compliance, FSSAI context |
+| `/improving-accountability` | Accountability systems, what breaks down without them |
+
+**These pages serve two purposes:**
+1. AEO: AI systems retrieve these when users ask "how do multi-location businesses maintain consistency" type questions.
+2. Internal link targets: Every commercial solutions page should link to the relevant operational problem page.
+
+**Page structure:**
+- H1: The operational problem, stated plainly (e.g. "Operational Drift in Multi-Location Businesses")
+- What it is (concise definition)
+- How it happens (operational reality, not theory)
+- What it costs (business impact, no hype)
+- How audit systems address it
+- Internal link to relevant platform page + relevant solutions page
+- FAQ block
+
+**Tone check:** These pages should feel like something an operations director would recognize immediately. No startup voice. No "game-changing solutions."
+
+---
+
+### 2.3 Missing Commercial SEO Pages
+
+The guide lists these pages that don't exist yet:
+
+| Route | Notes |
+|---|---|
+| `/multi-location-audit-software` | This is the **highest-priority** commercial page — it's the core category keyword |
+| `/fssai-audit-software` | High relevance for India market; FSSAI content already exists in FAQ |
+| `/healthcare-audit-software` | Healthcare mentioned in use cases on homepage but no dedicated page |
+
+> [!NOTE]
+> `/multi-location-audit-software` is arguably more important than any vertical-specific page. It directly captures the category-defining keyword and reinforces Audiment's canonical positioning.
+
+These pages follow the same 5-layer commercial SEO structure:
+1. Discovery match
+2. Operational pain
+3. Hidden failure
+4. Operational system
+5. Operational outcome
+
+Each also needs:
+- FAQ schema
+- Breadcrumb schema
+- Internal links to platform pages and operational problem pages
+
+---
+
+### 2.4 Missing Comparison Page
+
+The guide lists `/audiment-vs-checklist-apps` — not yet built. Four comparison pages exist; add this one.
+
+This page should compare Audiment against generic checklist apps (Google Forms, Excel, WhatsApp groups) rather than named software. It addresses the most common objection: "why not just use a checklist app?"
+
+---
+
+### 2.5 Internal Linking System
+
+This is the most important structural work in Phase 2. The guide calls this out explicitly:
+
+> `/restaurant-audit-software` → links to `/operational-drift`, `/proof-based-audits`, `/issue-tracking`, `/staying-ahead-of-compliance`, `/improving-accountability`
+
+**Build the full map:**
+
+```
+Commercial Pages (solutions/)
+  → Platform Pages (/platform/)
+  → Operational Problem Pages (/)
+  
+Platform Pages (/platform/)
+  → Relevant Commercial Pages
+  → Related Platform Pages
+  
+Operational Problem Pages (/)
+  → Platform Pages that solve the problem
+  → Commercial Pages for relevant verticals
+```
+
+**Implementation:** Add a `RelatedContent` component that renders 3–4 contextual links at the bottom of each page. Not a generic "you might also like" — specific, labelled links tied to the page's topic.
+
+---
+
+### 2.6 Sitemap Update
+
+Once all Phase 2 pages are created, `sitemap.ts` needs new entries with correct priorities:
+
+- Platform pages: `priority: 0.8`
+- Operational problem pages: `priority: 0.8`
+- `/multi-location-audit-software`: `priority: 0.9`
+- `/fssai-audit-software`: `priority: 0.8`
+
+---
+
+### Phase 2 Deliverables Checklist
+
+- [ ] 5 platform pages created (`/platform/*`)
+- [ ] 5 operational problem pages created (root-level)
+- [ ] `/multi-location-audit-software` created
+- [ ] `/fssai-audit-software` created
+- [ ] `/healthcare-audit-software` created
+- [ ] `/compare/audiment-vs-checklist-apps` created
+- [ ] FAQ schema on every new page
+- [ ] Breadcrumb schema on every new page
+- [ ] `RelatedContent` component built and added to all commercial pages
+- [ ] Internal link map fully implemented
+- [ ] Sitemap updated
+
+**Estimated effort:** 4–6 sessions. Each page is medium-length content + schema.
+
+---
+
+## Phase 3 — Authority Compounding
+**Goal:** Build semantic memory. Teach Google and AI systems that Audiment owns operational control for multi-location businesses.
+
+> [!NOTE]
+> Phase 3 activities have longer feedback loops. Most won't show results for 60–120 days. Start Phase 1 and 2 first.
+
+### 3.1 Semantic Consistency Audit (GEO)
+
+The guide's GEO requirement is simple: Audiment should not describe itself differently across surfaces.
+
+**Audit these surfaces for semantic consistency:**
+- Homepage
+- All solutions pages
+- LinkedIn company page description
+- LinkedIn posts (tone and terminology)
+- YouTube channel description and video descriptions
+- Any press mentions or directory listings
+
+**The eight terms that must appear consistently:**
+1. operational control
+2. operational consistency
+3. quality consistency
+4. issue visibility
+5. reducing operational drift
+6. staying ahead of compliance
+7. accountability
+8. proof-based audits
+
+> `operational oversight` is acceptable but secondary. Prefer: *stay on top of operations*, *operational consistency*, *visibility into issues*, *operational control*.
+
+If any surface uses different terminology ("streamline," "supercharge," "transform"), replace it with the above.
+
+---
+
+### 3.2 Thought Leadership Content
+
+The guide calls for operational thought leadership — not product marketing, not startup inspiration.
+
+**What this looks like:**
+- Blog posts that answer operational questions operators actually ask
+- Written at the level of a senior operations director, not a software marketer
+
+**Topic territories (grounded in the guide's AEO question examples):**
+- "How do restaurant chains maintain consistency across 50 locations?"
+- "What is operational drift and how does it happen?"
+- "How do multi-location businesses stay in control as they scale?"
+- "What makes a proof-based audit different from a standard checklist audit?"
+- "Why do corrective actions fail in multi-location operations?"
+
+**Format:** Long-form (1,200–2,000 words). Question-based headings. Concise answer paragraphs. Internal links to platform pages and operational problem pages.
+
+---
+
+### 3.3 AI-Search Optimization
+
+The guide identifies this as a Phase 3 priority. In practice, it means:
+
+**Make Audiment's answers retrievable by AI systems:**
+- Every FAQ block on every page answers the question directly in the first sentence
+- No preamble. No "Great question!" No "It depends."
+- Answers are 2–5 sentences. Complete. Self-contained.
+- FAQ schema on every commercial, feature, and operational problem page ensures structured retrieval.
+
+**Concept chains (from the guide):**
+These must appear as actual written content somewhere on the site — not just implied:
+> Proof-based audits → reliable operational inputs → operational patterns → earlier issue detection → operational control
+
+This chain should appear on the homepage, on the `/proof-based-audits` platform page, and in at least two blog posts.
+
+---
+
+### 3.4 Topical Authority Expansion
+
+Once the core pages are established, expand into adjacent queries:
+
+**New commercial pages (later):**
+- `/logistics-audit-software`
+- `/facility-management-audit-software`
+- `/franchise-brand-standard-software` (distinct from franchise compliance)
+
+**New operational problem pages (later):**
+- `/audit-manipulation` (addresses self-reporting problem)
+- `/reactive-operations` (vs. proactive operational oversight)
+- `/no-centralized-accountability`
+
+---
+
+### Phase 3 Deliverables Checklist
+
+- [ ] GEO consistency audit: all surfaces checked
+- [ ] LinkedIn description updated to canonical positioning
+- [ ] YouTube descriptions updated
+- [ ] 5+ thought leadership blog posts published
+- [ ] Concept chain content present on homepage + platform page
+- [ ] AI-search FAQ audit: all FAQ answers are direct, first-sentence answers
+- [ ] Topical expansion pages scoped (not necessarily built yet)
+
+---
+
+## Semantic Rules (Apply to All Phases)
+
+These are not stylistic preferences — they are structural requirements from the guide.
+
+**Always use:**
+- "multi-location businesses"
+- "proof-based audits"
+- "quality consistency" — commercially immediate for restaurants, franchises, retail, healthcare
+- "operational consistency"
+- "stay on top of operations" — primary framing for oversight/control
+- "operational control"
+- "operational drift"
+- "issue visibility"
+- "accountability"
+- "corrective actions"
+- "audit and inspection software"
+
+**Use sparingly (secondary, not lead):**
+- "operational oversight" — acceptable but slightly enterprise-y; prefer the above
+
+**Never use:**
+- "operational infrastructure" — internal concept only; operators don't say this
+- "transform your operations"
+- "game-changing"
+- "AI-powered" (unless specifically accurate)
+- "streamline" (vague)
+- "supercharge"
+- "next-generation"
+- enterprise jargon: "synergize," "leverage," "scalable solutions"
+- motivational tone: "unlock your potential," "take control today"
+
+---
+
+## Final Objective (from the guide)
+
+> The website should eventually teach Google, AI systems, and operators that:
+>
+> Audiment = operational control across locations, operational consistency, accountability, issue visibility, and reducing operational drift.
+>
+> Enabled by: proof-based audits, operational tracking, and corrective actions.
+>
+> The ideal long-term association: *"How do multi-location businesses stay in control as they scale?"* → Audiment.

@@ -105,7 +105,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/use-cases/mobile-audit-app',
-        destination: '/use-cases/field-audit-app',
+        destination: '/use-cases/audit-checklist-software',
         permanent: true,
       },
     ];

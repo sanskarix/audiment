@@ -60,7 +60,7 @@ export function ContactSection() {
                         Get in touch
                     </h2>
                     <p className="text-xl text-neutral-500 max-w-2xl mx-auto">
-                        Ready to scale your audits? Let's get in touch.
+                        Tell us about your operation and we&apos;ll walk you through how Audiment fits.
                     </p>
                 </div>
 

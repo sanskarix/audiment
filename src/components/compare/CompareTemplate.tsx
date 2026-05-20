@@ -5,53 +5,47 @@ import { Footer } from '@/components/ui/modem-animated-footer'
 interface CompareProps {
   competitor: string
   heroH1: string
+  heroSubtext?: string
   whereAudimentWins: { title: string, text: string }[]
   whoShouldChooseCompetitor: { title: string, text: string }[]
-  features: {
-    audiment: {
-      photoEvidence: string
-      geoTagged: string
-      autoCA: string
-      trendDetection: string
-      fssaiReady: string
-      pdfReports: string
-      offline: string
-      roleBased: string
-      pricing: string
-    }
-    competitor: {
-      photoEvidence: string
-      geoTagged: string
-      autoCA: string
-      trendDetection: string
-      fssaiReady: string
-      pdfReports: string
-      offline: string
-      roleBased: string
-      pricing: string
-    }
+  migrationReality?: {
+    timeline: string
+    effort: string
+    support: string
+  }
+  operationalDifferences: {
+    area: string
+    audiment: string
+    competitor: string
+  }[]
+  operationalOutcomeDifference?: {
+    title: string
+    text: string
   }
 }
 
 export default function CompareTemplate({
   competitor,
   heroH1,
+  heroSubtext,
   whereAudimentWins,
   whoShouldChooseCompetitor,
-  features
+  migrationReality,
+  operationalDifferences,
+  operationalOutcomeDifference,
 }: CompareProps) {
   const faqs = [
     {
       question: `Is Audiment a direct alternative to ${competitor}?`,
-      answer: `Yes, Audiment is designed as a more modern, compliance-focused alternative to ${competitor}, particularly for multi-location food, retail, and manufacturing enterprises.`
+      answer: `Yes. Both serve multi-location audit management. The differences are in how each platform handles accountability workflows, evidence collection, and rollout complexity – which is what matters most during day-to-day operations.`
     },
     {
-      question: "How easy is the migration process?",
-      answer: "We offer dedicated onboarding specialists who can instantly digitize your existing checklists and import your operational hierarchy into Audiment."
+      question: "How does the migration process work?",
+      answer: "Our onboarding team digitizes your existing checklists and imports your location hierarchy. Most teams are running their first audits on Audiment within 1-2 weeks, often in parallel with their existing system."
     },
     {
-      question: "Can we run a parallel trial?",
-      answer: "Absolutely. We encourage operations teams to run Audiment simultaneously in a few locations to physically compare interface speed and reporting capabilities."
+      question: "Can we run a trial in a few locations first?",
+      answer: "Yes, and we recommend it. Most teams start with 3-5 locations to validate the workflow, then expand once managers are comfortable with the interface."
     }
   ]
 
@@ -75,54 +69,53 @@ export default function CompareTemplate({
       <section className="pt-32 pb-20 bg-muted/20 border-b border-border text-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold mb-6 uppercase tracking-wide text-sm border border-primary/20">
-            Compare Software
+            Comparison
           </span>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-balance text-heading">
             {heroH1}
           </h1>
-          <p className="text-xl text-muted-foreground mb-10 text-balance">
-            Looking for {competitor} alternatives? Here is a transparent, feature-by-feature comparison demonstrating how Audiment provides unparalleled field operational oversight.
+          <p className="text-xl text-muted-foreground mb-10 text-balance max-w-2xl mx-auto">
+            {heroSubtext || `Evaluating ${competitor}? Here's a practical comparison focused on operational outcomes, rollout realities, and how each platform handles accountability.`}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/#contact" className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all shadow-lg hover:-translate-y-0.5">
-              Book a Strategy Call
+              Book a Comparison Call
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Comparison Table */}
+      {/* Operational Differences – replaces feature matrix */}
       <section className="py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-card border border-border rounded-2xl shadow-xl overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[700px]">
-            <thead>
-              <tr className="bg-muted/40">
-                <th className="py-6 px-8 font-bold text-lg text-heading w-1/3 border-b border-border">Feature Capabilities</th>
-                <th className="py-6 px-8 font-bold text-xl text-primary bg-primary/5 border-b border-l border-border w-1/3">Audiment</th>
-                <th className="py-6 px-8 font-bold text-xl text-heading w-1/3 border-b border-l border-border">{competitor}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              <Row title="Mandatory Photo Evidence" aud={features.audiment.photoEvidence} comp={features.competitor.photoEvidence} />
-              <Row title="Geo-Tagged Verification" aud={features.audiment.geoTagged} comp={features.competitor.geoTagged} />
-              <Row title="Auto Corrective Actions" aud={features.audiment.autoCA} comp={features.competitor.autoCA} />
-              <Row title="Trend Detection Analytics" aud={features.audiment.trendDetection} comp={features.competitor.trendDetection} />
-              <Row title="FSSAI-Ready Templates" aud={features.audiment.fssaiReady} comp={features.competitor.fssaiReady} />
-              <Row title="Offline Execution" aud={features.audiment.offline} comp={features.competitor.offline} />
-              <Row title="Role-Based Access" aud={features.audiment.roleBased} comp={features.competitor.roleBased} />
-              <Row title="PDF Reports Export" aud={features.audiment.pdfReports} comp={features.competitor.pdfReports} />
-              <Row title="Pricing Model" aud={features.audiment.pricing} comp={features.competitor.pricing} />
-            </tbody>
-          </table>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4 text-heading">How they differ in practice</h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">Not a feature checklist – a look at how each platform handles the operational areas that matter most to multi-location teams.</p>
+        </div>
+        <div className="space-y-6">
+          {operationalDifferences.map((diff, i) => (
+            <div key={i} className="bg-card border border-border rounded-2xl p-8 shadow-sm">
+              <h3 className="font-bold text-lg mb-4 text-heading">{diff.area}</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
+                  <span className="text-sm font-semibold text-primary block mb-2">Audiment</span>
+                  <p className="text-foreground leading-relaxed">{diff.audiment}</p>
+                </div>
+                <div className="p-4 rounded-xl bg-muted/50 border border-border">
+                  <span className="text-sm font-semibold text-muted-foreground block mb-2">{competitor}</span>
+                  <p className="text-muted-foreground leading-relaxed">{diff.competitor}</p>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Pros & Cons Sections */}
+      {/* Operational Strengths */}
       <section className="py-24 bg-muted/20 border-y border-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-16">
           <div className="bg-card p-10 rounded-3xl border border-border shadow-lg">
              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 text-primary mb-6 text-2xl font-bold">✓</div>
-             <h2 className="text-3xl font-bold mb-8 text-heading">Where Audiment Wins</h2>
+             <h2 className="text-3xl font-bold mb-8 text-heading">Where Audiment is stronger</h2>
              <ul className="space-y-8">
                {whereAudimentWins.map((win, i) => (
                  <li key={i}>
@@ -135,7 +128,7 @@ export default function CompareTemplate({
           
           <div className="p-10 rounded-3xl border border-border bg-background">
              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-muted text-muted-foreground mb-6 text-2xl font-bold">ℹ</div>
-             <h2 className="text-3xl font-bold mb-8 text-heading">Who Should Choose {competitor}?</h2>
+             <h2 className="text-3xl font-bold mb-8 text-heading">When {competitor} may be a better fit</h2>
              <ul className="space-y-8">
                {whoShouldChooseCompetitor.map((con, i) => (
                  <li key={i}>
@@ -148,13 +141,61 @@ export default function CompareTemplate({
         </div>
       </section>
 
+      {/* Operational Outcome Difference */}
+      {operationalOutcomeDifference && (
+        <section className="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-card border border-border rounded-2xl p-8 md:p-10">
+            <h2 className="text-2xl font-bold mb-4 text-heading">{operationalOutcomeDifference.title}</h2>
+            <p className="text-muted-foreground leading-relaxed">{operationalOutcomeDifference.text}</p>
+          </div>
+        </section>
+      )}
+
+      {/* Migration Reality */}
+      {migrationReality && (
+        <section className="py-24">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold mb-12 text-center text-heading">What switching actually looks like</h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="p-8 rounded-2xl bg-card border border-border text-center">
+                <span className="text-4xl font-bold text-heading block mb-3">{migrationReality.timeline}</span>
+                <p className="text-muted-foreground font-medium">Typical rollout timeline</p>
+              </div>
+              <div className="p-8 rounded-2xl bg-card border border-border text-center">
+                <span className="text-4xl font-bold text-heading block mb-3">{migrationReality.effort}</span>
+                <p className="text-muted-foreground font-medium">Internal effort required</p>
+              </div>
+              <div className="p-8 rounded-2xl bg-card border border-border text-center">
+                <span className="text-4xl font-bold text-heading block mb-3">{migrationReality.support}</span>
+                <p className="text-muted-foreground font-medium">Onboarding support</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* FAQs */}
+      <section className="py-24 bg-muted/10 border-t border-border">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold mb-12 text-center text-heading">Common questions when comparing</h2>
+          <div className="grid gap-6 md:grid-cols-1">
+            {faqs.map((faq, idx) => (
+              <div key={idx} className="bg-card border border-border p-8 rounded-2xl shadow-sm">
+                <h3 className="font-bold text-lg mb-3 text-heading">{faq.question}</h3>
+                <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-24 text-center">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-extrabold mb-6 text-heading tracking-tight">Make the Switch Today</h2>
-          <p className="text-xl text-muted-foreground mb-10">Stop paying for legacy platforms that don't prevent pencil-whipping. Start using Audiment.</p>
+          <h2 className="text-4xl font-extrabold mb-6 text-heading tracking-tight">See how they compare in your workflow</h2>
+          <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">Walk through a live demo with our team. We&apos;ll map your existing audit process and show you exactly where the operational differences show up.</p>
           <Link href="/#contact" className="inline-flex items-center px-12 py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg hover:bg-primary/90 transition-all shadow-xl hover:-translate-y-1">
-             Request Migration Audit
+             Book a Comparison Call
           </Link>
         </div>
       </section>
@@ -175,15 +216,5 @@ export default function CompareTemplate({
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
     </div>
-  )
-}
-
-function Row({ title, aud, comp }: { title: string, aud: string, comp: string }) {
-  return (
-    <tr className="hover:bg-muted/10 transition-colors">
-      <td className="py-5 px-8 font-semibold text-heading border-border">{title}</td>
-      <td className="py-5 px-8 bg-primary/[0.02] border-l border-border font-medium text-foreground">{aud}</td>
-      <td className="py-5 px-8 border-l border-border text-muted-foreground">{comp}</td>
-    </tr>
   )
 }

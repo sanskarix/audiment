@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Terms of Service – Audiment",
   description: "Terms and conditions governing your use of the Audiment platform.",
   robots: "index, follow",
+  alternates: { canonical: 'https://audiment.in/terms-of-service' }
 };
 
 export default function TermsOfServicePage() {

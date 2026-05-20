@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Cookie Policy – Audiment",
   description: "How Audiment uses cookies and tracking technologies on its website.",
   robots: "index, follow",
+  alternates: { canonical: 'https://audiment.in/cookie-policy' }
 };
 
 export default function CookiePolicyPage() {

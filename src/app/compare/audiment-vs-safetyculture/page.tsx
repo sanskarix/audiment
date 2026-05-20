@@ -1,8 +1,8 @@
 import CompareTemplate from '@/components/compare/CompareTemplate'
 
 export const metadata = {
-  title: 'Audiment vs SafetyCulture | Verified multi-location audits vs a generic platform',
-  description: 'Audiment vs SafetyCulture (iAuditor) – see why franchise operators and multi-location food businesses choose Audiment for GPS-verified auditor presence, 48-hour CAPA SLAs, and FSSAI-ready templates.',
+  title: 'Audiment vs SafetyCulture (iAuditor) | Multi-Location Audit Comparison',
+  description: 'Audiment is audit and inspection software built specifically for multi-location operational control. See how Audiment compares to SafetyCulture on evidence verification, corrective action workflows, and multi-location oversight.',
   alternates: { canonical: 'https://audiment.in/compare/audiment-vs-safetyculture' }
 }
 
@@ -10,55 +10,68 @@ export default function CompareSafetyCulture() {
   return (
     <CompareTemplate
       competitor="SafetyCulture (iAuditor)"
-      heroH1="Audiment vs SafetyCulture (iAuditor) – Software Comparison"
-      features={{
-        audiment: {
-          photoEvidence: "Strict enforcement; utilizes proof of presence checks",
-          geoTagged: "Yes, blocks submission if off-site natively",
-          autoCA: "Yes, advanced SLA logic built-in natively",
-          trendDetection: "Yes, specifically tailored for multi-location",
-          fssaiReady: "Deeply specialized FSSAI modules out of the box",
-          pdfReports: "Instant, customized branded generation",
-          offline: "Flawless offline-first synchronization",
-          roleBased: "Advanced RBAC for massive franchisee hierarchies",
-          pricing: "Transparent per-location pricing (unlimited users)"
-        },
-        competitor: {
-          photoEvidence: "Supported, but lacks proof of presence enforcement",
-          geoTagged: "Basic tagging, easily bypassed on some devices",
-          autoCA: "Yes, but often requires manual review processes",
-          trendDetection: "Strong, though generalized across all industries",
-          fssaiReady: "Requires heavy manual custom template building",
-          pdfReports: "Standard PDF generation",
-          offline: "Supported with occasional sync delays in large files",
-          roleBased: "Complex to manage across franchise boundaries",
-          pricing: "Typically per-user pricing (scales expensively)"
-        }
+      heroH1="Audiment vs SafetyCulture (iAuditor)"
+      heroSubtext="SafetyCulture is a strong, established platform with broad industry coverage. If you're running 20+ food, retail, or franchise locations, here's how the two platforms differ in practice."
+      migrationReality={{
+        timeline: "1–2 weeks",
+        effort: "Minimal",
+        support: "Dedicated onboarding"
       }}
+      operationalDifferences={[
+        {
+          area: "Evidence collection",
+          audiment: "Photo evidence is mandatory per question – auditors must use the live camera. Gallery uploads are blocked. You see what actually happened, not a stock photo from last week.",
+          competitor: "Photo evidence is supported but optional. Auditors can skip photo items or upload from their gallery, which reduces the reliability of the evidence."
+        },
+        {
+          area: "Auditor presence verification",
+          audiment: "GPS-verified presence checks require a geo-tagged video and selfie from the location. If the auditor isn't on-site, the system flags it before submission.",
+          competitor: "GPS tagging is available, but audits can still be submitted from off-site locations without blocking."
+        },
+        {
+          area: "Corrective action workflow",
+          audiment: "Failed items auto-generate tasks with SLA deadlines. The system escalates unresolved issues automatically – first to the branch manager, then regionally.",
+          competitor: "Corrective actions are available but typically require manual assignment and follow-up. Escalation paths need additional configuration."
+        },
+        {
+          area: "Multi-location visibility",
+          audiment: "Dashboards are built around branch-level comparison, regional trends, and repeat-failure detection across your network. Designed for 20–500 location operations.",
+          competitor: "Analytics are strong but generalized across all industries. Multi-location ranking and regional trending may require custom report building."
+        },
+        {
+          area: "Pricing structure",
+          audiment: "Per-location pricing – unlimited users per location. Adding a new shift manager doesn't change your cost.",
+          competitor: "Per-user pricing. Costs increase as you onboard more frontline staff, which can scale unpredictably for large operations."
+        }
+      ]}
       whereAudimentWins={[
         {
-          title: "Auditor Accountability",
-          text: "SafetyCulture trusts the inspector; Audiment mathematically verifies them. Our proof of presence checks totally eliminate the possibility of off-site 'pencil whipping' ensuring your data is ironclad."
+          title: "Execution verification, not just data collection",
+          text: "SafetyCulture excels at data collection. Audiment goes further by verifying that the person actually walked the floor. GPS-based presence checks confirm the auditor was at the location."
         },
         {
-          title: "Multi-Location Native Focus",
-          text: "Audiment's dashboard is explicitly built for operations directors managing 50+ locations, providing immediate comparative ranking tools that generic platforms lack."
+          title: "Built for multi-location operations",
+          text: "Audiment's dashboard is designed for operations directors managing distributed networks. Comparative ranking, regional trend lines, and branch-level scoring are native to the interface."
         },
         {
-          title: "Predictable Cost Scaling",
-          text: "Charging per user penalizes you for growth and discourages you from giving all front-line staff access. Our per-location pricing means you can onboard your entire workforce safely."
+          title: "Predictable cost at scale",
+          text: "Per-location pricing means you can give every shift manager access without worrying about seat costs scaling unexpectedly."
         }
       ]}
       whoShouldChooseCompetitor={[
         {
-          title: "Aviation or Oil & Gas Operations",
-          text: "SafetyCulture's legacy in heavy industrial and aviation sectors provides specific sensor integrations that fall outside Audiment's primary multi-location retail and food safety focus."
+          title: "Heavy industrial or aviation operations",
+          text: "SafetyCulture has deep roots in construction, mining, and aviation with specific sensor integrations and compliance frameworks outside Audiment's primary focus areas."
         },
         {
-          title: "Single Location Operators",
-          text: "If you only manage one building and have a team of 4 people, a simpler iAuditor free tier might suffice over an enterprise governance platform."
+          title: "Single-location teams",
+          text: "If you manage one or two locations with a small team, SafetyCulture's free tier may be sufficient. Audiment is designed for the complexity of managing compliance across many locations."
         }
       ]}
+      operationalOutcomeDifference={{
+        title: "Operational Outcome Difference",
+        text: "Generic checklist systems are strong at collecting responses, but weaker at creating reliable operational inputs and accountable issue closure across locations. Proof-based audits and corrective-action enforcement improve issue visibility, reduce operational drift, and strengthen operational control over time."
+      }}
     />
   )
 }

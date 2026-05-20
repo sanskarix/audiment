@@ -14,7 +14,7 @@ interface Testimonial {
 // --- Data ---
 const testimonials: Testimonial[] = [
   {
-    text: "Audiment helped us enforce brand standards across our properties without flying area managers out every week. The GPS-verified photos are completely foolproof.",
+    text: "Audiment helped us standardize brand compliance across our properties without flying area managers out every week. The GPS-verified photos give us real confidence in what we're seeing.",
     image: "",
     name: "Rahul S.",
     role: "Regional Director, Best Western Plus",
@@ -32,7 +32,7 @@ const testimonials: Testimonial[] = [
     role: "Fleet Operations Head, VRL Logistics",
   },
   {
-    text: "We rolled out Audiment to all our franchise locations in under a month. It's given us ground-truth visibility into food safety and cleanliness, ensuring a consistent customer experience.",
+    text: "We rolled out Audiment to all our franchise locations in under a month. It's given us verified visibility into food safety and cleanliness, ensuring a consistent customer experience across the network.",
     image: "",
     name: "Sneha K.",
     role: "VP of Operations, Tom & Chee",
@@ -56,7 +56,7 @@ const testimonials: Testimonial[] = [
     role: "Supply Chain Director, VRL Logistics",
   },
   {
-    text: "No more pencil-whipping. The mandatory photo evidence feature ensures our teams are actually verifying temperatures and prep stations, not just signing off.",
+    text: "No more guesswork. The mandatory photo evidence ensures our teams are actually verifying temperatures and prep stations, not just signing off from memory.",
     image: "",
     name: "Aditya M.",
     role: "Food Safety Manager, Tom & Chee",

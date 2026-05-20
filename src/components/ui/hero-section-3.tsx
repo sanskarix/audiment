@@ -61,12 +61,12 @@ export function HeroSection({ userRole }: { userRole?: string | null }) {
                             >
                                 <h1
                                     className="text-balance text-5xl font-semibold sm:text-6xl md:text-7xl tracking-tight leading-[1.1]">
-                                    Audit management software<br />
-                                    <span className="text-neutral-400">for every location you run</span>
+                                    Audit and inspection software<br />
+                                    <span className="text-neutral-400">for multi-location businesses</span>
                                 </h1>
 
                                 <p className="mx-auto mt-6 max-w-5xl text-pretty text-xl text-neutral-600">
-                                    Enforce photo evidence, verify auditor presence, and turn failed checks into automated actions across every branch.
+                                    Stay on top of quality and consistency across every location. Proof-based audits, issue tracking, corrective actions, and accountability systems — built for businesses running multiple locations.
                                 </p>
 
                                 <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -76,7 +76,7 @@ export function HeroSection({ userRole }: { userRole?: string | null }) {
                                                 userRole === 'admin' ? '/dashboard/admin' :
                                                     userRole === 'manager' ? '/dashboard/manager' :
                                                         userRole === 'auditor' ? '/dashboard/auditor' : '/login'
-                                            }>Go to app</Link>
+                                            }>Dashboard</Link>
                                         </Button>
                                     ) : (
                                         <Button asChild size="lg" className="rounded-full px-8 h-12 text-base">

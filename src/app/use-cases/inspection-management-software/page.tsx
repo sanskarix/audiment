@@ -1,8 +1,8 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 
 export const metadata = {
-  title: 'Audiment | Inspection management that schedules, verifies, and closes the loop',
-  description: 'Audiment manages the full inspection lifecycle – automated scheduling, GPS-verified execution, SLA-tracked corrective actions, and predictive analytics across every branch.',
+  title: 'Inspection Management Software | Operational Oversight Across Every Location',
+  description: 'Audiment is audit and inspection software for multi-location businesses. Unstructured inspections produce unreliable data. Scheduled, evidence-backed inspections with full lifecycle tracking give you operational visibility from assignment to resolution.',
   alternates: { canonical: 'https://audiment.in/use-cases/inspection-management-software' }
 }
 
@@ -11,56 +11,61 @@ export default function InspectionManagementSoftware() {
     <UseCaseTemplate
       title="Inspection Management Software"
       heroH1="Inspection Management Software – Schedule, Execute and Track Every Inspection"
-      heroSubheadline="Schedule recurring checks, enforce proof-of-presence, and automatically assign follow-ups. Build an inspection workflow that actually guarantees standards are met at every outlet."
-      primaryKeyword="inspection management software"
+      heroSubheadline="An inspection only has value if it was actually done on-site, recorded honestly, and followed by action. Audiment manages all three."
+      primaryKeyword="inspection management"
+      operationalScenario={{
+        title: "When inspections stop being a formality",
+        before: "Your area manager is scheduled for 8 store visits this week. They visit 5, spend 15 minutes each, and complete the other 3 inspections from the regional office based on last week's memory. You receive 8 green reports. Three of those stores haven't actually been inspected.",
+        after: "Each inspection requires GPS-verified presence and live photo evidence. You can see exactly which locations were physically visited, when the auditor arrived and left, and what they actually found. The 3 unvisited stores show as incomplete – not as false passes."
+      }}
       features={[
         {
-          title: "Rigid Execution Scheduling",
-          description: "Auto-deploy daily opening checklists, weekly hygiene runs, and monthly deep-dives directly to the correct role. Prevent essential checks from being skipped."
+          title: "Automated Scheduling",
+          description: "Deploy daily opening checklists, weekly hygiene runs, and monthly deep-dives to the correct role at each location automatically. Essential checks can't be skipped or forgotten."
         },
         {
-          title: "Mandatory Evidence Capture",
-          description: "Inspections require live, geo-tagged photo proof per question. You can't just check a box from the back office without physically verifying the equipment."
+          title: "Verified Execution",
+          description: "Inspections require live, geo-tagged photo evidence per question. The inspector must physically verify the condition – not just check a box from memory."
         },
         {
           title: "Dynamic Escalation Paths",
-          description: "If a fire safety inspection fails, the system bypasses the store manager and alerts facilities maintenance instantly to resolve the high-risk hazard."
+          description: "If a fire safety inspection fails, the system can bypass the store manager and alert facilities maintenance directly, matching the severity to the right response team."
         }
       ]}
       benefits={[
         {
-          title: "Enforce Physical Presence",
-          description: "Stop paying area managers to fill out forms in their car. Force physical presence and objective verification on the actual store floor."
+          title: "Verified On-Site Execution",
+          description: "GPS checks and on-site evidence confirm the inspector actually walked the floor. Inspections reflect real conditions, not recalled observations."
         },
         {
-          title: "Track Resolution Realities",
-          description: "See exactly how long it takes a specific branch to fix a critical failure after the inspection is submitted, identifying slow operational responses."
+          title: "Track Resolution Speed",
+          description: "See exactly how long it takes each branch to fix a critical failure after the inspection is submitted. Identify which locations consistently respond slowly."
         },
         {
-          title: "Scale Audit Capabilities",
-          description: "Run 10x more routine inspections using your front-line staff without sacrificing the integrity of the compliance data sent to corporate."
+          title: "Scale Without Sacrificing Quality",
+          description: "Enable front-line staff to run routine inspections while area managers focus on complex audits. The evidence quality remains consistent regardless of who conducts the inspection."
         }
       ]}
       faqs={[
         {
           question: "How does the software verify that inspections actually happened on-site?",
-          answer: "Audiment logs hardware GPS coordinates, server-locked timestamps, and disables gallery uploads. Auditors must physically stand at the location and take live photos/videos."
+          answer: "GPS location is checked against the registered branch address. Photos must be taken live on-site – gallery uploads are disabled. If the auditor isn't at the location, the system flags it."
         },
         {
           question: "Can we use this for third-party auditing partners?",
-          answer: "Yes. You can create restricted auditor accounts for external consultants, allowing them to log their official findings directly into your dashboard."
+          answer: "Yes. You can create restricted auditor accounts for external consultants, giving them access to log findings directly into your system."
         },
         {
           question: "What happens if a critical inspection is missed?",
-          answer: "If a mandatory scheduled check is missed, the system automatically triggers an alert to the Area Manager or Regional Director, preventing silent drifts in compliance."
+          answer: "The system triggers an alert to the Area Manager or Regional Director. Missed mandatory checks don't disappear – they show as overdue until completed."
         },
         {
           question: "Can I customize the corrective action workflow?",
-          answer: "Absolutely. You can define specific SLA resolution windows, escalation pathways, and the exact photo proof required for different severity levels."
+          answer: "Yes. You define resolution windows, escalation pathways, and evidence requirements for different severity levels."
         },
         {
-          question: "Does it help pass government regulatory inspections?",
-          answer: "Yes. Keeping a digital, timestamped log of FSSAI temperature checks, clean kitchen sweeps, and fire safety logs proves consistent daily execution to government health inspectors."
+          question: "Does it help with regulatory inspections?",
+          answer: "Yes. A digital, timestamped log of daily compliance checks – with photo evidence – demonstrates consistent execution to government inspectors far more convincingly than paper records."
         }
       ]}
     />

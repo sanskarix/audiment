@@ -11,9 +11,9 @@ const features = [
   {
     icon: Camera,
     category: "Evidence",
-    title: "Photo and video evidence enforcement",
-    heading: "No evidence, no submission.",
-    description: "Every audit question can require mandatory photo or video proof before the auditor can proceed. No evidence, no submission.",
+    title: "Photo and video evidence on every audit",
+    heading: "Evidence that shows real conditions.",
+    description: "Mark any audit question as evidence-required. Auditors capture live photos or video on-site before they can move on. You see exactly what your branches look like – not what someone says they look like.",
     imageUrl: "/images/photoevidence.jpeg",
   },
   {
@@ -35,9 +35,9 @@ const features = [
   {
     icon: Video,
     category: "Verification",
-    title: "Flash verification – prove your auditor was there",
-    heading: "1 minute of uneditable truth.",
-    description: "Auditors record a 1-minute geo-tagged video and verified selfie from the field. Tamper-proof proof of presence at every location.",
+    title: "Verified auditor presence",
+    heading: "Verified presence at every audit.",
+    description: "Auditors record a short geo-tagged video and selfie from the location. This confirms they were on-site when the audit was completed.",
     imageUrl: "/images/flash.jpeg",
   },
   {
@@ -60,16 +60,16 @@ const features = [
     icon: Eye,
     category: "Reporting",
     title: "One-click PDF audit reports",
-    heading: "See how branches run when no one's watching.",
-    description: "Export complete audit reports as high-fidelity PDFs including all questions, answers, photo evidence, scores, and corrective action status.",
+    heading: "Complete audit documentation, ready to share.",
+    description: "Export complete audit reports as detailed PDFs including all questions, responses, photo evidence, scores, and corrective action status. Ready for inspectors or internal review.",
     imageUrl: "/images/reports.jpeg",
   },
   {
     icon: MapPin,
     category: "Audit Trail",
     title: "Permanent audit trail",
-    heading: "Proof they were actually there.",
-    description: "Every audit, photo, score, and corrective action is permanently stored and searchable. Full compliance history at your fingertips.",
+    heading: "A complete, searchable record.",
+    description: "Every audit, photo, score, and corrective action is permanently stored and searchable. Pull up any location's compliance history in seconds.",
     imageUrl: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070&auto=format&fit=crop",
   },
 ];

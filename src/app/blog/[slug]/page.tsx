@@ -118,7 +118,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent"></div>
                 <div className="relative z-10">
                   <h3 className="text-2xl md:text-3xl font-bold mb-6">Ready to digitize your audit process?</h3>
-                  <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto leading-relaxed">Join hundreds of multi-location businesses using Audiment to ensure compliance.</p>
+                  <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto leading-relaxed">See how multi-location teams use proof-based audits and corrective actions to stay on top of quality and compliance.</p>
                   <Link href="/#contact" className="inline-flex h-14 items-center justify-center px-10 bg-primary text-primary-foreground text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-xl shadow-primary/25">
                     Book a call with Audiment
                   </Link>

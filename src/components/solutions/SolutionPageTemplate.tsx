@@ -41,6 +41,9 @@ interface Props {
   relatedIndustryLinks: { title: string, href: string }[]
   workflowSteps?: WorkflowStep[]
   operationalBottlenecks?: string[]
+  breadcrumbLabel?: string
+  canonicalPath?: string
+  crossLinks?: { title: string; href: string; description: string; tag?: string }[]
 }
 
 export default function SolutionPageTemplate({
@@ -56,6 +59,9 @@ export default function SolutionPageTemplate({
   relatedIndustryLinks,
   workflowSteps,
   operationalBottlenecks,
+  breadcrumbLabel,
+  canonicalPath,
+  crossLinks,
 }: Props) {
   // Schema for FAQ
   const faqSchema = {
@@ -71,6 +77,17 @@ export default function SolutionPageTemplate({
     }))
   };
 
+  // Breadcrumb schema
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://audiment.in" },
+      { "@type": "ListItem", "position": 2, "name": "Solutions", "item": "https://audiment.in/solutions" },
+      { "@type": "ListItem", "position": 3, "name": breadcrumbLabel || `${industry} Audit Software`, "item": canonicalPath ? `https://audiment.in${canonicalPath}` : "https://audiment.in/solutions" }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
@@ -83,8 +100,8 @@ export default function SolutionPageTemplate({
       {/* Pain Points */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4 text-heading">The challenges holding your operations back</h2>
-          <p className="text-muted-foreground text-xl">Traditional systems fail when subjected to the reality of scale.</p>
+          <h2 className="text-3xl font-bold mb-4 text-heading">The operational challenges you&apos;re dealing with</h2>
+          <p className="text-muted-foreground text-xl max-w-2xl mx-auto">These are the problems that get worse as you add locations – not better.</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           {painPoints.map((point, idx) => (
@@ -102,8 +119,8 @@ export default function SolutionPageTemplate({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-6 text-heading">How Audiment solves it</h2>
-              <p className="text-xl text-muted-foreground mb-10">We've built the ultimate platform to transform your field execution and guarantee compliance standards everywhere.</p>
+              <h2 className="text-3xl font-bold mb-6 text-heading">How Audiment addresses this</h2>
+              <p className="text-xl text-muted-foreground mb-10">The specific capabilities that close the gap between what you expect and what actually happens on the floor.</p>
               <div className="space-y-10">
                 {features.map((feature, idx) => (
                   <div key={idx} className="flex gap-6">
@@ -120,7 +137,7 @@ export default function SolutionPageTemplate({
                <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-background to-secondary/20 opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
                <div className="text-center z-10 p-8 glass rounded-2xl shadow-lg border border-white/10 dark:border-white/5">
                  <h3 className="text-2xl font-bold mb-3 text-heading">Interactive Checklists</h3>
-                 <p className="text-muted-foreground">Automated logic, mandatory photos, & flash verification.</p>
+                 <p className="text-muted-foreground">Conditional logic, mandatory photos, and verified presence.</p>
                </div>
             </div>
           </div>
@@ -133,7 +150,7 @@ export default function SolutionPageTemplate({
           <div className="grid lg:grid-cols-2 gap-16">
             {operationalBottlenecks && (
               <div>
-                <h2 className="text-3xl font-bold mb-8 text-heading">Managerial Bottlenecks We Remove</h2>
+                <h2 className="text-3xl font-bold mb-8 text-heading">The bottlenecks this removes</h2>
                 <ul className="space-y-4">
                   {operationalBottlenecks.map((bottleneck, idx) => (
                     <li key={idx} className="flex items-start gap-4 p-4 rounded-xl bg-card border border-border">
@@ -147,7 +164,7 @@ export default function SolutionPageTemplate({
             
             {workflowSteps && (
               <div>
-                <h2 className="text-3xl font-bold mb-8 text-heading">The Issue-Resolution Workflow</h2>
+                <h2 className="text-3xl font-bold mb-8 text-heading">The issue → resolution workflow</h2>
                 <div className="space-y-6">
                   {workflowSteps.map((step, idx) => (
                     <div key={idx} className="relative pl-8 border-l-2 border-border last:border-transparent pb-6 last:pb-0">
@@ -166,15 +183,15 @@ export default function SolutionPageTemplate({
       {/* Sample Checklist */}
       <section className="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-heading">Sample {industry} Audit Checklist</h2>
-          <p className="text-muted-foreground text-xl">Transform static PDFs into powerful digital workflows mapped to standard operating procedures.</p>
+          <h2 className="text-3xl font-bold mb-4 text-heading">Sample {industry} audit checklist</h2>
+          <p className="text-muted-foreground text-xl max-w-2xl mx-auto">A preview of the kind of operational standards you can digitize and track with Audiment.</p>
         </div>
         <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-muted/50 border-b border-border">
-                <th className="py-5 px-6 font-semibold text-sm uppercase tracking-wider text-muted-foreground">Area / Category</th>
-                <th className="py-5 px-6 font-semibold text-sm uppercase tracking-wider text-muted-foreground">Checklist Item Verification</th>
+                <th className="py-5 px-6 font-semibold text-sm uppercase tracking-wider text-muted-foreground">Area</th>
+                <th className="py-5 px-6 font-semibold text-sm uppercase tracking-wider text-muted-foreground">Checklist Item</th>
               </tr>
             </thead>
             <tbody>
@@ -192,7 +209,7 @@ export default function SolutionPageTemplate({
       {/* FAQs */}
       <section className="py-24 bg-muted/20 border-t border-border">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-12 text-center text-heading">Frequently Asked Questions</h2>
+          <h2 className="text-3xl font-bold mb-12 text-center text-heading">Frequently asked questions</h2>
           <div className="grid gap-6 md:grid-cols-2">
             {faqs.map((faq, idx) => (
               <div key={idx} className="bg-card border border-border p-8 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
@@ -206,8 +223,8 @@ export default function SolutionPageTemplate({
 
       {/* CTA & Internal Links */}
       <section className="py-32 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-balance">
-        <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-heading tracking-tight">Ready to digitize your {industry.toLowerCase()} audits?</h2>
-        <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">Stop managing compliance with paper. Join top operators ensuring impeccable execution across every location.</p>
+        <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-heading tracking-tight">See how this works for {industry.toLowerCase()} operations</h2>
+        <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">Walk through a live demo mapped to your specific workflow. Our team will show you exactly how Audiment fits your operation.</p>
         <Link href="/#contact" className="inline-flex items-center px-12 py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg hover:bg-primary/90 transition-all shadow-xl hover:shadow-primary/30 mb-20 hover:-translate-y-1">
           Book a Discovery Call
         </Link>
@@ -235,6 +252,32 @@ export default function SolutionPageTemplate({
         </div>
       </section>
 
+      {/* Cross-links: Platform pages + Operational problem pages */}
+      {crossLinks && crossLinks.length > 0 && (
+        <section className="py-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-6">Platform &amp; related topics</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {crossLinks.map((link, i) => (
+              <Link
+                key={i}
+                href={link.href}
+                className="group p-5 rounded-xl border border-border bg-card hover:border-primary/40 hover:shadow-md transition-all"
+              >
+                {link.tag && (
+                  <span className="inline-block text-xs font-semibold text-primary uppercase tracking-wider mb-1">
+                    {link.tag}
+                  </span>
+                )}
+                <h3 className="font-semibold text-sm mb-1 text-heading group-hover:text-primary transition-colors leading-snug">
+                  {link.title}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">{link.description}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       <Footer
         brandName="Audiment"
         navLinks={[
@@ -250,6 +293,7 @@ export default function SolutionPageTemplate({
       />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
     </div>
   )
 }

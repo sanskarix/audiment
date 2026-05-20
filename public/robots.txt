@@ -1,7 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /login
+Disallow: /test-recording
+Disallow: /test-scoring
 
-# Allow major AI crawlers
+# AI Crawlers
 User-agent: GPTBot
 Allow: /
 
@@ -20,9 +25,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-# Sitemap
 Sitemap: https://audiment.in/sitemap.xml
-Disallow: /admin/
-Disallow: /manager/
-Disallow: /auditor/
-Disallow: /api/

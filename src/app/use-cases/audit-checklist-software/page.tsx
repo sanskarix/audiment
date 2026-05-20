@@ -1,8 +1,8 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 
 export const metadata = {
-  title: 'Audiment | Digital audit checklists that enforce photo evidence, not just tick-boxes',
-  description: 'Audiment replaces paper checklists with smart digital audit forms – conditional logic, mandatory photo requirements, weighted scoring, and instant distribution to every location.',
+  title: 'Audit Checklist Software | Maintain Consistent Standards Across Locations',
+  description: 'Audiment is audit and inspection software for multi-location businesses. Paper checklists create inconsistency at scale. Digital audit forms with conditional logic, photo evidence, and weighted scoring give you reliable operational data from every location.',
   alternates: { canonical: 'https://audiment.in/use-cases/audit-checklist-software' }
 }
 
@@ -11,56 +11,61 @@ export default function AuditChecklistSoftware() {
     <UseCaseTemplate
       title="Digital Audit Checklist Software"
       heroH1="Digital Audit Checklist Software – Build, Assign and Track Checklists at Scale"
-      heroSubheadline="Retire paper clipboards permanently. Build, distribute, and track digital audit checklists that enforce photo evidence and prove physical presence."
-      primaryKeyword="digital audit checklist software"
+      heroSubheadline="Paper checklists tell you everything passed. Digital checklists with photo evidence show you what actually happened. There's a difference."
+      primaryKeyword="digital audit checklists"
+      operationalScenario={{
+        title: "The gap between a checked box and a verified standard",
+        before: "Your opening checklist has 25 items. The kitchen manager checks all 25 in 3 minutes – without leaving the office. The paper says 'pass'. The walk-in freezer has been at -12°C instead of -18°C for a week. You find out when inventory spoils.",
+        after: "The same checklist now requires a live photo of the freezer thermometer. The manager can't submit without it. When the photo shows -12°C, a corrective action is auto-created with a 24-hour SLA. You see the issue the same morning – not when it becomes a write-off."
+      }}
       features={[
         {
-          title: "Operational Logic Builders",
-          description: "Build dynamic workflows. If a fridge fails a temp check, the checklist automatically expands to trigger the spoilage reporting protocol."
+          title: "Conditional Logic Builders",
+          description: "Build dynamic workflows where questions adapt based on previous answers. If a fridge fails a temp check, the checklist expands to trigger the spoilage reporting protocol automatically."
         },
         {
-          title: "Proof-Enforced Questions",
-          description: "Mark high-risk items as evidence-mandatory. The audit cannot be submitted without a live, timestamped photo proving the physical state."
+          title: "Evidence-Mandatory Questions",
+          description: "Mark high-risk items as photo-required. The audit cannot be submitted without a live, timestamped photo proving the physical state of that specific checkpoint."
         },
         {
-          title: "Tamper-Proof Timestamps",
-          description: "Every interaction is logged against server time and GPS coordinates, creating an airtight accountability trail that cannot be pencil-whipped."
+          title: "Server-Verified Timestamps",
+          description: "Every interaction is logged against server time and GPS coordinates, creating a reliable accountability trail that shows exactly when and where each check was performed."
         }
       ]}
       benefits={[
         {
           title: "Actionable Data, Not Dead Forms",
-          description: "Paper checklists go into a cabinet to die. Digital checklists feed live trend dashboards showing you exactly where systemic failures occur."
+          description: "Paper checklists go into a cabinet and stay there. Digital checklists feed live trend dashboards showing you exactly where systemic failures keep recurring."
         },
         {
           title: "Instant Root-Cause Identification",
-          description: "Stop guessing why customer complaints are rising on weekends. Cross-reference shift audit scores with performance data instantly."
+          description: "Stop guessing why customer complaints rise on weekends. Cross-reference shift audit scores with performance data to see the pattern immediately."
         },
         {
           title: "Frictionless Staff Adoption",
-          description: "Front-line employees don't need extensive training. The mobile interface guides them step-by-step through the exact operational standard required."
+          description: "Front-line employees don't need training sessions. The mobile interface guides them step-by-step through the exact operational standard required. Tap pass or fail, take a photo, move on."
         }
       ]}
       faqs={[
         {
           question: "How do we import our existing Excel sheets or PDFs?",
-          answer: "Our onboarding team routinely imports legacy spreadsheets and paper checklists, digitizing them into smart, interactive Audiment templates in under 48 hours."
+          answer: "Our onboarding team routinely digitizes legacy spreadsheets and paper checklists into smart Audiment templates, usually within 48 hours of kickoff."
         },
         {
-          question: "Can we block managers from using their gallery images?",
-          answer: "Yes. Gallery uploads are completely blocked by default. Auditors must use the live in-app camera to prove the audit is happening in real time."
+          question: "Can we prevent staff from uploading old photos?",
+          answer: "Yes. Gallery uploads are blocked by default. Auditors must use the live in-app camera, ensuring the evidence represents the current state."
         },
         {
           question: "Does it support offline audit runs?",
-          answer: "Absolutely. Auditors can carry out full checklist runs without cell service or Wi-Fi. The device pings the internal clock and hardware GPS, syncing once online."
+          answer: "Yes. Audits continue offline and sync automatically once the device reconnects."
         },
         {
           question: "How does scoring work?",
-          answer: "You can assign custom weights to each question. The software aggregates individual responses into a clean percentage score, flagging critical compliance failures."
+          answer: "You assign custom weights to each question. The software aggregates responses into a percentage score, flagging critical compliance failures separately from minor issues."
         },
         {
           question: "Can reports be shared with supervisors or health inspectors?",
-          answer: "Yes. Completed checklist runs instantly generate a clean PDF report containing all photos, notes, timestamps, and locations, ready to export or print."
+          answer: "Yes. Completed audits instantly generate a PDF report containing all photos, notes, timestamps, and locations, ready to export or share."
         }
       ]}
     />

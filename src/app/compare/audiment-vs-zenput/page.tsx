@@ -1,8 +1,8 @@
 import CompareTemplate from '@/components/compare/CompareTemplate'
 
 export const metadata = {
-  title: 'Audiment vs Zenput | FSSAI-native audits vs a US-centric enterprise suite',
-  description: 'Audiment vs Zenput (Crunchtime) – how Audiment\'s proof of presence checks, native FSSAI templates, and agile deployment compare against Zenput for Indian and Asian multi-location operators.',
+  title: 'Audiment vs Zenput (Crunchtime) | Multi-Location Audit Comparison',
+  description: 'Audiment is audit and inspection software built specifically for multi-location operational control. See how Audiment compares to Zenput on deployment speed, FSSAI compliance, and quality consistency for APAC operations.',
   alternates: { canonical: 'https://audiment.in/compare/audiment-vs-zenput' }
 }
 
@@ -10,51 +10,64 @@ export default function CompareZenput() {
   return (
     <CompareTemplate
       competitor="Crunchtime (Zenput)"
-      heroH1="Audiment vs Zenput – Multi-Location Platform Comparison"
-      features={{
-        audiment: {
-          photoEvidence: "Impenetrable anti-spoofing logic via proof of presence checks",
-          geoTagged: "Yes, requires physical location presence securely",
-          autoCA: "Immediate SLA escalation triggers",
-          trendDetection: "Real-time interactive dashboard aggregation",
-          fssaiReady: "Comprehensive Indian food safety logic included",
-          pdfReports: "Customizable dynamic reporting instantly",
-          offline: "Flawless offline image and video staging",
-          roleBased: "Advanced franchisee isolation layers",
-          pricing: "Transparent per-location SaaS model"
-        },
-        competitor: {
-          photoEvidence: "Strong photo requirements supported natively",
-          geoTagged: "Yes, utilizing standard device location",
-          autoCA: "Very strong task management system",
-          trendDetection: "Powerful enterprise analytics suite",
-          fssaiReady: "More US-centric FDA/Health Dept focus",
-          pdfReports: "Available",
-          offline: "Good offline capabilities",
-          roleBased: "Excellent enterprise management hierarchy",
-          pricing: "Often high-ticket enterprise contracts"
-        }
+      heroH1="Audiment vs Zenput (Crunchtime)"
+      heroSubtext="Zenput – now part of Crunchtime – is an established enterprise platform for restaurant operations. If you're evaluating it for your APAC or Indian operations, here's a practical comparison of what each platform offers."
+      migrationReality={{
+        timeline: "1–2 weeks",
+        effort: "Minimal",
+        support: "Dedicated onboarding team"
       }}
+      operationalDifferences={[
+        {
+          area: "Deployment and rollout",
+          audiment: "Browser-based – no app downloads, no device management. Most teams go from kickoff to live audits in 1-2 weeks without IT involvement.",
+          competitor: "Enterprise deployment with deeper IT integration. Rollouts typically take longer and may require internal project management."
+        },
+        {
+          area: "FSSAI and Indian compliance",
+          audiment: "Pre-built FSSAI Schedule 4 templates available out of the box. Designed for Indian food safety requirements without reconfiguration.",
+          competitor: "Built primarily around US FDA and food safety standards. Using it for FSSAI compliance requires custom template building and reconfiguration."
+        },
+        {
+          area: "Evidence verification",
+          audiment: "Photo evidence is mandatory per question. GPS-based presence checks verify the auditor was at the location before submission.",
+          competitor: "Strong photo requirements supported. Standard device location verification available."
+        },
+        {
+          area: "Analytics and visibility",
+          audiment: "Real-time multi-location dashboards with regional comparison and trend detection. Built for operations directors managing distributed networks.",
+          competitor: "Powerful enterprise analytics suite with deep reporting. Strongest when integrated with the broader Crunchtime ecosystem."
+        },
+        {
+          area: "Pricing",
+          audiment: "Transparent per-location SaaS pricing. No enterprise contracts or minimum commitments.",
+          competitor: "Enterprise contracts, typically higher ticket with longer sales cycles. Best suited for organizations with dedicated procurement processes."
+        }
+      ]}
       whereAudimentWins={[
         {
-          title: "Implementation Speed & Scalability",
-          text: "Deploying legacy enterprise suites can take quarters and heavy IT involvement. Audiment's intuitive builder and zero-training mobile app allow massive regional chains to scale compliance frameworks in days."
+          title: "Implementation speed",
+          text: "Enterprise platforms like Crunchtime can take months to deploy with significant IT involvement. Audiment's browser-based approach means no app downloads, no device management, and no hardware procurement."
         },
         {
-          title: "Operational Realism in APAC",
-          text: "Audiment is natively built for the operational realities of Indian and Southeast Asian markets, meaning FSSAI compliance and high-turnover staff training work out-of-the-box rather than requiring custom reconfiguration."
+          title: "APAC market fit",
+          text: "Audiment is built for the operational realities of Indian and Southeast Asian markets. FSSAI compliance, high-turnover staff workflows, and regional management structures work out of the box."
         },
         {
-          title: "Verified Execution vs Data Collection",
-          text: "While legacy platforms are excellent at collecting data, Audiment enforces execution. Our proof of presence ensures that the hygiene check was actually performed physically, creating a higher standard of trustworthy operational visibility."
+          title: "Execution verification",
+          text: "Enterprise platforms are excellent at collecting and organizing data. Audiment adds a verification layer – GPS-based presence checks and mandatory photo evidence create a higher standard of operational reliability."
         }
       ]}
       whoShouldChooseCompetitor={[
         {
-          title: "Extensive Crunchtime Ecosystem Users",
-          text: "Since Zenput was acquired by Crunchtime, organizations already heavily invested in the broader Crunchtime back-office inventory and labor suite will benefit from their native integrations."
+          title: "Organizations deep in the Crunchtime ecosystem",
+          text: "If your business already uses Crunchtime's inventory, labor, and back-office suite, Zenput's native integrations with that ecosystem may provide more value than a standalone audit platform."
         }
       ]}
+      operationalOutcomeDifference={{
+        title: "Operational Outcome Difference",
+        text: "Broad enterprise systems can organize complex data, but multi-location operators still need verified execution and accountable closure at branch level. Proof-based audits and corrective actions improve issue visibility, reduce operational drift, and support more consistent operational control."
+      }}
     />
   )
 }

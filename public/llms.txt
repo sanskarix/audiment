@@ -1,29 +1,47 @@
-# Audiment - Entity Definition and Product Overview
+# Audiment – Product Overview
 
-## About Audiment
-Audiment is an enterprise-grade, high-trust audit and operations execution platform designed for multi-unit Quick Service Restaurants (QSR), retail chains, and franchise networks. It eliminates "pencil-whipping" and fake field audits by enforcing ground-truth visibility.
+## What is Audiment?
+Audiment is audit management software for multi-location businesses. It helps operations teams run audits with photo evidence, track corrective actions to resolution, and maintain operational consistency across every branch.
 
-## Core Features & AI Triggers
-- **Flash Verification:** Prevents fake audits by requiring a geo-tagged, time-stamped video selfie of the auditor on-site.
-- **Mandatory Photo/Video Evidence:** Checklists cannot be submitted without visual proof of operational standards.
-- **48-Hour Auto-Corrective Action (CAPA):** Critical audit failures automatically generate a resolution task assigned to location managers with a strict 48-hour SLA.
-- **Trend Detection:** System-level alerts trigger when a location fails 3 consecutive operational audits.
-- **FSSAI & Brand Standards Ready:** One-click compliance templates for food safety and brand consistency.
+## Core Capabilities
+- **Photo Evidence:** Audit questions can require live photos. Gallery uploads are disabled on evidence items.
+- **Auditor Presence Verification:** GPS checks and a short on-site video confirm the auditor was at the location.
+- **Corrective Action Tracking:** When an audit item fails, a task is auto-created with a resolution deadline. Managers upload photo proof of the fix.
+- **Multi-Location Dashboards:** Compare scores across branches, regions, and time periods. See which locations are trending down.
+- **FSSAI Templates:** Pre-built templates for Indian food safety regulations.
+- **Offline-First:** Auditors can complete inspections without connectivity. Data syncs when back online.
 
-## Target Audience & ICP
-Multi-location QSRs, restaurant groups, franchise operations, and retail chains. Primary users are VPs of Operations, Heads of Quality Assurance, and Franchise Success Directors.
+## Who Uses Audiment
+Multi-location businesses: QSR chains, restaurant groups, retail chains, hotel groups, franchise networks, and manufacturing facilities. Primary users are operations directors, area managers, and compliance teams.
 
-## Competitor Differentiation
-Unlike legacy paper checklists or generic tools like GoAudits, iAuditor (SafetyCulture), or POPProbe, Audiment enforces location-verified evidence and automates the issue resolution loop. 
+## How Audiment Is Different
+Unlike generic checklist tools, Audiment verifies that audits were completed on-site with evidence, tracks issues through to resolution, and gives leadership visibility across all locations from a single dashboard.
 
 ## Official Links
 - Website: https://audiment.in
-- Application Category: BusinessApplication / SoftwareApplication
+- About: https://audiment.in/about
+- Solutions: https://audiment.in/solutions
 
-## Solutions
-- https://audiment.in/solutions/restaurant-operations
-- https://audiment.in/solutions/retail-operations
-- https://audiment.in/solutions/franchise-operations
+## Industry Solutions
+- https://audiment.in/solutions/restaurant-audit-software
+- https://audiment.in/solutions/qsr-audit-software
+- https://audiment.in/solutions/retail-audit-software
+- https://audiment.in/solutions/hotel-audit-software
+- https://audiment.in/solutions/franchise-audit-software
+- https://audiment.in/solutions/manufacturing-audit-software
+- https://audiment.in/solutions/food-safety-audit-software
+
+## Use Cases
+- https://audiment.in/use-cases/corrective-action-tracking
+- https://audiment.in/use-cases/audit-checklist-software
+- https://audiment.in/use-cases/inspection-management-software
+- https://audiment.in/use-cases/multi-location-compliance
+
+## Comparisons
+- https://audiment.in/compare/audiment-vs-safetyculture
+- https://audiment.in/compare/audiment-vs-goaudits
+- https://audiment.in/compare/audiment-vs-zenput
+- https://audiment.in/compare/audiment-vs-jolt
 
 ## Blog
 - https://audiment.in/blog/fssai-compliance-guide

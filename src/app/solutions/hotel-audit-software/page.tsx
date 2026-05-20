@@ -1,8 +1,8 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'Audiment for hotels | Guest-experience standards enforced at every property',
-  description: 'Audiment gives hotel groups verified compliance across housekeeping, F&B, and safety – photo-evidenced inspections, automated maintenance corrective actions, and real-time portfolio dashboards.',
+  title: 'Hotel Audit Software | Maintain Quality Standards Across Properties',
+  description: 'Audiment is audit and inspection software for hotel groups. Guest experience and service standards vary across properties without systematic oversight. Proof-based audits and corrective action workflows give you visibility and accountability across every property.',
   alternates: { canonical: 'https://audiment.in/solutions/hotel-audit-software' }
 }
 
@@ -11,7 +11,7 @@ export default function HotelAuditSoftware() {
     <SolutionPageTemplate
       industry="Hotels & Hospitality"
       heroH1="Hotel Audit Software – Maintain Guest Experience Standards at Every Property"
-      heroSubheadline="Eliminate the friction between corporate standards and physical execution. From housekeeping to fine dining, hold every property accountable."
+      heroSubheadline="Guest satisfaction depends on consistency across every property. From housekeeping to F&B to engineering – Audiment gives your operations team verified visibility into daily execution at each location."
       painPoints={[
         {
           title: "Inconsistent Guest Experience",
@@ -19,11 +19,11 @@ export default function HotelAuditSoftware() {
         },
         {
           title: "Housekeeping Standards Varying By Property",
-          description: "Without strict digital checklists enforcing standards, room cleanliness drops, leading directly to negative OTA reviews."
+          description: "Without structured digital checklists guiding standards, room cleanliness drops, leading directly to negative OTA reviews."
         },
         {
           title: "Safety Compliance Blind Spots",
-          description: "Managing pool safety logs, fire extinguisher checks, and boiler room maintenance on paper leaves the corporation dangerously exposed to massive liabilities."
+          description: "Pool safety logs, fire extinguisher checks, and boiler maintenance on paper leaves gaps. If something goes wrong, you don't have a defensible record."
         }
       ]}
       features={[
@@ -33,17 +33,17 @@ export default function HotelAuditSoftware() {
         },
         {
           title: "Multi-Department Workflows",
-          description: "If an auditor spots a broken AC during a room inspection, Audiment instantly alerts the Chief Engineer, completely bypassing slow email chains."
+          description: "If an auditor spots a broken AC during a room inspection, the engineering team gets an alert with photos and a deadline – no email chains needed."
         },
         {
-          title: "Brand Audit Protection",
-          description: "Arm your Area General Managers with standardized corporate iPad audits, ensuring local managers cannot hide operational deficiencies."
+          title: "Standardized Corporate Audits",
+          description: "Give Area General Managers consistent, standardized audit templates for property visits. Scores are comparable across the portfolio because every property is measured against the same standard."
         }
       ]}
       operationalBottlenecks={[
         "Disconnected departments (housekeeping vs maintenance) missing issues until a guest complains.",
         "Area managers rating properties subjectively during high-level walkthroughs.",
-        "Preventative maintenance schedules not being physically verified.",
+        "Preventative maintenance schedules not being verified with evidence.",
         "Shift handovers leaving unresolved issues for the next shift to discover."
       ]}
       workflowSteps={[
@@ -78,14 +78,22 @@ export default function HotelAuditSoftware() {
         },
         {
           question: "Does it support offline room inspections?",
-          answer: "Yes. Many hotel corridors and service elevators have poor Wi-Fi. Auditors can complete full inspections offline, syncing automatically when back in the lobby."
+          answer: "Yes. Audits continue offline and sync automatically once the device reconnects."
         }
       ]}
       relatedBlogLink="/blog/multi-location-compliance-guide"
+      breadcrumbLabel="Hotel Audit Software"
+      canonicalPath="/solutions/hotel-audit-software"
       relatedBlogTitle="Multi-Location Compliance Guide"
       relatedIndustryLinks={[
         { title: "Restaurant Audit Software", href: "/solutions/restaurant-audit-software" },
         { title: "Franchise Audit Software", href: "/solutions/franchise-audit-software" }
+      ]}
+      crossLinks={[
+        { tag: "Platform", title: "Corrective Actions", href: "/platform/corrective-actions", description: "Track cross-department issue closure with ownership." },
+        { tag: "Platform", title: "Operational Dashboards", href: "/platform/operational-dashboards", description: "Property-level visibility across your portfolio." },
+        { tag: "Topic", title: "Hidden Operational Issues", href: "/hidden-operational-issues", description: "Why service and maintenance issues surface late." },
+        { tag: "Topic", title: "Maintaining Standards Across Locations", href: "/maintaining-standards-across-locations", description: "Consistency systems for distributed hospitality teams." },
       ]}
     />
   )

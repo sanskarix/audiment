@@ -27,7 +27,7 @@ interface FooterProps {
 
 export const Footer = ({
   brandName = "Audiment",
-  brandDescription = "Proof-based audit software for multi-location operations. Enforce truth and stop pencil-whipping with photo evidence and proof of presence checks.",
+  brandDescription = "Audit management software for multi-location businesses. Evidence-backed audits, automated corrective actions, and operational visibility across every branch.",
   socialLinks = [],
   navLinks = [],
   className,
@@ -79,7 +79,7 @@ export const Footer = ({
               </div>
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-heading mb-2">Use Cases</h3>
-                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/use-cases/field-audit-app">Field Audit App</Link>
+
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/use-cases/corrective-action-tracking">Corrective Actions</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/use-cases/multi-location-compliance">Multi-Location Compliance</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/use-cases/inspection-management-software">Inspection Management</Link>

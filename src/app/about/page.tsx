@@ -3,8 +3,8 @@ import { Navbar } from '@/components/ui/navbar'
 import { Footer } from '@/components/ui/modem-animated-footer'
 
 export const metadata = {
-  title: 'Audiment | Built for operational clarity at scale',
-  description: 'Learn the story behind Audiment. Built by Asellus LLP to digitize operational checks, ensure verified visibility, and deliver operational clarity for multi-location operators.',
+  title: 'About Audiment | Operational Control Across Multi-Location Businesses',
+  description: 'Audiment is audit and inspection software for multi-location businesses. We help operations teams stay on top of quality and compliance across locations through proof-based audits and corrective actions.',
   alternates: { canonical: 'https://audiment.in/about' }
 }
 
@@ -14,7 +14,7 @@ export default function AboutPage() {
     "@type": "Organization",
     "name": "Audiment",
     "url": "https://audiment.in",
-    "logo": "https://audiment.in/logo.png",
+    "logo": "https://audiment.in/icon.svg",
     "email": "hello@audiment.com",
     "sameAs": [
       "https://www.linkedin.com/company/audiment",
@@ -29,10 +29,10 @@ export default function AboutPage() {
       <section className="pt-32 pb-20 border-b border-border text-center bg-muted/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-balance text-heading">
-            Audiment – built for operational clarity at scale
+            About Audiment
           </h1>
           <p className="text-xl text-muted-foreground mb-8 text-balance">
-            Enterprise Audit Management Software for Multi-Location Businesses
+            Audit and inspection software for multi-location businesses.
           </p>
         </div>
       </section>
@@ -41,45 +41,63 @@ export default function AboutPage() {
       <section className="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="prose prose-lg dark:prose-invert">
-          <h2>What is Audiment?</h2>
+          <h2>Why multi-location operations break as they scale</h2>
           <p>
-            Audiment is an enterprise-grade compliance and audit management platform designed explicitly for fast-scaling multi-location businesses. Founded with a vision to eradicate operational blind spots, Audiment provides a secure, centralized digital infrastructure that empowers global brands to manage quality control, food safety, and brand standards comprehensively across hundreds of disparate locations seamlessly.
+            Multi-location businesses lose operational control as they scale. Standards drift between locations, managers self-report, issue visibility weakens, and failures surface too late.
           </p>
           <p>
-            By replacing outdated paper processes and manual spreadsheets with intuitive mobile applications and intelligent automated workflows, Audiment fundamentally shifts how operations executives collect, analyze, and act upon field intelligence data in real-time.
-          </p>
-
-          <h2>The Problem We Solve</h2>
-          <p>
-            When a business scales beyond a single location, entropy inevitably sets in. Corporate leadership loses physical visibility, relying heavily on delayed reports and subjective regional manager assessments that are often lacking in operational clarity–where subjective reporting replaces verified execution. Audiment solves this execution gap. By mandating geo-tagged photo evidence and automating corrective interventions immediately when a standard fails, Audiment ensures that what corporate dictates is definitively what occurs on the front line.
+            The pattern is predictable: what worked at 1 or 2 locations breaks at 20 or 200. Operational consistency becomes harder to maintain, quality weakens, and compliance becomes reactive.
           </p>
 
-          <h2>Key Features</h2>
+          <h2>Why self-reporting fails in distributed teams</h2>
+          <p>
+            Self-reporting creates blind spots. A completed checklist does not prove a standard was actually met. Without evidence and follow-through, reports can look healthy while operational drift is increasing.
+          </p>
+          <p>
+            This is not a motivation problem. It is a system problem. Teams need a way to verify execution quality and close issues consistently across locations.
+          </p>
+
+          <h2>What Audiment is built to do</h2>
+          <p>
+            Audiment helps multi-location businesses stay on top of quality and compliance across locations. It is audit and inspection software built around proof-based operational systems.
+          </p>
           <ul>
-            <li><strong>Intelligent Mobile Checklists:</strong> Dynamic logical branches that adapt to auditor input efficiently.</li>
-            <li><strong>Proof of Presence:</strong> Undeniable geo-fenced and verified selfie checks actively ensuring verified execution.</li>
-            <li><strong>Automated CAPA Workflows:</strong> Strict SLA-tracked Corrective and Preventive Action generation natively integrated.</li>
-            <li><strong>Real-Time Analytics Dashboard:</strong> Instantaneous regional comparative scoring empowering data-driven executive oversight.</li>
-            <li><strong>Offline-First Execution:</strong> Flawless auditing in deep freezers or remote industrial locations securely.</li>
+            <li><strong>Proof-based audits:</strong> Critical checks require evidence, so reported completion reflects real execution.</li>
+            <li><strong>Issue visibility:</strong> Teams can see failed standards and recurring risk patterns across locations.</li>
+            <li><strong>Corrective actions:</strong> Failures become owned tasks with deadlines and proof of closure.</li>
+            <li><strong>Operational patterns:</strong> Trend signals highlight where consistency is weakening before escalation.</li>
+            <li><strong>Offline continuity:</strong> Audits continue offline and sync automatically once the device reconnects.</li>
+          </ul>
+          <p>
+            For deeper context, see <Link href="/operational-drift" className="text-primary hover:underline">operational drift</Link>, <Link href="/platform/proof-based-audits" className="text-primary hover:underline">proof-based audits</Link>, and <Link href="/platform/corrective-actions" className="text-primary hover:underline">corrective actions</Link>.
+          </p>
+
+          <h2>Who it is for</h2>
+          <p>
+            Audiment is designed for operations teams managing distributed execution across restaurants, retail chains, hotel groups, franchise networks, healthcare sites, and manufacturing facilities.
+          </p>
+          <p>
+            The strongest fit is businesses with 10-500+ locations that need operational consistency, accountability, and compliance readiness without relying on paper and chat threads.
+          </p>
+
+          <h2>Industries served</h2>
+          <ul>
+            <li>Quick service restaurants (QSR) and restaurant chains</li>
+            <li>Retail chains and multi-store operations</li>
+            <li>Hotels and hospitality groups</li>
+            <li>Franchise networks</li>
+            <li>Food safety and FSSAI compliance</li>
+            <li>Manufacturing and production facilities</li>
           </ul>
 
-          <h2>Industries Served</h2>
-          <ul>
-            <li>Quick Service Restaurants (QSR) & Fine Dining</li>
-            <li>Large-Scale Retail Chains & FMCG Brands</li>
-            <li>Hotels & Global Hospitality Groups</li>
-            <li>Massive Franchise Networks (Master/Sub configurations)</li>
-            <li>Food Manufacturing & Processing Centers</li>
-          </ul>
-
-          <h2>Technology</h2>
+          <h2>Built by Asellus LLP</h2>
           <p>
-            Audiment leverages state-of-the-art architectures intrinsically designed for massive concurrent scale and military-grade security. Utilizing Next.js for universally fast and responsive interfaces, backed natively by Firebase scaling infrastructure and seamless Cloudinary media delivery networks, the platform provides an entirely mobile-optimized experience free of hardware friction.
+            Audiment is developed by Asellus LLP. The platform runs in any mobile browser with no app download required.
           </p>
 
-          <h2>Contact</h2>
+          <h2>Get in touch</h2>
           <p>
-            For enterprise inquiries or technical assistance, our global team remains readily accessible:<br />
+            For inquiries, demos, or partnership discussions:<br />
             <strong>Email:</strong> <a href="mailto:hello@audiment.com" className="text-primary hover:underline">hello@audiment.com</a>
           </p>
         </div>

@@ -10,6 +10,11 @@ interface Props {
   features: { title: string, description: string }[]
   benefits: { title: string, description: string }[]
   faqs: { question: string, answer: string }[]
+  operationalScenario?: {
+    title: string
+    before: string
+    after: string
+  }
 }
 
 export default function UseCaseTemplate({
@@ -20,6 +25,7 @@ export default function UseCaseTemplate({
   features,
   benefits,
   faqs,
+  operationalScenario,
 }: Props) {
   const faqSchema = {
     "@context": "https://schema.org",
@@ -46,12 +52,12 @@ export default function UseCaseTemplate({
           <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto text-balance">
             {heroSubheadline}
           </p>
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/#contact" className="px-8 py-4 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/25">
-              Start Free Trial
+              Book a Demo
             </Link>
-            <Link href="/blog" className="px-8 py-4 rounded-xl bg-muted text-foreground font-bold hover:bg-muted/80 transition-all">
-              Read Our Blog
+            <Link href="/solutions" className="px-8 py-4 rounded-xl bg-muted text-foreground font-bold hover:bg-muted/80 transition-all">
+              Explore Solutions
             </Link>
           </div>
         </div>
@@ -60,15 +66,15 @@ export default function UseCaseTemplate({
       {/* Core Features */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4 text-heading">Core {primaryKeyword} Capabilities</h2>
-          <p className="text-muted-foreground text-lg">Everything you need to execute perfectly.</p>
+          <h2 className="text-3xl font-bold mb-4 text-heading">How Audiment handles {primaryKeyword}</h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">The operational capabilities that make the difference between knowing what happened and guessing.</p>
         </div>
         <div className="grid md:grid-cols-2 gap-12 items-center">
            <div className="bg-card rounded-3xl border border-border shadow-2xl p-8 relative overflow-hidden h-[400px] flex items-center justify-center isolate group">
               <div className="absolute inset-0 bg-gradient-to-bl from-primary/10 via-background to-secondary/10 opacity-50 group-hover:opacity-100 transition-opacity"></div>
               <div className="text-center z-10 p-8 glass rounded-2xl shadow-lg border border-white/10 dark:border-white/5">
                 <h3 className="text-2xl font-bold mb-3 text-heading">Automated Workflows</h3>
-                <p className="text-muted-foreground">Driven by powerful conditional logic.</p>
+                <p className="text-muted-foreground">Driven by conditional logic and operational context.</p>
               </div>
            </div>
            <div className="space-y-8">
@@ -85,12 +91,31 @@ export default function UseCaseTemplate({
         </div>
       </section>
 
+      {/* Operational Scenario – Before/After */}
+      {operationalScenario && (
+        <section className="py-24 bg-neutral-950 text-white">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold mb-12 text-center">{operationalScenario.title}</h2>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="p-8 rounded-2xl bg-white/5 border border-white/10">
+                <span className="text-sm font-semibold tracking-widest text-red-400 block mb-4">WITHOUT AUDIMENT</span>
+                <p className="text-neutral-300 leading-relaxed">{operationalScenario.before}</p>
+              </div>
+              <div className="p-8 rounded-2xl bg-white/5 border border-emerald-500/20">
+                <span className="text-sm font-semibold tracking-widest text-emerald-400 block mb-4">WITH AUDIMENT</span>
+                <p className="text-neutral-300 leading-relaxed">{operationalScenario.after}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Benefits */}
       <section className="py-24 bg-muted/30 border-y border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4 text-heading">Why Choose Audiment</h2>
-            <p className="text-lg text-muted-foreground">The strategic advantages of our platform.</p>
+            <h2 className="text-3xl font-bold mb-4 text-heading">The operational advantage</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">What changes when you move from checking boxes to verifying execution.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {benefits.map((point, idx) => (
@@ -117,11 +142,11 @@ export default function UseCaseTemplate({
       </section>
 
       {/* CTA */}
-      <section className="py-24 text-center bg-primary text-primary-foreground">
+      <section className="py-24 text-center bg-neutral-950 text-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold mb-6 text-white">Upgrade Your Operations Today</h2>
-          <p className="text-primary-foreground/80 text-xl mb-10">Stop relying on outdated manual systems. Try Audiment and see the difference immediately.</p>
-          <Link href="/#contact" className="inline-flex items-center px-10 py-5 rounded-xl bg-white text-primary font-bold text-lg hover:bg-gray-100 transition-all shadow-xl">
+          <h2 className="text-4xl font-bold mb-6">See how this works for your operation</h2>
+          <p className="text-neutral-400 text-xl mb-10 max-w-2xl mx-auto">Walk through a live demo with our team. We&apos;ll map your current workflow and show you exactly where Audiment fits.</p>
+          <Link href="/#contact" className="inline-flex items-center px-10 py-5 rounded-xl bg-white text-neutral-900 font-bold text-lg hover:bg-gray-100 transition-all shadow-xl">
              Book a Demo 
           </Link>
         </div>

@@ -88,6 +88,26 @@ export default function SolutionPageTemplate({
     ]
   };
 
+  // HowTo schema
+  const howToSchema = workflowSteps && workflowSteps.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": `How to manage and resolve issues in ${industry.toLowerCase()} operations`,
+    "description": `A step-by-step workflow guide to managing operations, identifying issues, and tracking corrective actions in ${industry.toLowerCase()}.`,
+    "step": workflowSteps.map((step, idx) => ({
+      "@type": "HowToStep",
+      "position": idx + 1,
+      "name": step.title,
+      "text": step.description
+    })),
+    "tool": [
+      {
+        "@type": "HowToTool",
+        "name": "Audiment Platform"
+      }
+    ]
+  } : null;
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
@@ -294,6 +314,9 @@ export default function SolutionPageTemplate({
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {howToSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
+      )}
     </div>
   )
 }

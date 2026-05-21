@@ -154,6 +154,55 @@ function StructuredData() {
             }
           }
         ]
+      },
+      {
+        "@type": "HowTo",
+        "name": "How to digitize and manage audits with Audiment",
+        "description": "A step-by-step guide to managing the full audit lifecycle—from blueprint scheduling and evidence verification to automated corrective action resolution and executive reporting.",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "name": "Schedule & assign audits",
+            "text": "HQ automatically deploys a new FSSAI or operational checklist. Branch managers are notified instantly.",
+            "url": "https://audiment.in#how-it-works"
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Execute audits on-site",
+            "text": "Field managers walk the floor, completing the audit on mobile with offline-first support.",
+            "url": "https://audiment.in#how-it-works"
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Capture & verify evidence",
+            "text": "Critical questions require photo evidence taken on-site, geo-tagged and timestamped automatically.",
+            "url": "https://audiment.in#how-it-works"
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Detect issues instantly",
+            "text": "When a standard fails, like a missed temperature log, the system flags it immediately.",
+            "url": "https://audiment.in#how-it-works"
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Generate corrective action",
+            "text": "An SLA-bound task is automatically created and assigned to the branch manager for resolution.",
+            "url": "https://audiment.in#how-it-works"
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Resolve & report to leadership",
+            "text": "Manager uploads proof of the fix. HQ sees the exact trend and resolution time across the region.",
+            "url": "https://audiment.in#how-it-works"
+          }
+        ],
+        "tool": [
+          {
+            "@type": "HowToTool",
+            "name": "Audiment Platform"
+          }
+        ]
       }
     ]
   };

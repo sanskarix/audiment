@@ -164,11 +164,26 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             "@type": "Article",
             headline: post.title,
             description: post.description,
-            author: { "@type": "Organization", "name": "Audiment" },
-            publisher: { "@type": "Organization", "name": "Audiment" },
+            image: "https://audiment.in/opengraph-image",
             datePublished: post.date,
             dateModified: post.date,
-            image: "https://audiment.in/opengraph-image"
+            author: {
+              "@type": (post.author.toLowerCase().includes("team") || post.author.toLowerCase().includes("audiment")) ? "Organization" : "Person",
+              "name": post.author,
+              "url": "https://audiment.in"
+            },
+            publisher: {
+              "@type": "Organization",
+              "name": "Audiment",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://audiment.in/icon.svg"
+              }
+            },
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": `https://audiment.in/blog/${post.slug}`
+            }
           })
         }}
       />

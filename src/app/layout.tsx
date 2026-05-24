@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Script from "next/script";
+import { AppProviders } from "@/components/AppProviders";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -16,18 +17,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "@/components/theme-provider";
-import { AuthProvider } from "@/components/AuthProvider";
-
 const SITE_URL = "https://audiment.in";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: 'Audiment',
-  title: 'Audit and Inspection Software for Multi-Location Businesses | Audiment',
+  title: 'Multi-Location Audit & Inspection Software | Audiment',
   description:
-    'Audiment is audit and inspection software for multi-location businesses. Stay on top of quality and compliance across locations through proof-based audits, issue tracking, and corrective actions.',
+    'Run audits across every location with proof, tracking, and corrective actions. Audiment is audit management software built for multi-location businesses.',
   keywords: [
     'audit and inspection software',
     'multi-location audit software',
@@ -46,15 +43,15 @@ export const metadata: Metadata = {
     type: 'website',
     url: SITE_URL,
     siteName: 'Audiment',
-    title: 'Audit and Inspection Software for Multi-Location Businesses | Audiment',
+    title: 'Multi-Location Audit & Inspection Software | Audiment',
     description:
-      'Audiment is audit and inspection software for multi-location businesses. Stay on top of quality and compliance across locations through proof-based audits, issue tracking, and corrective actions.',
+      'Run audits across every location with proof, tracking, and corrective actions. Audiment is audit management software built for multi-location businesses.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Audit and Inspection Software for Multi-Location Businesses | Audiment',
+    title: 'Multi-Location Audit & Inspection Software | Audiment',
     description:
-      'Audiment is audit and inspection software for multi-location businesses. Stay on top of quality and compliance across locations through proof-based audits, issue tracking, and corrective actions.',
+      'Run audits across every location with proof, tracking, and corrective actions. Audiment is audit management software built for multi-location businesses.',
   },
   robots: {
     index: true,
@@ -99,19 +96,7 @@ export default function RootLayout({
             })();
           `}
         </Script>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded focus:text-sm">
-            Skip to content
-          </a>
-          <AuthProvider>
-            <TooltipProvider>{children}</TooltipProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

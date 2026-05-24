@@ -1,18 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CheckCircle2, Loader2, Send } from 'lucide-react';
-import posthog from 'posthog-js';
 
 export function ContactSection() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [error, setError] = useState('');
     const [formData, setFormData] = useState({
         fullName: '',
         companyName: '',
@@ -25,16 +23,24 @@ export function ContactSection() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        setError('');
         try {
-            await addDoc(collection(db, 'leads'), {
-                ...formData,
-                outlets: Number(formData.outlets),
-                createdAt: serverTimestamp()
+            const response = await fetch('/api/leads', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...formData,
+                    outlets: Number(formData.outlets),
+                }),
             });
-            posthog.capture('contact_form_submitted', {
-                company_name: formData.companyName,
-                outlets: Number(formData.outlets),
-            });
+
+            if (!response.ok) {
+                const data = await response.json().catch(() => null);
+                throw new Error(data?.error || 'Something went wrong. Please try again.');
+            }
+
             setSuccess(true);
             setFormData({
                 fullName: '',
@@ -44,9 +50,9 @@ export function ContactSection() {
                 phone: '',
                 message: ''
             });
-        } catch (error) {
-            console.error('Error adding lead:', error);
-            alert('Something went wrong. Please try again.');
+        } catch (error: any) {
+            console.error('Error submitting lead:', error);
+            setError(error?.message || 'Something went wrong. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -161,6 +167,12 @@ export function ContactSection() {
                                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                 />
                             </div>
+
+                            {error && (
+                                <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                                    {error}
+                                </div>
+                            )}
 
                             <Button
                                 type="submit"

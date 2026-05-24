@@ -11,27 +11,29 @@ import {
 } from "lucide-react";
 import { HeroSection } from "@/components/ui/hero-section-3";
 import { Footer } from "@/components/ui/modem-animated-footer";
-import { StickyFeatureSection } from "@/components/ui/sticky-scroll-cards-section";
-import { FAQAccordion } from "@/components/ui/faq-accordion";
-import { TestimonialsSection } from "@/components/ui/testimonial-v2";
-import { ContactSection } from "@/components/ui/contact-section";
+import {
+  DeferredContactSection,
+  DeferredFAQAccordion,
+  DeferredStickyFeatureSection,
+  DeferredTestimonialsSection,
+} from "@/components/home/HomePageSections";
 
 export const metadata: Metadata = {
-  title: 'Audit and Inspection Software for Multi-Location Businesses | Audiment',
-  description: 'Audiment is audit and inspection software for multi-location businesses. Maintain quality consistency across locations through proof-based audits, issue tracking, corrective actions, and accountability systems.',
+  title: 'Multi-Location Audit & Inspection Software | Audiment',
+  description: 'Run audits across every location with proof, tracking, and corrective actions. Audiment is audit management software built for multi-location businesses.',
   keywords: ['audit and inspection software', 'multi-location audit software', 'proof-based audits', 'quality consistency', 'operational consistency', 'corrective action tracking', 'FSSAI audit software', 'field audit app India'],
   alternates: { canonical: 'https://audiment.in' },
   openGraph: {
-    title: 'Audit and Inspection Software for Multi-Location Businesses | Audiment',
-    description: 'Audiment is audit and inspection software for multi-location businesses. Stay on top of quality and consistency across locations through proof-based audits, issue tracking, and corrective actions.',
+    title: 'Multi-Location Audit & Inspection Software | Audiment',
+    description: 'Run audits across every location with proof, tracking, and corrective actions. Audiment is audit management software built for multi-location businesses.',
     url: 'https://audiment.in',
     siteName: 'Audiment',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Audit and Inspection Software for Multi-Location Businesses | Audiment',
-    description: 'Audiment is audit and inspection software for multi-location businesses. Stay on top of quality and consistency across locations through proof-based audits, issue tracking, and corrective actions.',
+    title: 'Multi-Location Audit & Inspection Software | Audiment',
+    description: 'Run audits across every location with proof, tracking, and corrective actions. Audiment is audit management software built for multi-location businesses.',
   },
 };
 
@@ -44,7 +46,7 @@ function StructuredData() {
         "name": "Audiment",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Web, Mobile",
-        "description": "Audiment is audit and inspection software for multi-location businesses. Proof-based audits, issue tracking, corrective actions, and accountability systems help businesses maintain quality consistency and stay on top of operations across every location.",
+        "description": "Audiment is audit management software for multi-location businesses. Run proof-based audits across locations with photo evidence, corrective action tracking, and accountability.",
         "keywords": "multi-location audit software, inspection software, proof-based audits, quality consistency, operational consistency, corrective action tracking"
       },
       {
@@ -78,7 +80,7 @@ function StructuredData() {
             "name": "What is audit management software?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Software for creating, running, and tracking audits across locations. It replaces paper checklists with digital workflows that collect evidence, score results, trigger follow-up tasks, and generate reports."
+              "text": "Software that replaces paper checklists with digital audits. You create templates, assign them to locations, and track results with photo evidence, scoring, and automatic follow-up tasks."
             }
           },
           {
@@ -94,7 +96,7 @@ function StructuredData() {
             "name": "What happens if the auditor doesn't have internet?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Audits continue offline and sync automatically once the device reconnects."
+              "text": "Audits keep running offline. Everything syncs automatically when the connection is back."
             }
           },
           {
@@ -102,7 +104,7 @@ function StructuredData() {
             "name": "Can managers see surprise audits before the auditor arrives?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. Surprise audits stay hidden on the manager's dashboard until the auditor begins the inspection."
+              "text": "No. Surprise audits stay hidden on the manager’s dashboard until the auditor starts the inspection."
             }
           },
           {
@@ -110,7 +112,7 @@ function StructuredData() {
             "name": "How does Audiment verify that the auditor was on-site?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "A short geo-tagged video and selfie are captured at the location. If the auditor is outside the registered location's GPS range, the system flags it."
+              "text": "The auditor records a short geo-tagged video and selfie at the location. If they’re outside the registered GPS range, the system flags it."
             }
           },
           {
@@ -118,7 +120,7 @@ function StructuredData() {
             "name": "Can I customise the audit templates?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes. Build templates from scratch – set your own questions, severity levels, photo requirements, and recurrence schedules."
+              "text": "Yes. Build your own templates from scratch – questions, severity levels, photo requirements, and how often they repeat."
             }
           },
           {
@@ -126,7 +128,7 @@ function StructuredData() {
             "name": "Does Audiment support FSSAI compliance?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes. Pre-built FSSAI templates can be loaded instantly. All records – photos, GPS data, timestamps, corrective action history – are stored for regulatory review."
+              "text": "Yes. Load a pre-built FSSAI template and start auditing immediately. All records – photos, GPS data, timestamps, corrective actions – are stored for regulatory review."
             }
           },
           {
@@ -134,7 +136,7 @@ function StructuredData() {
             "name": "How is Audiment different from iAuditor?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Audiment is built specifically for multi-location operations where accountability matters. Photo evidence is required (not optional), auditor presence is verified, corrective actions auto-generate with deadlines, and the system flags declining trends across locations."
+              "text": "iAuditor is a general-purpose inspection tool. Audiment is built for multi-location businesses where accountability matters. Photo evidence is mandatory, auditor presence is GPS-verified, corrective actions auto-generate with deadlines, and declining trends are flagged automatically."
             }
           },
           {
@@ -142,7 +144,7 @@ function StructuredData() {
             "name": "Who can see what?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Admins see all locations. Managers see only their assigned branches. Auditors see only their assigned audits. Access is enforced at the server level."
+              "text": "Admins see all locations. Managers see only their assigned branches, and auditors see only their assigned audits. Access controls are enforced at the server level."
             }
           },
           {
@@ -150,7 +152,7 @@ function StructuredData() {
             "name": "What happens when an audit score is low?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Critical failures create corrective action tasks immediately. If a location's score drops across consecutive audits, alerts escalate to regional management and then leadership."
+              "text": "Critical failures trigger corrective action tasks immediately. If a location’s score keeps dropping across consecutive audits, alerts escalate to regional management and then leadership."
             }
           }
         ]
@@ -158,42 +160,42 @@ function StructuredData() {
       {
         "@type": "HowTo",
         "name": "How to digitize and manage audits with Audiment",
-        "description": "A step-by-step guide to managing the full audit lifecycle—from blueprint scheduling and evidence verification to automated corrective action resolution and executive reporting.",
+        "description": "How Audiment handles an audit from start to finish – scheduling, on-site execution, evidence capture, issue detection, corrective actions, and reporting.",
         "step": [
           {
             "@type": "HowToStep",
-            "name": "Schedule & assign audits",
-            "text": "HQ automatically deploys a new FSSAI or operational checklist. Branch managers are notified instantly.",
+            "name": "Schedule & assign",
+            "text": "HQ pushes a checklist to any location. Branch managers get notified instantly.",
             "url": "https://audiment.in#how-it-works"
           },
           {
             "@type": "HowToStep",
-            "name": "Execute audits on-site",
-            "text": "Field managers walk the floor, completing the audit on mobile with offline-first support.",
+            "name": "Audit on-site",
+            "text": "The auditor walks the floor and completes the checklist on their phone – even offline.",
             "url": "https://audiment.in#how-it-works"
           },
           {
             "@type": "HowToStep",
-            "name": "Capture & verify evidence",
-            "text": "Critical questions require photo evidence taken on-site, geo-tagged and timestamped automatically.",
+            "name": "Capture proof",
+            "text": "Critical questions require photos taken on-site, geo-tagged and timestamped automatically.",
             "url": "https://audiment.in#how-it-works"
           },
           {
             "@type": "HowToStep",
-            "name": "Detect issues instantly",
-            "text": "When a standard fails, like a missed temperature log, the system flags it immediately.",
+            "name": "Flag issues",
+            "text": "When a standard fails – like a missed temperature log – the system flags it immediately.",
             "url": "https://audiment.in#how-it-works"
           },
           {
             "@type": "HowToStep",
-            "name": "Generate corrective action",
-            "text": "An SLA-bound task is automatically created and assigned to the branch manager for resolution.",
+            "name": "Assign the fix",
+            "text": "A corrective action task is auto-created with a deadline and assigned to the branch manager.",
             "url": "https://audiment.in#how-it-works"
           },
           {
             "@type": "HowToStep",
-            "name": "Resolve & report to leadership",
-            "text": "Manager uploads proof of the fix. HQ sees the exact trend and resolution time across the region.",
+            "name": "Resolve & report",
+            "text": "The manager uploads proof of the fix. HQ sees resolution times and trends across every region.",
             "url": "https://audiment.in#how-it-works"
           }
         ],
@@ -220,33 +222,33 @@ function StructuredData() {
 const steps = [
   {
     number: "01",
-    title: "Audit scheduled & assigned",
-    desc: "HQ automatically deploys a new FSSAI or operational checklist. Branch managers are instantly notified.",
+    title: "Schedule & assign",
+    desc: "HQ pushes a checklist to any location. Branch managers get notified instantly.",
   },
   {
     number: "02",
-    title: "Audit executed on-site",
-    desc: "Field managers walk the floor, completing the audit on mobile with offline-first support.",
+    title: "Audit on-site",
+    desc: "The auditor walks the floor and completes the checklist on their phone – even offline.",
   },
   {
     number: "03",
-    title: "Evidence captured & verified",
-    desc: "Critical questions require photo evidence taken on-site. The evidence is geo-tagged and timestamped automatically.",
+    title: "Capture proof",
+    desc: "Critical questions require photos taken on-site, geo-tagged and timestamped automatically.",
   },
   {
     number: "04",
-    title: "Issues detected instantly",
-    desc: "When a standard fails–like a missed temp log–the system flags it immediately.",
+    title: "Flag issues",
+    desc: "When a standard fails – like a missed temperature log – the system flags it immediately.",
   },
   {
     number: "05",
-    title: "Corrective action generated",
-    desc: "An SLA-bound task is automatically created and assigned to the branch manager for resolution.",
+    title: "Assign the fix",
+    desc: "A corrective action task is auto-created with a deadline and assigned to the branch manager.",
   },
   {
     number: "06",
-    title: "Resolution & leadership visibility",
-    desc: "Manager uploads proof of the fix. HQ sees the exact trend and resolution time across the region.",
+    title: "Resolve & report",
+    desc: "The manager uploads proof of the fix. HQ sees resolution times and trends across every region.",
   },
 ];
 
@@ -295,37 +297,37 @@ const useCases = [
   {
     icon: UtensilsIcon,
     title: "QSR and restaurant chains",
-    desc: "Run daily hygiene audits, track temperature compliance, and ensure every outlet maintains the same brand standard – whether it's location 5 or location 50.",
+    desc: "Run daily hygiene and food safety audits across every outlet. Every location follows the same standard – whether it's branch 5 or branch 50.",
   },
   {
     icon: ShoppingBagIcon,
     title: "Retail chains",
-    desc: "Verify that visual merchandising, promotional displays, and store presentation match corporate guidelines across every location. Area managers see which stores are falling behind.",
+    desc: "Audit merchandising, displays, and store presentation across all locations. Area managers see exactly which stores are falling behind.",
   },
   {
     icon: BuildingIcon,
     title: "Hotels and hospitality",
-    desc: "Standardize housekeeping, F&B safety, and guest experience checks across properties. When a room inspection finds a maintenance issue, the task goes to engineering automatically.",
+    desc: "Run housekeeping, F&B safety, and guest experience checks across properties. When a room inspection finds a maintenance issue, the fix is assigned automatically.",
   },
   {
     icon: Settings,
     title: "Facility management",
-    desc: "Run systematic audits across managed facilities with photo evidence trails. Track maintenance issues from discovery to resolution with clear accountability.",
+    desc: "Audit managed facilities with photo evidence at every step. Track maintenance issues from discovery to fix with clear ownership.",
   },
   {
     icon: Heart,
     title: "Healthcare clinics",
-    desc: "Maintain hygiene protocols and infection control standards across multiple clinic locations. Digital records provide inspection-ready documentation.",
+    desc: "Audit hygiene protocols and infection control across clinic locations. Every record is stored and inspection-ready when a regulator shows up.",
   },
   {
     icon: Truck,
     title: "Logistics and warehouses",
-    desc: "Audit safety equipment, storage conditions, and dock compliance across distribution centres. Track corrective actions for hazards with strict resolution deadlines.",
+    desc: "Audit safety equipment, storage, and dock compliance across distribution centres. Hazards get flagged with deadlines and tracked to resolution.",
   },
   {
     icon: Wrench,
     title: "Manufacturing and production",
-    desc: "Digitize safety walks, equipment checks, and quality control inspections across facilities. Shift handovers include verified evidence of the outgoing shift's compliance status.",
+    desc: "Run safety walks, equipment checks, and quality inspections across plants. Shift handovers include verified proof that every standard was met.",
   },
 ];
 
@@ -357,25 +359,25 @@ export default async function Home() {
               <span className="text-neutral-400">audits break down</span>
             </h2>
             <p className="text-lg text-neutral-400 leading-relaxed">
-              When you ran one location, you saw everything. Now you have 5, 20, or 50 – and you rely on managers to tell you the truth.
+              When you had one location, you saw everything. Now you rely on managers to tell you the truth.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 icon: MapPinIcon,
-                title: "WhatsApp reporting chaos",
-                desc: "Photos scattered across group chats, impossible to track, and instantly lost. No way to verify when or where the photo was actually taken.",
+                title: "Reports lost in WhatsApp",
+                desc: "Audit photos scattered across group chats. No way to verify when or where they were taken.",
               },
               {
                 icon: FileText,
-                title: "Inconsistent manager reporting",
-                desc: "Area managers develop blind spots – scoring locations generously or skipping over real problems. Corporate finds out through customer complaints, not through internal data.",
+                title: "Managers hide the real picture",
+                desc: "Area managers score generously or skip over problems. You find out through customer complaints, not your own data.",
               },
               {
                 icon: Shield,
-                title: "Unresolved corrective actions",
-                desc: "Finding the issue is step one. Without a system to track the fix, critical failures are forgotten by the next shift.",
+                title: "Issues found, never fixed",
+                desc: "Someone spots the problem. Without a system to track the fix, it's forgotten by the next shift.",
               },
             ].map((card, i) => (
               <div
@@ -397,10 +399,10 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-center gap-0">
             {[
-              { label: "Proof-based audits", sub: "Reliable operational inputs" },
-              { label: "Operational patterns", sub: "Issues identified earlier" },
+              { label: "Proof-based audits", sub: "Every audit backed by evidence" },
+              { label: "Pattern detection", sub: "Issues caught earlier" },
               { label: "Corrective actions", sub: "Accountability enforced" },
-              { label: "Operational control", sub: "Consistency across locations" },
+              { label: "Consistent standards", sub: "Same rules, every location" },
             ].map((item, i, arr) => (
               <>
                 <div key={i} className="flex flex-col items-center text-center px-6 py-4">
@@ -421,29 +423,29 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="max-w-3xl mb-16">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 leading-[1.15] mb-6">
-              Audiment gives you<br />
-              <span className="text-neutral-400">operational clarity.</span>
+              Know what&apos;s actually happening<br />
+              <span className="text-neutral-400">at every branch</span>
             </h2>
             <p className="text-lg text-neutral-500 leading-relaxed">
-              Know what's actually happening at every branch. When an audit uncovers an issue, it becomes a tracked task that must be resolved with evidence – not just marked as done.
+              Every audit collects proof. Every issue becomes a tracked task. Every fix requires evidence – not just a checkbox.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
                 icon: CameraIcon,
-                title: "Execution consistency",
-                desc: 'Standardize operations across 5 or 500 branches. When your opening checklist is the same everywhere, quality stops depending on which manager is on shift.',
+                title: "Same standards, every location",
+                desc: 'Your checklists run the same way at every branch. Quality stops depending on which manager is on shift.',
               },
               {
                 icon: MapPinIcon,
-                title: "Branch-level visibility",
-                desc: "See which locations are consistently underperforming and where issues keep recurring – without waiting for the monthly area visit.",
+                title: "See which branches are failing",
+                desc: "Know which locations keep scoring low and where issues recur. No waiting for the monthly area visit.",
               },
               {
                 icon: RefreshCw,
-                title: "Issue resolution, not just detection",
-                desc: "Finding a problem is step one. Audiment tracks the fix – who resolved it, when, and with what evidence – so issues don't just get logged and forgotten.",
+                title: "Track the fix, not just the finding",
+                desc: "When an audit flags an issue, it becomes a task with a deadline. The fix requires photo proof before it's closed.",
               },
             ].map((pillar, i) => (
               <div
@@ -466,8 +468,8 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-20">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-6">
-              From blueprint to resolution –<br />
-              <span className="text-neutral-400">the full audit lifecycle</span>
+              How an audit works<br />
+              <span className="text-neutral-400">on Audiment</span>
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:gap-6">
@@ -492,8 +494,8 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-20">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-6">
-              One platform,<br />
-              <span className="text-neutral-400">three powerful interfaces</span>
+              Three roles.<br />
+              <span className="text-neutral-400">One audit system.</span>
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -501,34 +503,34 @@ export default async function Home() {
               {
                 icon: Crown,
                 role: "Leadership",
-                subtitle: "Corporate / Executive",
+                subtitle: "HQ & Executive",
                 color: "bg-neutral-900",
                 items: [
-                  "Cross-location trend tracking and risk visibility",
-                  "Standardize operational blueprints network-wide",
-                  "Identify systemic bottlenecks and repeat failures",
+                  "Know which locations are failing – and why",
+                  "Spot repeat issues before they become patterns",
+                  "Set the same audit standards across every branch",
                 ],
               },
               {
                 icon: Users,
                 role: "Branch Managers",
-                subtitle: "Multi-Unit Leaders",
+                subtitle: "Area & Regional",
                 color: "bg-neutral-700",
                 items: [
-                  "Monitor branch-level execution across their territory",
-                  "Review and approve corrective action resolutions",
-                  "Track compliance scores and auditor performance",
+                  "See which branches passed and which didn't",
+                  "Review and close corrective actions with proof",
+                  "Track which auditors are completing their assignments",
                 ],
               },
               {
                 icon: ClipboardList,
                 role: "Auditors",
-                subtitle: "Field Execution",
+                subtitle: "On the ground",
                 color: "bg-neutral-500",
                 items: [
-                  "Execute daily/weekly audits with mandatory evidence",
-                  "Receive automated corrective action tasks",
-                  "Fix issues and submit photo proof before the SLA expires",
+                  "Complete checklists with required photo evidence",
+                  "Get corrective action tasks assigned automatically",
+                  "Submit proof of the fix before the deadline",
                 ],
               },
             ].map((role, i) => (
@@ -560,7 +562,7 @@ export default async function Home() {
       </section>
 
       {/* ── Key Features Section (§4) ─────────────────────────────────────── */}
-      <StickyFeatureSection />
+      <DeferredStickyFeatureSection />
 
       {/* ── Operational Failures Section (§5) ─────────────────────────────── */}
       <section className="py-24 bg-white px-6">
@@ -573,12 +575,12 @@ export default async function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
-              "Temperature logs skipped during the morning rush",
-              "Opening checklists ignored until the end of the day",
-              "Critical SOP violations in food prep areas",
-              "Repeat hygiene failures across specific regions",
-              "Corrective actions marked as 'done' without actual fixes",
-              "Outdated promotional materials left on the floor"
+              "Temperature logs skipped every morning rush",
+              "Opening checklists backdated at closing",
+              "Food prep violations no one reported",
+              "Same failures repeating at the same branches",
+              "Fixes marked 'done' with no proof",
+              "Outdated promos still on the floor"
             ].map((failure, i) => (
               <div key={i} className="flex items-center gap-4 p-6 rounded-xl bg-neutral-50 border border-neutral-100">
                 <AlertTriangle className="w-6 h-6 text-amber-500 flex-shrink-0" />
@@ -623,10 +625,10 @@ export default async function Home() {
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-white mb-6">
               What changes when you<br />
-              <span className="text-neutral-400">digitize your audits</span>
+              <span className="text-neutral-400">stop auditing on paper</span>
             </h2>
             <p className="text-lg text-neutral-400">
-              The difference between paper-based reporting and structured operational audits – across the capabilities that matter most.
+              Paper checklists, generic tools, and Audiment – compared on the things that actually matter.
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 overflow-hidden">
@@ -698,17 +700,17 @@ export default async function Home() {
               {
                 icon: Smartphone,
                 title: "No app download",
-                desc: "Field auditors open a browser link and they're in. No app store approvals, no device management, no IT setup – works on any phone.",
+                desc: "Open a link, log in, start auditing. Works on any phone – no app store, no IT setup.",
               },
               {
                 icon: Wifi,
-                title: "Works offline too",
-                desc: "Audits continue offline and sync automatically once the device reconnects.",
+                title: "Works offline",
+                desc: "Audits keep running without internet. Everything syncs automatically when the connection is back.",
               },
               {
                 icon: Shield,
                 title: "Your data stays yours",
-                desc: "Organisation-level data isolation enforced at the database layer. Each client's data is fully separated – no cross-tenant access, ever.",
+                desc: "Every organisation's data is completely separated at the database level. No other client can access yours – ever.",
               },
             ].map((tech, i) => (
               <div
@@ -741,7 +743,7 @@ export default async function Home() {
 
       {/* ── Animated Testimonial Columns (§7) ─────────────────────────────── */}
       <div id="testimonials">
-        <TestimonialsSection />
+        <DeferredTestimonialsSection />
       </div>
 
       {/* ── Operational Scenarios ───────────────────────────────────────────── */}
@@ -751,18 +753,18 @@ export default async function Home() {
             {[
               {
                 industry: "QSR chain – 30 outlets",
-                headline: "From 5-day fixes to same-day resolution",
-                story: "Before Audiment, corrective actions were tracked in WhatsApp groups and weekly reports. Most issues took 3–5 days to resolve because nobody had clear ownership. After switching to auto-assigned tasks with SLA deadlines, critical issues now get resolved within 48 hours.",
+                headline: "Issue resolution went from 5 days to 48 hours",
+                story: "Corrective actions used to live in WhatsApp groups. Nobody owned the fix, so most took 3–5 days. With auto-assigned tasks and SLA deadlines, critical issues now close within 48 hours.",
               },
               {
                 industry: "Retail chain – 45 stores",
-                headline: "Planned audits actually getting completed",
-                story: "Paper-based audits were routinely skipped or backdated. With digital scheduling and photo evidence, area managers can see exactly which stores have completed their checks – and which haven't. Audit completion went from inconsistent to reliable.",
+                headline: "No more skipped or backdated audits",
+                story: "Paper audits were routinely skipped or filled in hours late. With digital scheduling and required photo evidence, area managers see exactly which stores completed their checks. Audit completion went from inconsistent to reliable.",
               },
               {
                 industry: "Hotel group – 6 properties",
-                headline: "Inspection-ready compliance, every day",
-                story: "Daily FSSAI-mapped checklists replaced the old monthly paper audit. When a health inspector visited, the operations team pulled up 90 days of timestamped, photo-backed records in under a minute. No scrambling, no missing documentation.",
+                headline: "Health inspector arrived. Records ready in under a minute.",
+                story: "Daily FSSAI checklists replaced the old monthly paper audit. When an inspector visited, the team pulled up 90 days of timestamped, photo-backed records in under a minute. No scrambling, no missing documents.",
               },
             ].map((cs, i) => (
               <div
@@ -787,7 +789,7 @@ export default async function Home() {
             </h2>
             <p className="text-lg text-neutral-500">Everything you need to know before getting started.</p>
           </div>
-          <FAQAccordion />
+          <DeferredFAQAccordion />
         </div>
       </section>
 
@@ -801,7 +803,7 @@ export default async function Home() {
             <span className="text-neutral-400">happening at your branches?</span>
           </h2>
           <p className="text-xl md:text-2xl text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-            Walk through a live demo with our team. We&apos;ll map your current audit workflow and show you where Audiment fits.
+            Book 30 minutes. Tell us what you audit today – we&apos;ll show you how it works on Audiment.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
             {userRole ? (
@@ -836,7 +838,7 @@ export default async function Home() {
       </section>
 
       {/* Contact Section (§2) */}
-      <ContactSection />
+      <DeferredContactSection />
 
       {/* Footer */}
       <Footer

@@ -27,7 +27,7 @@ interface FooterProps {
 
 export const Footer = ({
   brandName = "Audiment",
-  brandDescription = "Audit management software for multi-location businesses. Evidence-backed audits, automated corrective actions, and operational visibility across every branch.",
+  brandDescription = "Audit management software for multi-location businesses. Evidence-backed audits, automated corrective actions, and visibility across every branch.",
   socialLinks = [],
   navLinks = [],
   className,

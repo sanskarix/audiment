@@ -107,8 +107,8 @@ const AnimatedHeader = () => {
           transition-all duration-700 ease-out delay-100
           ${h2In ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
       >
-        Everything you need for<br />
-        <span className="bg-gradient-to-r from-neutral-400 via-neutral-500 to-neutral-400 bg-clip-text text-transparent">compliant operations</span>
+        Everything you need to<br />
+        <span className="bg-gradient-to-r from-neutral-400 via-neutral-500 to-neutral-400 bg-clip-text text-transparent">enforce standards</span>
       </h2>
       <p
         ref={pRef}

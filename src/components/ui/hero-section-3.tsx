@@ -61,12 +61,12 @@ export function HeroSection({ userRole }: { userRole?: string | null }) {
                             >
                                 <h1
                                     className="text-balance text-5xl font-semibold sm:text-6xl md:text-7xl tracking-tight leading-[1.1]">
-                                    Audit and inspection software<br />
+                                    Audit management software<br />
                                     <span className="text-neutral-400">for multi-location businesses</span>
                                 </h1>
 
                                 <p className="mx-auto mt-6 max-w-5xl text-pretty text-xl text-neutral-600">
-                                    Stay on top of quality and consistency across every location. Proof-based audits, issue tracking, corrective actions, and accountability systems — built for businesses running multiple locations.
+                                    You can&apos;t be at every branch. Run proof-based audits across your locations, track issues to resolution, and know what&apos;s actually happening on the ground.
                                 </p>
 
                                 <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">

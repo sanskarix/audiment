@@ -6,43 +6,43 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 const faqs = [
   {
     q: "What is audit management software?",
-    a: "Software for creating, running, and tracking audits across locations. It replaces paper checklists with digital workflows that collect evidence, score results, trigger follow-up tasks, and generate reports.",
+    a: "Software that replaces paper checklists with digital audits. You create templates, assign them to locations, and track results – with photo evidence, scoring, and automatic follow-up tasks.",
   },
   {
     q: "Do my auditors need to download an app?",
-    a: "No. Audiment runs in the browser. Open the link, log in, start auditing. Works on any phone.",
+    a: "No. Audiment runs in the browser – open the link, log in, start auditing. Works on any phone.",
   },
   {
     q: "What happens if the auditor doesn't have internet?",
-    a: "Audits continue offline and sync automatically once the device reconnects.",
+    a: "Audits keep running offline. Everything syncs automatically when the connection is back.",
   },
   {
     q: "Can managers see surprise audits before the auditor arrives?",
-    a: "No. Surprise audits stay hidden on the manager's dashboard until the auditor begins the inspection.",
+    a: "No. Surprise audits stay hidden on the manager’s dashboard until the auditor starts the inspection.",
   },
   {
     q: "How does Audiment verify that the auditor was on-site?",
-    a: "A short geo-tagged video and selfie are captured at the location. If the auditor is outside the registered location's GPS range, the system flags it.",
+    a: "The auditor records a short geo-tagged video and selfie at the location. If they’re outside the registered GPS range, the system flags it.",
   },
   {
     q: "Can I customise the audit templates?",
-    a: "Yes. Build templates from scratch – set your own questions, severity levels, photo requirements, and recurrence schedules.",
+    a: "Yes. Build your own templates from scratch – questions, severity levels, photo requirements, and how often they repeat.",
   },
   {
     q: "Does Audiment support FSSAI compliance?",
-    a: "Yes. Pre-built FSSAI templates can be loaded instantly. All records – photos, GPS data, timestamps, corrective action history – are stored for regulatory review.",
+    a: "Yes. You can load a pre-built FSSAI template and start auditing immediately. All records, including photos, GPS data, timestamps, and corrective actions, are stored for regulatory review.",
   },
   {
     q: "How is Audiment different from iAuditor?",
-    a: "Audiment is built specifically for multi-location operations where accountability matters. Photo evidence is required (not optional), auditor presence is verified, corrective actions auto-generate with deadlines, and the system flags declining trends across locations.",
+    a: "iAuditor is a general-purpose inspection tool. Audiment is built specifically for multi-location businesses where accountability is critical. We ensure photo evidence is mandatory, auditor presence is GPS-verified, and corrective actions are automatically generated with deadlines.",
   },
   {
     q: "Who can see what?",
-    a: "Admins see all locations. Managers see only their assigned branches. Auditors see only their assigned audits. Access is enforced at the server level.",
+    a: "Admins see all locations. Managers see only their assigned branches, and auditors see only their assigned audits. Access controls are enforced at the server level.",
   },
   {
     q: "What happens when an audit score is low?",
-    a: "Critical failures create corrective action tasks immediately. If a location's score drops across consecutive audits, alerts escalate to regional management and then leadership.",
+    a: "Critical failures trigger corrective action tasks immediately. If a location’s score keeps dropping across consecutive audits, alerts escalate to regional management and then leadership.",
   },
 ];
 

@@ -2,7 +2,7 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
   title: 'Food Safety Audit Software | Stay Ahead of Compliance Across Locations',
-  description: 'Audiment is audit and inspection software for food businesses. Reactive compliance leaves you exposed to regulatory risk. FSSAI-ready templates, photo-verified audits, and corrective action tracking keep you ahead of compliance across every location.',
+  description: 'Audiment is audit management software for food businesses. FSSAI-ready templates, photo-verified audits, and corrective action tracking keep you compliant across every location.',
   alternates: { canonical: 'https://audiment.in/solutions/food-safety-audit-software' }
 }
 
@@ -11,7 +11,7 @@ export default function FoodSafetyAuditSoftware() {
     <SolutionPageTemplate
       industry="Food Safety"
       heroH1="Food Safety Audit Software – FSSAI-Ready, Photo-Verified Compliance Audits"
-      heroSubheadline="Food safety compliance fails when it relies on memory and paper logs. Audiment forces physical floor walks, captures live temperature data, and creates an audit trail that stands up to inspection."
+      heroSubheadline="Food safety compliance fails when it relies on memory and paper logs. Audiment requires physical floor walks, captures live temperature data, and creates an audit trail that stands up to inspection."
       painPoints={[
         {
           title: "FSSAI Inspection Readiness",
@@ -62,7 +62,7 @@ export default function FoodSafetyAuditSoftware() {
       faqs={[
         {
           question: "Can this software replace our manual temperature logs?",
-          answer: "Yes, fully. Digital temperature logging via mobile devices reduces errors, prevents retrospective filling, and makes historical data instantly searchable for inspectors."
+          answer: "Yes. Digital temperature logging via mobile is faster, prevents retrospective filling, and makes historical data instantly searchable for inspectors."
         },
         {
           question: "Is this compliant with FSSAI regulations?",

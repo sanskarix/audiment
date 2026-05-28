@@ -1,8 +1,8 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'Retail Audit Software | Improve Operational Consistency Across Stores',
-  description: 'Audiment is audit and inspection software for retail chains. Visual merchandising and brand standards drift silently across stores. Proof-based audits, issue tracking, and corrective actions keep every location consistent.',
+  title: 'Retail Audit Software | Maintain Standards Across Every Store',
+  description: 'Audiment is audit management software for retail chains. Audit merchandising, store presentation, and brand standards across every location with proof and corrective actions.',
   alternates: { canonical: 'https://audiment.in/solutions/retail-audit-software' }
 }
 
@@ -11,7 +11,7 @@ export default function RetailAuditSoftware() {
     <SolutionPageTemplate
       industry="Retail"
       heroH1="Retail Audit Software – Standardize Store Compliance Across Your Chain"
-      heroSubheadline="Make sure visual merchandising, stock management, and store presentation match your brand guidelines in every store – without relying on monthly visits."
+      heroSubheadline="Make sure visual merchandising, stock management, and store presentation match your brand guidelines in every store — without relying on monthly visits."
       painPoints={[
         {
           title: "Inconsistent Visual Merchandising",
@@ -37,7 +37,7 @@ export default function RetailAuditSoftware() {
         },
         {
           title: "Regional Dashboard Analytics",
-          description: "Stop waiting for month-end reports. Instantly see which retail district is failing loss-prevention audits the most and deploy targeted training to fix it."
+          description: "Stop waiting for month-end reports. See which retail district is failing loss-prevention audits most often and deploy targeted training to fix it."
         }
       ]}
       operationalBottlenecks={[
@@ -90,7 +90,7 @@ export default function RetailAuditSoftware() {
         { title: "Restaurant Audit Software", href: "/solutions/restaurant-audit-software" }
       ]}
       crossLinks={[
-        { tag: "Platform", title: "Operational Dashboards", href: "/platform/operational-dashboards", description: "Track store-level consistency and recurring issues." },
+        { tag: "Platform", title: "Audit Dashboards", href: "/platform/operational-dashboards", description: "Track store-level consistency and recurring issues." },
         { tag: "Platform", title: "Issue Tracking", href: "/platform/issue-tracking", description: "Move from detected issues to verified resolution." },
         { tag: "Topic", title: "Operational Drift", href: "/operational-drift", description: "How retail standards drift across distributed stores." },
         { tag: "Topic", title: "Maintaining Standards Across Locations", href: "/maintaining-standards-across-locations", description: "Operational consistency framework for retail chains." },

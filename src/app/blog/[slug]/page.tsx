@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!post) return {}
   
   return {
-    title: `${post.title.slice(0, 47)} | Audiment`,
+    title: { absolute: `${post.title} | Audiment` },
     description: post.description,
     alternates: { 
       canonical: `https://audiment.in/blog/${resolvedParams.slug}` 

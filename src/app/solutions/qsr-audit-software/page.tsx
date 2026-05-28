@@ -1,8 +1,8 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'QSR Audit Software | Operational Consistency for Quick Service Chains',
-  description: 'Audiment is audit and inspection software for QSR chains. Speed of service creates compliance gaps that compound across outlets. Proof-based audits, issue tracking, and corrective actions keep every outlet on standard every shift.',
+  title: 'QSR Audit Software | Audit Management for Quick Service Chains',
+  description: 'Audiment is audit management software for QSR chains. Shift-by-shift audits with photo evidence keep every outlet on standard — even with high staff turnover.',
   alternates: { canonical: 'https://audiment.in/solutions/qsr-audit-software' }
 }
 
@@ -10,8 +10,8 @@ export default function QSRAuditSoftware() {
   return (
     <SolutionPageTemplate
       industry="Quick Service Restaurants (QSR)"
-      heroH1="QSR Audit Software – Speed, Compliance and Consistency Across Every Outlet"
-      heroSubheadline="In QSR, speed and compliance constantly compete. Audiment helps you maintain both – with shift-by-shift digital audits that take minutes, not hours, and evidence that shows what actually happened on the floor."
+      heroH1="QSR Audit Software – Compliance and Consistency Across Every Outlet"
+      heroSubheadline="In QSR, speed and compliance constantly compete. Audiment helps you maintain both — with shift-by-shift digital audits that take minutes, not hours, and evidence that shows what actually happened on the floor."
       painPoints={[
         {
           title: "High Staff Turnover Breaking SOPs",
@@ -19,7 +19,7 @@ export default function QSRAuditSoftware() {
         },
         {
           title: "Speed vs Quality Trade-off",
-          description: "When drive-thru lines back up, managers cut corners on hygiene and preparation standards to clear orders faster. The problem isn't that they don't care – it's that there's no visibility into these operational gaps in real time."
+          description: "When drive-thru lines back up, managers cut corners on hygiene and prep standards to clear orders faster. The problem isn't that they don't care — it's that there's no way to see these gaps in real time."
         },
         {
           title: "Brand Consistency Drift",
@@ -32,8 +32,8 @@ export default function QSRAuditSoftware() {
           description: "Map your operational manual into actionable checklists. New shift leaders know exactly what to verify during opening – and they can't skip the critical steps."
         },
         {
-          title: "Cross-Location Performance Visibility",
-          description: "If service speed is dropping regionally, cross-reference it with audit scores to see whether it's a staffing issue, a training gap, or an equipment problem. Real-time dashboards expose the root cause."
+          title: "Cross-Location Performance Tracking",
+          description: "If service speed is dropping regionally, cross-reference it with audit scores to see whether it's a staffing issue, a training gap, or an equipment problem. Dashboards expose the root cause."
         },
         {
           title: "Shift-by-Shift Accountability",
@@ -92,7 +92,7 @@ export default function QSRAuditSoftware() {
       crossLinks={[
         { tag: "Platform", title: "Issue Tracking", href: "/platform/issue-tracking", description: "Resolve shift-level failures before they repeat." },
         { tag: "Platform", title: "Geo-Verified Audits", href: "/platform/geo-verified-audits", description: "Verify on-site checks during high-speed operations." },
-        { tag: "Topic", title: "Operational Drift", href: "/operational-drift", description: "Why QSR standards slip across outlets without visibility." },
+        { tag: "Topic", title: "Operational Drift", href: "/operational-drift", description: "Why QSR standards slip across outlets without consistent audits." },
         { tag: "Topic", title: "Improving Accountability", href: "/improving-accountability", description: "Assign and close failures by shift and location." },
       ]}
     />

@@ -19,7 +19,7 @@ import {
 } from "@/components/home/HomePageSections";
 
 export const metadata: Metadata = {
-  title: 'Multi-Location Audit & Inspection Software | Audiment',
+  title: { absolute: 'Multi-Location Audit & Inspection Software | Audiment' },
   description: 'Run audits across every location with proof, tracking, and corrective actions. Audiment is audit management software built for multi-location businesses.',
   keywords: ['audit and inspection software', 'multi-location audit software', 'proof-based audits', 'quality consistency', 'operational consistency', 'corrective action tracking', 'FSSAI audit software', 'field audit app India'],
   alternates: { canonical: 'https://audiment.in' },

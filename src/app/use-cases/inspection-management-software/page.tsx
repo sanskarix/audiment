@@ -1,8 +1,8 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 
 export const metadata = {
-  title: 'Inspection Management Software | Operational Oversight Across Every Location',
-  description: 'Audiment is audit and inspection software for multi-location businesses. Unstructured inspections produce unreliable data. Scheduled, evidence-backed inspections with full lifecycle tracking give you operational visibility from assignment to resolution.',
+  title: 'Inspection Management Software | Schedule, Execute, and Track Every Inspection',
+  description: 'Audiment is audit management software for multi-location businesses. Scheduled, evidence-backed inspections with full lifecycle tracking show you what\'s actually happening at every location.',
   alternates: { canonical: 'https://audiment.in/use-cases/inspection-management-software' }
 }
 

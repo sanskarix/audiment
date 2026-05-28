@@ -2,7 +2,7 @@ import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 
 export const metadata = {
   title: 'Multi-Location Compliance Software | Stay on Top of Standards Across Every Branch',
-  description: 'Audiment is audit and inspection software for multi-location businesses. Compliance becomes harder to maintain as you scale. Proof-based audits, operational dashboards, and corrective action tracking give you verified compliance data and issue visibility across your entire network.',
+  description: 'Audiment is audit management software for multi-location businesses. Proof-based audits, dashboards, and corrective action tracking give you verified compliance data from every branch.',
   alternates: { canonical: 'https://audiment.in/use-cases/multi-location-compliance' }
 }
 
@@ -10,8 +10,8 @@ export default function MultiLocationCompliance() {
   return (
     <UseCaseTemplate
       title="Multi-Location Compliance Software"
-      heroH1="Multi-Location Compliance Software – Verified Visibility Across Every Branch"
-      heroSubheadline="When you manage 10 locations, you can visit each one monthly. When you manage 50, you can't. Audiment gives you verified operational data from every branch – without being there."
+      heroH1="Multi-Location Compliance Software – Verified Standards Across Every Branch"
+      heroSubheadline="When you manage 10 locations, you can visit each one monthly. When you manage 50, you can't. Audiment gives you verified audit data from every branch — without being there."
       primaryKeyword="multi-location compliance"
       operationalScenario={{
         title: "What changes when compliance is verified, not assumed",
@@ -24,8 +24,8 @@ export default function MultiLocationCompliance() {
           description: "Push operational playbooks to every location instantly. When you update the opening checklist, every branch is running the new version by tomorrow morning – no PDFs to email, no hoping managers read the update."
         },
         {
-          title: "Role-Based Visibility Hierarchies",
-          description: "Branch managers see their tasks and scores. Regional managers see territory-wide trend lines. Leadership sees systemic patterns across the entire network. Each role gets exactly the view they need to act."
+          title: "Role-Based Access Hierarchies",
+          description: "Branch managers see their tasks and scores. Regional managers see territory-wide trend lines. Leadership sees recurring patterns across the entire network. Each role gets the view they need to act."
         },
         {
           title: "Automated Issue Escalation",

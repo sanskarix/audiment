@@ -1,8 +1,8 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
-  title: 'Restaurant Audit Software | Stay on Top of Operations Across Locations',
-  description: 'Audiment is audit and inspection software for restaurant chains. Standards become harder to maintain as you scale. Proof-based audits, corrective action tracking, and quality consistency systems keep every location on standard.',
+  title: 'Restaurant Audit Software | Audit Management for Restaurant Chains',
+  description: 'Audiment is audit management software for restaurant chains. Run hygiene, safety, and brand standard audits across every kitchen with proof, tracking, and corrective actions.',
   alternates: { canonical: 'https://audiment.in/solutions/restaurant-audit-software' }
 }
 
@@ -11,7 +11,7 @@ export default function RestaurantAuditSoftware() {
     <SolutionPageTemplate
       industry="Restaurants"
       heroH1="Restaurant Audits You Can Actually Trust"
-      heroSubheadline="Replace scattered paper checklists with digital audit workflows built for multi-location restaurant operators. Know what's actually happening in your kitchens."
+      heroSubheadline="Replace scattered paper checklists with digital audits built for multi-location restaurant operators. Know what's actually happening in every kitchen."
       painPoints={[
         {
           title: "Inconsistent Hygiene Standards",
@@ -29,7 +29,7 @@ export default function RestaurantAuditSoftware() {
       features={[
         {
           title: "Mandatory Photo Evidence",
-          description: "Staff take live photos of clean stations, temperature gauges, and correctly stored inventory as part of the audit. You see exactly what's happening in your kitchens – not a summary from memory."
+          description: "Staff take live photos of clean stations, temperature gauges, and correctly stored inventory during the audit. You see what's happening in your kitchens — not a summary from memory."
         },
         {
           title: "Automated FSSAI-Ready Reports",
@@ -41,7 +41,7 @@ export default function RestaurantAuditSoftware() {
         }
       ]}
       operationalBottlenecks={[
-        "Store managers covering up equipment failures to avoid corporate scrutiny.",
+        "Store managers covering up equipment failures to avoid scrutiny from corporate.",
         "Area managers completing audits from their cars without walking the floor.",
         "Paper checklists getting lost before the FSSAI inspector arrives.",
         "Corporate finding out about hygiene failures through customer reviews instead of internal systems."
@@ -62,15 +62,15 @@ export default function RestaurantAuditSoftware() {
       faqs={[
         {
           question: "Can we use our existing paper checklists in Audiment?",
-          answer: "Yes, you can easily replicate and enhance your current paper forms using our digital builder, adding photo requirements and condition logic."
+          answer: "Yes. You can replicate and enhance your current paper forms using the digital builder — adding photo requirements and conditional logic."
         },
         {
           question: "Will this slow down my kitchen staff during opening/closing?",
-          answer: "No, a digitized checklist with a mobile UI is significantly faster. Staff tap 'Pass' or 'Fail' rather than writing out logs, saving 15-20 minutes daily."
+          answer: "No. A digitized checklist on mobile is significantly faster. Staff tap Pass or Fail rather than writing logs by hand — saving 15–20 minutes daily."
         },
         {
           question: "Do managers need an internet connection in the freezer?",
-          answer: "Yes. Audits continue offline and sync automatically once the device reconnects."
+          answer: "Audits continue offline and sync automatically once the device reconnects."
         },
         {
           question: "Can FSSAI inspectors view these logs?",
@@ -78,7 +78,7 @@ export default function RestaurantAuditSoftware() {
         },
         {
           question: "How do we stop staff from taking photos of old, clean equipment?",
-          answer: "Our software requires live camera capture. Staff cannot upload images from their photo gallery, ensuring the evidence represents the reality of that exact moment."
+          answer: "Audiment requires live camera capture. Staff cannot upload images from their gallery, so evidence always reflects the actual moment."
         }
       ]}
       relatedBlogLink="/blog/restaurant-audit-guide"
@@ -92,7 +92,7 @@ export default function RestaurantAuditSoftware() {
       crossLinks={[
         { tag: "Platform", title: "Proof-Based Audits", href: "/platform/proof-based-audits", description: "How photo evidence replaces self-reported summaries across your outlets." },
         { tag: "Platform", title: "Corrective Actions", href: "/platform/corrective-actions", description: "Auto-generated tasks with deadlines when a standard fails at any location." },
-        { tag: "Platform", title: "Issue Tracking", href: "/platform/issue-tracking", description: "End-to-end visibility from issue detection to verified resolution." },
+        { tag: "Platform", title: "Issue Tracking", href: "/platform/issue-tracking", description: "Track every failed check from detection to verified closure." },
         { tag: "Topic", title: "Operational Drift", href: "/operational-drift", description: "How restaurant standards drift silently as you scale and how to stop it." },
         { tag: "Topic", title: "Staying Ahead of Compliance", href: "/staying-ahead-of-compliance", description: "Proactive FSSAI compliance vs. scrambling before inspections." },
         { tag: "Topic", title: "Maintaining Standards Across Locations", href: "/maintaining-standards-across-locations", description: "The core consistency challenge for restaurant chains." },

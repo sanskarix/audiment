@@ -21,8 +21,10 @@ const SITE_URL = "https://audiment.in";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  applicationName: 'Audiment',
-  title: 'Multi-Location Audit & Inspection Software | Audiment',
+  title: {
+    template: '%s | Audiment',
+    default: 'Multi-Location Audit & Inspection Software | Audiment',
+  },
   description:
     'Run audits across every location with proof, tracking, and corrective actions. Audiment is audit management software built for multi-location businesses.',
   keywords: [

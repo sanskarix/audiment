@@ -2,7 +2,7 @@ import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 
 export const metadata = {
   title: 'Audit Checklist Software | Maintain Consistent Standards Across Locations',
-  description: 'Audiment is audit and inspection software for multi-location businesses. Paper checklists create inconsistency at scale. Digital audit forms with conditional logic, photo evidence, and weighted scoring give you reliable operational data from every location.',
+  description: 'Audiment is audit management software for multi-location businesses. Digital audit forms with conditional logic, photo evidence, and weighted scoring replace paper checklists that hide problems.',
   alternates: { canonical: 'https://audiment.in/use-cases/audit-checklist-software' }
 }
 
@@ -35,7 +35,7 @@ export default function AuditChecklistSoftware() {
       benefits={[
         {
           title: "Actionable Data, Not Dead Forms",
-          description: "Paper checklists go into a cabinet and stay there. Digital checklists feed live trend dashboards showing you exactly where systemic failures keep recurring."
+          description: "Paper checklists go into a cabinet and stay there. Digital checklists feed live dashboards showing you where the same failures keep recurring."
         },
         {
           title: "Instant Root-Cause Identification",

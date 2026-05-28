@@ -2,7 +2,7 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
   title: 'Franchise Compliance Software | Maintain Standards Across Every Outlet',
-  description: 'Audiment is audit and inspection software for franchise networks. Franchisee self-reporting creates blind spots as your network grows. Proof-based audits, corrective actions, and operational dashboards keep every unit on standard.',
+  description: 'Audiment is audit management software for franchise networks. Proof-based audits, corrective actions, and dashboards give corporate teams proof of what\'s happening at every franchisee location.',
   alternates: { canonical: 'https://audiment.in/solutions/franchise-audit-software' }
 }
 
@@ -11,14 +11,14 @@ export default function FranchiseAuditSoftware() {
     <SolutionPageTemplate
       industry="Franchises"
       heroH1="Franchise Audit Software – Protect Brand Standards Across Every Franchisee"
-      heroSubheadline="Your brand promise is only as strong as your weakest location. Ensure operational consistency across your entire franchise network with verified compliance data – not assumptions."
+      heroSubheadline="Your brand promise is only as strong as your weakest location. Keep every franchise unit on standard with verified compliance data — not assumptions."
       painPoints={[
         {
           title: "Franchisees Drifting from Standards",
-          description: "Local operators cut costs by using off-brand suppliers, understaffing shifts, or skipping maintenance. Without visibility into daily operations, corporate finds out through customer complaints – not internal systems."
+          description: "Local operators cut costs by using off-brand suppliers, understaffing shifts, or skipping maintenance. Without audit data from daily operations, corporate finds out through customer complaints — not internal systems."
         },
         {
-          title: "No Real-Time Visibility",
+          title: "No Proof of Daily Execution",
           description: "Corporate has no way to know whether franchisees are actually completing safety checklists or just filling in paper at the end of the week. The monthly area visit catches problems after they've been festering for weeks."
         },
         {
@@ -91,7 +91,7 @@ export default function FranchiseAuditSoftware() {
       ]}
       crossLinks={[
         { tag: "Platform", title: "Proof-Based Audits", href: "/platform/proof-based-audits", description: "Verify on-site execution across franchise locations." },
-        { tag: "Platform", title: "Operational Dashboards", href: "/platform/operational-dashboards", description: "Network-level visibility into franchise performance." },
+        { tag: "Platform", title: "Audit Dashboards", href: "/platform/operational-dashboards", description: "Network-level audit performance across every franchise unit." },
         { tag: "Topic", title: "Improving Accountability", href: "/improving-accountability", description: "How ownership systems reduce unresolved franchise issues." },
         { tag: "Topic", title: "Maintaining Standards Across Locations", href: "/maintaining-standards-across-locations", description: "Why consistency breaks as franchise networks scale." },
       ]}

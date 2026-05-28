@@ -2,7 +2,7 @@ import CompareTemplate from '@/components/compare/CompareTemplate'
 
 export const metadata = {
   title: 'Audiment vs GoAudits | Multi-Location Audit Comparison',
-  description: 'Audiment is audit and inspection software built specifically for multi-location operational control. See how Audiment compares to GoAudits on evidence verification, corrective action workflows, and quality consistency across locations.',
+  description: 'Audiment is audit management software built for multi-location operations. See how Audiment compares to GoAudits on evidence verification, corrective action workflows, and audit quality across locations.',
   alternates: { canonical: 'https://audiment.in/compare/audiment-vs-goaudits' }
 }
 
@@ -66,7 +66,7 @@ export default function CompareGoAudits() {
       ]}
       operationalOutcomeDifference={{
         title: "Operational Outcome Difference",
-        text: "Checklist-first systems can log findings, but they often leave follow-through inconsistent across branches. Proof-based audits with corrective-action ownership create more reliable operational inputs, earlier issue detection, and stronger operational consistency as location count grows."
+        text: "Checklist-first systems can log findings, but they often leave follow-through inconsistent across branches. Proof-based audits with corrective-action ownership create more reliable audit data, earlier issue detection, and stronger consistency as location count grows."
       }}
     />
   )

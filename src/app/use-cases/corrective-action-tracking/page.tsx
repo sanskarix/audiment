@@ -2,7 +2,7 @@ import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 
 export const metadata = {
   title: 'Corrective Action Tracking | Improve Accountability Across Locations',
-  description: 'Audiment is audit and inspection software for multi-location businesses. Issues get detected but rarely resolved without a tracking system. Auto-generated corrective action tasks, SLA deadlines, photo-proof closure, and escalation keep accountability clear at every location.',
+  description: 'Audiment is audit management software for multi-location businesses. Auto-generated corrective action tasks, SLA deadlines, and photo-proof closure keep every issue on track from detection to resolution.',
   alternates: { canonical: 'https://audiment.in/use-cases/corrective-action-tracking' }
 }
 

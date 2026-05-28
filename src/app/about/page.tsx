@@ -3,8 +3,8 @@ import { Navbar } from '@/components/ui/navbar'
 import { Footer } from '@/components/ui/modem-animated-footer'
 
 export const metadata = {
-  title: 'About Audiment | Operational Control Across Multi-Location Businesses',
-  description: 'Audiment is audit and inspection software for multi-location businesses. We help operations teams stay on top of quality and compliance across locations through proof-based audits and corrective actions.',
+  title: 'About Audiment | Audit Management for Multi-Location Businesses',
+  description: 'Audiment is audit management software for multi-location businesses. Run audits across every location with proof, tracking, and corrective actions.',
   alternates: { canonical: 'https://audiment.in/about' }
 }
 
@@ -32,7 +32,7 @@ export default function AboutPage() {
             About Audiment
           </h1>
           <p className="text-xl text-muted-foreground mb-8 text-balance">
-            Audit and inspection software for multi-location businesses.
+            Audit management software for multi-location businesses.
           </p>
         </div>
       </section>
@@ -43,30 +43,24 @@ export default function AboutPage() {
         <div className="prose prose-lg dark:prose-invert">
           <h2>Why multi-location operations break as they scale</h2>
           <p>
-            Multi-location businesses lose operational control as they scale. Standards drift between locations, managers self-report, issue visibility weakens, and failures surface too late.
-          </p>
-          <p>
-            The pattern is predictable: what worked at 1 or 2 locations breaks at 20 or 200. Operational consistency becomes harder to maintain, quality weakens, and compliance becomes reactive.
+            When you had one or two locations, you could see everything yourself. At 20 or 200, you can&apos;t. Standards drift, managers self-report, issues stay hidden, and problems surface too late.
           </p>
 
           <h2>Why self-reporting fails in distributed teams</h2>
           <p>
-            Self-reporting creates blind spots. A completed checklist does not prove a standard was actually met. Without evidence and follow-through, reports can look healthy while operational drift is increasing.
-          </p>
-          <p>
-            This is not a motivation problem. It is a system problem. Teams need a way to verify execution quality and close issues consistently across locations.
+            A completed checklist doesn&apos;t prove a standard was actually met. Without photo evidence and tracked follow-through, reports can look healthy while quality is slipping. This isn&apos;t a motivation problem — it&apos;s a system problem.
           </p>
 
           <h2>What Audiment is built to do</h2>
           <p>
-            Audiment helps multi-location businesses stay on top of quality and compliance across locations. It is audit and inspection software built around proof-based operational systems.
+            Audiment helps you run audits across every location with proof, tracking, and accountability.
           </p>
           <ul>
-            <li><strong>Proof-based audits:</strong> Critical checks require evidence, so reported completion reflects real execution.</li>
-            <li><strong>Issue visibility:</strong> Teams can see failed standards and recurring risk patterns across locations.</li>
-            <li><strong>Corrective actions:</strong> Failures become owned tasks with deadlines and proof of closure.</li>
-            <li><strong>Operational patterns:</strong> Trend signals highlight where consistency is weakening before escalation.</li>
-            <li><strong>Offline continuity:</strong> Audits continue offline and sync automatically once the device reconnects.</li>
+            <li><strong>Proof-based audits:</strong> Critical checks require photo or video evidence before they can be marked complete.</li>
+            <li><strong>Issue tracking:</strong> Failed standards become tracked issues so you can see what&apos;s broken and where.</li>
+            <li><strong>Corrective actions:</strong> Every failure becomes an assigned task with a deadline and proof of closure.</li>
+            <li><strong>Trend detection:</strong> See which locations keep scoring low and where the same issues keep recurring.</li>
+            <li><strong>Offline audits:</strong> Audits run offline and sync automatically when the device reconnects.</li>
           </ul>
           <p>
             For deeper context, see <Link href="/operational-drift" className="text-primary hover:underline">operational drift</Link>, <Link href="/platform/proof-based-audits" className="text-primary hover:underline">proof-based audits</Link>, and <Link href="/platform/corrective-actions" className="text-primary hover:underline">corrective actions</Link>.
@@ -74,10 +68,10 @@ export default function AboutPage() {
 
           <h2>Who it is for</h2>
           <p>
-            Audiment is designed for operations teams managing distributed execution across restaurants, retail chains, hotel groups, franchise networks, healthcare sites, and manufacturing facilities.
+            Audiment is built for founders and operations teams who run multi-location businesses and need to know what&apos;s actually happening on the ground.
           </p>
           <p>
-            The strongest fit is businesses with 10-500+ locations that need operational consistency, accountability, and compliance readiness without relying on paper and chat threads.
+            The strongest fit is businesses with 10–500+ locations that can&apos;t rely on paper checklists and WhatsApp threads to maintain standards.
           </p>
 
           <h2>Industries served</h2>

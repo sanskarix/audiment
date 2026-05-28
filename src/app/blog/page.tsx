@@ -47,7 +47,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
   const featuredPost = searchQuery ? null : posts.find(p => p.featured)
   const displayPosts = searchQuery || categoryQuery ? filteredPosts : filteredPosts.filter(p => p.slug !== featuredPost?.slug)
   const semanticOrder = [
-    "Operational Control",
+    "Audit Management",
     "Operational Drift",
     "Quality Consistency",
     "Accountability",

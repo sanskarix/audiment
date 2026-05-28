@@ -2,7 +2,7 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
   title: 'Manufacturing Audit Software | Maintain Standards Across Facilities',
-  description: 'Audiment is audit and inspection software for manufacturing operations. Safety and quality standards drift without systematic oversight across facilities. Proof-based audits, equipment checks, and corrective actions give you operational control across every site.',
+  description: 'Audiment is audit management software for manufacturing operations. Proof-based audits, equipment checks, and corrective actions keep safety and quality standards consistent across every facility.',
   alternates: { canonical: 'https://audiment.in/solutions/manufacturing-audit-software' }
 }
 

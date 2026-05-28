@@ -2,7 +2,7 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
   title: 'Hotel Audit Software | Maintain Quality Standards Across Properties',
-  description: 'Audiment is audit and inspection software for hotel groups. Guest experience and service standards vary across properties without systematic oversight. Proof-based audits and corrective action workflows give you visibility and accountability across every property.',
+  description: 'Audiment is audit management software for hotel groups. Audit housekeeping, F&B, and guest experience standards across every property with proof, tracking, and accountability.',
   alternates: { canonical: 'https://audiment.in/solutions/hotel-audit-software' }
 }
 
@@ -11,7 +11,7 @@ export default function HotelAuditSoftware() {
     <SolutionPageTemplate
       industry="Hotels & Hospitality"
       heroH1="Hotel Audit Software – Maintain Guest Experience Standards at Every Property"
-      heroSubheadline="Guest satisfaction depends on consistency across every property. From housekeeping to F&B to engineering – Audiment gives your operations team verified visibility into daily execution at each location."
+      heroSubheadline="Guest satisfaction depends on consistency across every property. From housekeeping to F&B to engineering — Audiment shows your operations team what's actually happening at each location, every day."
       painPoints={[
         {
           title: "Inconsistent Guest Experience",
@@ -28,8 +28,8 @@ export default function HotelAuditSoftware() {
       ]}
       features={[
         {
-          title: "Total Property Visibility",
-          description: "Group Directors of Operations can instantly see the compliance health of every department (F&B, Rooms, Engineering) across their entire portfolio."
+          title: "Full Property Overview",
+          description: "Group Directors of Operations can see the compliance health of every department (F&B, Rooms, Engineering) across their entire portfolio — on one screen."
         },
         {
           title: "Multi-Department Workflows",
@@ -50,7 +50,7 @@ export default function HotelAuditSoftware() {
         { title: "Room Inspection", description: "Housekeeping supervisor logs a damaged carpet during standard check." },
         { title: "Department Handoff", description: "A maintenance task is auto-generated and assigned to engineering." },
         { title: "Proof of Repair", description: "Engineer logs the repair with a geo-tagged photo." },
-        { title: "Executive Visibility", description: "General manager sees the closed loop on the daily property dashboard." }
+        { title: "GM Dashboard Updated", description: "General manager sees the closed loop on the daily property dashboard." }
       ]}
       sampleChecklist={[
         { area: "Room Cleanliness", question: "Are absolutely all bathroom surfaces, including shower glass and mirrors, free from water spots and dust?" },
@@ -91,7 +91,7 @@ export default function HotelAuditSoftware() {
       ]}
       crossLinks={[
         { tag: "Platform", title: "Corrective Actions", href: "/platform/corrective-actions", description: "Track cross-department issue closure with ownership." },
-        { tag: "Platform", title: "Operational Dashboards", href: "/platform/operational-dashboards", description: "Property-level visibility across your portfolio." },
+        { tag: "Platform", title: "Audit Dashboards", href: "/platform/operational-dashboards", description: "Property-level audit performance across your portfolio." },
         { tag: "Topic", title: "Hidden Operational Issues", href: "/hidden-operational-issues", description: "Why service and maintenance issues surface late." },
         { tag: "Topic", title: "Maintaining Standards Across Locations", href: "/maintaining-standards-across-locations", description: "Consistency systems for distributed hospitality teams." },
       ]}

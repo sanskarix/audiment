@@ -14,7 +14,7 @@ const solutions = [
     },
     {
         title: 'QSR Audit Software',
-        description: 'Shift-by-shift compliance checks for high-volume QSR operations. Opening checklists, temperature logs, and brand standard audits run consistently — even with high staff turnover.',
+        description: 'Shift-by-shift compliance checks for high-volume QSR operations. Opening checklists, temperature logs, and brand standard audits run consistently – even with high staff turnover.',
         href: '/solutions/qsr-audit-software',
         icon: <Coffee className="w-8 h-8 text-primary" />,
     },

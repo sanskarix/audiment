@@ -2,7 +2,7 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 
 export const metadata = {
   title: 'QSR Audit Software | Audit Management for Quick Service Chains',
-  description: 'Audiment is audit management software for QSR chains. Shift-by-shift audits with photo evidence keep every outlet on standard — even with high staff turnover.',
+  description: 'Audiment is audit management software for QSR chains. Shift-by-shift audits with photo evidence keep every outlet on standard – even with high staff turnover.',
   alternates: { canonical: 'https://audiment.in/solutions/qsr-audit-software' }
 }
 
@@ -11,7 +11,7 @@ export default function QSRAuditSoftware() {
     <SolutionPageTemplate
       industry="Quick Service Restaurants (QSR)"
       heroH1="QSR Audit Software – Compliance and Consistency Across Every Outlet"
-      heroSubheadline="In QSR, speed and compliance constantly compete. Audiment helps you maintain both — with shift-by-shift digital audits that take minutes, not hours, and evidence that shows what actually happened on the floor."
+      heroSubheadline="In QSR, speed and compliance constantly compete. Audiment helps you maintain both – with shift-by-shift digital audits that take minutes, not hours, and evidence that shows what actually happened on the floor."
       painPoints={[
         {
           title: "High Staff Turnover Breaking SOPs",
@@ -19,7 +19,7 @@ export default function QSRAuditSoftware() {
         },
         {
           title: "Speed vs Quality Trade-off",
-          description: "When drive-thru lines back up, managers cut corners on hygiene and prep standards to clear orders faster. The problem isn't that they don't care — it's that there's no way to see these gaps in real time."
+          description: "When drive-thru lines back up, managers cut corners on hygiene and prep standards to clear orders faster. The problem isn't that they don't care – it's that there's no way to see these gaps in real time."
         },
         {
           title: "Brand Consistency Drift",

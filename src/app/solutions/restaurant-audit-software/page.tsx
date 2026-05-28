@@ -29,7 +29,7 @@ export default function RestaurantAuditSoftware() {
       features={[
         {
           title: "Mandatory Photo Evidence",
-          description: "Staff take live photos of clean stations, temperature gauges, and correctly stored inventory during the audit. You see what's happening in your kitchens — not a summary from memory."
+          description: "Staff take live photos of clean stations, temperature gauges, and correctly stored inventory during the audit. You see what's happening in your kitchens – not a summary from memory."
         },
         {
           title: "Automated FSSAI-Ready Reports",
@@ -62,11 +62,11 @@ export default function RestaurantAuditSoftware() {
       faqs={[
         {
           question: "Can we use our existing paper checklists in Audiment?",
-          answer: "Yes. You can replicate and enhance your current paper forms using the digital builder — adding photo requirements and conditional logic."
+          answer: "Yes. You can replicate and enhance your current paper forms using the digital builder – adding photo requirements and conditional logic."
         },
         {
           question: "Will this slow down my kitchen staff during opening/closing?",
-          answer: "No. A digitized checklist on mobile is significantly faster. Staff tap Pass or Fail rather than writing logs by hand — saving 15–20 minutes daily."
+          answer: "No. A digitized checklist on mobile is significantly faster. Staff tap Pass or Fail rather than writing logs by hand – saving 15–20 minutes daily."
         },
         {
           question: "Do managers need an internet connection in the freezer?",

@@ -11,11 +11,11 @@ export default function FranchiseAuditSoftware() {
     <SolutionPageTemplate
       industry="Franchises"
       heroH1="Franchise Audit Software – Protect Brand Standards Across Every Franchisee"
-      heroSubheadline="Your brand promise is only as strong as your weakest location. Keep every franchise unit on standard with verified compliance data — not assumptions."
+      heroSubheadline="Your brand promise is only as strong as your weakest location. Keep every franchise unit on standard with verified compliance data – not assumptions."
       painPoints={[
         {
           title: "Franchisees Drifting from Standards",
-          description: "Local operators cut costs by using off-brand suppliers, understaffing shifts, or skipping maintenance. Without audit data from daily operations, corporate finds out through customer complaints — not internal systems."
+          description: "Local operators cut costs by using off-brand suppliers, understaffing shifts, or skipping maintenance. Without audit data from daily operations, corporate finds out through customer complaints – not internal systems."
         },
         {
           title: "No Proof of Daily Execution",

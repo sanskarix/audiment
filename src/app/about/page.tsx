@@ -48,7 +48,7 @@ export default function AboutPage() {
 
           <h2>Why self-reporting fails in distributed teams</h2>
           <p>
-            A completed checklist doesn&apos;t prove a standard was actually met. Without photo evidence and tracked follow-through, reports can look healthy while quality is slipping. This isn&apos;t a motivation problem — it&apos;s a system problem.
+            A completed checklist doesn&apos;t prove a standard was actually met. Without photo evidence and tracked follow-through, reports can look healthy while quality is slipping. This isn&apos;t a motivation problem – it&apos;s a system problem.
           </p>
 
           <h2>What Audiment is built to do</h2>

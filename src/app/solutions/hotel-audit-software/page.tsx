@@ -11,7 +11,7 @@ export default function HotelAuditSoftware() {
     <SolutionPageTemplate
       industry="Hotels & Hospitality"
       heroH1="Hotel Audit Software – Maintain Guest Experience Standards at Every Property"
-      heroSubheadline="Guest satisfaction depends on consistency across every property. From housekeeping to F&B to engineering — Audiment shows your operations team what's actually happening at each location, every day."
+      heroSubheadline="Guest satisfaction depends on consistency across every property. From housekeeping to F&B to engineering – Audiment shows your operations team what's actually happening at each location, every day."
       painPoints={[
         {
           title: "Inconsistent Guest Experience",
@@ -29,7 +29,7 @@ export default function HotelAuditSoftware() {
       features={[
         {
           title: "Full Property Overview",
-          description: "Group Directors of Operations can see the compliance health of every department (F&B, Rooms, Engineering) across their entire portfolio — on one screen."
+          description: "Group Directors of Operations can see the compliance health of every department (F&B, Rooms, Engineering) across their entire portfolio – on one screen."
         },
         {
           title: "Multi-Department Workflows",

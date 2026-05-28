@@ -11,7 +11,7 @@ export default function MultiLocationCompliance() {
     <UseCaseTemplate
       title="Multi-Location Compliance Software"
       heroH1="Multi-Location Compliance Software – Verified Standards Across Every Branch"
-      heroSubheadline="When you manage 10 locations, you can visit each one monthly. When you manage 50, you can't. Audiment gives you verified audit data from every branch — without being there."
+      heroSubheadline="When you manage 10 locations, you can visit each one monthly. When you manage 50, you can't. Audiment gives you verified audit data from every branch – without being there."
       primaryKeyword="multi-location compliance"
       operationalScenario={{
         title: "What changes when compliance is verified, not assumed",

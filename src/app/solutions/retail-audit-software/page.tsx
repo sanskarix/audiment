@@ -11,7 +11,7 @@ export default function RetailAuditSoftware() {
     <SolutionPageTemplate
       industry="Retail"
       heroH1="Retail Audit Software – Standardize Store Compliance Across Your Chain"
-      heroSubheadline="Make sure visual merchandising, stock management, and store presentation match your brand guidelines in every store — without relying on monthly visits."
+      heroSubheadline="Make sure visual merchandising, stock management, and store presentation match your brand guidelines in every store – without relying on monthly visits."
       painPoints={[
         {
           title: "Inconsistent Visual Merchandising",

@@ -51,7 +51,7 @@ export default function CompareJolt() {
         },
         {
           title: "Multi-location operational scope",
-          text: "Audiment's analytics focus on cross-location trends, regional comparisons, and recurring patterns — the view operations directors need when managing a distributed network."
+          text: "Audiment's analytics focus on cross-location trends, regional comparisons, and recurring patterns – the view operations directors need when managing a distributed network."
         },
         {
           title: "Automated escalation workflows",

@@ -1,10 +1,11 @@
 import CompareTemplate from '@/components/compare/CompareTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Audiment vs Zenput (Crunchtime) | Multi-Location Audit Comparison',
   description: 'Audiment is audit management software built for multi-location operations. See how Audiment compares to Zenput on deployment speed, FSSAI compliance, and audit quality for APAC operations.',
-  alternates: { canonical: 'https://audiment.in/compare/audiment-vs-zenput' }
-}
+  path: '/compare/audiment-vs-zenput',
+})
 
 export default function CompareZenput() {
   return (

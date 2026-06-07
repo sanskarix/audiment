@@ -1,10 +1,11 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Audit Checklist Software | Maintain Consistent Standards Across Locations',
   description: 'Audiment is audit management software for multi-location businesses. Digital audit forms with conditional logic, photo evidence, and weighted scoring replace paper checklists that hide problems.',
-  alternates: { canonical: 'https://audiment.in/use-cases/audit-checklist-software' }
-}
+  path: '/use-cases/audit-checklist-software',
+})
 
 export default function AuditChecklistSoftware() {
   return (

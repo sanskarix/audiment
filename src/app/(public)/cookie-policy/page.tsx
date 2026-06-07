@@ -4,8 +4,8 @@ import { Footer } from "@/components/ui/modem-animated-footer";
 import { Navbar } from "@/components/ui/navbar";
 
 export const metadata: Metadata = {
-  title: "Cookie Policy – Audiment",
-  description: "How Audiment uses cookies and tracking technologies on its website.",
+  title: "Cookie Policy | Audiment",
+  description: "How Audiment uses cookies and tracking technologies on audiment.in.",
   robots: "index, follow",
   alternates: { canonical: 'https://audiment.in/cookie-policy' }
 };
@@ -36,7 +36,7 @@ export default function CookiePolicyPage() {
             <p className="text-base text-neutral-500 leading-relaxed mb-6">
               This Cookie Policy explains how <strong className="font-semibold text-neutral-900">Asellus LLP</strong> ("Company," "we," "us," and "our")
               uses cookies and similar technologies to recognize you when you visit our website
-              at <a href="https://audiment.vercel.app" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-700 underline underline-offset-4">audiment.vercel.app</a>. It explains what these technologies are and why we use them,
+              at <a href="https://audiment.in" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-700 underline underline-offset-4">audiment.in</a>. It explains what these technologies are and why we use them,
               as well as your rights to control our use of them.
             </p>
             <p className="text-base text-neutral-500 leading-relaxed mb-6">
@@ -197,7 +197,7 @@ export default function CookiePolicyPage() {
               or by post to:
             </p>
             <div className="p-6 rounded-xl bg-neutral-50 border border-neutral-100">
-              <h3 className="text-lg font-semibold mb-4 text-neutral-900 border-b border-neutral-200 pb-4">Audiment – Privacy Team</h3>
+              <h3 className="text-lg font-semibold mb-4 text-neutral-900 border-b border-neutral-200 pb-4">Audiment Privacy Team</h3>
               <div className="space-y-2 text-base text-neutral-600">
                 <div><strong className="font-semibold text-neutral-900">Company</strong> &nbsp;Asellus LLP (doing business as Audiment)</div>
                 <div><strong className="font-semibold text-neutral-900">Address</strong> &nbsp;Indore, Madhya Pradesh 452007, India</div>

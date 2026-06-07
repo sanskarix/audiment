@@ -47,6 +47,5 @@ Unlike generic checklist tools, Audiment verifies that audits were completed on-
 - https://audiment.in/blog/fssai-compliance-guide
 - https://audiment.in/blog/capa-management-guide
 - https://audiment.in/blog/audit-management-guide
-- https://audiment.in/blog/flash-verification-in-audits
 - https://audiment.in/blog/multi-location-compliance-guide
 - https://audiment.in/blog/restaurant-audit-guide

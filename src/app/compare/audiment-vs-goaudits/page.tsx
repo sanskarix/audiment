@@ -1,10 +1,11 @@
 import CompareTemplate from '@/components/compare/CompareTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Audiment vs GoAudits | Multi-Location Audit Comparison',
   description: 'Audiment is audit management software built for multi-location operations. See how Audiment compares to GoAudits on evidence verification, corrective action workflows, and audit quality across locations.',
-  alternates: { canonical: 'https://audiment.in/compare/audiment-vs-goaudits' }
-}
+  path: '/compare/audiment-vs-goaudits',
+})
 
 export default function CompareGoAudits() {
   return (

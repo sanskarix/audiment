@@ -1,10 +1,11 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Inspection Management Software | Schedule, Execute, and Track Every Inspection',
   description: 'Audiment is audit management software for multi-location businesses. Scheduled, evidence-backed inspections with full lifecycle tracking show you what\'s actually happening at every location.',
-  alternates: { canonical: 'https://audiment.in/use-cases/inspection-management-software' }
-}
+  path: '/use-cases/inspection-management-software',
+})
 
 export default function InspectionManagementSoftware() {
   return (

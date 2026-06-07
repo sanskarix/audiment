@@ -1,10 +1,11 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Retail Audit Software | Maintain Standards Across Every Store',
   description: 'Audiment is audit management software for retail chains. Audit merchandising, store presentation, and brand standards across every location with proof and corrective actions.',
-  alternates: { canonical: 'https://audiment.in/solutions/retail-audit-software' }
-}
+  path: '/solutions/retail-audit-software',
+})
 
 export default function RetailAuditSoftware() {
   return (

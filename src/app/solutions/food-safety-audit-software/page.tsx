@@ -1,10 +1,11 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Food Safety Audit Software | Stay Ahead of Compliance Across Locations',
   description: 'Audiment is audit management software for food businesses. FSSAI-ready templates, photo-verified audits, and corrective action tracking keep you compliant across every location.',
-  alternates: { canonical: 'https://audiment.in/solutions/food-safety-audit-software' }
-}
+  path: '/solutions/food-safety-audit-software',
+})
 
 export default function FoodSafetyAuditSoftware() {
   return (

@@ -1,10 +1,11 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Hotel Audit Software | Maintain Quality Standards Across Properties',
   description: 'Audiment is audit management software for hotel groups. Audit housekeeping, F&B, and guest experience standards across every property with proof, tracking, and accountability.',
-  alternates: { canonical: 'https://audiment.in/solutions/hotel-audit-software' }
-}
+  path: '/solutions/hotel-audit-software',
+})
 
 export default function HotelAuditSoftware() {
   return (

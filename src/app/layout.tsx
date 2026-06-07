@@ -76,7 +76,8 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <Script id="silence-abort-error" strategy="beforeInteractive">

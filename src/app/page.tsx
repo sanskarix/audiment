@@ -404,15 +404,15 @@ export default async function Home() {
               { label: "Corrective actions", sub: "Accountability enforced" },
               { label: "Consistent standards", sub: "Same rules, every location" },
             ].map((item, i, arr) => (
-              <>
-                <div key={i} className="flex flex-col items-center text-center px-6 py-4">
+              <React.Fragment key={i}>
+                <div className="flex flex-col items-center text-center px-6 py-4">
                   <span className="text-white font-semibold text-base">{item.label}</span>
                   <span className="text-neutral-500 text-sm mt-1">{item.sub}</span>
                 </div>
                 {i < arr.length - 1 && (
-                  <span key={`arrow-${i}`} className="text-neutral-600 text-2xl hidden md:block select-none">→</span>
+                  <span className="text-neutral-600 text-2xl hidden md:block select-none">→</span>
                 )}
-              </>
+              </React.Fragment>
             ))}
           </div>
         </div>
@@ -720,7 +720,7 @@ export default async function Home() {
                 <div className="w-12 h-12 rounded-full bg-neutral-50 flex items-center justify-center mb-4 text-neutral-900">
                   <tech.icon className="w-6 h-6" />
                 </div>
-                <h4 className="text-lg font-semibold text-neutral-900 mb-2">{tech.title}</h4>
+                <h3 className="text-lg font-semibold text-neutral-900 mb-2">{tech.title}</h3>
                 <p className="text-base text-neutral-500 leading-relaxed">{tech.desc}</p>
               </div>
             ))}

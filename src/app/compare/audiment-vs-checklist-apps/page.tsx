@@ -1,10 +1,11 @@
 import CompareTemplate from '@/components/compare/CompareTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Audiment vs Checklist Apps | Multi-Location Operations Comparison',
   description: 'Audiment is audit management software for multi-location businesses. See how Audiment compares with generic checklist apps on proof-based audits, issue tracking, and accountability workflows.',
-  alternates: { canonical: 'https://audiment.in/compare/audiment-vs-checklist-apps' },
-}
+  path: '/compare/audiment-vs-checklist-apps',
+})
 
 export default function CompareChecklistApps() {
   return (

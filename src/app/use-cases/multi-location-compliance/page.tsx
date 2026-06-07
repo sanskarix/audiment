@@ -1,10 +1,11 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Multi-Location Compliance Software | Stay on Top of Standards Across Every Branch',
   description: 'Audiment is audit management software for multi-location businesses. Proof-based audits, dashboards, and corrective action tracking give you verified compliance data from every branch.',
-  alternates: { canonical: 'https://audiment.in/use-cases/multi-location-compliance' }
-}
+  path: '/use-cases/multi-location-compliance',
+})
 
 export default function MultiLocationCompliance() {
   return (

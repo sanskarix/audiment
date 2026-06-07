@@ -1,10 +1,11 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Manufacturing Audit Software | Maintain Standards Across Facilities',
   description: 'Audiment is audit management software for manufacturing operations. Proof-based audits, equipment checks, and corrective actions keep safety and quality standards consistent across every facility.',
-  alternates: { canonical: 'https://audiment.in/solutions/manufacturing-audit-software' }
-}
+  path: '/solutions/manufacturing-audit-software',
+})
 
 export default function ManufacturingAuditSoftware() {
   return (

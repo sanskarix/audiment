@@ -1,10 +1,11 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'QSR Audit Software | Audit Management for Quick Service Chains',
   description: 'Audiment is audit management software for QSR chains. Shift-by-shift audits with photo evidence keep every outlet on standard – even with high staff turnover.',
-  alternates: { canonical: 'https://audiment.in/solutions/qsr-audit-software' }
-}
+  path: '/solutions/qsr-audit-software',
+})
 
 export default function QSRAuditSoftware() {
   return (

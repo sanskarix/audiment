@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowRight, Utensils, Coffee, ShieldCheck, ShoppingBag, Store, Building, Factory } from 'lucide-react'
 import { Navbar } from '@/components/ui/navbar'
 import { Footer } from '@/components/ui/modem-animated-footer'
+import { buildPageMeta } from '@/lib/seo'
 
 const solutions = [
     {
@@ -50,11 +51,11 @@ const solutions = [
     },
 ]
 
-export const metadata: Metadata = {
-    title: { absolute: 'Audit Software by Industry | Audiment' },
+export const metadata = buildPageMeta({
+    title: 'Audit Software by Industry | Audiment',
     description: 'Audit management software configured for restaurants, QSR, retail, hotels, franchises, and manufacturing. Each solution matches the specific audit workflows of your industry.',
-    alternates: { canonical: 'https://audiment.in/solutions' },
-}
+    path: '/solutions',
+})
 
 export default function SolutionsHub() {
     return (
@@ -116,6 +117,26 @@ export default function SolutionsHub() {
                     { label: "Terms of service", href: "/terms-of-service" },
                 ]}
             />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "name": "Audit Software by Industry",
+                "description": "Audit management software solutions for different industries",
+                "itemListElement": solutions.map((s, i) => ({
+                    "@type": "ListItem",
+                    "position": i + 1,
+                    "name": s.title,
+                    "url": `https://audiment.in${s.href}`
+                }))
+            }) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://audiment.in" },
+                    { "@type": "ListItem", "position": 2, "name": "Solutions", "item": "https://audiment.in/solutions" }
+                ]
+            }) }} />
         </div>
     )
 }

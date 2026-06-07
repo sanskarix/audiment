@@ -1,10 +1,11 @@
 import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Corrective Action Tracking | Improve Accountability Across Locations',
   description: 'Audiment is audit management software for multi-location businesses. Auto-generated corrective action tasks, SLA deadlines, and photo-proof closure keep every issue on track from detection to resolution.',
-  alternates: { canonical: 'https://audiment.in/use-cases/corrective-action-tracking' }
-}
+  path: '/use-cases/corrective-action-tracking',
+})
 
 export default function CorrectiveActionTracking() {
   return (

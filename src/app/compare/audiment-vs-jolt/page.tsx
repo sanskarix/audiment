@@ -1,10 +1,11 @@
 import CompareTemplate from '@/components/compare/CompareTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Audiment vs Jolt | Multi-Location Audit Comparison',
   description: 'Audiment is audit management software built for multi-location operations. See how Audiment compares to Jolt on hardware requirements, multi-location scope, and corrective action workflows.',
-  alternates: { canonical: 'https://audiment.in/compare/audiment-vs-jolt' }
-}
+  path: '/compare/audiment-vs-jolt',
+})
 
 export default function CompareJolt() {
   return (

@@ -1,10 +1,11 @@
 import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'Franchise Compliance Software | Maintain Standards Across Every Outlet',
   description: 'Audiment is audit management software for franchise networks. Proof-based audits, corrective actions, and dashboards give corporate teams proof of what\'s happening at every franchisee location.',
-  alternates: { canonical: 'https://audiment.in/solutions/franchise-audit-software' }
-}
+  path: '/solutions/franchise-audit-software',
+})
 
 export default function FranchiseAuditSoftware() {
   return (

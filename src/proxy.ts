@@ -34,6 +34,15 @@ function getRateLimitRule(pathname: string) {
   return RATE_LIMIT_RULES.dashboard
 }
 
+function shouldApplyRateLimit(pathname: string) {
+  return pathname === '/login' ||
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/manager') ||
+    pathname.startsWith('/auditor')
+}
+
 function checkRateLimit(ip: string, pathname: string): {
   allowed: boolean
   remaining: number
@@ -83,32 +92,42 @@ if (typeof setInterval !== 'undefined') {
 // ─────────────────────────────────────────────
 
 export function proxy(request: NextRequest) {
+  const host = request.headers.get('host')?.toLowerCase()
+
+  if (host === 'www.audiment.in') {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.host = 'audiment.in'
+    return NextResponse.redirect(redirectUrl, 308)
+  }
+
   // ─── RATE LIMITING ──────────────────────────
-  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-    ?? request.headers.get('x-real-ip')
-    ?? 'unknown'
+  if (shouldApplyRateLimit(request.nextUrl.pathname)) {
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      ?? request.headers.get('x-real-ip')
+      ?? 'unknown'
 
-  const { allowed, remaining, resetAt } = checkRateLimit(
-    ip,
-    request.nextUrl.pathname
-  )
-
-  if (!allowed) {
-    return new NextResponse(
-      JSON.stringify({
-        error: 'Too many requests. Please try again later.',
-        retryAfter: Math.ceil((resetAt - Date.now()) / 1000)
-      }),
-      {
-        status: 429,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-RateLimit-Remaining': remaining.toString(),
-          'X-RateLimit-Reset': new Date(resetAt).toISOString(),
-          'Retry-After': Math.ceil((resetAt - Date.now()) / 1000).toString(),
-        },
-      }
+    const { allowed, remaining, resetAt } = checkRateLimit(
+      ip,
+      request.nextUrl.pathname
     )
+
+    if (!allowed) {
+      return new NextResponse(
+        JSON.stringify({
+          error: 'Too many requests. Please try again later.',
+          retryAfter: Math.ceil((resetAt - Date.now()) / 1000)
+        }),
+        {
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-RateLimit-Remaining': remaining.toString(),
+            'X-RateLimit-Reset': new Date(resetAt).toISOString(),
+            'Retry-After': Math.ceil((resetAt - Date.now()) / 1000).toString(),
+          },
+        }
+      )
+    }
   }
   // ─────────────────────────────────────────────
 
@@ -197,6 +216,7 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.[^/]+$).*)',
     '/dashboard/:path*',
     '/admin/:path*',
     '/manager/:path*',

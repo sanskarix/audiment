@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import { Navbar } from '@/components/ui/navbar'
 import { Footer } from '@/components/ui/modem-animated-footer'
+import { buildPageMeta } from '@/lib/seo'
 
-export const metadata = {
+export const metadata = buildPageMeta({
   title: 'About Audiment | Audit Management for Multi-Location Businesses',
   description: 'Audiment is audit management software for multi-location businesses. Run audits across every location with proof, tracking, and corrective actions.',
-  alternates: { canonical: 'https://audiment.in/about' }
-}
+  path: '/about',
+})
 
 export default function AboutPage() {
   const schema = {

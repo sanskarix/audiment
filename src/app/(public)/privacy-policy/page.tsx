@@ -5,8 +5,8 @@ import { Navbar } from "@/components/ui/navbar";
 import { MapPinIcon, CameraIcon, RefreshCw, FileCheck2, Shield, Smartphone, AlertTriangle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy – Audiment",
-  description: "How Audiment collects, uses, and protects your personal information.",
+  title: "Privacy Policy | Audiment",
+  description: "How Audiment collects, uses, and protects personal information on audiment.in.",
   robots: "index, follow",
   alternates: { canonical: 'https://audiment.in/privacy-policy' }
 };
@@ -32,11 +32,11 @@ export default function PrivacyPolicyPage() {
       <section className="py-20 md:py-32 px-6">
         <div className="max-w-3xl mx-auto">
           <section className="mt-16 scroll-mt-24">
-            <p className="text-base text-neutral-500 leading-relaxed mb-6">This Privacy Notice for <strong className="font-semibold text-neutral-900">Asellus LLP</strong> (doing business as <strong className="font-semibold text-neutral-900">Audiment</strong>) – referred
-              to as "we," "us," or "our" – describes how and why we access, collect, store, use, and share your personal
+            <p className="text-base text-neutral-500 leading-relaxed mb-6">This Privacy Notice for <strong className="font-semibold text-neutral-900">Asellus LLP</strong> (doing business as <strong className="font-semibold text-neutral-900">Audiment</strong>) referred
+              to as "we," "us," or "our" describes how and why we access, collect, store, use, and share your personal
               information when you use our services, including when you:</p>
             <ul className="list-disc list-outside pl-6 space-y-2 mb-6 text-base text-neutral-600 marker:text-emerald-500">
-              <li>Visit our website at <a href="https://www.audiment.vercel.app" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-700 underline underline-offset-4">audiment.vercel.app</a> or any website of ours that links to this Privacy Notice
+              <li>Visit our website at <a href="https://audiment.in" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-700 underline underline-offset-4">audiment.in</a> or any website of ours that links to this Privacy Notice
               </li>
               <li>Use our audit management platform</li>
               <li>Engage with us in other related ways, including marketing or events</li>
@@ -277,11 +277,11 @@ export default function PrivacyPolicyPage() {
             <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900 mb-6">How Can You Contact Us About This Notice?</h2>
             <p className="text-base text-neutral-500 leading-relaxed mb-6">If you have questions or comments about this notice, you may contact us:</p>
             <div >
-              <h3 className="text-lg font-semibold mb-4 text-neutral-900 border-b border-neutral-200 pb-4">Audiment – Privacy Team</h3>
+              <h3 className="text-lg font-semibold mb-4 text-neutral-900 border-b border-neutral-200 pb-4">Audiment Privacy Team</h3>
               <div ><strong className="font-semibold text-neutral-900">Company</strong> Asellus LLP (doing business as Audiment)</div>
               <div ><strong className="font-semibold text-neutral-900">Email</strong> <a href="mailto:privacy@audiment.io" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-700 underline underline-offset-4">privacy@audiment.io</a>
               </div>
-              <div ><strong className="font-semibold text-neutral-900">Website</strong> <a href="https://www.audiment.vercel.app" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-700 underline underline-offset-4">audiment.vercel.app</a></div>
+              <div ><strong className="font-semibold text-neutral-900">Website</strong> <a href="https://audiment.in" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:text-emerald-700 underline underline-offset-4">audiment.in</a></div>
             </div>
           </section>
           <section className="mt-16 scroll-mt-24">

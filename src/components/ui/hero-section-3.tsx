@@ -3,6 +3,7 @@ import React from 'react'
 import Image from 'next/image'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { CalButton } from '@/components/ui/cal-button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -79,13 +80,9 @@ export function HeroSection({ userRole }: { userRole?: string | null }) {
                                             }>Dashboard</Link>
                                         </Button>
                                     ) : (
-                                        <Button asChild size="lg" className="rounded-full px-8 h-12 text-base">
-                                            <Link href="#contact">Book a call</Link>
-                                        </Button>
+                                        <CalButton size="lg" className="rounded-full px-8 h-12 text-base">Book a call</CalButton>
                                     )}
-                                    <Button asChild size="lg" variant="outline" className="rounded-full px-8 h-12 text-base">
-                                        <Link href="#contact">See it in action</Link>
-                                    </Button>
+                                    <CalButton size="lg" variant="outline" className="rounded-full px-8 h-12 text-base">See it in action</CalButton>
                                 </div>
                                 <span className="sr-only">Built for restaurant chains, retail brands, hotel groups, franchise operations, and multi-location businesses across India and globally.</span>
 

@@ -2,6 +2,7 @@
 import React from 'react'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { CalButton } from '@/components/ui/cal-button'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -88,22 +89,16 @@ export const Navbar = () => {
                                         <span>Login</span>
                                     </Link>
                                 </Button>
-                                <Button
-                                    asChild
+                                <CalButton
                                     size="sm"
                                     className={cn(isScrolled && 'lg:hidden')}>
-                                    <Link href="#contact">
-                                        <span>Book a call</span>
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
+                                    <span>Book a call</span>
+                                </CalButton>
+                                <CalButton
                                     size="sm"
                                     className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                    <Link href="/#contact">
-                                        <span>Book a call</span>
-                                    </Link>
-                                </Button>
+                                    <span>Book a call</span>
+                                </CalButton>
                             </div>
                         </div>
                     </div>

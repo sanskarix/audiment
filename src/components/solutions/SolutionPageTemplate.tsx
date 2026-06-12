@@ -2,6 +2,7 @@ import { Navbar } from '@/components/ui/navbar'
 import { SolutionsHero } from '@/components/ui/solutions-hero'
 import Link from 'next/link'
 import { Footer } from '@/components/ui/modem-animated-footer'
+import { CalButton } from '@/components/ui/cal-button'
 
 interface PainPoint {
   title: string
@@ -245,9 +246,9 @@ export default function SolutionPageTemplate({
       <section className="py-32 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-balance">
         <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-heading tracking-tight">See how this works for {industry.toLowerCase()} operations</h2>
         <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">Walk through a live demo mapped to your specific workflow. Our team will show you exactly how Audiment fits your operation.</p>
-        <Link href="/#contact" className="inline-flex items-center px-12 py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg hover:bg-primary/90 transition-all shadow-xl hover:shadow-primary/30 mb-20 hover:-translate-y-1">
+        <CalButton className="inline-flex items-center px-12 py-5 rounded-2xl font-bold text-lg shadow-xl mb-20">
           Book a Discovery Call
-        </Link>
+        </CalButton>
         
         <div className="border-t border-border pt-16 flex flex-col md:flex-row gap-12 justify-center text-sm">
            <div className="text-left flex-1 md:text-right">

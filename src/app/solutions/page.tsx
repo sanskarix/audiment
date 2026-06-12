@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowRight, Utensils, Coffee, ShieldCheck, ShoppingBag, Store, Building, Factory } from 'lucide-react'
 import { Navbar } from '@/components/ui/navbar'
 import { Footer } from '@/components/ui/modem-animated-footer'
+import { CalButton } from '@/components/ui/cal-button'
 import { buildPageMeta } from '@/lib/seo'
 
 const solutions = [
@@ -98,9 +99,9 @@ export default function SolutionsHub() {
                     <div className="max-w-3xl mx-auto px-6">
                         <h2 className="text-3xl md:text-4xl font-bold mb-6">Not sure which solution fits?</h2>
                         <p className="text-neutral-400 text-lg mb-10 max-w-2xl mx-auto">Tell us what you audit today. We&apos;ll show you how Audiment fits your operation.</p>
-                        <Link href="/#contact" className="inline-flex items-center px-10 py-5 rounded-xl bg-white text-neutral-900 font-bold text-lg hover:bg-gray-100 transition-all shadow-xl">
+                        <CalButton className="inline-flex items-center px-10 py-5 rounded-xl bg-white text-neutral-900 font-bold text-lg hover:bg-gray-100 transition-all shadow-xl">
                             Book a Discovery Call
-                        </Link>
+                        </CalButton>
                     </div>
                 </section>
             </main>

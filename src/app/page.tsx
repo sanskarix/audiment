@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { HeroSection } from "@/components/ui/hero-section-3";
 import { Footer } from "@/components/ui/modem-animated-footer";
+import { CalButton } from "@/components/ui/cal-button";
 import {
   DeferredContactSection,
   DeferredFAQAccordion,
@@ -819,20 +820,18 @@ export default async function Home() {
                 <ArrowRight className="w-5 h-5" />
               </Link>
             ) : (
-              <Link
-                href="#contact"
+              <CalButton
                 className="inline-flex h-14 items-center gap-2 px-10 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-full transition-all hover:scale-[1.02] shadow-[0_8px_30px_rgba(255,255,255,0.15)]"
               >
                 Book a Demo
                 <ArrowRight className="w-5 h-5" />
-              </Link>
+              </CalButton>
             )}
-            <Link
-              href="#contact"
+            <CalButton
               className="inline-flex h-14 items-center gap-2 px-10 border border-white/20 hover:border-white/40 text-white text-base font-medium rounded-full transition-all duration-300"
             >
               See It In Action
-            </Link>
+            </CalButton>
           </div>
         </div>
       </section>

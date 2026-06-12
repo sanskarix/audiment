@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Navbar } from '@/components/ui/navbar'
 import { Footer } from '@/components/ui/modem-animated-footer'
+import { CalButton } from '@/components/ui/cal-button'
 
 interface CompareProps {
   competitor: string
@@ -78,9 +79,9 @@ export default function CompareTemplate({
             {heroSubtext || `Evaluating ${competitor}? Here's a practical comparison focused on operational outcomes, rollout realities, and how each platform handles accountability.`}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/#contact" className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all shadow-lg hover:-translate-y-0.5">
+            <CalButton className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold shadow-lg">
               Book a Comparison Call
-            </Link>
+            </CalButton>
           </div>
         </div>
       </section>
@@ -194,9 +195,9 @@ export default function CompareTemplate({
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-extrabold mb-6 text-heading tracking-tight">See how they compare in your workflow</h2>
           <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">Walk through a live demo with our team. We&apos;ll map your existing audit process and show you exactly where the operational differences show up.</p>
-          <Link href="/#contact" className="inline-flex items-center px-12 py-5 rounded-2xl bg-primary text-primary-foreground font-bold text-lg hover:bg-primary/90 transition-all shadow-xl hover:-translate-y-1">
+          <CalButton className="inline-flex items-center px-12 py-5 rounded-2xl font-bold text-lg shadow-xl">
              Book a Comparison Call
-          </Link>
+          </CalButton>
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Navbar } from '@/components/ui/navbar'
 import { Footer } from '@/components/ui/modem-animated-footer'
+import { CalButton } from '@/components/ui/cal-button'
 
 interface Props {
   title: string
@@ -53,9 +54,9 @@ export default function UseCaseTemplate({
             {heroSubheadline}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/#contact" className="px-8 py-4 rounded-xl bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/25">
+            <CalButton className="px-8 py-4 rounded-xl font-bold shadow-lg">
               Book a Demo
-            </Link>
+            </CalButton>
             <Link href="/solutions" className="px-8 py-4 rounded-xl bg-muted text-foreground font-bold hover:bg-muted/80 transition-all">
               Explore Solutions
             </Link>
@@ -146,9 +147,9 @@ export default function UseCaseTemplate({
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold mb-6">See how this works for your operation</h2>
           <p className="text-neutral-400 text-xl mb-10 max-w-2xl mx-auto">Walk through a live demo with our team. We&apos;ll map your current workflow and show you exactly where Audiment fits.</p>
-          <Link href="/#contact" className="inline-flex items-center px-10 py-5 rounded-xl bg-white text-neutral-900 font-bold text-lg hover:bg-gray-100 transition-all shadow-xl">
+          <CalButton className="inline-flex items-center px-10 py-5 rounded-xl font-bold text-lg shadow-xl">
              Book a Demo 
-          </Link>
+          </CalButton>
         </div>
       </section>
 

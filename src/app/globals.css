@@ -362,6 +362,40 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  /* Blog article prose — brand-consistent styling for MDX content */
+  .blog-prose details {
+    @apply border border-border rounded-xl overflow-hidden my-3;
+  }
+
+  .blog-prose details summary {
+    @apply flex items-center justify-between cursor-pointer px-5 py-4 font-semibold text-foreground text-sm leading-snug select-none bg-muted/40 hover:bg-muted/70 transition-colors duration-200;
+    list-style: none;
+  }
+
+  .blog-prose details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .blog-prose details summary::after {
+    content: "+";
+    @apply text-muted-foreground text-lg font-light leading-none flex-shrink-0 ml-4 transition-transform duration-200;
+  }
+
+  .blog-prose details[open] summary::after {
+    content: "−";
+  }
+
+  .blog-prose details > p,
+  .blog-prose details > div {
+    @apply px-5 py-4 text-sm text-muted-foreground leading-relaxed border-t border-border;
+  }
+
+  /* Ensure prose ul/ol list items align with brand body text size */
+  .blog-prose ul,
+  .blog-prose ol {
+    @apply text-base;
+  }
 }
 
 @theme inline {

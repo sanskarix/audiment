@@ -1,0 +1,124 @@
+---
+title: "How to Do Quality Control Across Multiple Outlets (Without Being Everywhere)"
+description: "Learn how to maintain consistent quality control across multiple locations by standardising inspections, requiring evidence, assigning ownership, and reviewing trends."
+date: "2026-06-19"
+author: "Audiment Team"
+category: "Quality Management"
+tags: ["quality control", "multi-location", "consistency", "inspections", "audits"]
+featured: false
+---
+
+**Quality control across multiple outlets requires three things: a standard way to inspect every location, proof that inspections actually happened, and a process for fixing failures. Without those three elements, quality becomes inconsistent as a business grows.**
+
+If you're trying to figure out how to do quality control across multiple locations, the challenge usually isn't defining standards.
+
+Most businesses already know what good looks like.
+
+The challenge is making sure every location is measured the same way, every inspection is verifiable, and every problem gets fixed.
+
+A restaurant chain may have food safety procedures.
+
+A retail business may have merchandising standards.
+
+A construction company may have site safety requirements.
+
+The question isn't whether those standards exist.
+
+The question is whether they're being followed consistently across every location.
+
+This is where quality control becomes difficult.
+
+Not because the standards are unclear.
+
+Because the people, managers, shifts, and locations are different.
+
+The businesses that maintain quality at scale usually do four things well:
+
+* They standardise inspections.
+* They require evidence.
+* They assign ownership.
+* They review trends regularly.
+
+Everything else is built on top of those foundations.
+
+---
+
+## Why Quality Control Breaks Down Across Multiple Locations
+
+**When a business operates from more than one location, quality control stops being a personal task and becomes a systems problem. Without a consistent inspection process, standards vary by manager, by shift, and by location — often without anyone noticing.**
+
+Quality problems rarely appear all at once.
+
+More often, they follow a predictable pattern:
+
+**Checklist exists.**
+
+↓
+
+**Managers interpret it differently.**
+
+↓
+
+**Evidence isn't collected consistently.**
+
+↓
+
+**Problems are reported but not tracked.**
+
+↓
+
+**Corrective actions never fully close.**
+
+↓
+
+**Drift becomes normal.**
+
+By the time leadership notices the issue, the problem has usually existed for months.
+
+This is why quality control becomes harder as operations grow.
+
+Not because people care less.
+
+Because consistency becomes more difficult to enforce.
+
+### Scenario 1: The Restaurant That Thought Food Safety Was Fine
+
+Head office believed every outlet was following the same food safety procedures.
+
+A surprise audit revealed that several locations were recording refrigerator temperatures differently, while another had stopped recording them entirely.
+
+The procedure existed.
+
+Verification didn't.
+
+### Scenario 2: The Retail Chain With Multiple Versions of the Same Standard
+
+A retailer introduced a new visual merchandising standard.
+
+Some store managers adopted it immediately.
+
+Others interpreted it differently.
+
+Several skipped parts they considered unimportant.
+
+Three months later, customers were experiencing different versions of the same brand.
+
+### Scenario 3: The Construction Site Nobody Checked
+
+A construction company required weekly safety inspections across every site.
+
+Most teams completed them.
+
+One site repeatedly skipped inspections due to project deadlines.
+
+The issue remained invisible until an external review uncovered multiple compliance failures.
+
+### Scenario 4: The Franchise That Trusted Reports
+
+Every location reported that standards were being followed.
+
+Audit results told a different story.
+
+The issue wasn't dishonesty.
+
+The issue was that nobody was measuring performance consistently.

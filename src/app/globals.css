@@ -257,10 +257,10 @@
     @apply text-heading/90;
   }
 
-.body-text {
-  @apply text-[12px] font-normal leading-relaxed;
-  color: var(--color-body);
-}
+  .body-text {
+    @apply text-[12px] font-normal leading-relaxed;
+    color: var(--color-body);
+  }
 
   .dark .body-text {
     color: var(--color-body);
@@ -359,11 +359,19 @@
   }
 
   .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 
-  /* Blog article prose — brand-consistent styling for MDX content */
+  /* Blog article prose – brand-consistent styling for MDX content */
+
+  /* Remove prose-injected top margin on tables so they sit flush inside their rounded containers */
+  .blog-prose table {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
   .blog-prose details {
     @apply border border-border rounded-xl overflow-hidden my-3;
   }
@@ -386,8 +394,8 @@
     content: "−";
   }
 
-  .blog-prose details > p,
-  .blog-prose details > div {
+  .blog-prose details>p,
+  .blog-prose details>div {
     @apply px-5 py-4 text-sm text-muted-foreground leading-relaxed border-t border-border;
   }
 
@@ -395,6 +403,11 @@
   .blog-prose ul,
   .blog-prose ol {
     @apply text-base;
+  }
+
+  /* Answer Box Implementation for GEO/Featured Snippets */
+  .blog-prose h2 + p {
+    @apply p-6 my-8 rounded-2xl bg-muted/30 border-l-4 border-primary text-[16px] leading-relaxed font-medium text-foreground;
   }
 }
 

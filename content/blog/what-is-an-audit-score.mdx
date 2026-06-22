@@ -1,0 +1,148 @@
+---
+title: "What Is an Audit Score? How Scoring Works in Multi-Location Audits"
+description: "Learn how audit scores work, including weighted scoring, critical fails, and why branch comparison and score history matter in multi-location audit programs."
+date: "2026-06-11"
+author: "Audiment Team"
+category: "Audit Management"
+tags: ["audit score", "audit scoring", "weighted audit score", "critical fail", "multi-location audit", "compliance scoring"]
+featured: false
+---
+
+An audit score tells you how a location performed. But a score in isolation is only a snapshot. The score becomes a meaningful management signal when it is weighted by severity, compared across branches, and tracked over time.
+
+Understanding how audit scoring works — and what makes one scoring model more useful than another — is what turns audit data into operational intelligence.
+
+## What Is an Audit Score?
+
+**An audit score is the calculated result of an audit that shows how well a location performed against the standards being assessed. In multi-location operations, the score becomes more useful when it is weighted by severity, compared across branches, and tracked over time — rather than read as a single isolated number.**
+
+A raw score that counts passes and failures without weighting them by severity will systematically undervalue critical problems and overvalue consistent performance on low-stakes checks. A location can look strong on average while hiding a serious failure in the results.
+
+## How Audit Scoring Works in Audiment
+
+**Audiment uses a centralised scoring model so every audit result is calculated the same way across submission, reports, dashboards, and PDF exports. Yes/no answers normalise to 1.0 or 0.0, rating questions normalise as rating divided by 10, and each answer is multiplied by a severity weight.**
+
+The severity weights are: Low = 1, Medium = 2, Critical = 5. The final percentage is based on weighted normalised scores. A critical failure can override the overall percentage-based grade entirely, marking the result as `criticalfail` regardless of how the rest of the audit scored.
+
+That override matters because a location should not be able to hide a major safety or hygiene issue behind a strong average on low-severity questions.
+
+## Why Weighted Scores Matter
+
+**Weighted scoring matters because not every failure is equally important. A minor signage issue should not reduce the result in the same way as a blocked fire exit or a failed cold-chain check. The score should reflect the difference — not flatten it.**
+
+A flat scoring model that counts every question equally gives auditors and managers a misleading picture. A location that fails ten low-severity checks and passes three critical ones could still look better than a location that fails one critical item. Weighted scoring prevents that inversion.
+
+For details on how to design audit checklists that use severity weighting effectively, see [what is a compliance audit checklist and how to build one](/blog/compliance-audit-checklist).
+
+## Why Scores Are More Useful Over Time
+
+**A single score is one snapshot. A series of scores across weeks or months shows whether a location is improving, slipping, or staying flat. That trend is what makes the score useful as a management signal — and what the [multi-location audit management](/blog/multi-location-audit-management) layer uses to trigger alerts.**
+
+Consider two locations that both score 82 this month. One has been scoring 90, 88, 87, and 82 across the last four audits. The other has been scoring 79, 81, 80, and 82. Those two 82 scores mean different things. One location is stable, the other is trending in the wrong direction.
+
+That is why score history matters more than any single number. Audiment surfaces that trend and sends a priority alert when a location underperforms across three consecutive audits.
+
+## What Is a Critical Fail?
+
+**A critical fail is a result triggered when a critical-severity question fails, overriding the percentage-based grade regardless of overall average performance. It signals that an issue is too serious to be hidden by average scores elsewhere in the audit.**
+
+Critical fails exist because some failures are not about averages. A blocked emergency exit, a serious food contamination risk, or a major safety violation is not one data point in a weighted average — it is a signal that requires immediate action regardless of how the rest of the audit went.
+
+The corrective action workflow in Audiment is triggered automatically for critical failures. See [how to track corrective actions across multiple locations](/blog/corrective-action-tracking) for how that follow-up process works.
+
+## Cross-Branch Score Comparison
+
+**Cross-branch comparison only becomes meaningful when every location is being scored against the same questions with the same severity weights and the same evidence rules. A centralised scoring model is what makes that comparison credible.**
+
+If different locations use different checklists, or the same checklist with different severity assignments, the scores cannot be meaningfully compared. A 78 at Branch A and a 78 at Branch B do not mean the same thing if they were calculated differently.
+
+Audiment's centralised blueprint system ensures that once a blueprint is published to multiple locations, the questions, severity weights, and evidence rules are identical across every branch.
+
+## Frequently Asked Questions
+
+<details>
+<summary><strong>What is an audit score?</strong></summary>
+<p>An audit score is the numeric result of an inspection or audit that reflects how well a location met the standards being checked. In a well-designed scoring model, the score is weighted by severity so that critical failures have more impact than low-stakes issues.</p>
+</details>
+
+<details>
+<summary><strong>What is a weighted audit score?</strong></summary>
+<p>A weighted audit score gives more impact to critical questions than low-severity ones, so serious failures influence the final result more heavily than minor issues. In Audiment, severity weights are Low = 1, Medium = 2, and Critical = 5.</p>
+</details>
+
+<details>
+<summary><strong>What is a critical fail in an audit?</strong></summary>
+<p>A critical fail is a result triggered when a critical-severity question fails, overriding the percentage-based grade because the issue is too serious to be hidden by average performance. It indicates that a serious problem was found that requires immediate corrective action regardless of the overall score.</p>
+</details>
+
+<details>
+<summary><strong>Does Audiment use weighted scoring?</strong></summary>
+<p>Yes. Audiment uses centralised weighted scoring with severity weights of 1, 2, and 5, plus critical-failure override logic. Every audit is scored the same way across all locations, making cross-branch comparison meaningful.</p>
+</details>
+
+<details>
+<summary><strong>How do you compare audit scores across multiple locations?</strong></summary>
+<p>Cross-location comparison is only meaningful when every location uses the same checklist, the same severity weights, and the same evidence rules. A centralised blueprint system ensures that a score of 82 at one branch means the same as a score of 82 at another branch.</p>
+</details>
+
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is an audit score?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An audit score is the numeric result of an inspection or audit that reflects how well a location met the standards being checked. In a well-designed scoring model, the score is weighted by severity so that critical failures have more impact than low-stakes issues."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a weighted audit score?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A weighted audit score gives more impact to critical questions than low-severity ones, so serious failures influence the final result more heavily than minor issues. In Audiment, severity weights are Low = 1, Medium = 2, and Critical = 5."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a critical fail in an audit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A critical fail is a result triggered when a critical-severity question fails, overriding the percentage-based grade because the issue is too serious to be hidden by average performance."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Audiment use weighted scoring?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Audiment uses centralised weighted scoring with severity weights of 1, 2, and 5, plus critical-failure override logic. Every audit is scored the same way across all locations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you compare audit scores across multiple locations?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cross-location comparison is only meaningful when every location uses the same checklist, the same severity weights, and the same evidence rules. A centralised blueprint system ensures consistent scoring across branches."
+          }
+        }
+      ]
+    })
+  }}
+/>
+
+---
+
+**Related reading:**
+- [What Is Audit Management? A Plain-English Guide](/blog/what-is-audit-management)
+- [Multi-location audit management: how to manage audits across 10, 50, or 500 locations](/blog/multi-location-audit-management)
+- [What is a compliance audit checklist? How to build one that works](/blog/compliance-audit-checklist)
+- [How to track corrective actions across multiple locations](/blog/corrective-action-tracking)
+
+See how Audiment's centralised scoring model makes cross-location comparison meaningful. [Book a call with Audiment](/multi-location-audit-software).

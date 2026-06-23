@@ -2,14 +2,16 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
-  title: 'QSR Audit Software | Audit Management for Quick Service Chains',
+  title: 'QSR Audit Software',
   description: 'Audiment is audit management software for QSR chains. Shift-by-shift audits with photo evidence keep every outlet on standard – even with high staff turnover.',
   path: '/solutions/qsr-audit-software',
 })
 
 export default function QSRAuditSoftware() {
   return (
-    <SolutionPageTemplate
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"https://schema.org","@type":"SoftwareApplication"}) }} />
+      <SolutionPageTemplate
       industry="Quick Service Restaurants (QSR)"
       heroH1="QSR Audit Software – Compliance and Consistency Across Every Outlet"
       heroSubheadline="In QSR, speed and compliance constantly compete. Audiment helps you maintain both – with shift-by-shift digital audits that take minutes, not hours, and evidence that shows what actually happened on the floor."
@@ -97,5 +99,6 @@ export default function QSRAuditSoftware() {
         { tag: "Topic", title: "Improving Accountability", href: "/improving-accountability", description: "Assign and close failures by shift and location." },
       ]}
     />
+    </>
   )
 }

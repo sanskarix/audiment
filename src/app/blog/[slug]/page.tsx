@@ -14,19 +14,53 @@ export async function generateStaticParams() {
   }))
 }
 
+function cleanBlogTitle(title: string): string {
+  const separators = ['?', ':', '(', '-']
+  let clean = title
+  
+  let firstSepIdx = -1
+  let matchingSep = ''
+  for (const sep of separators) {
+    const idx = clean.indexOf(sep)
+    if (idx !== -1 && (firstSepIdx === -1 || idx < firstSepIdx)) {
+      firstSepIdx = idx
+      matchingSep = sep
+    }
+  }
+  
+  if (firstSepIdx !== -1) {
+    clean = clean.substring(0, firstSepIdx).trim()
+    if (matchingSep === '?') {
+      clean += '?'
+    }
+  }
+  
+  clean = clean
+    .replace(/\bfor Multi-Location Businesses\b/gi, '')
+    .replace(/\bfor Multi-Outlet Restaurants\b/gi, '')
+    .replace(/\bAcross Multiple Locations\b/gi, '')
+    .replace(/\bAcross Locations\b/gi, '')
+    .trim()
+    
+  return clean
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params
   const post = getPostBySlug(resolvedParams.slug)
   if (!post) return {}
   
+  const displayTitle = post.metaTitle || cleanBlogTitle(post.title)
+  const metaTitle = `${displayTitle} | Audiment`
+  
   return {
-    title: { absolute: `${post.title} | Audiment` },
+    title: { absolute: metaTitle },
     description: post.description,
     alternates: { 
       canonical: `https://audiment.in/blog/${resolvedParams.slug}` 
     },
     openGraph: {
-      title: post.title,
+      title: displayTitle,
       description: post.description,
       url: `https://audiment.in/blog/${resolvedParams.slug}`,
       type: 'article',
@@ -34,7 +68,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.title,
+      title: displayTitle,
       description: post.description,
     },
     keywords: post.tags,

@@ -2,14 +2,16 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
-  title: 'Manufacturing Audit Software | Maintain Standards Across Facilities',
+  title: 'Manufacturing Audit Software',
   description: 'Audiment is audit management software for manufacturing operations. Proof-based audits, equipment checks, and corrective actions keep safety and quality standards consistent across every facility.',
   path: '/solutions/manufacturing-audit-software',
 })
 
 export default function ManufacturingAuditSoftware() {
   return (
-    <SolutionPageTemplate
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"https://schema.org","@type":"SoftwareApplication"}) }} />
+      <SolutionPageTemplate
       industry="Manufacturing"
       heroH1="Manufacturing Audit Software – Quality and Safety Compliance Across Facilities"
       heroSubheadline="Safety walks and quality checks only protect your workforce if they're done properly. Audiment ensures they are – with photo evidence, GPS verification, and automated escalation for hazards."
@@ -97,5 +99,6 @@ export default function ManufacturingAuditSoftware() {
         { tag: "Topic", title: "Maintaining Standards Across Locations", href: "/maintaining-standards-across-locations", description: "Consistency model for multi-site manufacturing operations." },
       ]}
     />
+    </>
   )
 }

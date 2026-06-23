@@ -19,6 +19,14 @@ const geistMono = Geist_Mono({
 
 const SITE_URL = "https://audiment.in";
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Audiment",
+  url: "https://audiment.in",
+  logo: "https://audiment.in/icon.svg"
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -78,6 +86,10 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <Script id="silence-abort-error" strategy="beforeInteractive">

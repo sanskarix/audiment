@@ -2,14 +2,16 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
-  title: 'Retail Audit Software | Maintain Standards Across Every Store',
+  title: 'Retail Audit Software',
   description: 'Audiment is audit management software for retail chains. Audit merchandising, store presentation, and brand standards across every location with proof and corrective actions.',
   path: '/solutions/retail-audit-software',
 })
 
 export default function RetailAuditSoftware() {
   return (
-    <SolutionPageTemplate
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"https://schema.org","@type":"SoftwareApplication"}) }} />
+      <SolutionPageTemplate
       industry="Retail"
       heroH1="Retail Audit Software – Standardize Store Compliance Across Your Chain"
       heroSubheadline="Make sure visual merchandising, stock management, and store presentation match your brand guidelines in every store – without relying on monthly visits."
@@ -97,5 +99,6 @@ export default function RetailAuditSoftware() {
         { tag: "Topic", title: "Maintaining Standards Across Locations", href: "/maintaining-standards-across-locations", description: "Operational consistency framework for retail chains." },
       ]}
     />
+    </>
   )
 }

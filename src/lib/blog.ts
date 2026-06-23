@@ -8,6 +8,7 @@ const BLOG_DIR = path.join(process.cwd(), 'content/blog')
 export interface BlogPost {
   slug: string
   title: string
+  metaTitle?: string
   description: string
   date: string
   author: string
@@ -34,6 +35,7 @@ export function getAllPosts(): BlogPost[] {
       return {
         slug,
         title: data.title,
+        metaTitle: data.metaTitle || data.meta_title || undefined,
         description: data.description,
         date: data.date,
         author: data.author || 'Audiment Team',
@@ -60,6 +62,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
   return {
     slug,
     title: data.title,
+    metaTitle: data.metaTitle || data.meta_title || undefined,
     description: data.description,
     date: data.date,
     author: data.author || 'Audiment Team',

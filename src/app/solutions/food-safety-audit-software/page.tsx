@@ -2,14 +2,16 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
-  title: 'Food Safety Audit Software | Stay Ahead of Compliance Across Locations',
+  title: 'Food Safety Audit Software',
   description: 'Audiment is audit management software for food businesses. FSSAI-ready templates, photo-verified audits, and corrective action tracking keep you compliant across every location.',
   path: '/solutions/food-safety-audit-software',
 })
 
 export default function FoodSafetyAuditSoftware() {
   return (
-    <SolutionPageTemplate
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"https://schema.org","@type":"SoftwareApplication"}) }} />
+      <SolutionPageTemplate
       industry="Food Safety"
       heroH1="Food Safety Audit Software – FSSAI-Ready, Photo-Verified Compliance Audits"
       heroSubheadline="Food safety compliance fails when it relies on memory and paper logs. Audiment requires physical floor walks, captures live temperature data, and creates an audit trail that stands up to inspection."
@@ -97,5 +99,6 @@ export default function FoodSafetyAuditSoftware() {
         { tag: "Commercial", title: "FSSAI Audit Software", href: "/fssai-audit-software", description: "Dedicated FSSAI-focused page for multi-location teams." },
       ]}
     />
+    </>
   )
 }

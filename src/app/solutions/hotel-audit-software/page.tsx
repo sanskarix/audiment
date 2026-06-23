@@ -2,14 +2,16 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
-  title: 'Hotel Audit Software | Maintain Quality Standards Across Properties',
-  description: 'Audiment is audit management software for hotel groups. Audit housekeeping, F&B, and guest experience standards across every property with proof, tracking, and accountability.',
+  title: 'Hotel Audit Software',
+  description: 'Audiment is audit management software for hotels. Housekeeping checks, maintenance tracking, and F&B audits keep quality consistent across every property in your portfolio.',
   path: '/solutions/hotel-audit-software',
 })
 
 export default function HotelAuditSoftware() {
   return (
-    <SolutionPageTemplate
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"https://schema.org","@type":"SoftwareApplication"}) }} />
+      <SolutionPageTemplate
       industry="Hotels & Hospitality"
       heroH1="Hotel Audit Software – Maintain Guest Experience Standards at Every Property"
       heroSubheadline="Guest satisfaction depends on consistency across every property. From housekeeping to F&B to engineering – Audiment shows your operations team what's actually happening at each location, every day."
@@ -97,5 +99,6 @@ export default function HotelAuditSoftware() {
         { tag: "Topic", title: "Maintaining Standards Across Locations", href: "/maintaining-standards-across-locations", description: "Consistency systems for distributed hospitality teams." },
       ]}
     />
+    </>
   )
 }

@@ -2,7 +2,7 @@ import CompareTemplate from '@/components/compare/CompareTemplate'
 import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
-  title: 'Audiment vs SafetyCulture (iAuditor) | Multi-Location Audit Comparison',
+  title: 'Audiment vs SafetyCulture (iAuditor)',
   description: 'Audiment is audit management software built for multi-location operations. See how Audiment compares to SafetyCulture on evidence verification, corrective action workflows, and multi-location audit oversight.',
   path: '/compare/audiment-vs-safetyculture',
 })

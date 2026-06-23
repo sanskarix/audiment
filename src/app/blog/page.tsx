@@ -60,6 +60,17 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
 
   return (
     <main id="main-content" className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Blog",
+            name: "Audiment Blog",
+            url: "https://audiment.in/blog",
+          }),
+        }}
+      />
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 pt-32 pb-24">
         {/* Header Section */}

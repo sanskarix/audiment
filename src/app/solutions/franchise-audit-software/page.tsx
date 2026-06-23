@@ -2,14 +2,16 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
-  title: 'Franchise Compliance Software | Maintain Standards Across Every Outlet',
-  description: 'Audiment is audit management software for franchise networks. Proof-based audits, corrective actions, and dashboards give corporate teams proof of what\'s happening at every franchisee location.',
+  title: 'Franchise Compliance Software',
+  description: 'Audiment is audit management software for franchise networks. GPS-verified visits, franchisee scorecards, and corrective action workflows keep your brand standards consistent across every unit.',
   path: '/solutions/franchise-audit-software',
 })
 
 export default function FranchiseAuditSoftware() {
   return (
-    <SolutionPageTemplate
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"https://schema.org","@type":"SoftwareApplication"}) }} />
+      <SolutionPageTemplate
       industry="Franchises"
       heroH1="Franchise Audit Software – Protect Brand Standards Across Every Franchisee"
       heroSubheadline="Your brand promise is only as strong as your weakest location. Keep every franchise unit on standard with verified compliance data – not assumptions."
@@ -97,5 +99,6 @@ export default function FranchiseAuditSoftware() {
         { tag: "Topic", title: "Maintaining Standards Across Locations", href: "/maintaining-standards-across-locations", description: "Why consistency breaks as franchise networks scale." },
       ]}
     />
+    </>
   )
 }

@@ -83,6 +83,14 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // www → non-www canonical redirect (fixes all www.audiment.in GSC issues)
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.audiment.in' }],
+        destination: 'https://audiment.in/:path*',
+        permanent: true,
+      },
+      // Existing path redirects
       {
         source: '/solutions/restaurant-operations',
         destination: '/solutions/restaurant-audit-software',

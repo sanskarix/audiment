@@ -24,7 +24,42 @@ const organizationSchema = {
   "@type": "Organization",
   name: "Audiment",
   url: "https://audiment.in",
-  logo: "https://audiment.in/icon.svg"
+  logo: {
+    "@type": "ImageObject",
+    url: "https://audiment.in/icon.svg",
+    width: 512,
+    height: 512
+  },
+  description: "Audit management software for multi-location businesses. Run proof-based audits with corrective action tracking across every location.",
+  foundingDate: "2024",
+  legalName: "Asellus LLP",
+  email: "hello@audiment.com",
+  sameAs: [
+    "https://www.linkedin.com/company/audiment",
+    "https://twitter.com/audiment"
+  ],
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    email: "hello@audiment.com",
+    availableLanguage: "English"
+  }
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Audiment",
+  url: "https://audiment.in",
+  description: "Audit management software for multi-location businesses.",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://audiment.in/blog?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
 };
 
 export const metadata: Metadata = {
@@ -89,6 +124,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>

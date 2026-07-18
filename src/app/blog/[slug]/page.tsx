@@ -201,9 +201,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             description: post.description,
             image: "https://audiment.in/opengraph-image",
             datePublished: post.date,
-            dateModified: post.date,
+            dateModified: post.dateModified || post.date,
             author: {
-              "@type": (post.author.toLowerCase().includes("team") || post.author.toLowerCase().includes("audiment")) ? "Organization" : "Person",
+              "@type": "Organization",
               "name": post.author,
               "url": "https://audiment.in"
             },

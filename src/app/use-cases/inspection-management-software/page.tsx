@@ -2,49 +2,50 @@ import UseCaseTemplate from '@/components/use-cases/UseCaseTemplate'
 import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
-  title: 'Inspection Management Software | Schedule, Execute, and Track Every Inspection',
-  description: 'Audiment is audit management software for multi-location businesses. Scheduled, evidence-backed inspections with full lifecycle tracking show you what\'s actually happening at every location.',
+  title: 'Inspection Management Software | Standardize and Verify Inspections',
+  description: 'Audiment is audit management software for multi-location businesses. Schedule, execute, and track inspections with GPS verification and live photo evidence.',
   path: '/use-cases/inspection-management-software',
 })
 
 export default function InspectionManagementSoftware() {
   return (
     <UseCaseTemplate
+      path="/use-cases/inspection-management-software"
       title="Inspection Management Software"
-      heroH1="Inspection Management Software – Schedule, Execute and Track Every Inspection"
-      heroSubheadline="An inspection only has value if it was actually done on-site, recorded honestly, and followed by action. Audiment manages all three."
-      primaryKeyword="inspection management"
+      heroH1="Inspection Management Software – Verified Data from the Field"
+      heroSubheadline="Inspections only matter if they actually happened. Stop relying on trust and paper trails. Capture GPS-verified, photo-proofed inspection data from every location in real time."
+      primaryKeyword="inspection management software"
       operationalScenario={{
-        title: "When inspections stop being a formality",
-        before: "Your area manager is scheduled for 8 store visits this week. They visit 5, spend 15 minutes each, and complete the other 3 inspections from the regional office based on last week's memory. You receive 8 green reports. Three of those stores haven't actually been inspected.",
-        after: "Each inspection requires GPS-verified presence and live photo evidence. You can see exactly which locations were physically visited, when the auditor arrived and left, and what they actually found. The 3 unvisited stores show as incomplete – not as false passes."
+        title: "The difference between an assumed inspection and a verified one",
+        before: "Your safety protocol requires a daily perimeter check. The logs show it was completed at 6:00 AM every day this week. On Friday, a security incident occurs. Security camera footage reveals the inspector never left their desk all week; they just signed the logbook.",
+        after: "The perimeter check is managed in Audiment. The inspector is required to take a live photo of three specific checkpoints. The app geo-tags their location to ensure they walked the route. You have verifiable proof the inspection occurred exactly as recorded."
       }}
       features={[
         {
-          title: "Automated Scheduling",
-          description: "Deploy daily opening checklists, weekly hygiene runs, and monthly deep-dives to the correct role at each location automatically. Essential checks can't be skipped or forgotten."
+          title: "Automated Scheduling and Deployment",
+          description: "Deploy daily opening checklists, weekly hygiene runs, and monthly deep-dives directly to the correct role at each location automatically. Managers don't need to remember what to check—the software ensures essential checks appear in their queue and cannot be skipped."
         },
         {
-          title: "Verified Execution",
-          description: "Inspections require live, geo-tagged photo evidence per question. The inspector must physically verify the condition – not just check a box from memory."
+          title: "Verified Execution via Geo-Tagging",
+          description: "Inspections require live, geo-tagged photo evidence per critical question. The inspector must physically verify the condition on-site rather than checking a box from memory or a desk, drastically reducing the chance of falsified data."
         },
         {
           title: "Dynamic Escalation Paths",
-          description: "If a fire safety inspection fails, the system can bypass the store manager and alert facilities maintenance directly, matching the severity to the right response team."
+          description: "If a severe issue like a fire safety inspection fails, the system can automatically bypass the local store manager and alert regional facilities maintenance directly, ensuring the response matches the severity of the hazard."
         }
       ]}
       benefits={[
         {
           title: "Verified On-Site Execution",
-          description: "GPS checks and on-site evidence confirm the inspector actually walked the floor. Inspections reflect real conditions, not recalled observations."
+          description: "GPS checks, timestamping, and on-site camera restrictions confirm the inspector actually walked the floor. You can trust that the inspections in your dashboard reflect real physical conditions, not just recalled observations or guesswork."
         },
         {
           title: "Track Resolution Speed",
-          description: "See exactly how long it takes each branch to fix a critical failure after the inspection is submitted. Identify which locations consistently respond slowly."
+          description: "See exactly how long it takes each branch to fix a critical failure after an inspection is submitted. Identifying locations that consistently respond slowly allows you to address the root culture problem, not just the symptom."
         },
         {
           title: "Scale Without Sacrificing Quality",
-          description: "Enable front-line staff to run routine inspections while area managers focus on complex audits. The evidence quality remains consistent regardless of who conducts the inspection."
+          description: "Enable front-line staff to run routine daily inspections autonomously while reserving area managers for complex, high-level audits. Because of the strict evidence requirements, the data quality remains consistent regardless of who conducts the check."
         }
       ]}
       faqs={[

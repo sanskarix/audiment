@@ -16,6 +16,7 @@ interface Props {
     before: string
     after: string
   }
+  path: string
 }
 
 export default function UseCaseTemplate({
@@ -27,6 +28,7 @@ export default function UseCaseTemplate({
   benefits,
   faqs,
   operationalScenario,
+  path,
 }: Props) {
   const faqSchema = {
     "@context": "https://schema.org",
@@ -39,6 +41,18 @@ export default function UseCaseTemplate({
         "text": faq.answer
       }
     }))
+  };
+
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": `Audiment \u2013 ${title}`,
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "url": `https://audiment.in${path}`,
+    "description": heroSubheadline,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR", "description": "Contact for pricing" },
+    "provider": { "@type": "Organization", "name": "Audiment", "url": "https://audiment.in" }
   };
 
   return (
@@ -168,13 +182,14 @@ export default function UseCaseTemplate({
       />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
           { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://audiment.in" },
           { "@type": "ListItem", "position": 2, "name": "Use Cases", "item": "https://audiment.in/use-cases" },
-          { "@type": "ListItem", "position": 3, "name": title }
+          { "@type": "ListItem", "position": 3, "name": title, "item": `https://audiment.in${path}` }
         ]
       }) }} />
     </div>

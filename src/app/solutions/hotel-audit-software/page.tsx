@@ -2,15 +2,35 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
-  title: 'Hotel Audit Software',
+  title: 'Hotel Audit Software | Maintain Guest Standards Across Properties',
   description: 'Audiment is audit management software for hotels. Housekeeping checks, maintenance tracking, and F&B audits keep quality consistent across every property in your portfolio.',
   path: '/solutions/hotel-audit-software',
+  keywords: ['hotel audit software', 'hotel inspection software', 'housekeeping audit', 'hotel compliance', 'property audit management'],
 })
 
 export default function HotelAuditSoftware() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"https://schema.org","@type":"SoftwareApplication"}) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Audiment – Hotel Audit Software",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web, iOS, Android",
+        "url": "https://audiment.in/solutions/hotel-audit-software",
+        "description": "Proof-based audit management software for hotels and hospitality groups. Housekeeping, F&B, maintenance, and safety audits with corrective action tracking across every property.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR", "description": "Contact for pricing" },
+        "provider": { "@type": "Organization", "name": "Audiment", "url": "https://audiment.in" }
+      }) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://audiment.in" },
+          { "@type": "ListItem", "position": 2, "name": "Solutions", "item": "https://audiment.in/solutions" },
+          { "@type": "ListItem", "position": 3, "name": "Hotel Audit Software", "item": "https://audiment.in/solutions/hotel-audit-software" }
+        ]
+      }) }} />
       <SolutionPageTemplate
       industry="Hotels & Hospitality"
       heroH1="Hotel Audit Software – Maintain Guest Experience Standards at Every Property"

@@ -4,23 +4,40 @@ import { Footer } from '@/components/ui/modem-animated-footer'
 import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
-  title: 'About Audiment | Audit Management for Multi-Location Businesses',
-  description: 'Audiment is audit management software for multi-location businesses. Run audits across every location with proof, tracking, and corrective actions.',
+  title: 'About Audiment | Audit Management Software for Multi-Location Businesses',
+  description: 'Audiment is audit management software built for multi-location businesses. Learn about our mission, who we serve, and how proof-based audits help distributed teams maintain standards.',
   path: '/about',
+  keywords: ['about Audiment', 'audit management company', 'multi-location audit software', 'Asellus LLP', 'proof-based audit software India'],
 })
 
 export default function AboutPage() {
-  const schema = {
+  const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Audiment",
     "url": "https://audiment.in",
     "logo": "https://audiment.in/icon.svg",
     "email": "hello@audiment.com",
+    "legalName": "Asellus LLP",
+    "foundingDate": "2024",
+    "description": "Audit management software for multi-location businesses. Proof-based audits, issue tracking, and corrective actions across every location.",
     "sameAs": [
       "https://www.linkedin.com/company/audiment",
       "https://twitter.com/audiment"
     ]
+  };
+
+  const aboutPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About Audiment",
+    "url": "https://audiment.in/about",
+    "description": "Audiment is audit management software built by Asellus LLP for multi-location businesses. Proof-based audits, issue tracking, and corrective actions maintain quality consistency across distributed operations.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Audiment",
+      "url": "https://audiment.in"
+    }
   };
 
   return (
@@ -46,10 +63,16 @@ export default function AboutPage() {
           <p>
             When you had one or two locations, you could see everything yourself. At 20 or 200, you can&apos;t. Standards drift, managers self-report, issues stay hidden, and problems surface too late.
           </p>
+          <p>
+            The companies that maintain quality consistency at scale don&apos;t do it through more oversight or more reports. They do it by building execution systems that verify standards are being met — not trust-based systems that assume they are.
+          </p>
 
           <h2>Why self-reporting fails in distributed teams</h2>
           <p>
             A completed checklist doesn&apos;t prove a standard was actually met. Without photo evidence and tracked follow-through, reports can look healthy while quality is slipping. This isn&apos;t a motivation problem – it&apos;s a system problem.
+          </p>
+          <p>
+            Under shift pressure, managers make rational short-term decisions. They complete audits from memory. They mark checks done that they believe were done. Over weeks and months, these small inaccuracies compound into a significant gap between reported performance and actual performance.
           </p>
 
           <h2>What Audiment is built to do</h2>
@@ -62,6 +85,7 @@ export default function AboutPage() {
             <li><strong>Corrective actions:</strong> Every failure becomes an assigned task with a deadline and proof of closure.</li>
             <li><strong>Trend detection:</strong> See which locations keep scoring low and where the same issues keep recurring.</li>
             <li><strong>Offline audits:</strong> Audits run offline and sync automatically when the device reconnects.</li>
+            <li><strong>Geo-verification:</strong> Confirm that auditors were physically on-site when audits were completed.</li>
           </ul>
           <p>
             For deeper context, see <Link href="/operational-drift" className="text-primary hover:underline">operational drift</Link>, <Link href="/platform/proof-based-audits" className="text-primary hover:underline">proof-based audits</Link>, and <Link href="/platform/corrective-actions" className="text-primary hover:underline">corrective actions</Link>.
@@ -74,6 +98,9 @@ export default function AboutPage() {
           <p>
             The strongest fit is businesses with 10–500+ locations that can&apos;t rely on paper checklists and WhatsApp threads to maintain standards.
           </p>
+          <p>
+            Operations leaders, area managers, quality teams, and compliance managers use Audiment to standardize what gets audited, verify that it&apos;s actually done, and close issues before they escalate.
+          </p>
 
           <h2>Industries served</h2>
           <ul>
@@ -83,11 +110,12 @@ export default function AboutPage() {
             <li>Franchise networks</li>
             <li>Food safety and FSSAI compliance</li>
             <li>Manufacturing and production facilities</li>
+            <li>Healthcare and multi-facility quality management</li>
           </ul>
 
           <h2>Built by Asellus LLP</h2>
           <p>
-            Audiment is developed by Asellus LLP. The platform runs in any mobile browser with no app download required.
+            Audiment is developed by Asellus LLP, an India-based technology company focused on operational software for distributed businesses. The platform runs in any mobile browser with no app download required — designed for field teams who need to run audits quickly and reliably across locations.
           </p>
 
           <h2>Get in touch</h2>
@@ -113,8 +141,9 @@ export default function AboutPage() {
         ]}
       />
 
-      {/* Organization Schema */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      {/* Organization + AboutPage Schema */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutPageSchema) }} />
     </div>
   )
 }

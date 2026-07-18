@@ -11,6 +11,7 @@ export interface BlogPost {
   metaTitle?: string
   description: string
   date: string
+  dateModified?: string
   author: string
   category: string
   tags: string[]
@@ -38,6 +39,7 @@ export function getAllPosts(): BlogPost[] {
         metaTitle: data.metaTitle || data.meta_title || undefined,
         description: data.description,
         date: data.date,
+        dateModified: data.dateModified || data.date_modified || undefined,
         author: data.author || 'Audiment Team',
         category: data.category,
         tags: data.tags || [],
@@ -65,6 +67,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
     metaTitle: data.metaTitle || data.meta_title || undefined,
     description: data.description,
     date: data.date,
+    dateModified: data.dateModified || data.date_modified || undefined,
     author: data.author || 'Audiment Team',
     category: data.category,
     tags: data.tags || [],

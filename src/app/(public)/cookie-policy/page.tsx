@@ -6,7 +6,7 @@ import { Navbar } from "@/components/ui/navbar";
 export const metadata: Metadata = {
   title: "Cookie Policy | Audiment",
   description: "How Audiment uses cookies and tracking technologies on audiment.in.",
-  robots: "index, follow",
+  robots: { index: false, follow: true },
   alternates: { canonical: 'https://audiment.in/cookie-policy' }
 };
 

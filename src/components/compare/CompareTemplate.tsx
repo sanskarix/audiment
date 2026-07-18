@@ -23,6 +23,7 @@ interface CompareProps {
     title: string
     text: string
   }
+  path: string
 }
 
 export default function CompareTemplate({
@@ -34,6 +35,7 @@ export default function CompareTemplate({
   migrationReality,
   operationalDifferences,
   operationalOutcomeDifference,
+  path,
 }: CompareProps) {
   const faqs = [
     {
@@ -61,6 +63,18 @@ export default function CompareTemplate({
         "text": faq.answer
       }
     }))
+  };
+
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": `Audiment \u2013 ${heroH1}`,
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "url": `https://audiment.in${path}`,
+    "description": heroSubtext || `Evaluating ${competitor}? Here's a practical comparison focused on operational outcomes, rollout realities, and how each platform handles accountability.`,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR", "description": "Contact for pricing" },
+    "provider": { "@type": "Organization", "name": "Audiment", "url": "https://audiment.in" }
   };
 
   return (
@@ -216,13 +230,14 @@ export default function CompareTemplate({
       />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
           { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://audiment.in" },
           { "@type": "ListItem", "position": 2, "name": "Compare", "item": "https://audiment.in/compare" },
-          { "@type": "ListItem", "position": 3, "name": heroH1, "item": `https://audiment.in/compare/${heroH1.toLowerCase().replace(/\s+/g, '-').replace(/[()]/g, '')}` }
+          { "@type": "ListItem", "position": 3, "name": heroH1, "item": `https://audiment.in${path}` }
         ]
       }) }} />
     </div>

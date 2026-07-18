@@ -2,15 +2,35 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
-  title: 'QSR Audit Software',
+  title: 'QSR Audit Software | Compliance Across Every Outlet | Audiment',
   description: 'Audiment is audit management software for QSR chains. Shift-by-shift audits with photo evidence keep every outlet on standard – even with high staff turnover.',
   path: '/solutions/qsr-audit-software',
+  keywords: ['QSR audit software', 'quick service restaurant compliance', 'restaurant chain audit', 'shift audit app', 'franchise compliance software'],
 })
 
 export default function QSRAuditSoftware() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"https://schema.org","@type":"SoftwareApplication"}) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Audiment – QSR Audit Software",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web, iOS, Android",
+        "url": "https://audiment.in/solutions/qsr-audit-software",
+        "description": "Shift-by-shift digital audit software for QSR chains. Proof-based checklists, corrective action tracking, and real-time dashboards keep every outlet compliant across your network.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR", "description": "Contact for pricing" },
+        "provider": { "@type": "Organization", "name": "Audiment", "url": "https://audiment.in" }
+      }) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://audiment.in" },
+          { "@type": "ListItem", "position": 2, "name": "Solutions", "item": "https://audiment.in/solutions" },
+          { "@type": "ListItem", "position": 3, "name": "QSR Audit Software", "item": "https://audiment.in/solutions/qsr-audit-software" }
+        ]
+      }) }} />
       <SolutionPageTemplate
       industry="Quick Service Restaurants (QSR)"
       heroH1="QSR Audit Software – Compliance and Consistency Across Every Outlet"

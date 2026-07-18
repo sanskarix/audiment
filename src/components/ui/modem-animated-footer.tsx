@@ -87,6 +87,7 @@ export const Footer = ({
               </div>
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-heading mb-2">Comparisons</h3>
+                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/compare">All Comparisons</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/compare/audiment-vs-safetyculture">vs SafetyCulture</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/compare/audiment-vs-goaudits">vs GoAudits</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/compare/audiment-vs-zenput">vs Zenput</Link>

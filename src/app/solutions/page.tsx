@@ -53,9 +53,10 @@ const solutions = [
 ]
 
 export const metadata = buildPageMeta({
-    title: 'Audit Software by Industry | Audiment',
-    description: 'Audit management software configured for restaurants, QSR, retail, hotels, franchises, and manufacturing. Each solution matches the specific audit workflows of your industry.',
+    title: 'Audit Management Software by Industry | Audiment Solutions',
+    description: 'Audit management software configured for restaurants, QSR, retail, hotels, franchises, and manufacturing. Proof-based audits, issue tracking, and corrective actions for every industry.',
     path: '/solutions',
+    keywords: ['audit management software', 'industry audit software', 'restaurant audit', 'hotel audit', 'retail compliance software', 'QSR audit'],
 })
 
 export default function SolutionsHub() {

@@ -9,7 +9,7 @@ import Link from 'next/link'
 const menuItems = [
     { name: 'Solutions', href: '/solutions' },
     { name: 'How it works', href: '/#how-it-works' },
-    { name: 'Use cases', href: '/#use-cases' },
+    { name: 'Use cases', href: '/use-cases' },
     { name: 'Blog', href: '/blog' },
     { name: 'About', href: '/about' },
 ]

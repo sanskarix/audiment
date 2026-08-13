@@ -7,7 +7,7 @@ import { getSessionFromCookie } from "@/lib/auth";
 import {
   ArrowRight, CheckCircle2, Globe2, Shield, Zap, RefreshCw, Crown, Users, ClipboardList,
   Lock, Database, Smartphone, Wifi, Building2, UtensilsCrossed,
-  Check, X, AlertTriangle, MapPin as MapPinIcon, FileText, UserCheck, Camera as CameraIcon, Wrench, FileBarChart, UtensilsCrossed as UtensilsIcon, ShoppingBag as ShoppingBagIcon, Building2 as BuildingIcon, Settings, Heart, Truck, FileCheck2
+  Check, X, AlertTriangle, MapPin as MapPinIcon, FileText, UserCheck, Camera as CameraIcon, Wrench, FileBarChart, UtensilsCrossed as UtensilsIcon, ShoppingBag as ShoppingBagIcon, Building2 as BuildingIcon, Settings, Heart, FileCheck2
 } from "lucide-react";
 import { HeroSection } from "@/components/ui/hero-section-3";
 import { Footer } from "@/components/ui/modem-animated-footer";
@@ -321,11 +321,6 @@ const useCases = [
     desc: "Audit hygiene protocols and infection control across clinic locations. Every record is stored and inspection-ready when a regulator shows up.",
   },
   {
-    icon: Truck,
-    title: "Logistics and warehouses",
-    desc: "Audit safety equipment, storage, and dock compliance across distribution centres. Hazards get flagged with deadlines and tracked to resolution.",
-  },
-  {
     icon: Wrench,
     title: "Manufacturing and production",
     desc: "Run safety walks, equipment checks, and quality inspections across plants. Shift handovers include verified proof that every standard was met.",
@@ -583,9 +578,18 @@ export default async function Home() {
               "Fixes marked 'done' with no proof",
               "Outdated promos still on the floor"
             ].map((failure, i) => (
-              <div key={i} className="flex items-center gap-4 p-6 rounded-xl bg-neutral-50 border border-neutral-100">
-                <AlertTriangle className="w-6 h-6 text-amber-500 flex-shrink-0" />
-                <span className="text-lg text-neutral-700 font-medium">{failure}</span>
+              <div 
+                key={i} 
+                className="group flex items-center gap-5 p-6 rounded-xl bg-white border border-neutral-100 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-neutral-200 hover:-translate-y-0.5 transition-all duration-300"
+              >
+                <div className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-neutral-50 group-hover:bg-red-50/50 transition-colors duration-300 flex-shrink-0">
+                  <span className="text-sm font-bold tracking-wider text-neutral-400 group-hover:text-red-500 transition-colors duration-300 font-mono">
+                    {(i + 1).toString().padStart(2, '0')}
+                  </span>
+                </div>
+                <span className="text-base md:text-lg text-neutral-700 group-hover:text-neutral-900 font-medium transition-colors duration-300">
+                  {failure}
+                </span>
               </div>
             ))}
           </div>
@@ -637,7 +641,7 @@ export default async function Home() {
               <div className="px-6 py-4 text-sm font-semibold text-neutral-400 tracking-widest">Capability</div>
               <div className="px-6 py-4 text-sm font-semibold text-neutral-400 tracking-widest border-l border-white/10 text-center">Paper / Excel</div>
               <div className="px-6 py-4 text-sm font-semibold text-neutral-400 tracking-widest border-l border-white/10 text-center">Generic Tools</div>
-              <div className="px-6 py-4 text-sm font-semibold text-emerald-400 tracking-widest border-l border-white/10 text-center">Audiment</div>
+              <div className="px-6 py-4 text-sm font-semibold text-white tracking-widest border-l border-white/10 text-center">Audiment</div>
             </div>
             {comparisonRows.map((row, i) => (
               <div
@@ -653,7 +657,7 @@ export default async function Home() {
                   <span className="block mb-1">{row.generic.icon}</span>
                   <span className="text-sm">{row.generic.label}</span>
                 </div>
-                <div className="px-6 py-5 text-sm text-emerald-400 border-l border-white/5 text-center font-semibold">
+                <div className="px-6 py-5 text-sm text-neutral-200 border-l border-white/5 text-center font-semibold">
                   <span className="block mb-1">{row.audiment.icon}</span>
                   <span className="text-sm">{row.audiment.label}</span>
                 </div>
@@ -729,18 +733,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── Social Proof Section (§7) ──────────────────────────────────────── */}
-      <section className="py-24 border-b border-neutral-100 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-neutral-900 mb-4">
-              Why operations leaders<br />
-              <span className="text-neutral-400">choose Audiment</span>
-            </h2>
-            <p className="text-lg text-neutral-500 max-w-2xl mx-auto">From restaurant chains and retail brands to hotel groups and franchise networks.</p>
-          </div>
-        </div>
-      </section>
 
       {/* ── Animated Testimonial Columns (§7) ─────────────────────────────── */}
       <div id="testimonials">

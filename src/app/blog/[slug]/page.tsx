@@ -208,12 +208,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               "url": "https://audiment.in"
             },
             publisher: {
-              "@type": "Organization",
-              "name": "Audiment",
-              "logo": {
-                "@type": "ImageObject",
-                "url": "https://audiment.in/icon.svg"
-              }
+              "@id": "https://audiment.in/#organization"
             },
             mainEntityOfPage: {
               "@type": "WebPage",

@@ -12,12 +12,19 @@ interface Props {
   sections: Section[]
   faqs: Faq[]
   relatedLinks: RelatedLink[]
+  path?: string
 }
 
-export default function SeoContentPage({ heroH1, heroSubheadline, sections, faqs, relatedLinks }: Props) {
+export default function SeoContentPage({ heroH1, heroSubheadline, sections, faqs, relatedLinks, path }: Props) {
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
+    ...(path && {
+      '@id': `https://audiment.in${path}/#faq`,
+      'isPartOf': {
+        '@id': 'https://audiment.in/#website'
+      }
+    }),
     mainEntity: faqs.map((faq) => ({
       '@type': 'Question',
       name: faq.question,

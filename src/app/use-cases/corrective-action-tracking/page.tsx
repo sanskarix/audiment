@@ -23,7 +23,7 @@ export default function CorrectiveActionTracking() {
       features={[
         {
           title: "SLA-Driven Task Generation",
-          description: "When an audit standard fails, the system immediately generates a specific task. You define the Service Level Agreement (SLA) based on the severity—a burnt out bulb might get 72 hours, while a food safety violation gets 4 hours."
+          description: "When an audit standard fails, the system immediately generates a specific task. You define the Service Level Agreement (SLA) based on the severity–a burnt out bulb might get 72 hours, while a food safety violation gets 4 hours."
         },
         {
           title: "Proof of Closure Requirements",

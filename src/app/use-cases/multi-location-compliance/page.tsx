@@ -23,7 +23,7 @@ export default function MultiLocationCompliance() {
       features={[
         {
           title: "Standardized Blueprint Deployment",
-          description: "Push operational playbooks and new standards to every location instantly. When you update the opening checklist, every single branch is running the exact new version by tomorrow morning—no PDFs to email, no binders to update, and no hoping managers actually read the memo."
+          description: "Push operational playbooks and new standards to every location instantly. When you update the opening checklist, every single branch is running the exact new version by tomorrow morning–no PDFs to email, no binders to update, and no hoping managers actually read the memo."
         },
         {
           title: "Role-Based Access Hierarchies",
@@ -41,7 +41,7 @@ export default function MultiLocationCompliance() {
         },
         {
           title: "Close the Operational Loop",
-          description: "Finding the issue is only step one. Audiment tracks the resolution process from start to finish—who fixed it, when it was fixed, and what visual evidence proves it—ensuring that severe issues don't just sit unresolved in a filing cabinet."
+          description: "Finding the issue is only step one. Audiment tracks the resolution process from start to finish–who fixed it, when it was fixed, and what visual evidence proves it–ensuring that severe issues don't just sit unresolved in a filing cabinet."
         },
         {
           title: "Inspection-Ready Records on Demand",

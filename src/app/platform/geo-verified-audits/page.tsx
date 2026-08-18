@@ -61,7 +61,7 @@ export default function Page() {
         faqs={[
           {
             question: 'Does geo verification replace photo evidence?',
-            answer: 'No. Geo verification confirms presence, while photo evidence confirms execution quality. Both are required for a fully verified audit. An auditor can be on-site but still submit low-quality evidence — geo-verification and proof requirements work together.',
+            answer: 'No. Geo verification confirms presence, while photo evidence confirms execution quality. Both are required for a fully verified audit. An auditor can be on-site but still submit low-quality evidence – geo-verification and proof requirements work together.',
           },
           {
             question: 'Can geo-verified audits work with offline use?',
@@ -69,7 +69,7 @@ export default function Page() {
           },
           {
             question: 'Why is this important for area managers?',
-            answer: 'It confirms that reported results came from someone who was actually at the branch on the day of the audit. Area managers covering large territories benefit from the accountability structure — it creates a consistent record of site visits that can be referenced in performance reviews.',
+            answer: 'It confirms that reported results came from someone who was actually at the branch on the day of the audit. Area managers covering large territories benefit from the accountability structure – it creates a consistent record of site visits that can be referenced in performance reviews.',
           },
           {
             question: 'Can I set the geofence radius for each location?',

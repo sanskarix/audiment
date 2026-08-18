@@ -44,37 +44,22 @@ function StructuredData() {
     "@graph": [
       {
         "@type": "SoftwareApplication",
+        "@id": "https://audiment.in/#software",
         "name": "Audiment",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Web, Mobile",
         "description": "Audiment is audit management software for multi-location businesses. Run proof-based audits across locations with photo evidence, corrective action tracking, and accountability.",
-        "keywords": "multi-location audit software, inspection software, proof-based audits, quality consistency, operational consistency, corrective action tracking"
-      },
-      {
-        "@type": "WebSite",
-        "name": "Audiment",
-        "url": "https://audiment.in",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://audiment.in/blog?q={search_term_string}"
-          },
-          "query-input": "required name=search_term_string"
+        "keywords": "multi-location audit software, inspection software, proof-based audits, quality consistency, operational consistency, corrective action tracking",
+        "publisher": {
+          "@id": "https://audiment.in/#organization"
         }
       },
       {
-        "@type": "Organization",
-        "name": "Audiment",
-        "url": "https://audiment.in",
-        "logo": "https://audiment.in/icon.svg",
-        "description": "Audiment is audit and inspection software for multi-location businesses.",
-        "sameAs": [
-          "https://www.linkedin.com/company/audiment"
-        ]
-      },
-      {
         "@type": "FAQPage",
+        "@id": "https://audiment.in/#faq",
+        "isPartOf": {
+          "@id": "https://audiment.in/#website"
+        },
         "mainEntity": [
           {
             "@type": "Question",
@@ -160,8 +145,15 @@ function StructuredData() {
       },
       {
         "@type": "HowTo",
+        "@id": "https://audiment.in/#howto",
         "name": "How to digitize and manage audits with Audiment",
         "description": "How Audiment handles an audit from start to finish – scheduling, on-site execution, evidence capture, issue detection, corrective actions, and reporting.",
+        "isPartOf": {
+          "@id": "https://audiment.in/#website"
+        },
+        "publisher": {
+          "@id": "https://audiment.in/#organization"
+        },
         "step": [
           {
             "@type": "HowToStep",

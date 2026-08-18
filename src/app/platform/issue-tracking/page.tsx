@@ -39,19 +39,19 @@ export default function Page() {
         sections={[
           {
             title: 'What is issue tracking in operations?',
-            content: 'Issue tracking records a failed standard, assigns it to a named owner, sets a deadline based on severity, and confirms resolution with photographic proof. The issue lifecycle moves from detection to assignment to closure — with every step documented and visible to central teams. This is what separates a tracked failure from a verbal note that gets forgotten.',
+            content: 'Issue tracking records a failed standard, assigns it to a named owner, sets a deadline based on severity, and confirms resolution with photographic proof. The issue lifecycle moves from detection to assignment to closure – with every step documented and visible to central teams. This is what separates a tracked failure from a verbal note that gets forgotten.',
           },
           {
             title: 'Why it matters in multi-location operations',
-            content: 'Without a single issue tracking workflow, failed checks disappear into WhatsApp messages and phone calls. Leaders can\'t see what\'s open across their network, what\'s overdue, or which locations have the same failures recurring. The result is that high-risk issues sit alongside low-priority observations in the same informal queue — with no visibility into which are actually resolved.',
+            content: 'Without a single issue tracking workflow, failed checks disappear into WhatsApp messages and phone calls. Leaders can\'t see what\'s open across their network, what\'s overdue, or which locations have the same failures recurring. The result is that high-risk issues sit alongside low-priority observations in the same informal queue – with no visibility into which are actually resolved.',
           },
           {
             title: 'What fails without it',
-            content: 'Recurring issues stay open because no system tracks them to verified closure. Accountability weakens because nobody can see what\'s assigned to whom. High-risk failures get treated like low-priority tasks because everything looks equal without severity classification. Over time, the same issues appear in audit after audit at the same locations — until they escalate into customer complaints or compliance incidents.',
+            content: 'Recurring issues stay open because no system tracks them to verified closure. Accountability weakens because nobody can see what\'s assigned to whom. High-risk failures get treated like low-priority tasks because everything looks equal without severity classification. Over time, the same issues appear in audit after audit at the same locations – until they escalate into customer complaints or compliance incidents.',
           },
           {
             title: 'How Audiment handles it',
-            content: 'Audiment creates corrective actions automatically from failed audit checks — no manual creation required. Each issue is routed to a named owner, given a severity-appropriate due date, and tracked until closure is verified with photo evidence. Central teams see open issues, overdue actions, and repeat failures across all locations in a single dashboard view.',
+            content: 'Audiment creates corrective actions automatically from failed audit checks – no manual creation required. Each issue is routed to a named owner, given a severity-appropriate due date, and tracked until closure is verified with photo evidence. Central teams see open issues, overdue actions, and repeat failures across all locations in a single dashboard view.',
           },
           {
             title: 'Operational outcome',
@@ -73,7 +73,7 @@ export default function Page() {
           },
           {
             question: 'What does closure verification look like?',
-            answer: 'Issue closure requires a photo of the resolved state — a cleaned surface, a restocked station, a repaired piece of equipment. The closure photo is timestamped and attached to the issue record, creating a documented resolution trail that can be referenced if the issue recurs.',
+            answer: 'Issue closure requires a photo of the resolved state – a cleaned surface, a restocked station, a repaired piece of equipment. The closure photo is timestamped and attached to the issue record, creating a documented resolution trail that can be referenced if the issue recurs.',
           },
         ]}
         relatedLinks={[

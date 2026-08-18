@@ -90,6 +90,11 @@ export default function ManagerDashboardPage() {
   const [managerExtraStats, setManagerExtraStats] = useState<{ unassigned: any[], nearDeadlines: any[] }>({ unassigned: [], nearDeadlines: [] });
   const [isMounted, setIsMounted] = useState(false);
 
+  // Tab states for dashboard simplification
+  const [activeActivityTab, setActiveActivityTab] = useState<'audits' | 'notifications'>('audits');
+  const [activeTasksTab, setActiveTasksTab] = useState<'unassigned' | 'deadlines'>('unassigned');
+
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -379,380 +384,401 @@ export default function ManagerDashboardPage() {
 
   return (
     <DashboardShell role="manager">
-      <div className="dashboard-page-container px-6 md:px-10">
+      <div className="dashboard-page-container">
         {errorMsg && (
           <div className="bg-destructive/10 border border-destructive/20 text-destructive p-4 rounded-xl mb-6">
             <h3 className="font-bold">Error loading dashboard</h3>
             <p className="text-sm">{errorMsg}</p>
           </div>
         )}
+
+        {/* Page Header */}
         <div className="page-header-section mb-6">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <h1 className="page-heading">Overview</h1>
-            <p className="body-text">Manage quality and compliance across your branches.</p>
+            <p className="body-text text-muted-text">Manage quality and compliance across your branches.</p>
           </div>
         </div>
 
-        {/* Top Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <Card className="standard-card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Locations</p>
-              <MapPin className="h-4 w-4 text-primary/40 transition-colors" />
+        {/* Top Summary Stats */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="standard-card p-6 bg-card">
+            <p className="text-[11px] font-medium text-muted-text/50 uppercase tracking-[0.07em]">Locations</p>
+            <div className="text-[36px] font-bold text-heading tabular-nums leading-none mt-3" style={{ letterSpacing: '-0.02em' }}>
+              {stats?.assignedLocations}
             </div>
-            <div>
-              <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{stats?.assignedLocations}</div>
-              <p className="body-text mt-2">Managed locations</p>
-            </div>
+            <p className="text-[11.5px] text-muted-text/70 mt-2.5">Managed branches</p>
           </Card>
 
-          <Card className="standard-card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Pending Audits</p>
-              <ClipboardList className="h-4 w-4 text-primary/40 transition-colors" />
+          <Card className="standard-card p-6 bg-card">
+            <p className="text-[11px] font-medium text-muted-text/50 uppercase tracking-[0.07em]">Pending Audits</p>
+            <div className="text-[36px] font-bold text-heading tabular-nums leading-none mt-3" style={{ letterSpacing: '-0.02em' }}>
+              {(stats as any)?.totalPending || 0}
             </div>
-            <div>
-              <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{(stats as any)?.totalPending || 0}</div>
-              <p className="body-text mt-2">Require attention</p>
-            </div>
+            <p className="text-[11.5px] text-muted-text/70 mt-2.5">Require attention</p>
           </Card>
 
-          <Card className="standard-card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Completed</p>
-              <CheckCircle2 className="h-4 w-4 text-success/40 transition-colors" />
+          <Card className="standard-card p-6 bg-card">
+            <p className="text-[11px] font-medium text-muted-text/50 uppercase tracking-[0.07em]">Completed</p>
+            <div className="text-[36px] font-bold text-success tabular-nums leading-none mt-3" style={{ letterSpacing: '-0.02em' }}>
+              {(stats as any)?.completedThisMonth || 0}
             </div>
-            <div>
-              <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{(stats as any)?.completedThisMonth || 0}</div>
-              <p className="body-text mt-2">This month</p>
-            </div>
+            <p className="text-[11.5px] text-muted-text/70 mt-2.5">Completed this month</p>
           </Card>
 
-          <Card className="standard-card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Auditors</p>
-              <Users className="h-4 w-4 text-primary/40 transition-colors" />
+          <Card className="standard-card p-6 bg-card">
+            <p className="text-[11px] font-medium text-muted-text/50 uppercase tracking-[0.07em]">Auditors</p>
+            <div className="text-[36px] font-bold text-heading tabular-nums leading-none mt-3" style={{ letterSpacing: '-0.02em' }}>
+              {stats?.activeAuditors}
             </div>
-            <div>
-              <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{stats?.activeAuditors}</div>
-              <p className="body-text mt-2">Active auditors</p>
-            </div>
+            <p className="text-[11.5px] text-muted-text/70 mt-2.5">Active team members</p>
           </Card>
         </div>
 
-        {/* Priority Resolution Section */}
-        <Card className="standard-card bg-muted/5 border-primary/10 overflow-hidden">
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex flex-col gap-1">
-                <h3 className="section-heading">Corrective actions</h3>
-                <p className="text-[12px] text-muted-text">Issues requiring immediate attention</p>
-              </div>
-              <Link href="/dashboard/manager/corrective-actions" className="flex items-center gap-1.5 text-[11px] font-semibold text-primary hover:underline group/link transition-all">
-                View all <ArrowRight className="h-3 w-3 group-hover/link:translate-x-0.5 transition-transform" />
-              </Link>
+        {/* Corrective Actions Section */}
+        <div className="standard-card bg-card p-6">
+          <div className="flex items-center justify-between mb-5">
+            <div className="space-y-0.5">
+              <h3 className="text-[14px] font-semibold text-heading">Corrective Actions</h3>
+              <p className="text-[11px] text-muted-text/60">Issues requiring immediate attention</p>
             </div>
-
-            {correctiveActions.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-8 text-muted-text opacity-40">
-                 <CheckCircle2 className="h-8 w-8 mb-2" />
-                 <p className="text-xs font-medium">No pending actions</p>
-              </div>
-            ) : (
-              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin">
-                {[...correctiveActions]
-                  .sort((a, b) => {
-                    const toDate = (val: any) => val?.toDate ? val.toDate().getTime() : new Date(val).getTime();
-                    return toDate(a.deadline) - toDate(b.deadline);
-                  })
-                  .map(action => (
-                    <div 
-                      key={action.id} 
-                      className="flex-shrink-0 w-72 p-4 rounded-xl border border-border/50 bg-background hover:border-primary/20 hover:shadow-md transition-all cursor-pointer group/card"
-                      onClick={() => setSelectedCA(action)}
-                    >
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex flex-col gap-1.5">
-                           <div className="flex items-center gap-2">
-                              {action.severity === 'high' ? (
-                                <Badge className="bg-destructive/10 text-destructive border-none px-2 py-0.5 rounded-full text-[9px] font-bold">High</Badge>
-                              ) : action.severity === 'medium' ? (
-                                <Badge className="bg-amber-500/10 text-amber-600 border-none px-2 py-0.5 rounded-full text-[9px] font-bold">Medium</Badge>
-                              ) : (
-                                <Badge className="bg-primary/10 text-primary border-none px-2 py-0.5 rounded-full text-[9px] font-bold">Low</Badge>
-                              )}
-                              {action.status === 'in_progress' && (
-                                <Badge className="bg-primary/5 text-primary border-none px-2 py-0.5 rounded-full text-[9px] font-bold">In progress</Badge>
-                              )}
-                           </div>
-                           <span className="text-[13px] font-bold text-heading leading-tight group-hover/card:text-primary transition-colors line-clamp-1">{action.questionText}</span>
-                        </div>
-                      </div>
-                      <div className="space-y-1.5">
-                        <div className="flex items-center gap-1.5 text-[11px] text-muted-text">
-                           <MapPin className="h-3 w-3 opacity-40" />
-                           <span className="truncate">{action.locationName}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-destructive">
-                           <Clock className="h-3 w-3 opacity-40" />
-                           <span>Due {format(action.deadline.toDate ? action.deadline.toDate() : new Date(action.deadline), 'MMM d')}</span>
-                        </div>
-                      </div>
-                      <div className="mt-4 pt-3 border-t border-border/30 flex items-center justify-between">
-                         <span className="text-[10px] font-bold text-primary opacity-0 group-hover/card:opacity-100 transition-opacity">Resolve issue</span>
-                         <div className="h-6 w-6 rounded-full bg-muted/30 flex items-center justify-center opacity-40 group-hover/card:bg-primary/10 group-hover/card:text-primary group-hover/card:opacity-100 transition-all">
-                            <ArrowRight className="h-3.5 w-3.5" />
-                         </div>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            )}
+            <Link href="/dashboard/manager/corrective-actions" className="text-[11.5px] font-medium text-primary hover:opacity-80 transition-opacity">
+              View all
+            </Link>
           </div>
-        </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-7 gap-8">
-          {/* Trend Chart */}
-          <Card className="lg:col-span-4 standard-card p-6">
-            <div className="mb-6">
-              <h3 className="section-heading">Performance trend</h3>
-              <p className="body-text mt-1">Score trends from recent audits</p>
+          {correctiveActions.length === 0 ? (
+            <div className="text-center py-10 text-muted-text/40">
+              <p className="text-xs font-medium">No pending corrective actions.</p>
             </div>
-            <div className="h-[300px] w-full">
-              {isMounted ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={stats?.recentAuditScores} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.2}/>
-                        <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} strokeOpacity={0.5} />
-                    <XAxis 
-                      dataKey="date" 
-                      stroke="var(--muted-text)" 
-                      fontSize={10} 
-                      axisLine={false} 
-                      tickLine={false} 
-                      fontWeight={500} 
-                      tick={{ dy: 10 }}
-                    />
-                    <YAxis 
-                      stroke="var(--muted-text)" 
-                      fontSize={10} 
-                      axisLine={false} 
-                      tickLine={false} 
-                      domain={[0, 100]} 
-                      fontWeight={500}
-                      tickFormatter={(val) => `${val}%`}
-                    />
-                    <Tooltip
-                      contentStyle={{ 
-                        borderRadius: '12px', 
-                        border: '1px solid var(--border)', 
-                        backgroundColor: 'var(--background)', 
-                        color: 'var(--heading)', 
-                        fontSize: '11px',
-                        fontWeight: '600',
-                        boxShadow: '0 15px 30px rgba(0,0,0,0.15)',
-                        padding: '12px'
-                      }}
-                      cursor={{ stroke: 'var(--primary)', strokeWidth: 1, strokeDasharray: '4 4' }}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="score"
-                      stroke="var(--primary)"
-                      strokeWidth={3}
-                      fillOpacity={1}
-                      fill="url(#colorScore)"
-                      dot={false}
-                      activeDot={{ r: 5, strokeWidth: 0, fill: 'var(--primary)' }}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              ) : (
-                <Skeleton className="h-full w-full rounded-xl" />
-              )}
-            </div>
-          </Card>
-
-          {/* Activity Feed */}
-          <Card className="lg:col-span-3 standard-card p-6">
-            <div className="mb-6">
-              <h3 className="section-heading">Auditor Activity</h3>
-              <p className="body-text mt-1">Current workload of your team</p>
-            </div>
-            <div className="space-y-4">
-              {stats?.auditorActivity.map((aud, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-xl border border-border/40 bg-muted/5">
-                  <div className="space-y-1">
-                    <Link href={`/dashboard/manager/auditors/${aud.id}`} className="block">
-                      <p className="font-semibold text-[13px] text-heading hover:text-primary transition-colors cursor-pointer">{aud.name}</p>
-                    </Link>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-[10px] font-medium text-success border-success/30 bg-success/5 px-2 py-0.5">
-                        {aud.completed} completed
-                      </Badge>
-                      <Badge variant="outline" className="text-[10px] font-medium text-muted-text border-border px-2 py-0.5">
-                        {aud.pending} in progress
-                      </Badge>
-                    </div>
-                  </div>
-                  <CheckCircle2 className={aud.pending === 0 ? "text-success h-5 w-5 opacity-80" : "text-muted-text/30 h-5 w-5"} />
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-        {/* Manager Tasks: Unassigned Auddits & Near Deadlines */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Unassigned Audits */}
-          <Card className="standard-card p-6">
-            <div className="mb-6 flex items-center justify-between">
-              <div>
-                <h3 className="section-heading">Unassigned Audits</h3>
-                <p className="body-text mt-1">Audits waiting for an auditor</p>
-              </div>
-              <Badge variant="secondary" className="bg-primary/10 text-primary lowercase px-3">{managerExtraStats.unassigned.length} pending</Badge>
-            </div>
-            <div className="space-y-3">
-              {managerExtraStats.unassigned.length === 0 ? (
-                <div className="py-10 text-center border-2 border-dashed border-border/40 rounded-xl">
-                  <p className="text-sm text-body">No unassigned audits.</p>
-                </div>
-              ) : (
-                managerExtraStats.unassigned.map((audit) => (
-                  <div key={audit.id} className="flex items-center justify-between p-4 rounded-xl border border-border/40 hover:bg-muted/30 transition-all">
-                    <div className="space-y-1">
-                      <p className="text-sm font-semibold text-heading">{audit.templateTitle}</p>
-                      <p className="text-[11px] text-muted-text flex items-center gap-1.5">
-                        <MapPin className="h-3 w-3" /> {audit.locationName}
-                      </p>
-                    </div>
-                    <Link href="/dashboard/manager/audits">
-                      <Button size="sm" variant="outline" className="h-8 text-xs">Assign</Button>
-                    </Link>
-                  </div>
-                ))
-              )}
-            </div>
-          </Card>
-
-          {/* Near Deadlines */}
-          <Card className="standard-card p-6">
-            <div className="mb-6 flex items-center justify-between">
-              <div>
-                <h3 className="section-heading">Near Deadlines</h3>
-                <p className="body-text mt-1">Upcoming audit deadlines</p>
-              </div>
-              <AlertTriangle className="h-5 w-5 text-warning opacity-50" />
-            </div>
-            <div className="space-y-3">
-              {managerExtraStats.nearDeadlines.length === 0 ? (
-                <div className="py-10 text-center border-2 border-dashed border-border/40 rounded-xl">
-                  <p className="text-sm text-body">No upcoming deadlines.</p>
-                </div>
-              ) : (
-                managerExtraStats.nearDeadlines.map((audit) => (
-                  <div key={audit.id} className="flex items-center justify-between p-4 rounded-xl border border-border/40 hover:bg-muted/30 transition-all">
-                    <div className="space-y-1">
-                      <p className="text-sm font-semibold text-heading">{audit.templateTitle}</p>
-                      <p className="text-[11px] text-muted-text flex items-center gap-1.5">
-                        <Clock className="h-3 w-3" /> {audit.deadline ? format(audit.deadline.toDate(), 'MMM d, yyyy') : 'No date'}
-                      </p>
-                    </div>
-                    <Badge variant="outline" className={cn(
-                      "text-[10px]",
-                      audit.status === 'in_progress' ? "text-primary border-primary/20" : "text-muted-text border-border"
-                    )}>
-                      {audit.status}
-                    </Badge>
-                  </div>
-                ))
-              )}
-            </div>
-          </Card>
-        </div>
-
-        {/* Recent Notifications & Recent Audits Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card className="standard-card p-6">
-            <div className="mb-6">
-              <h3 className="section-heading">Recent Notifications</h3>
-              <p className="body-text mt-1">Latest updates and alerts</p>
-            </div>
-            <ScrollArea className="h-[350px] pr-4">
-              {notifications.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 opacity-40">
-                  <MessageSquare className="h-8 w-8 mb-2" />
-                  <p className="text-sm">No notifications yet.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {notifications.map((n) => (
-                    <div key={n.id} className={cn("p-4 rounded-xl border border-border/40 transition-all", !n.isRead && "bg-primary/5 border-primary/20")}>
-                      <div className="flex items-center justify-between mb-1">
-                        <p className="text-[13px] font-semibold text-heading">{n.title}</p>
-                        <span className="text-[10px] text-muted-text/50">
-                          {n.createdAt ? format(n.createdAt.toDate(), 'MMM d, h:mm a') : 'Now'}
+          ) : (
+            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none">
+              {[...correctiveActions]
+                .sort((a, b) => {
+                  const toDate = (val: any) => val?.toDate ? val.toDate().getTime() : new Date(val).getTime();
+                  return toDate(a.deadline) - toDate(b.deadline);
+                })
+                .map(action => (
+                  <button
+                    key={action.id}
+                    onClick={() => setSelectedCA(action)}
+                    className="flex-shrink-0 w-72 p-4 rounded-xl border border-border/40 bg-muted/5 hover:border-border/80 transition-all text-left group active:scale-[0.98]"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className={cn(
+                          "text-[10px] font-semibold uppercase tracking-[0.05em]",
+                          action.severity === 'high' ? "text-destructive" :
+                            action.severity === 'medium' ? "text-amber-500" :
+                            "text-primary"
+                        )}>
+                          {action.severity} severity
                         </span>
+                        {action.status === 'in_progress' && (
+                          <span className="text-[10px] text-muted-text/50 font-medium">In Progress</span>
+                        )}
                       </div>
-                      <p className="text-[12px] text-body line-clamp-2">{n.message}</p>
+
+                      <p className="text-[13.5px] font-normal text-heading leading-snug line-clamp-2 min-h-[40px]">
+                        {action.questionText}
+                      </p>
+
+                      <div className="space-y-1.5 pt-1 text-[11px] text-muted-text/60">
+                        <div className="flex items-center gap-1.5">
+                          <MapPin className="h-3 w-3 opacity-60" />
+                          <span className="truncate">{action.locationName}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-destructive font-medium">
+                          <Clock className="h-3 w-3 opacity-80" />
+                          <span>Due {format(action.deadline.toDate ? action.deadline.toDate() : new Date(action.deadline), 'MMM d')}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+            </div>
+          )}
+        </div>
+
+        {/* Split Grid: Left Side (Trends & Logs) vs Right Side (Operations & Workload) */}
+        <div className="grid grid-cols-1 lg:grid-cols-7 gap-6">
+          
+          {/* Left Column: Chart & Activity logs */}
+          <div className="lg:col-span-4 space-y-6">
+            
+            {/* Performance Trend */}
+            <Card className="standard-card p-6 bg-card">
+              <div className="mb-6">
+                <h3 className="text-[14px] font-semibold text-heading">Performance Trend</h3>
+                <p className="text-[11px] text-muted-text/60 mt-0.5">Average compliance score across recent audits</p>
+              </div>
+              <div className="h-[280px] w-full">
+                {isMounted ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={stats?.recentAuditScores} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.15}/>
+                          <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} strokeOpacity={0.2} />
+                      <XAxis 
+                        dataKey="date" 
+                        stroke="var(--muted-text)" 
+                        fontSize={10} 
+                        axisLine={false} 
+                        tickLine={false} 
+                        fontWeight={500} 
+                        tick={{ dy: 10 }}
+                      />
+                      <YAxis 
+                        stroke="var(--muted-text)" 
+                        fontSize={10} 
+                        axisLine={false} 
+                        tickLine={false} 
+                        domain={[0, 100]} 
+                        fontWeight={500}
+                        tickFormatter={(val) => `${val}%`}
+                      />
+                      <Tooltip
+                        contentStyle={{ 
+                          borderRadius: '12px', 
+                          border: '1px solid var(--border)', 
+                          backgroundColor: 'var(--background)', 
+                          color: 'var(--heading)', 
+                          fontSize: '11px',
+                          fontWeight: '600',
+                          boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
+                          padding: '10px'
+                        }}
+                        cursor={{ stroke: 'var(--primary)', strokeWidth: 1, strokeDasharray: '4 4' }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="score"
+                        stroke="var(--primary)"
+                        strokeWidth={2.5}
+                        fillOpacity={1}
+                        fill="url(#colorScore)"
+                        dot={false}
+                        activeDot={{ r: 4, strokeWidth: 0, fill: 'var(--primary)' }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <Skeleton className="h-full w-full rounded-xl" />
+                )}
+              </div>
+            </Card>
+
+            {/* Activity tab panel: Recent Audits & Notifications combined */}
+            <Card className="standard-card p-6 bg-card flex flex-col">
+              <div className="flex items-center justify-between mb-5">
+                <div className="space-y-0.5">
+                  <h3 className="text-[14px] font-semibold text-heading">Activity Log</h3>
+                  <p className="text-[11px] text-muted-text/60">Live updates and audit history</p>
+                </div>
+                {/* Segment controller */}
+                <div className="bg-muted/30 p-0.5 rounded-lg flex gap-1 border border-border/20">
+                  <button
+                    onClick={() => setActiveActivityTab('audits')}
+                    className={cn(
+                      "px-3 py-1 rounded-md text-[11px] font-medium transition-all",
+                      activeActivityTab === 'audits' 
+                        ? "bg-background text-heading shadow-sm" 
+                        : "text-muted-text/75 hover:text-heading"
+                    )}
+                  >
+                    Audits
+                  </button>
+                  <button
+                    onClick={() => setActiveActivityTab('notifications')}
+                    className={cn(
+                      "px-3 py-1 rounded-md text-[11px] font-medium transition-all",
+                      activeActivityTab === 'notifications' 
+                        ? "bg-background text-heading shadow-sm" 
+                        : "text-muted-text/75 hover:text-heading"
+                    )}
+                  >
+                    Alerts
+                  </button>
+                </div>
+              </div>
+
+              {activeActivityTab === 'audits' ? (
+                <div className="divide-y divide-border/25">
+                  {stats?.recentAudits.map((audit, i) => (
+                    <div key={i} className="py-4 flex items-center justify-between first:pt-0 last:pb-0">
+                      <div className="min-w-0 pr-4 space-y-1">
+                        <p className="text-[13px] font-normal text-heading leading-tight truncate">{audit.templateTitle}</p>
+                        <div className="text-[11px] text-muted-text/50 flex items-center gap-1.5">
+                          <MapPin className="h-3 w-3 opacity-60" /> {audit.locationName} 
+                          <span>•</span> 
+                          <Clock className="h-3 w-3 opacity-60" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMM d') : 'Scheduled'}
+                        </div>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        {audit.status === 'completed' ? (
+                          <span className={cn(
+                            "text-[13.5px] font-semibold tabular-nums",
+                            audit.scorePercentage >= 90 ? "text-success" : audit.scorePercentage >= 70 ? "text-primary" : "text-destructive"
+                          )}>
+                            {audit.scorePercentage}%
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-muted-text/40">
+                            {audit.status}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
-              )}
-            </ScrollArea>
-          </Card>
-
-        {/* Recent Audits Section */}
-        <Card className="standard-card p-6">
-          <div className="mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="section-heading">Recent Audits</h3>
-                <p className="body-text mt-1">Latest audits from your team</p>
-              </div>
-              <TrendingUp className="h-5 w-5 text-muted-text/50" />
-            </div>
-          </div>
-          <div className="space-y-3">
-            {stats?.recentAudits.map((audit, i) => (
-              <div key={i} className="flex items-center justify-between p-4 rounded-xl border border-border/40 hover:bg-muted/30 transition-all duration-200 group">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-full bg-primary/5 flex items-center justify-center text-primary shrink-0 group-hover:bg-primary/10 transition-colors">
-                    <ClipboardList className="h-5 w-5" />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-semibold text-heading leading-tight">{audit.templateTitle}</p>
-                    <div className="text-[12px] font-normal text-muted-text flex items-center gap-1.5">
-                      <MapPin className="h-3 w-3" /> {audit.locationName} 
-                      <span className="opacity-30 mx-0.5">•</span> 
-                      <Clock className="h-3 w-3" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMM d, h:mm a') : 'Scheduled'}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  {audit.status === 'completed' ? (
-                    <Badge className={cn(
-                      "text-[10px] font-semibold px-2.5 py-1",
-                      audit.scorePercentage >= 90 ? "bg-success text-success-foreground" : audit.scorePercentage >= 70 ? "bg-primary text-primary-foreground" : "bg-warning text-warning-foreground"
-                    )}>
-                      {audit.scorePercentage}%
-                    </Badge>
+              ) : (
+                <div className="divide-y divide-border/25 max-h-[300px] overflow-y-auto pr-1">
+                  {notifications.length === 0 ? (
+                    <p className="py-12 text-center text-xs text-muted-text/40">No notifications yet.</p>
                   ) : (
-                    <Badge variant="outline" className="text-[10px] font-semibold text-muted-text bg-muted/20 px-2.5 py-1">
-                      {audit.status}
-                    </Badge>
+                    notifications.map((n) => (
+                      <div key={n.id} className="py-4 first:pt-0 last:pb-0">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <div className="flex items-center gap-2">
+                            {!n.isRead && <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />}
+                            <p className="text-[13px] font-medium text-heading leading-tight">{n.title}</p>
+                          </div>
+                          <span className="text-[10px] text-muted-text/40 tabular-nums">
+                            {n.createdAt ? format(n.createdAt.toDate(), 'MMM d, h:mm a') : 'Now'}
+                          </span>
+                        </div>
+                        <p className="text-[11.5px] text-muted-text/70 leading-relaxed pr-6">{n.message}</p>
+                      </div>
+                    ))
                   )}
                 </div>
-              </div>
-            ))}
+              )}
+            </Card>
+
           </div>
-        </Card>
+
+          {/* Right Column: Workload & Combined Tasks */}
+          <div className="lg:col-span-3 space-y-6">
+            
+            {/* Auditor Workload */}
+            <Card className="standard-card p-6 bg-card flex flex-col">
+              <div className="mb-5">
+                <h3 className="text-[14px] font-semibold text-heading">Auditor Workload</h3>
+                <p className="text-[11px] text-muted-text/60 mt-0.5">Current audit assignment distribution</p>
+              </div>
+              <div className="divide-y divide-border/25 flex-1 flex flex-col justify-start">
+                {stats?.auditorActivity.map((aud, i) => (
+                  <div key={i} className="py-3.5 flex items-center justify-between first:pt-0 last:pb-0">
+                    <div className="space-y-1">
+                      <Link href={`/dashboard/manager/auditors/${aud.id}`} className="text-[13px] font-medium text-heading hover:text-primary transition-colors">
+                        {aud.name}
+                      </Link>
+                      <div className="flex items-center gap-3 text-[11px] text-muted-text/50">
+                        <span className="text-success font-medium">{aud.completed} completed</span>
+                        <span>•</span>
+                        <span>{aud.pending} in progress</span>
+                      </div>
+                    </div>
+                    {aud.pending === 0 ? (
+                      <span className="text-[10px] font-medium text-success uppercase tracking-[0.05em]">Idle</span>
+                    ) : (
+                      <span className="text-[10px] font-medium text-primary uppercase tracking-[0.05em]">{aud.pending} Active</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            {/* Audit Tasks Panel: Unassigned & Deadlines combined */}
+            <Card className="standard-card p-6 bg-card">
+              <div className="flex items-center justify-between mb-5">
+                <div className="space-y-0.5">
+                  <h3 className="text-[14px] font-semibold text-heading">Operations</h3>
+                  <p className="text-[11px] text-muted-text/60">Manage dispatches and deadlines</p>
+                </div>
+                {/* Segment controller */}
+                <div className="bg-muted/30 p-0.5 rounded-lg flex gap-1 border border-border/20">
+                  <button
+                    onClick={() => setActiveTasksTab('unassigned')}
+                    className={cn(
+                      "px-3 py-1 rounded-md text-[11px] font-medium transition-all",
+                      activeTasksTab === 'unassigned' 
+                        ? "bg-background text-heading shadow-sm" 
+                        : "text-muted-text/75 hover:text-heading"
+                    )}
+                  >
+                    Unassigned ({managerExtraStats.unassigned.length})
+                  </button>
+                  <button
+                    onClick={() => setActiveTasksTab('deadlines')}
+                    className={cn(
+                      "px-3 py-1 rounded-md text-[11px] font-medium transition-all",
+                      activeTasksTab === 'deadlines' 
+                        ? "bg-background text-heading shadow-sm" 
+                        : "text-muted-text/75 hover:text-heading"
+                    )}
+                  >
+                    Deadlines
+                  </button>
+                </div>
+              </div>
+
+              {activeTasksTab === 'unassigned' ? (
+                <div className="divide-y divide-border/25">
+                  {managerExtraStats.unassigned.length === 0 ? (
+                    <p className="py-6 text-center text-xs text-muted-text/40">No unassigned audits.</p>
+                  ) : (
+                    managerExtraStats.unassigned.map((audit) => (
+                      <div key={audit.id} className="py-4 flex items-center justify-between first:pt-0 last:pb-0">
+                        <div className="space-y-1 min-w-0 pr-4">
+                          <p className="text-[13px] font-normal text-heading truncate">{audit.templateTitle}</p>
+                          <p className="text-[11px] text-muted-text/50 flex items-center gap-1.5">
+                            <MapPin className="h-3 w-3 opacity-60" /> {audit.locationName}
+                          </p>
+                        </div>
+                        <Link href="/dashboard/manager/audits">
+                          <Button size="sm" variant="outline" className="h-7 px-3 text-[11px] font-medium border-border/50 text-muted-text hover:text-heading hover:border-border transition-colors">
+                            Assign
+                          </Button>
+                        </Link>
+                      </div>
+                    ))
+                  )}
+                </div>
+              ) : (
+                <div className="divide-y divide-border/25">
+                  {managerExtraStats.nearDeadlines.length === 0 ? (
+                    <p className="py-6 text-center text-xs text-muted-text/40">No upcoming deadlines.</p>
+                  ) : (
+                    managerExtraStats.nearDeadlines.map((audit) => (
+                      <div key={audit.id} className="py-4 flex items-center justify-between first:pt-0 last:pb-0">
+                        <div className="space-y-1 min-w-0 pr-4">
+                          <p className="text-[13px] font-normal text-heading truncate">{audit.templateTitle}</p>
+                          <p className="text-[11px] text-muted-text/50 flex items-center gap-1.5">
+                            <Clock className="h-3 w-3 opacity-60" /> {audit.deadline ? format(audit.deadline.toDate(), 'MMM d, yyyy') : '–'}
+                          </p>
+                        </div>
+                        <span className={cn(
+                          "text-[10px] font-medium uppercase tracking-[0.05em]",
+                          audit.status === 'in_progress' ? "text-primary" : "text-muted-text/50"
+                        )}>
+                          {audit.status}
+                        </span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </Card>
+
+          </div>
+
+        </div>
+
       </div>
 
       {/* Resolution Dialog */}
@@ -832,7 +858,6 @@ export default function ManagerDashboardPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      </div>
     </DashboardShell>
   );
 }

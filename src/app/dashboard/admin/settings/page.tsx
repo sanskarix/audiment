@@ -143,7 +143,8 @@ function SettingsContent() {
         }
         const nSnap = await getDoc(doc(db, 'organizations', orgId!, 'settings', 'notifications'));
         if (nSnap.exists()) {
-          setNotifSettings(nSnap.data() as typeof notifSettings);
+          setNotifSettings(prev => ({ ...prev, ...nSnap.data() }));
+
         }
       } catch (err) { console.error(err); }
       finally { setLoading(false); }
@@ -442,9 +443,11 @@ function SettingsContent() {
     <DashboardShell role="admin">
       <div className="dashboard-page-container">
         {/* Header */}
-        <div className="mb-8 flex flex-col gap-2">
-          <h1 className="page-heading">Settings</h1>
-          <p className="body-text text-muted-text">Manage platform preferences.</p>
+        <div className="page-header-section">
+          <div className="flex flex-col gap-1">
+            <h1 className="page-heading">Settings</h1>
+            <p className="body-text text-muted-text">Manage platform preferences.</p>
+          </div>
         </div>
 
         {/* Layout: vertical tab rail + content */}
@@ -532,7 +535,7 @@ function SettingsContent() {
                     </div>
                   </CardContent>
                   <CardFooter className="bg-muted/5 border-t border-border/30 py-3 px-6 justify-end">
-                    <Button onClick={updateProfile} disabled={updating === 'profile'} className="h-9 px-4 gap-2 text-[13px]">
+                    <Button onClick={updateProfile} disabled={updating === 'profile'} className="h-10 px-4 gap-2 text-[13px]">
                       {updating === 'profile' ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : saveSuccess === 'profile' ? <Check className="h-3.5 w-3.5" /> : null}
                       {saveSuccess === 'profile' ? 'Saved!' : 'Save Changes'}
                     </Button>
@@ -662,7 +665,7 @@ function SettingsContent() {
                   </div>
                 </CardContent>
                 <CardFooter className="bg-muted/5 border-t border-border/30 py-3 px-6 justify-end">
-                  <Button onClick={updateOrganization} disabled={updating === 'org'} className="h-9 px-4 gap-2 text-[13px]">
+                  <Button onClick={updateOrganization} disabled={updating === 'org'} className="h-10 px-4 gap-2 text-[13px]">
                     {updating === 'org' ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : saveSuccess === 'org' ? <Check className="h-3.5 w-3.5" /> : null}
                     {saveSuccess === 'org' ? 'Saved!' : 'Save Organization'}
                   </Button>

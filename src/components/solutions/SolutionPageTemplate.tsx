@@ -68,6 +68,10 @@ export default function SolutionPageTemplate({
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    "@id": `https://audiment.in${canonicalPath || ""}/#faq`,
+    "isPartOf": {
+      "@id": "https://audiment.in/#website"
+    },
     "mainEntity": faqs.map(faq => ({
       "@type": "Question",
       "name": faq.question,
@@ -82,6 +86,7 @@ export default function SolutionPageTemplate({
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
+    "@id": `https://audiment.in${canonicalPath || ""}/#breadcrumb`,
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://audiment.in" },
       { "@type": "ListItem", "position": 2, "name": "Solutions", "item": "https://audiment.in/solutions" },
@@ -93,6 +98,13 @@ export default function SolutionPageTemplate({
   const howToSchema = workflowSteps && workflowSteps.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "HowTo",
+    "@id": `https://audiment.in${canonicalPath || ""}/#howto`,
+    "isPartOf": {
+      "@id": "https://audiment.in/#website"
+    },
+    "publisher": {
+      "@id": "https://audiment.in/#organization"
+    },
     "name": `How to manage and resolve issues in ${industry.toLowerCase()} operations`,
     "description": `A step-by-step workflow guide to managing operations, identifying issues, and tracking corrective actions in ${industry.toLowerCase()}.`,
     "step": workflowSteps.map((step, idx) => ({

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CheckCircle2, Loader2, Send } from 'lucide-react';
+import posthog from 'posthog-js';
 
 export function ContactSection() {
     const [loading, setLoading] = useState(false);
@@ -25,6 +26,16 @@ export function ContactSection() {
         setLoading(true);
         setError('');
         try {
+            // Read AI search traffic and UTM attribution from sessionStorage
+            const ai_source = sessionStorage.getItem('ai_source') || undefined;
+            const ai_landing_page = sessionStorage.getItem('ai_landing_page') || undefined;
+            const ai_referrer = sessionStorage.getItem('ai_referrer') || undefined;
+            const utm_source = sessionStorage.getItem('ai_utm_source') || undefined;
+            const utm_medium = sessionStorage.getItem('ai_utm_medium') || undefined;
+            const utm_campaign = sessionStorage.getItem('ai_utm_campaign') || undefined;
+            const utm_content = sessionStorage.getItem('ai_utm_content') || undefined;
+            const utm_term = sessionStorage.getItem('ai_utm_term') || undefined;
+
             const response = await fetch('/api/leads', {
                 method: 'POST',
                 headers: {
@@ -33,6 +44,16 @@ export function ContactSection() {
                 body: JSON.stringify({
                     ...formData,
                     outlets: Number(formData.outlets),
+                    attribution: {
+                        aiSource: ai_source,
+                        aiLandingPage: ai_landing_page,
+                        aiReferrer: ai_referrer,
+                        utmSource: utm_source,
+                        utmMedium: utm_medium,
+                        utmCampaign: utm_campaign,
+                        utmContent: utm_content,
+                        utmTerm: utm_term,
+                    }
                 }),
             });
 
@@ -40,6 +61,20 @@ export function ContactSection() {
                 const data = await response.json().catch(() => null);
                 throw new Error(data?.error || 'Something went wrong. Please try again.');
             }
+
+            // Capture conversion event client-side in PostHog
+            posthog.capture('contact_form_submitted', {
+                email: formData.email,
+                company_name: formData.companyName,
+                outlets: Number(formData.outlets),
+                source: 'website',
+                ai_source,
+                ai_landing_page,
+                ai_referrer,
+                utm_source,
+                utm_medium,
+                utm_campaign,
+            });
 
             setSuccess(true);
             setFormData({

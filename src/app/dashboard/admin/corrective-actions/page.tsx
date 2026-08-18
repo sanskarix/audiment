@@ -407,13 +407,13 @@ export default function AdminCorrectiveActionsPage() {
                       </TableCell>
                       <TableCell className="px-3 py-2 text-right">
                         <div className="flex justify-end gap-2">
-                          <Button variant="outline" size="sm" className="h-8 text-[11px] font-medium tracking-widest uppercase" onClick={() => {
+                          <Button variant="outline" size="sm" className="h-7 px-3 text-[11px] font-medium border-border/50 text-muted-text" onClick={() => {
                             setEditingCA(action);
                             setSelectedManager(action.assignedManagerId || '');
                             setSelectedDate(action.deadline?.toDate ? action.deadline.toDate() : (action.deadline ? new Date(action.deadline) : undefined));
                           }}>Edit</Button>
                           {action.status === 'completed' && (
-                            <Button size="sm" className="h-8 text-[11px] font-medium tracking-widest uppercase bg-success text-success-foreground hover:bg-success/90" onClick={() => setResolvingCA(action)}>Review</Button>
+                            <Button size="sm" className="h-7 px-3 text-[11px] font-medium bg-success/10 text-success hover:bg-success/20 border-none" onClick={() => setResolvingCA(action)}>Review</Button>
                           )}
                         </div>
                       </TableCell>
@@ -518,10 +518,10 @@ export default function AdminCorrectiveActionsPage() {
             )}
           </div>
           <DialogFooter className="flex flex-row justify-between w-full items-center gap-4 sm:justify-between pt-4 border-t border-border/40">
-            <Button variant="outline" size="sm" className="h-10 px-4 border-destructive/30 text-destructive hover:bg-destructive/10 text-xs font-semibold active:scale-95 transition-all" onClick={handleReject}>Reject Proof</Button>
+            <Button variant="outline" size="sm" className="h-9 px-4 border-destructive/30 text-destructive hover:bg-destructive/10 text-[12px] font-medium active:scale-95 transition-all" onClick={handleReject}>Reject Proof</Button>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="h-10 px-4 border-border/50 text-xs font-semibold active:scale-95 transition-all" onClick={() => setResolvingCA(null)}>Cancel</Button>
-              <Button size="sm" className="h-10 px-4 bg-success text-success-foreground hover:bg-success/90 text-xs font-semibold shadow-lg shadow-success/20 active:scale-95 transition-all" onClick={handleResolve}>Resolve Task</Button>
+              <Button variant="outline" size="sm" className="h-9 px-4 border-border/50 text-[12px] font-medium active:scale-95 transition-all" onClick={() => setResolvingCA(null)}>Cancel</Button>
+              <Button size="sm" className="h-9 px-4 bg-success text-success-foreground hover:bg-success/90 text-[12px] font-medium shadow-lg shadow-success/20 active:scale-95 transition-all" onClick={handleResolve}>Resolve Task</Button>
             </div>
           </DialogFooter>
         </DialogContent>

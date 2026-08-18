@@ -23,7 +23,7 @@ export default function InspectionManagementSoftware() {
       features={[
         {
           title: "Automated Scheduling and Deployment",
-          description: "Deploy daily opening checklists, weekly hygiene runs, and monthly deep-dives directly to the correct role at each location automatically. Managers don't need to remember what to check—the software ensures essential checks appear in their queue and cannot be skipped."
+          description: "Deploy daily opening checklists, weekly hygiene runs, and monthly deep-dives directly to the correct role at each location automatically. Managers don't need to remember what to check–the software ensures essential checks appear in their queue and cannot be skipped."
         },
         {
           title: "Verified Execution via Geo-Tagging",

@@ -50,7 +50,7 @@ export default function CompareChecklistApps() {
       ]}
       operationalOutcomeDifference={{
         title: "Operational Outcome Difference",
-        text: "Generic checklist apps collect answers but fundamentally rely on trust, self-reporting, and manual follow-up. Proof-based audits and integrated corrective actions remove the guesswork, improving issue tracking and accountability—which is exactly what helps multi-location businesses stay on top of their operations."
+        text: "Generic checklist apps collect answers but fundamentally rely on trust, self-reporting, and manual follow-up. Proof-based audits and integrated corrective actions remove the guesswork, improving issue tracking and accountability–which is exactly what helps multi-location businesses stay on top of their operations."
       }}
     />
   )

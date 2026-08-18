@@ -74,6 +74,8 @@ export function ManagerMultiSelect({ managers, value, onChange }: { managers: an
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[400px] p-0 overflow-hidden gap-0">
+          <DialogTitle className="sr-only">Select Managers</DialogTitle>
+          <DialogDescription className="sr-only">Search and select managers to assign to this location.</DialogDescription>
           <div className="flex items-center border-b border-border/50 px-3">
             <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
             <input

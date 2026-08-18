@@ -11,32 +11,21 @@ export const metadata = buildPageMeta({
 })
 
 export default function AboutPage() {
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Audiment",
-    "url": "https://audiment.in",
-    "logo": "https://audiment.in/icon.svg",
-    "email": "hello@audiment.com",
-    "legalName": "Asellus LLP",
-    "foundingDate": "2024",
-    "description": "Audit management software for multi-location businesses. Proof-based audits, issue tracking, and corrective actions across every location.",
-    "sameAs": [
-      "https://www.linkedin.com/company/audiment",
-      "https://twitter.com/audiment"
-    ]
-  };
-
   const aboutPageSchema = {
     "@context": "https://schema.org",
     "@type": "AboutPage",
+    "@id": "https://audiment.in/about/#aboutpage",
     "name": "About Audiment",
     "url": "https://audiment.in/about",
     "description": "Audiment is audit management software built by Asellus LLP for multi-location businesses. Proof-based audits, issue tracking, and corrective actions maintain quality consistency across distributed operations.",
+    "isPartOf": {
+      "@id": "https://audiment.in/#website"
+    },
+    "about": {
+      "@id": "https://audiment.in/#organization"
+    },
     "publisher": {
-      "@type": "Organization",
-      "name": "Audiment",
-      "url": "https://audiment.in"
+      "@id": "https://audiment.in/#organization"
     }
   };
 
@@ -64,7 +53,7 @@ export default function AboutPage() {
             When you had one or two locations, you could see everything yourself. At 20 or 200, you can&apos;t. Standards drift, managers self-report, issues stay hidden, and problems surface too late.
           </p>
           <p>
-            The companies that maintain quality consistency at scale don&apos;t do it through more oversight or more reports. They do it by building execution systems that verify standards are being met — not trust-based systems that assume they are.
+            The companies that maintain quality consistency at scale don&apos;t do it through more oversight or more reports. They do it by building execution systems that verify standards are being met – not trust-based systems that assume they are.
           </p>
 
           <h2>Why self-reporting fails in distributed teams</h2>
@@ -115,7 +104,7 @@ export default function AboutPage() {
 
           <h2>Built by Asellus LLP</h2>
           <p>
-            Audiment is developed by Asellus LLP, an India-based technology company focused on operational software for distributed businesses. The platform runs in any mobile browser with no app download required — designed for field teams who need to run audits quickly and reliably across locations.
+            Audiment is developed by Asellus LLP, an India-based technology company focused on operational software for distributed businesses. The platform runs in any mobile browser with no app download required – designed for field teams who need to run audits quickly and reliably across locations.
           </p>
 
           <h2>Get in touch</h2>
@@ -141,8 +130,7 @@ export default function AboutPage() {
         ]}
       />
 
-      {/* Organization + AboutPage Schema */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+      {/* AboutPage Schema */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutPageSchema) }} />
     </div>
   )

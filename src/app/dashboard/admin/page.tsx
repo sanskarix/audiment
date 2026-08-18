@@ -229,26 +229,26 @@ export default function AdminDashboardPage() {
             {trendAlerts.map((alert) => (
               <div
                 key={alert.id}
-                className="flex items-center justify-between p-4 rounded-lg border bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-200 transition-all animate-in fade-in slide-in-from-top-4"
+                className="flex items-center justify-between p-4 rounded-xl border bg-warning/5 border-warning/20 text-warning transition-all"
               >
                 <div className="flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-sm font-medium">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  <span className="text-[13px] font-medium">
                     Performance Alert – {alert.locationName || 'Location'} has scored below threshold on 3 consecutive audits.
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
                   <Link
                     href="/dashboard/admin/reports"
-                    className="text-sm font-semibold hover:underline"
+                    className="text-[13px] font-semibold hover:opacity-70 transition-opacity"
                   >
                     View reports
                   </Link>
                   <button
                     onClick={() => handleDismissAlert(alert.id)}
-                    className="p-1 hover:bg-amber-200/50 dark:hover:bg-amber-800/50 rounded-md transition-colors"
+                    className="p-1 hover:bg-warning/10 rounded-md transition-colors"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -257,6 +257,7 @@ export default function AdminDashboardPage() {
         )}
 
         {/* Stats Grid */}
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">

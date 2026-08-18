@@ -9,6 +9,16 @@ Disallow: /_next/static/
 Disallow: /_next/image/
 
 # AI Crawlers
+User-agent: OAI-SearchBot
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /login
+Disallow: /test-recording
+Disallow: /test-scoring
+Disallow: /_next/static/
+Disallow: /_next/image/
+Allow: /
+
 User-agent: GPTBot
 Allow: /
 

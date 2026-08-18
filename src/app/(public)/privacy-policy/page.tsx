@@ -7,7 +7,7 @@ import { MapPinIcon, CameraIcon, RefreshCw, FileCheck2, Shield, Smartphone, Aler
 export const metadata: Metadata = {
   title: "Privacy Policy | Audiment",
   description: "How Audiment collects, uses, and protects personal information on audiment.in.",
-  robots: { index: false, follow: true },
+  robots: { index: true, follow: true },
   alternates: { canonical: 'https://audiment.in/privacy-policy' }
 };
 

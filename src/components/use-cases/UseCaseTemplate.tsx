@@ -33,6 +33,10 @@ export default function UseCaseTemplate({
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    "@id": `https://audiment.in${path}/#faq`,
+    "isPartOf": {
+      "@id": "https://audiment.in/#website"
+    },
     "mainEntity": faqs.map(faq => ({
       "@type": "Question",
       "name": faq.question,
@@ -46,13 +50,15 @@ export default function UseCaseTemplate({
   const softwareSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
+    "@id": `https://audiment.in${path}/#software`,
     "name": `Audiment \u2013 ${title}`,
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web, iOS, Android",
     "url": `https://audiment.in${path}`,
     "description": heroSubheadline,
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR", "description": "Contact for pricing" },
-    "provider": { "@type": "Organization", "name": "Audiment", "url": "https://audiment.in" }
+    "publisher": { "@id": "https://audiment.in/#organization" },
+    "provider": { "@id": "https://audiment.in/#organization" }
   };
 
   return (
@@ -186,6 +192,7 @@ export default function UseCaseTemplate({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
+        "@id": `https://audiment.in${path}/#breadcrumb`,
         "itemListElement": [
           { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://audiment.in" },
           { "@type": "ListItem", "position": 2, "name": "Use Cases", "item": "https://audiment.in/use-cases" },

@@ -3,7 +3,7 @@ import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
   title: 'Proof-Based Audits | Evidence-Backed Audits Across Locations | Audiment',
-  description: 'Proof-based audits require live photo evidence on critical checks so you know what\'s actually happening at every location. Stop trusting checklists — verify execution.',
+  description: 'Proof-based audits require live photo evidence on critical checks so you know what\'s actually happening at every location. Stop trusting checklists – verify execution.',
   path: '/platform/proof-based-audits',
   keywords: ['proof-based audits', 'evidence-based audit software', 'photo audit app', 'audit verification', 'checklist audit software'],
 })

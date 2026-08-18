@@ -22,41 +22,47 @@ const SITE_URL = "https://audiment.in";
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Audiment",
-  url: "https://audiment.in",
-  logo: {
+  "@id": "https://audiment.in/#organization",
+  "name": "Audiment",
+  "url": "https://audiment.in",
+  "logo": {
     "@type": "ImageObject",
-    url: "https://audiment.in/icon.svg",
-    width: 512,
-    height: 512
+    "@id": "https://audiment.in/#logo",
+    "url": "https://audiment.in/icon.svg",
+    "width": 512,
+    "height": 512
   },
-  description: "Audit management software for multi-location businesses. Run proof-based audits with corrective action tracking across every location.",
-  foundingDate: "2024",
-  legalName: "Asellus LLP",
-  email: "hello@audiment.com",
-  sameAs: [
+  "description": "Audit management software for multi-location businesses. Run proof-based audits with corrective action tracking across every location.",
+  "foundingDate": "2024",
+  "legalName": "Asellus LLP",
+  "email": "hello@audiment.com",
+  "sameAs": [
     "https://www.linkedin.com/company/audiment",
     "https://twitter.com/audiment"
   ],
-  contactPoint: {
+  "contactPoint": {
     "@type": "ContactPoint",
-    contactType: "customer support",
-    email: "hello@audiment.com",
-    availableLanguage: "English"
+    "contactType": "customer support",
+    "email": "hello@audiment.com",
+    "availableLanguage": "English"
   }
 };
 
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Audiment",
-  url: "https://audiment.in",
-  description: "Audit management software for multi-location businesses.",
-  potentialAction: {
+  "@id": "https://audiment.in/#website",
+  "name": "Audiment",
+  "url": "https://audiment.in",
+  "description": "Audit management software for multi-location businesses.",
+  "publisher": {
+    "@id": "https://audiment.in/#organization"
+  },
+  "potentialAction": {
     "@type": "SearchAction",
-    target: {
+    "target": {
       "@type": "EntryPoint",
-      urlTemplate: "https://audiment.in/blog?q={search_term_string}"
+      "urlTemplate": "https://audiment.in/blog?q={search_term_string}"
     },
     "query-input": "required name=search_term_string"
   }

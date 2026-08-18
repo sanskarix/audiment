@@ -208,7 +208,9 @@ export default function AdminTemplatesPage() {
                         className="px-2 py-0.5 text-body bg-muted/60 text-muted-text border-none"
                         style={{ fontSize: 12, fontWeight: 400 }}
                       >
-                        {t.category.charAt(0).toUpperCase() + t.category.slice(1)}
+                        {t.category
+                          ? t.category.charAt(0).toUpperCase() + t.category.slice(1)
+                          : 'General'}
                       </Badge>
                     </TableCell>
                     <TableCell className="standard-table-cell tabular-nums text-body font-normal">{t.createdAt?.toDate().toLocaleDateString()}</TableCell>

@@ -106,12 +106,35 @@ export default function CompareTemplate({
         </div>
       </section>
 
-      {/* Operational Differences – replaces feature matrix */}
+      {/* Operational Differences – Structured Table + Detailed Breakdown */}
       <section className="py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4 text-heading">How they differ in practice</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">Not a feature checklist – a look at how each platform handles the operational areas that matter most to multi-location teams.</p>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">A side-by-side breakdown of how each platform handles the operational workflows that matter most to multi-location teams.</p>
         </div>
+
+        {/* Structured Semantic Comparison Table for AI and quick scanning */}
+        <div className="mb-14 overflow-x-auto rounded-2xl border border-border shadow-md bg-card">
+          <table className="w-full border-collapse text-left text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/40">
+                <th className="px-6 py-4 font-bold text-heading w-1/4">Operational Area</th>
+                <th className="px-6 py-4 font-bold text-primary w-3/8 bg-primary/5">Audiment</th>
+                <th className="px-6 py-4 font-bold text-muted-foreground w-3/8">{competitor}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {operationalDifferences.map((diff, i) => (
+                <tr key={i} className="hover:bg-muted/20 transition-colors">
+                  <td className="px-6 py-4 font-semibold text-heading align-top">{diff.area}</td>
+                  <td className="px-6 py-4 text-foreground bg-primary/5 align-top leading-relaxed">{diff.audiment}</td>
+                  <td className="px-6 py-4 text-muted-foreground align-top leading-relaxed">{diff.competitor}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
         <div className="space-y-6">
           {operationalDifferences.map((diff, i) => (
             <div key={i} className="bg-card border border-border rounded-2xl p-8 shadow-sm">

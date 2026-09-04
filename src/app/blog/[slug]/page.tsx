@@ -99,12 +99,46 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     .filter(p => p.slug !== post.slug)
     .slice(0, 3)
 
+  const breadcrumbsSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://audiment.in"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": "https://audiment.in/blog"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": post.title,
+        "item": `https://audiment.in/blog/${post.slug}`
+      }
+    ]
+  };
+
   return (
     <main id="main-content" className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 pt-32 pb-24">
-        <Link href="/blog" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-12 group font-medium">
-          <span className="group-hover:-translate-x-1 transition-transform">←</span> Back to blog
+        {/* Breadcrumb Navigation */}
+        <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
+          <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+          <span>/</span>
+          <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
+          <span>/</span>
+          <span className="text-foreground font-medium truncate max-w-md">{post.category}</span>
+        </nav>
+
+        <Link href="/blog" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 group font-medium text-sm">
+          <span className="group-hover:-translate-x-1 transition-transform">←</span> Back to all articles
         </Link>
 
         <div className="flex flex-col lg:flex-row gap-16 items-start">
@@ -145,11 +179,36 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </header>
 
               <article className="prose prose-neutral dark:prose-invert prose-p:text-[15px] prose-li:text-[15px] prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-foreground prose-h1:text-3xl prose-h2:text-[20px] prose-h2:mt-10 prose-h3:text-base prose-h3:mt-8 prose-h4:text-[15px] prose-p:text-muted-foreground prose-p:leading-relaxed prose-li:text-muted-foreground prose-li:leading-relaxed prose-strong:text-foreground prose-strong:font-semibold prose-a:text-primary prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-code:text-primary prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-[13px] prose-code:font-medium prose-blockquote:border-l-2 prose-blockquote:border-border prose-blockquote:text-muted-foreground prose-blockquote:not-italic prose-blockquote:pl-4 prose-blockquote:py-0 prose-hr:border-border prose-hr:my-10 prose-img:rounded-2xl prose-img:border prose-img:border-border prose-img:shadow-xl max-w-none blog-prose">
-                <MDXRemote source={post.content} />
+                <MDXRemote 
+                  source={post.content} 
+                  components={{
+                    BlogCTA: () => null,
+                  }}
+                />
               </article>
 
+              {/* Author & Editorial Trust Box */}
+              <div className="mt-16 p-8 rounded-2xl border border-border bg-muted/20 flex flex-col sm:flex-row gap-6 items-start">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-xl shrink-0">
+                  A
+                </div>
+                <div className="space-y-2 text-sm">
+                  <h4 className="font-bold text-base text-heading">Written by the Audiment Editorial Team</h4>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Audiment is built by Asellus LLP to help multi-location restaurant, retail, hotel, and healthcare operators eliminate operational drift. We publish practical, research-backed guides on audit management, proof-based verification, and corrective action workflows.
+                  </p>
+                  <div className="pt-2 flex items-center gap-4 text-xs">
+                    <Link href="/about" className="text-primary hover:underline font-medium">About Audiment</Link>
+                    <span className="text-muted-foreground">•</span>
+                    <Link href="/solutions" className="text-primary hover:underline font-medium">Industry Solutions</Link>
+                    <span className="text-muted-foreground">•</span>
+                    <Link href="/compare" className="text-primary hover:underline font-medium">Software Comparisons</Link>
+                  </div>
+                </div>
+              </div>
+
               {/* CTA Box */}
-              <div className="mt-24 bg-card border border-border rounded-3xl p-10 md:p-16 text-center relative overflow-hidden group shadow-2xl shadow-primary/5">
+              <div className="mt-16 bg-card border border-border rounded-3xl p-10 md:p-16 text-center relative overflow-hidden group shadow-2xl shadow-primary/5">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent"></div>
                 <div className="relative z-10">
                   <h3 className="text-2xl md:text-3xl font-bold mb-6">Ready to digitize your audit process?</h3>
@@ -190,7 +249,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         ]}
       />
 
-      {/* Article Schema */}
+      {/* Structured Schema: Article + Breadcrumbs */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -199,13 +258,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             "@type": "Article",
             headline: post.title,
             description: post.description,
-            image: "https://audiment.in/opengraph-image",
+            image: "https://audiment.in/opengraph-image.png",
             datePublished: post.date,
             dateModified: post.dateModified || post.date,
             author: {
               "@type": "Organization",
+              "@id": "https://audiment.in/#organization",
               "name": post.author,
-              "url": "https://audiment.in"
+              "url": "https://audiment.in/about"
             },
             publisher: {
               "@id": "https://audiment.in/#organization"
@@ -215,6 +275,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               "@id": `https://audiment.in/blog/${post.slug}`
             }
           })
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbsSchema)
         }}
       />
     </main>

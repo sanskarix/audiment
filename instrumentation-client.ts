@@ -32,7 +32,8 @@ if (typeof window !== "undefined") {
       } else if (
         refLower.includes("copilot.microsoft.com") ||
         refLower.includes("edgeservices.bing.com") ||
-        refLower.includes("sydney.bing.com")
+        refLower.includes("sydney.bing.com") ||
+        refLower.includes("bing.com/chat")
       ) {
         aiSource = "Copilot";
       } else if (
@@ -40,6 +41,20 @@ if (typeof window !== "undefined") {
         refLower.includes("bard.google.com")
       ) {
         aiSource = "Gemini";
+      } else if (
+        refLower.includes("claude.ai") ||
+        refLower.includes("anthropic.com")
+      ) {
+        aiSource = "Claude";
+      } else if (
+        refLower.includes("grok.com") ||
+        refLower.includes("x.ai")
+      ) {
+        aiSource = "Grok";
+      } else if (
+        refLower.includes("you.com")
+      ) {
+        aiSource = "You.com";
       }
       
       // 2. Fallback / Detect AI search source from UTM parameters
@@ -59,6 +74,12 @@ if (typeof window !== "undefined") {
           aiSource = "Copilot";
         } else if (combinedUTM.includes("gemini") || combinedUTM.includes("bard")) {
           aiSource = "Gemini";
+        } else if (combinedUTM.includes("claude") || combinedUTM.includes("anthropic")) {
+          aiSource = "Claude";
+        } else if (combinedUTM.includes("grok") || combinedUTM.includes("xai")) {
+          aiSource = "Grok";
+        } else if (combinedUTM.includes("you.com") || combinedUTM.includes("youchat")) {
+          aiSource = "You.com";
         }
       }
       
@@ -66,6 +87,7 @@ if (typeof window !== "undefined") {
       if (aiSource) {
         const landingPage = window.location.pathname + window.location.search;
         
+        sessionStorage.setItem("ai_referral", "true");
         sessionStorage.setItem("ai_source", aiSource);
         sessionStorage.setItem("ai_landing_page", landingPage);
         if (referrer) sessionStorage.setItem("ai_referrer", referrer);
@@ -77,6 +99,7 @@ if (typeof window !== "undefined") {
         
         // Register super properties in PostHog so they attach to all subsequent events
         posthog.register({
+          ai_referral: true,
           ai_attribution_source: aiSource,
           ai_landing_page: landingPage,
           ai_referrer: referrer || undefined,
@@ -87,6 +110,7 @@ if (typeof window !== "undefined") {
         
         // Capture initial landing event (source -> landing page)
         posthog.capture("ai_search_landed", {
+          ai_referral: true,
           ai_source: aiSource,
           landing_page: landingPage,
           referrer: referrer || undefined,

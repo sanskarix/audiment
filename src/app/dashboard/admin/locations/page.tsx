@@ -21,7 +21,7 @@ import posthog from 'posthog-js';
 
 import { Check, Search, X, ChevronDownIcon } from 'lucide-react';
 
-export function ManagerMultiSelect({ managers, value, onChange }: { managers: any[], value: string[], onChange: (val: string[]) => void }) {
+function ManagerMultiSelect({ managers, value, onChange }: { managers: any[], value: string[], onChange: (val: string[]) => void }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 

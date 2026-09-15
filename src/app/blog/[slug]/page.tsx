@@ -2,6 +2,7 @@ import { getPostBySlug, getAllPosts, getPostsByCategory } from '@/lib/blog'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { BlogCard } from '@/components/blog/BlogCard'
+import { BlogMetadataPublisher } from '@/components/blog/BlogMetadataPublisher'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/ui/modem-animated-footer'
 import { CalButton } from '@/components/ui/cal-button'
@@ -126,6 +127,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <main id="main-content" className="min-h-screen bg-background text-foreground transition-colors duration-300">
+      <BlogMetadataPublisher category={post.category} slug={post.slug} />
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 pt-32 pb-24">
         {/* Breadcrumb Navigation */}
@@ -242,7 +244,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           { label: "How it works", href: "/#how-it-works" },
           { label: "Use cases", href: "/#use-cases" },
           { label: "Blog", href: "/blog" },
-          { label: "Contact", href: "/#contact" },
           { label: "Privacy policy", href: "/privacy-policy" },
           { label: "Cookie policy", href: "/cookie-policy" },
           { label: "Terms of service", href: "/terms-of-service" },

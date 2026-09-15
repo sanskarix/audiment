@@ -2,6 +2,21 @@
 import React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useConsent } from "@/components/ConsentProvider";
+
+function PrivacySettingsButton() {
+  const { openPreferences } = useConsent();
+
+  return (
+    <button
+      type="button"
+      onClick={openPreferences}
+      className="hover:text-heading transition-colors duration-200 text-muted-text text-left cursor-pointer"
+    >
+      Privacy Settings
+    </button>
+  );
+}
 
 interface FooterLink {
   label: string;
@@ -97,13 +112,14 @@ export const Footer = ({
                 <h3 className="font-medium text-heading mb-2">Company</h3>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/about">About Us</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/blog">Blog</Link>
-                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/#contact">Contact</Link>
+                <a className="hover:text-heading transition-colors duration-200 text-muted-text" href="mailto:hello@audiment.com">Contact</a>
               </div>
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-heading mb-2">Legal</h3>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/privacy-policy">Privacy policy</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/cookie-policy">Cookie policy</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/terms-of-service">Terms of service</Link>
+                <PrivacySettingsButton />
               </div>
             </div>
           </div>

@@ -13,7 +13,6 @@ import { HeroSection } from "@/components/ui/hero-section-3";
 import { Footer } from "@/components/ui/modem-animated-footer";
 import { CalButton } from "@/components/ui/cal-button";
 import {
-  DeferredContactSection,
   DeferredFAQAccordion,
   DeferredStickyFeatureSection,
   DeferredTestimonialsSection,
@@ -820,9 +819,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Contact Section (§2) */}
-      <DeferredContactSection />
-
       {/* Footer */}
       <Footer
         brandName="Audiment"
@@ -832,7 +828,6 @@ export default async function Home() {
           { label: "How it works", href: "#how-it-works" },
           { label: "Use cases", href: "#use-cases" },
           { label: "Blog", href: "/blog" },
-          { label: "Contact", href: "#contact" },
           { label: "Privacy policy", href: "/privacy-policy" },
           { label: "Cookie policy", href: "/cookie-policy" },
           { label: "Terms of service", href: "/terms-of-service" },

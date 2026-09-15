@@ -76,7 +76,7 @@ export default function SeoContentPage({ heroH1, heroSubheadline, sections, faqs
         </div>
       </section>
 
-      <Footer brandName="Audiment" navLinks={[{ label: 'Features', href: '/#features' }, { label: 'How it works', href: '/#how-it-works' }, { label: 'Blog', href: '/blog' }, { label: 'Contact', href: '/#contact' }]} />
+      <Footer brandName="Audiment" navLinks={[{ label: 'Features', href: '/#features' }, { label: 'How it works', href: '/#how-it-works' }, { label: 'Blog', href: '/blog' }]} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
     </div>
   )

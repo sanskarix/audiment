@@ -39,7 +39,6 @@ export function SolutionsHero({
     subtitle,
     description,
     ctaText = "Get Started",
-    ctaHref = "/#contact"
 }: SolutionsHeroProps) {
     return (
         <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 bg-white overflow-hidden">

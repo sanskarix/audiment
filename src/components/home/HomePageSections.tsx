@@ -31,12 +31,3 @@ export const DeferredTestimonialsSection = dynamic(
     loading: () => <div className="min-h-[720px]" aria-hidden />,
   }
 );
-
-export const DeferredContactSection = dynamic(
-  () =>
-    import("@/components/ui/contact-section").then((mod) => mod.ContactSection),
-  {
-    ssr: false,
-    loading: () => <div className="min-h-[720px] bg-white" aria-hidden />,
-  }
-);

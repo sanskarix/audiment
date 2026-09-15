@@ -203,7 +203,6 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
           { label: "How it works", href: "/#how-it-works" },
           { label: "Use cases", href: "/#use-cases" },
           { label: "Blog", href: "/blog" },
-          { label: "Contact", href: "/#contact" },
           { label: "Privacy policy", href: "/privacy-policy" },
           { label: "Cookie policy", href: "/cookie-policy" },
           { label: "Terms of service", href: "/terms-of-service" },

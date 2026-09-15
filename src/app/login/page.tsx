@@ -171,7 +171,7 @@ export default function LoginPage() {
         </Card>
 
         <p className="text-center text-[12px] text-muted-text">
-          Don&apos;t have an account? <a href="/#contact" className="text-primary hover:underline font-normal">Contact your administrator</a>
+          Don&apos;t have an account? <a href="mailto:hello@audiment.com" className="text-primary hover:underline font-normal">Contact your administrator</a>
         </p>
       </div>
     </main>

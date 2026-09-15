@@ -163,6 +163,31 @@ export default function RootLayout({
             Cal.config = Cal.config || {};
             Cal.config.forwardQueryParams = true;
             Cal.ns.demo("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+            if (!window.__audimentCalListenersAdded) {
+              window.__audimentCalListenersAdded = true;
+              Cal.ns.demo("on", {
+                action: "navigatedToBooker",
+                callback: function () {
+                  window.dataLayer = window.dataLayer || [];
+                  window.dataLayer.push({
+                    event: "booking_start",
+                    booking_method: "cal_booking",
+                    page_path: window.location.pathname
+                  });
+                }
+              });
+              Cal.ns.demo("on", {
+                action: "bookingSuccessfulV2",
+                callback: function () {
+                  window.dataLayer = window.dataLayer || [];
+                  window.dataLayer.push({
+                    event: "generate_lead",
+                    booking_method: "cal_booking",
+                    page_path: window.location.pathname
+                  });
+                }
+              });
+            }
           `}
         </Script>
         <AppProviders>{children}</AppProviders>

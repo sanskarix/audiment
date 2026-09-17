@@ -113,17 +113,19 @@ export function HeroSection({ userRole }: { userRole?: string | null }) {
 
 const LogoCloud = () => {
     return (
-        <section className="bg-background pb-16 md:pb-32">
-            <div className="group relative m-auto max-w-7xl px-6">
-                <div className="flex flex-col items-center md:flex-row">
-                    <div className="inline md:max-w-44 md:border-r md:pr-6">
-                        <p className="text-end text-sm">Trusted Across Industries</p>
+        <section className="bg-background pb-16 md:pb-32 overflow-hidden w-full max-w-full">
+            <div className="group relative m-auto max-w-7xl px-6 w-full min-w-0 overflow-hidden">
+                <div className="flex flex-col items-center md:flex-row w-full min-w-0">
+                    <div className="inline md:max-w-44 md:border-r md:pr-6 shrink-0">
+                        <p className="text-center md:text-end text-sm">Trusted Across Industries</p>
                     </div>
-                    <div className="relative py-6 md:w-[calc(100%-11rem)]">
+                    <div className="relative py-6 w-full min-w-0 md:w-[calc(100%-11rem)] overflow-hidden">
                         <InfiniteSlider
                             durationOnHover={20}
                             duration={40}
-                            gap={112}>
+                            gap={112}
+                            className="w-full min-w-0 overflow-hidden"
+                        >
                             <div className="flex h-36 items-center justify-center">
                                 <Image
                                     className="h-full w-auto max-w-none dark:invert object-contain"

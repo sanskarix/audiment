@@ -86,9 +86,9 @@ export function InfiniteSlider({
     : {};
 
   return (
-    <div className={cn('overflow-hidden', className)}>
+    <div className={cn('overflow-hidden w-full max-w-full min-w-0', className)}>
       <motion.div
-        className='flex w-max'
+        className='flex w-max shrink-0'
         style={{
           ...(direction === 'horizontal'
             ? { x: translation }

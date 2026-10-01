@@ -112,7 +112,7 @@ export const Footer = ({
                 <h3 className="font-medium text-heading mb-2">Company</h3>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/about">About Us</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/blog">Blog</Link>
-                <a className="hover:text-heading transition-colors duration-200 text-muted-text" href="mailto:hello@audiment.com">Contact</a>
+                <a className="hover:text-heading transition-colors duration-200 text-muted-text" href="mailto:hello@audiment.in">Contact</a>
               </div>
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-heading mb-2">Legal</h3>

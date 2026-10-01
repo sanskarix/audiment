@@ -29,7 +29,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://app.cal.com",
       "font-src 'self' https://fonts.gstatic.com https://api.fontshare.com https://app.cal.com",
       "img-src 'self' data: blob: https://res.cloudinary.com https://*.googleapis.com https://*.googleusercontent.com https://firebasestorage.googleapis.com https://app.cal.com https://*.cal.com https://www.googletagmanager.com https://*.google-analytics.com",
-      "connect-src 'self' https://api.cloudinary.com https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net wss://*.firebaseio.com https://us.i.posthog.com https://us-assets.i.posthog.com https://app.cal.com https://*.cal.com https://www.googletagmanager.com https://*.google-analytics.com https://analytics.google.com",
+      "connect-src 'self' https://api.cloudinary.com https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net wss://*.firebaseio.com https://app.cal.com https://*.cal.com https://www.googletagmanager.com https://*.google-analytics.com https://analytics.google.com",
       "frame-src 'self' https://*.firebaseapp.com https://app.cal.com https://*.cal.com https://www.googletagmanager.com",
       "media-src 'self' blob:;",
       "object-src 'none'",
@@ -68,18 +68,6 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
     ]
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/ingest/static/:path*',
-        destination: 'https://us-assets.i.posthog.com/static/:path*',
-      },
-      {
-        source: '/ingest/:path*',
-        destination: 'https://us.i.posthog.com/:path*',
-      },
-    ];
   },
   async redirects() {
     return [

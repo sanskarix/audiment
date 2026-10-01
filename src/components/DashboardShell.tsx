@@ -17,9 +17,9 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarInset,
-} from '@/components/ui/sidebar';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+} from '@/components/app-ui/sidebar';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/app-ui/dropdown-menu';
+import { Avatar, AvatarFallback } from '@/components/app-ui/avatar';
 import { useTheme } from 'next-themes';
 import {
   LayoutDashboard,
@@ -43,7 +43,7 @@ import {
   Bell,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from './ui/button';
+import { Button } from '@/components/app-ui/button';
 import NotificationBell from './NotificationBell';
 import { useAuthSync } from './AuthProvider';
 

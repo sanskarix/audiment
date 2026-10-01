@@ -1,0 +1,339 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@custom-variant dark (&:is(.dark *));
+
+/* New Website UI Stylesheets (Asellus Design Language) */
+@import "./website-style.css";
+@import "./website-audiment.css";
+@import "./website-scroll-reveal.css";
+
+/* Non-bold font styling across all headings */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 400 !important;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-orange: var(--orange);
+  --color-paper: var(--paper);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-success-foreground: var(--success-foreground);
+  --color-success: var(--success);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning: var(--warning);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Audiment Spacing Scale */
+  --spacing-aud-2xs: 0.25rem;
+  --spacing-aud-xs: 0.5rem;
+  --spacing-aud-sm: 0.75rem;
+  --spacing-aud-md: 1rem;
+  --spacing-aud-lg: 1.5rem;
+  --spacing-aud-xl: 2rem;
+  --spacing-aud-2xl: 3rem;
+  --spacing-aud-3xl: 4rem;
+
+  @keyframes scroll {
+    to {
+      transform: translate(calc(-50% - 0.5rem));
+    }
+  }
+
+  @keyframes mesh-gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes spotlight {
+    0% {
+      opacity: 0;
+      transform: translate(-72%, -62%) scale(0.5);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -40%) scale(1);
+    }
+  }
+
+  --animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+  --animate-mesh: mesh-gradient 15s ease infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
+}
+
+:root {
+  /* New UI Design Language Tokens (Asellus Design Language) */
+  --ink: #181818;
+  --muted: #737373;
+  --line: #e8e8e8;
+  --orange: #FF5400;
+  --paper: #FAFAFA;
+  --content: 1248px;
+
+  --background: #FAFAFA;
+  --foreground: #181818;
+  --card: #ffffff;
+  --card-foreground: #181818;
+  --popover: #ffffff;
+  --popover-foreground: #181818;
+  --primary: #FF5400;
+  --primary-foreground: #ffffff;
+  --secondary: #f2f2f0;
+  --secondary-foreground: #181818;
+  --muted-foreground: #737373;
+  --accent: #f2f2f0;
+  --accent-foreground: #181818;
+  --destructive: oklch(0.577 0.245 27.3);
+  --destructive-foreground: oklch(0.98 0 0);
+  --success: oklch(0.6 0.18 150);
+  --success-foreground: oklch(0.98 0 0);
+  --warning: oklch(0.8 0.12 80);
+  --warning-foreground: oklch(0.2 0.02 80);
+  --border: #e8e8e8;
+  --input: #e8e8e8;
+  --ring: #FF5400;
+  --radius: 0.625rem;
+
+  /* Typography */
+  --color-heading: #181818;
+  --color-body: #45474d;
+  --color-muted: #737373;
+
+  /* Back-compat tokens */
+  --heading: var(--color-heading);
+  --body: var(--color-body);
+  --muted-text: var(--color-muted);
+}
+
+.dark {
+  --ink: #FAFAFA;
+  --muted: #a1a1aa;
+  --line: rgba(255, 255, 255, 0.12);
+  --orange: #FF5400;
+  --paper: #121212;
+
+  --background: #121212;
+  --foreground: #FAFAFA;
+  --card: #1c1c1c;
+  --card-foreground: #FAFAFA;
+  --popover: #1c1c1c;
+  --popover-foreground: #FAFAFA;
+  --primary: #FF5400;
+  --primary-foreground: #ffffff;
+  --secondary: #262626;
+  --secondary-foreground: #FAFAFA;
+  --muted-foreground: #a1a1aa;
+  --accent: #262626;
+  --accent-foreground: #FAFAFA;
+  --border: rgba(255, 255, 255, 0.15);
+  --input: rgba(255, 255, 255, 0.2);
+  --ring: #FF5400;
+  --success: oklch(0.5 0.15 150);
+  --success-foreground: oklch(0.98 0 0);
+  --warning: oklch(0.75 0.15 80);
+  --warning-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+
+  /* Typography */
+  --color-heading: #ffffff;
+  --color-body: #e4e4e7;
+  --color-muted: #a1a1aa;
+
+  /* Back-compat tokens */
+  --heading: var(--color-heading);
+  --body: var(--color-body);
+  --muted-text: var(--color-muted);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    font-variant-ligatures: normal;
+  }
+
+  body {
+    @apply antialiased selection:bg-primary/30 dark:selection:bg-primary/40 bg-background text-foreground;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  }
+
+  .glass-dark {
+    @apply bg-black/50 backdrop-blur-xl border border-white/10;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-dot-black\/\[0\.12\] {
+    background-image: radial-gradient(rgb(0 0 0 / 0.12) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
+  .bg-gradient-conic {
+    background-image: conic-gradient(var(--conic-position, from 45deg), var(--tw-gradient-stops));
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Blog article prose – brand-consistent styling for MDX content */
+  .blog-prose table {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .blog-prose details {
+    @apply border border-border rounded-xl overflow-hidden my-3;
+  }
+
+  .blog-prose details summary {
+    @apply flex items-center justify-between cursor-pointer px-5 py-4 font-semibold text-foreground text-sm leading-snug select-none bg-muted/40 hover:bg-muted/70 transition-colors duration-200;
+    list-style: none;
+  }
+
+  .blog-prose details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .blog-prose details summary::after {
+    content: "+";
+    @apply text-muted-foreground text-lg font-light leading-none flex-shrink-0 ml-4 transition-transform duration-200;
+  }
+
+  .blog-prose details[open] summary::after {
+    content: "−";
+  }
+
+  .blog-prose details>p,
+  .blog-prose details>div {
+    @apply px-5 py-4 text-sm text-muted-foreground leading-relaxed border-t border-border;
+  }
+
+  .blog-prose ul,
+  .blog-prose ol {
+    @apply text-base;
+  }
+
+  .blog-prose h2 + p {
+    @apply p-6 my-8 rounded-2xl bg-muted/30 border-l-4 border-primary text-[16px] leading-relaxed font-medium text-foreground;
+  }
+}
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-heading: var(--heading);
+  --color-body: var(--body);
+  --color-muted-text: var(--muted-text);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-orange: var(--orange);
+  --color-ink: var(--ink);
+  --color-line: var(--line);
+  --color-paper: var(--paper);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="cardGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f8fafc" />
+    </linearGradient>
+    <filter id="shadow2" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.08" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="420" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5" />
+  
+  <!-- Header / Title -->
+  <text x="450" y="44" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Multi-Location Audit &amp; Quality Governance Hierarchy</text>
+  <text x="450" y="70" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="500" fill="#64748b">How standards flow downward and real-time proof flows upward across distributed operations</text>
+
+  <!-- Tier 1: Headquarters & Operations Leadership -->
+  <g filter="url(#shadow2)">
+    <rect x="250" y="100" width="400" height="70" rx="12" fill="url(#cardGrad2)" stroke="#3b82f6" stroke-width="2" />
+    <text x="450" y="130" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#1d4ed8">Headquarters &amp; Operations Leadership</text>
+    <text x="450" y="152" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="500" fill="#64748b">Network Benchmarking • Operational Drift Detection • SLA Escalation</text>
+  </g>
+
+  <!-- Connecting Lines to Tier 2 -->
+  <path d="M 380 170 L 220 220" stroke="#94a3b8" stroke-width="1.5" />
+  <path d="M 520 170 L 680 220" stroke="#94a3b8" stroke-width="1.5" />
+
+  <!-- Tier 2: Regional / Area Managers -->
+  <g filter="url(#shadow2)">
+    <rect x="80" y="220" width="280" height="60" rx="10" fill="url(#cardGrad2)" stroke="#94a3b8" stroke-width="1.5" />
+    <text x="220" y="246" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#0f172a">Region North / Area 1</text>
+    <text x="220" y="266" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="500" fill="#64748b">Surprise Field Audits • Geo-Verified Checks</text>
+  </g>
+  <g filter="url(#shadow2)">
+    <rect x="540" y="220" width="280" height="60" rx="10" fill="url(#cardGrad2)" stroke="#94a3b8" stroke-width="1.5" />
+    <text x="680" y="246" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="#0f172a">Region South / Area 2</text>
+    <text x="680" y="266" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="500" fill="#64748b">Surprise Field Audits • Geo-Verified Checks</text>
+  </g>
+
+  <!-- Connecting Lines to Tier 3 -->
+  <path d="M 160 280 L 110 320" stroke="#cbd5e1" stroke-width="1.5" />
+  <path d="M 280 280 L 330 320" stroke="#cbd5e1" stroke-width="1.5" />
+  <path d="M 620 280 L 570 320" stroke="#cbd5e1" stroke-width="1.5" />
+  <path d="M 740 280 L 790 320" stroke="#cbd5e1" stroke-width="1.5" />
+
+  <!-- Tier 3: Outlets & Frontline Branches -->
+  <g filter="url(#shadow2)">
+    <rect x="30" y="320" width="160" height="56" rx="8" fill="url(#cardGrad2)" stroke="#e2e8f0" stroke-width="1.5" />
+    <text x="110" y="344" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#0f172a">Branch 101</text>
+    <text x="110" y="362" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="500" fill="#16a34a">Daily Opening Logs</text>
+  </g>
+  <g filter="url(#shadow2)">
+    <rect x="250" y="320" width="160" height="56" rx="8" fill="url(#cardGrad2)" stroke="#e2e8f0" stroke-width="1.5" />
+    <text x="330" y="344" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#0f172a">Branch 102</text>
+    <text x="330" y="362" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="500" fill="#16a34a">CAPA Resolution</text>
+  </g>
+  <g filter="url(#shadow2)">
+    <rect x="490" y="320" width="160" height="56" rx="8" fill="url(#cardGrad2)" stroke="#e2e8f0" stroke-width="1.5" />
+    <text x="570" y="344" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#0f172a">Branch 201</text>
+    <text x="570" y="362" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="500" fill="#16a34a">Daily Opening Logs</text>
+  </g>
+  <g filter="url(#shadow2)">
+    <rect x="710" y="320" width="160" height="56" rx="8" fill="url(#cardGrad2)" stroke="#e2e8f0" stroke-width="1.5" />
+    <text x="790" y="344" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#0f172a">Branch 202</text>
+    <text x="790" y="362" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" font-weight="500" fill="#16a34a">CAPA Resolution</text>
+  </g>
+</svg>

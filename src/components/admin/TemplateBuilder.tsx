@@ -3,20 +3,19 @@
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, query, doc, addDoc, getDocs, writeBatch, serverTimestamp, getDoc } from 'firebase/firestore';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Card } from '@/components/ui/card';
+import { Button } from '@/components/app-ui/button';
+import { Badge } from '@/components/app-ui/badge';
+import { Input } from '@/components/app-ui/input';
+import { Label } from '@/components/app-ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/app-ui/select';
+import { Switch } from '@/components/app-ui/switch';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/app-ui/accordion';
+import { Card } from '@/components/app-ui/card';
 import { cn } from '@/lib/utils';
 import { Plus, ArrowUp, ArrowDown, Trash2, ArrowLeft, Save, AlertCircle, Camera, FileText } from 'lucide-react';
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/app-ui/skeleton";
 import { useRouter } from 'next/navigation';
 import { useAuthSync } from '@/components/AuthProvider';
-import posthog from 'posthog-js';
 
 type QuestionType = 'yes_no' | 'rating';
 type SeverityType = 'low' | 'medium' | 'critical';
@@ -184,15 +183,8 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
       });
 
       await batch.commit();
-      posthog.capture('template_saved', {
-        is_new: !templateId,
-        template_title: title,
-        category,
-        question_count: questions.length,
-      });
       router.push('/dashboard/admin/templates');
     } catch (e: any) {
-      posthog.captureException(e);
       setError(e.message || 'Failed to save template');
     } finally {
       setLoading(false);

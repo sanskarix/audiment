@@ -35,10 +35,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
+} from '@/components/app-ui/dropdown-menu';
+import { Button } from '@/components/app-ui/button';
+import { Badge } from '@/components/app-ui/badge';
+import { ScrollArea } from '@/components/app-ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
 import { useAuthSync } from './AuthProvider';

@@ -46,7 +46,7 @@ const features = [
     title: "Standardized audit blueprints",
     heading: "Build once. Deploy to every location.",
     description: "Build reusable audit templates with custom questions, scoring weights, and severity levels. Share blueprints across your entire organization.",
-    imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "/images/templates.jpeg",
   },
   {
     icon: FileCheck2,
@@ -70,7 +70,7 @@ const features = [
     title: "Permanent audit trail",
     heading: "A complete, searchable record.",
     description: "Every audit, photo, score, and corrective action is permanently stored and searchable. Pull up any location's compliance history in seconds.",
-    imageUrl: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "/images/audittrail.jpeg",
   },
 ];
 

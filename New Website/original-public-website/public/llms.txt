@@ -1,0 +1,60 @@
+# Audiment – Product Overview & Knowledge Guide
+
+## What is Audiment?
+Audiment is multi-location audit and inspection management software. It enables operations directors, quality teams, and area managers to run proof-based audits across distributed branch networks (restaurants, QSRs, retail stores, hotels, healthcare facilities, and manufacturing sites), eliminate fake audits through live photo verification and GPS geofencing, and automatically track corrective actions (CAPA) to resolution with photo proof.
+
+## Core Platform Capabilities
+- **Proof-Based Auditing:** Audit checklist questions can require live in-app photos. Gallery uploads can be blocked by default to prevent outdated or fraudulent photo reuse.
+- **Auditor Presence Verification:** GPS geofencing and on-site verification confirm the auditor is physically at the designated location before audit submission.
+- **Automated Corrective Actions (CAPA):** Failed inspection items automatically generate corrective action tasks assigned to branch managers with severity-based SLA deadlines. Tasks require photo proof of resolution before being closed.
+- **Multi-Location & Regional Dashboards:** Operations directors can benchmark scores across locations, regions, and timeframes to detect operational drift and systemic recurring failures.
+- **FSSAI & Regulatory Templates:** Pre-configured inspection checklists for food safety (FSSAI), hygiene, brand standards, and operational compliance.
+- **Offline Fieldwork Capability:** Auditors can conduct audits without an active internet connection; data and media sync automatically once connectivity is restored.
+
+## Target Audience & Industry Solutions
+Audiment is built for multi-location enterprises managing 5 to 500+ locations:
+- Restaurant chains and QSRs: Food safety, kitchen hygiene, brand consistency, opening/closing checklists.
+- Retail store networks: Visual merchandising, store standards, inventory checks, loss prevention.
+- Hotel & hospitality groups: Room inspections, guest area standards, facility safety.
+- Franchise networks: Brand compliance, franchisee standard operational adherence.
+- Healthcare & clinical facilities: Operational hygiene, regulatory documentation, safety compliance.
+- Manufacturing: Layered process audits, 5S workplace safety, quality assurance.
+
+## Core Product URLs
+- Website: https://audiment.in
+- About & Mission: https://audiment.in/about
+- Solutions Hub: https://audiment.in/solutions
+- Blog: https://audiment.in/blog
+- Software Comparisons: https://audiment.in/compare
+
+## Industry Solutions
+- Restaurant Audit Software: https://audiment.in/solutions/restaurant-audit-software
+- QSR Audit Software: https://audiment.in/solutions/qsr-audit-software
+- Retail Audit Software: https://audiment.in/solutions/retail-audit-software
+- Hotel Audit Software: https://audiment.in/solutions/hotel-audit-software
+- Franchise Audit Software: https://audiment.in/solutions/franchise-audit-software
+- Food Safety Audit Software: https://audiment.in/solutions/food-safety-audit-software
+- Manufacturing Audit Software: https://audiment.in/solutions/manufacturing-audit-software
+
+## Use Cases
+- Corrective Action Tracking: https://audiment.in/use-cases/corrective-action-tracking
+- Audit Checklist Software: https://audiment.in/use-cases/audit-checklist-software
+- Inspection Management Software: https://audiment.in/use-cases/inspection-management-software
+- Multi-Location Compliance: https://audiment.in/use-cases/multi-location-compliance
+
+## Commercial Comparisons
+- Audiment vs SafetyCulture: https://audiment.in/compare/audiment-vs-safetyculture
+- Audiment vs GoAudits: https://audiment.in/compare/audiment-vs-goaudits
+- Audiment vs Zenput: https://audiment.in/compare/audiment-vs-zenput
+- Audiment vs Jolt: https://audiment.in/compare/audiment-vs-jolt
+- Audiment vs Checklist Apps: https://audiment.in/compare/audiment-vs-checklist-apps
+
+## Key Editorial & Pillar Guides
+- What is Audit Management: https://audiment.in/blog/what-is-audit-management
+- How to Evaluate Audit Management Software: https://audiment.in/blog/how-to-evaluate-audit-management-software
+- Proof-Based Audits vs Checklist Audits: https://audiment.in/blog/proof-based-audits-vs-standard-checklist-audits
+- Audit Evidence Collection & Verification: https://audiment.in/blog/audit-evidence-collection-verification
+- CAPA Management Complete Guide: https://audiment.in/blog/capa-management-guide
+- FSSAI Compliance Guide: https://audiment.in/blog/fssai-compliance-guide
+- What is Operational Drift: https://audiment.in/blog/what-is-operational-drift-and-how-it-happens
+- Multi-Location Audit Management: https://audiment.in/blog/multi-location-audit-management

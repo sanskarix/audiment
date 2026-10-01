@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Core pages
     { url: 'https://audiment.in', lastModified: new Date('2026-07-01'), changeFrequency: 'weekly', priority: 1.0 },
     { url: 'https://audiment.in/about', lastModified: new Date('2026-07-01'), changeFrequency: 'monthly', priority: 0.7 },
+    { url: 'https://audiment.in/glossary', lastModified: new Date('2026-10-01'), changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://audiment.in/blog', lastModified: new Date('2026-07-01'), changeFrequency: 'weekly', priority: 0.8 },
     { url: 'https://audiment.in/solutions', lastModified: new Date('2026-07-01'), changeFrequency: 'monthly', priority: 0.8 },
     // Solutions

@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Header } from '@/components/new-website/Header';
-import { Footer } from '@/components/new-website/Footer';
+import { Header } from '@/components/website/Header';
+import { Footer } from '@/components/website/Footer';
 import { observeDotBorderButtons } from '@/lib/dotBorder';
 import { observeAnimations } from '@/lib/animations';
 import { initCalEmbed, getCalAttributes } from '@/lib/cal';

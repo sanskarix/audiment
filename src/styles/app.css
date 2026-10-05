@@ -168,7 +168,6 @@
   html {
     @apply font-sans;
     scroll-behavior: smooth;
-    zoom: 90%;
   }
 }
 

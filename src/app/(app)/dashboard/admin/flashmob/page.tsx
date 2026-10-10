@@ -418,13 +418,13 @@ export default function AdminFlashmobPage() {
                 </TabsTrigger>
               </TabsList>
 
-              <div className="relative w-full sm:w-72">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text" />
+              <div className="search-wrapper w-full sm:w-72">
+                <Search className="search-icon" />
                 <Input
                   placeholder="Filter by location or auditor..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-10 h-11 border-border/50 bg-background/50 focus-visible:ring-primary/20 shadow-sm"
+                  className="search-input"
                 />
               </div>
             </div>
@@ -437,12 +437,10 @@ export default function AdminFlashmobPage() {
                   ))}
                 </div>
               ) : filteredAudits.length === 0 ? (
-                <div className="standard-card flex flex-col items-center justify-center py-20 text-center">
-                  <div className="h-16 w-16 rounded-2xl bg-muted/30 flex items-center justify-center mb-4">
-                    <History className="h-8 w-8 text-muted-text/30" />
-                  </div>
-                  <h3 className="section-heading text-heading/70">No audit logs found</h3>
-                  <p className="body-text text-muted-text/60 mt-1">Once auditors submit their verifications, they'll appear here.</p>
+                <div className="empty-state">
+                  <History className="empty-state-icon" />
+                  <h3 className="empty-state-title">No audit logs found</h3>
+                  <p className="empty-state-body">Once auditors submit their verifications, they'll appear here.</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-aud-md">
@@ -459,9 +457,9 @@ export default function AdminFlashmobPage() {
                   <PendingRequestCard key={req.id} request={req} />
                 ))}
                 {publishedRequests.length === 0 && (
-                  <div className="col-span-full standard-card flex flex-col items-center justify-center py-20 text-center border-dashed">
-                    <History className="h-10 w-10 text-muted-text/20 mb-3" />
-                    <p className="body-text text-muted-text">No pending assignments at the moment.</p>
+                  <div className="col-span-full empty-state">
+                    <History className="empty-state-icon" />
+                    <p className="empty-state-body">No pending assignments at the moment.</p>
                   </div>
                 )}
               </div>

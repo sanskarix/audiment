@@ -140,8 +140,8 @@ export default function LoginPage() {
               )}
 
               {resetSuccess && (
-                <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
-                  <p className="text-xs font-normal text-green-600">{resetSuccess}</p>
+                <div className="p-3 rounded-lg bg-success/10 border border-success/20">
+                  <p className="text-xs font-normal text-success">{resetSuccess}</p>
                 </div>
               )}
 

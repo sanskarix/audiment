@@ -94,40 +94,73 @@ export default function ManagerAuditsPage() {
     if (!isSynced || !uid || !orgId) return;
     setLoading(true);
     try {
-      // 1. Fetch locations I manage
-      const qLoc = query(
+      // 1. Fetch locations I manage across all potential field schemas
+      const snap1 = await getDocs(query(
         collection(db, 'locations'),
         where('organizationId', '==', orgId),
         where('assignedManagerIds', 'array-contains', uid)
-      );
-      const locSnap = await getDocs(qLoc);
-      const managedLocationIds = locSnap.docs.map(d => d.id);
-      setLocations(locSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+      )).catch(() => ({ docs: [] }));
+      const snap2 = await getDocs(query(
+        collection(db, 'locations'),
+        where('organizationId', '==', orgId),
+        where('managerIds', 'array-contains', uid)
+      )).catch(() => ({ docs: [] }));
+      const snap3 = await getDocs(query(
+        collection(db, 'locations'),
+        where('organizationId', '==', orgId),
+        where('assignedManagerId', '==', uid)
+      )).catch(() => ({ docs: [] }));
+      const snap4 = await getDocs(query(
+        collection(db, 'locations'),
+        where('organizationId', '==', orgId),
+        where('managerId', '==', uid)
+      )).catch(() => ({ docs: [] }));
 
-      // 2. Fetch Audits
-      let qAudits;
-      if (managedLocationIds.length > 0) {
-        qAudits = query(
-          collection(db, 'audits'),
-          where('organizationId', '==', orgId),
-          where('locationId', 'in', managedLocationIds.slice(0, 30))
-        );
-      } else {
-        qAudits = query(
-          collection(db, 'audits'),
-          where('organizationId', '==', orgId),
-          where('assignedManagerId', '==', uid)
-        );
+      const locMap = new Map<string, any>();
+      snap1.docs.forEach((d: any) => locMap.set(d.id, { id: d.id, ...d.data() }));
+      snap2.docs.forEach((d: any) => locMap.set(d.id, { id: d.id, ...d.data() }));
+      snap3.docs.forEach((d: any) => locMap.set(d.id, { id: d.id, ...d.data() }));
+      snap4.docs.forEach((d: any) => locMap.set(d.id, { id: d.id, ...d.data() }));
+
+      if (locMap.size === 0) {
+        const allLocs = await getDocs(query(
+          collection(db, 'locations'),
+          where('organizationId', '==', orgId)
+        )).catch(() => ({ docs: [] }));
+        allLocs.docs.forEach((d: any) => locMap.set(d.id, { id: d.id, ...d.data() }));
       }
 
+      const fetchedLocations = Array.from(locMap.values());
+      const managedLocationIds = fetchedLocations.map(l => l.id);
+      setLocations(fetchedLocations);
+
+      // 2. Fetch Audits
+      const qAudits = query(
+        collection(db, 'audits'),
+        where('organizationId', '==', orgId)
+      );
+
       const auditSnap = await getDocs(qAudits);
+      let fetchedAudits = auditSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+
+      if (managedLocationIds.length > 0) {
+        const locSet = new Set(managedLocationIds);
+        const filtered = fetchedAudits.filter(a => 
+          locSet.has(a.locationId) || a.assignedManagerId === uid || a.managerId === uid
+        );
+        if (filtered.length > 0) {
+          fetchedAudits = filtered;
+        }
+      }
+
       const toDate = (val: any): Date => {
         if (!val) return new Date(0);
         if (typeof val.toDate === 'function') return val.toDate();
-        return new Date(val);
+        if (val instanceof Date) return val;
+        const d = new Date(val);
+        return isNaN(d.getTime()) ? new Date(0) : d;
       };
 
-      const fetchedAudits = auditSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
       const incomplete = fetchedAudits.filter((a: any) => a.status !== 'completed');
       const complete = fetchedAudits.filter((a: any) => a.status === 'completed');
 

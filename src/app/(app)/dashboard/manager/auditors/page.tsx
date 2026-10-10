@@ -112,14 +112,17 @@ export default function AuditorsPage() {
       const q = query(
         collection(db, 'users'),
         where('organizationId', '==', orgId),
-        where('managerId', '==', uid),
         where('role', '==', 'AUDITOR')
       );
       const snapshot = await getDocs(q);
-      const fetchedAuditors = snapshot.docs.map(doc => ({
+      const allAuditors = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       })) as Auditor[];
+      let fetchedAuditors = allAuditors.filter((a: any) => a.managerId === uid || a.assignedManagerId === uid);
+      if (fetchedAuditors.length === 0) {
+        fetchedAuditors = allAuditors;
+      }
       setAuditors(fetchedAuditors);
 
       const auditorIds = fetchedAuditors.map(a => a.id).filter(id => !!id);

@@ -278,7 +278,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
             </div>
             <div className="p-5 space-y-4">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="title" className="text-body font-normal">Template Title</Label>
+                <Label htmlFor="title" className="field-label">Template Title</Label>
                 <Input
                   id="title"
                   value={title}
@@ -288,7 +288,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <Label htmlFor="category" className="text-body font-normal">Category</Label>
+                <Label htmlFor="category" className="field-label">Category</Label>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger id="category" className="text-body">
                     <SelectValue />
@@ -334,9 +334,9 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
             <div className="flex flex-col gap-1">
               <h3 className="section-heading flex items-center gap-2">
                 Questions
-                <Badge variant="secondary" className="rounded-full px-2.5 py-0.5 text-[12px] font-normal">
+                <span className="status-badge-xs badge-muted">
                   {questions.length}
-                </Badge>
+                </span>
               </h3>
               <p className="body-text">Add the checks that auditors will complete.</p>
             </div>
@@ -352,12 +352,12 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
 
           {/* Empty state */}
           {questions.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-16 border-2 border-dashed border-border rounded-xl bg-muted/5 text-center">
-              <div className="bg-muted/20 p-5 rounded-full mb-5">
-                <FileText className="h-8 w-8 opacity-20" />
+            <div className="empty-state">
+              <div className="empty-state-icon mb-4">
+                <FileText className="h-8 w-8 opacity-40 text-muted-text" />
               </div>
-              <p className="section-heading opacity-40 mb-1">No questions yet</p>
-              <p className="body-text mb-6">Start adding questions to build your audit template.</p>
+              <p className="empty-state-title mb-1">No questions yet</p>
+              <p className="empty-state-body mb-6">Start adding questions to build your audit template.</p>
               <Button
                 variant="outline"
                 onClick={addEmptyQuestion}
@@ -398,23 +398,23 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                       {/* Badges */}
                       <div className="flex items-center gap-2 shrink-0">
                         {q.requiresPhoto && (
-                          <Badge variant="outline" className="text-[11px] font-normal px-2 py-0.5 gap-1 text-muted-text">
+                          <span className="status-badge-xs badge-muted gap-1">
                             <Camera className="h-3 w-3" />
                             Photo
-                          </Badge>
+                          </span>
                         )}
-                        <Badge
+                        <span
                           className={cn(
-                            'text-[11px] font-normal px-2 py-0.5 border',
+                            'status-badge-xs',
                             q.severity === 'critical'
-                              ? 'bg-destructive/10 text-destructive border-destructive/20'
+                              ? 'badge-danger'
                               : q.severity === 'medium'
-                                ? 'bg-warning/10 text-warning border-warning/20'
-                                : 'bg-muted/60 text-muted-foreground border-border'
+                                ? 'badge-warning'
+                                : 'badge-muted'
                           )}
                         >
                           {q.severity.charAt(0).toUpperCase() + q.severity.slice(1)}
-                        </Badge>
+                        </span>
                       </div>
                     </div>
                   </AccordionTrigger>
@@ -425,7 +425,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
 
                       {/* Question text */}
                       <div className="md:col-span-12 flex flex-col gap-2">
-                        <Label className="text-body font-normal">Question</Label>
+                        <Label className="field-label">Question</Label>
                         <Input
                           value={q.questionText}
                           onChange={e => updateQuestion(idx, 'questionText', e.target.value)}
@@ -436,7 +436,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
 
                       {/* Response type */}
                       <div className="md:col-span-4 flex flex-col gap-2">
-                        <Label className="text-body font-normal">Response Type</Label>
+                        <Label className="field-label">Response Type</Label>
                         <Select value={q.questionType} onValueChange={val => updateQuestion(idx, 'questionType', val)}>
                           <SelectTrigger className="text-body">
                             <SelectValue />
@@ -450,7 +450,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
 
                       {/* Severity */}
                       <div className="md:col-span-4 flex flex-col gap-2">
-                        <Label className="text-body font-normal">Severity</Label>
+                        <Label className="field-label">Severity</Label>
                         <Select value={q.severity} onValueChange={val => updateQuestion(idx, 'severity', val)}>
                           <SelectTrigger className="text-body">
                             <SelectValue />
@@ -467,7 +467,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                       <div className="md:col-span-4 flex items-end">
                         <div className="flex items-center justify-between w-full h-11 px-4 rounded-md border border-border bg-background">
                           <Label
-                            className="text-body font-normal cursor-pointer"
+                            className="field-label cursor-pointer"
                             htmlFor={`photo-${idx}`}
                           >
                             Require Photo

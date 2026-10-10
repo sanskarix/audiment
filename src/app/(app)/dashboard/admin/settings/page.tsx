@@ -460,12 +460,12 @@ function SettingsContent() {
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all w-full text-left',
+                  'settings-nav-btn',
                   activeTab === tab.id
                     ? tab.id === 'danger'
-                      ? 'bg-destructive/10 text-destructive'
-                      : 'bg-primary/5 text-primary'
-                    : 'text-muted-text hover:bg-muted/50 hover:text-body'
+                      ? 'settings-nav-btn-danger'
+                      : 'settings-nav-btn-active'
+                    : 'settings-nav-btn-inactive'
                 )}
               >
                 <tab.icon className="h-4 w-4 shrink-0" />
@@ -482,7 +482,7 @@ function SettingsContent() {
               <>
                 <Card className="standard-card">
                   <CardHeader className="pb-4">
-                    <CardTitle className="text-[15px] font-semibold">Personal Information</CardTitle>
+                    <CardTitle className="card-section-title">Personal Information</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     {/* Avatar row */}
@@ -497,7 +497,7 @@ function SettingsContent() {
                         <button
                           onClick={() => userPhotoInputRef.current?.click()}
                           disabled={uploadingPhoto}
-                          className="absolute -bottom-1 -right-1 bg-primary text-white p-1.5 rounded-full shadow hover:opacity-90 transition-opacity"
+                          className="avatar-camera-btn"
                         >
                           {uploadingPhoto ? <Loader2 className="h-3 w-3 animate-spin" /> : <Camera className="h-3 w-3" />}
                         </button>
@@ -505,7 +505,7 @@ function SettingsContent() {
                       </div>
                       <div className="flex flex-col gap-0.5 items-start px-2">
                         <p className="text-[13px] font-medium text-heading">Profile Photo</p>
-                        <p className="text-[12px] text-muted-text">PNG, JPG or GIF up to 2MB</p>
+                        <p className="text-[12px] text-muted-foreground">PNG, JPG or GIF up to 2MB</p>
                         {userDoc?.photoUrl && (
                           <Button
                             variant="ghost"
@@ -513,7 +513,7 @@ function SettingsContent() {
                             onClick={() => handleRemovePhoto('user')}
                             className="h-6 px-2 mt-1 text-[11px] text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
-                            Remove Logo
+                            Remove Photo
                           </Button>
                         )}
                       </div>
@@ -522,13 +522,13 @@ function SettingsContent() {
                     {/* Fields */}
                     <div className="grid gap-4">
                       <div className="grid gap-1.5">
-                        <Label className="text-[11px] font-semibold text-muted-text uppercase tracking-wider">Full Name</Label>
+                        <Label className="field-label">Full Name</Label>
                         <Input value={profileForm.name} onChange={e => setProfileForm(p => ({ ...p, name: e.target.value }))} className="h-10" />
                       </div>
                       <div className="grid gap-1.5">
-                        <Label className="text-[11px] font-semibold text-muted-text uppercase tracking-wider">Email Address</Label>
+                        <Label className="field-label">Email Address</Label>
                         <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text/50" />
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                           <Input type="email" value={profileForm.email} onChange={e => setProfileForm(p => ({ ...p, email: e.target.value }))} className="h-10 pl-9" />
                         </div>
                       </div>

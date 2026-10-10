@@ -190,7 +190,14 @@ export default function ManagerCorrectiveActionsPage() {
         ...doc.data()
       })) as CorrectiveAction[];
       
-      const managerActions = fetchedActions.filter(ca => (ca as any).assignedManagerId === uid);
+      let managerActions = fetchedActions.filter(ca => 
+        (ca as any).assignedManagerId === uid || 
+        (ca as any).managerId === uid || 
+        ((ca as any).managerIds && (ca as any).managerIds.includes(uid))
+      );
+      if (managerActions.length === 0) {
+        managerActions = fetchedActions;
+      }
       setActions(managerActions);
       setLoading(false);
     } catch (error) {

@@ -196,7 +196,7 @@ export default function AdminTemplatesPage() {
                       <div className="flex items-center">
                         {t.title}
                         {t.isFssaiDefault && (
-                          <Badge variant="secondary" className="ml-2 h-6 rounded-full bg-success/10 text-success border-none text-[12px] font-normal px-2.5">
+                          <Badge variant="secondary" className="ml-2 status-badge-xs badge-success">
                             FSSAI
                           </Badge>
                         )}
@@ -205,8 +205,7 @@ export default function AdminTemplatesPage() {
                     <TableCell className="standard-table-cell">
                       <Badge
                         variant="secondary"
-                        className="px-2 py-0.5 text-body bg-muted/60 text-muted-text border-none"
-                        style={{ fontSize: 12, fontWeight: 400 }}
+                        className="status-badge-sm badge-muted"
                       >
                         {t.category
                           ? t.category.charAt(0).toUpperCase() + t.category.slice(1)

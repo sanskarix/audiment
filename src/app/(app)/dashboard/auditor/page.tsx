@@ -132,23 +132,23 @@ export default function AuditorDashboardPage() {
         <div className="grid grid-cols-2 gap-4 md:gap-8 mb-6 md:mb-8">
           <Card className="standard-card p-4 md:p-6">
             <div className="flex items-center justify-between mb-3 md:mb-4">
-              <p className="section-heading text-[11px] md:text-[12px]">Completed</p>
+              <p className="stat-label">Completed</p>
               <FileCheck className="h-3.5 w-3.5 md:h-4 md:w-4 text-primary/40 transition-colors" />
             </div>
             <div>
-              <div className="text-[28px] md:text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{completedAudits.length}</div>
-              <p className="body-text mt-1 text-[11px] md:text-[13px]">Finalized audits</p>
+              <div className="stat-number text-heading">{completedAudits.length}</div>
+              <p className="stat-sub">Finalized audits</p>
             </div>
           </Card>
 
           <Card className="standard-card p-4 md:p-6">
             <div className="flex items-center justify-between mb-3 md:mb-4">
-              <p className="section-heading text-[11px] md:text-[12px]">Avg. score</p>
+              <p className="stat-label">Avg. score</p>
               <Target className="h-3.5 w-3.5 md:h-4 md:w-4 text-success/40 transition-colors" />
             </div>
             <div>
-              <div className="text-[28px] md:text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{avgScore}%</div>
-              <p className="body-text mt-1 text-[11px] md:text-[13px]">Average score</p>
+              <div className="stat-number text-success">{avgScore}%</div>
+              <p className="stat-sub">Average score</p>
             </div>
           </Card>
         </div>
@@ -157,25 +157,25 @@ export default function AuditorDashboardPage() {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-1">
-              <h3 className="section-heading">Active audits</h3>
-              <p className="body-text">Assigned audits pending completion</p>
+              <h3 className="card-section-title">Active audits</h3>
+              <p className="card-section-subtitle">Assigned audits pending completion</p>
             </div>
-            <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-3 text-[11px] font-semibold tabular-nums">
+            <Badge variant="secondary" className="status-badge-sm badge-primary tabular-nums">
               {filteredAudits.length} Required
             </Badge>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="relative flex-1 group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+            <div className="search-wrapper">
+              <Search className="search-icon" />
               <Input
                 placeholder="Search by template or location..."
-                className="pl-9 h-11 text-body font-normal bg-background border border-border/40 placeholder:text-muted-text/60"
+                className="search-input"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button variant="outline" className="h-11 px-3 gap-2 font-medium text-[12px] border-border/40 text-muted-text hover:bg-muted/50 shrink-0 hidden md:flex">
+            <Button variant="outline" className="filter-btn shrink-0 hidden md:flex">
               <Filter className="h-4 w-4" />
               Filters
             </Button>

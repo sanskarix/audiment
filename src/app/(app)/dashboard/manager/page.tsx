@@ -79,6 +79,15 @@ interface ManagerStats {
   recentAudits: any[];
 }
 
+const toDate = (val: any): Date => {
+  if (!val) return new Date(0);
+  if (typeof val.toDate === 'function') return val.toDate();
+  if (val instanceof Date) return val;
+  if (typeof val === 'number') return new Date(val);
+  const d = new Date(val);
+  return isNaN(d.getTime()) ? new Date(0) : d;
+};
+
 export default function ManagerDashboardPage() {
   const [stats, setStats] = useState<ManagerStats | null>(null);
   const [correctiveActions, setCorrectiveActions] = useState<any[]>([]);
@@ -121,80 +130,112 @@ export default function ManagerDashboardPage() {
         const monthStart = startOfMonth(new Date());
         const now = new Date();
 
-        // 1. Robust Location Detection
+        const toDate = (val: any): Date => {
+          if (!val) return new Date(0);
+          if (typeof val.toDate === 'function') return val.toDate();
+          if (val instanceof Date) return val;
+          if (typeof val === 'number') return new Date(val);
+          const d = new Date(val);
+          return isNaN(d.getTime()) ? new Date(0) : d;
+        };
+
+        // 1. Robust Location Detection across user profile and location fields
         let managedLocationIds: string[] = [];
         const userLocSnap = await getDoc(doc(db, 'users', uid!));
         const userData = userLocSnap.data();
-        if (userData?.assignedLocationIds || userData?.assignedLocations) {
-          managedLocationIds = userData?.assignedLocationIds || userData?.assignedLocations || [];
+        if (userData?.assignedLocationIds?.length || userData?.assignedLocations?.length || userData?.managedLocationIds?.length || userData?.locationIds?.length) {
+          managedLocationIds = userData?.assignedLocationIds || userData?.assignedLocations || userData?.managedLocationIds || userData?.locationIds || [];
         }
         
         if (managedLocationIds.length === 0) {
-          const locsByArrayQuery = query(
+          const locsByAssignedArray = query(
             collection(db, 'locations'),
             where('organizationId', '==', orgId!),
             where('assignedManagerIds', 'array-contains', uid!)
           );
-          const locsBySingleQuery = query(
+          const locsByManagerArray = query(
+            collection(db, 'locations'),
+            where('organizationId', '==', orgId!),
+            where('managerIds', 'array-contains', uid!)
+          );
+          const locsByAssignedSingle = query(
             collection(db, 'locations'),
             where('organizationId', '==', orgId!),
             where('assignedManagerId', '==', uid!)
           );
+          const locsByManagerSingle = query(
+            collection(db, 'locations'),
+            where('organizationId', '==', orgId!),
+            where('managerId', '==', uid!)
+          );
           
-          const [snapArray, snapSingle] = await Promise.all([
-            getDocs(locsByArrayQuery),
-            getDocs(locsBySingleQuery)
+          const [snap1, snap2, snap3, snap4] = await Promise.all([
+            getDocs(locsByAssignedArray).catch(() => ({ docs: [] })),
+            getDocs(locsByManagerArray).catch(() => ({ docs: [] })),
+            getDocs(locsByAssignedSingle).catch(() => ({ docs: [] })),
+            getDocs(locsByManagerSingle).catch(() => ({ docs: [] }))
           ]);
           
           const foundIds = new Set<string>();
-          snapArray.docs.forEach(d => foundIds.add(d.id));
-          snapSingle.docs.forEach(d => foundIds.add(d.id));
+          snap1.docs.forEach((d: any) => foundIds.add(d.id));
+          snap2.docs.forEach((d: any) => foundIds.add(d.id));
+          snap3.docs.forEach((d: any) => foundIds.add(d.id));
+          snap4.docs.forEach((d: any) => foundIds.add(d.id));
           managedLocationIds = Array.from(foundIds);
         }
 
+        // Fallback: If no explicit manager restriction found, query all locations in org
         if (managedLocationIds.length === 0) {
-          console.log('Manager Dashboard - No managed locations found');
+          const allOrgLocsSnap = await getDocs(query(
+            collection(db, 'locations'),
+            where('organizationId', '==', orgId!)
+          )).catch(() => ({ docs: [] }));
+          managedLocationIds = allOrgLocsSnap.docs.map((d: any) => d.id);
         }
 
-        // 2. Fetch Audits across all managed locations
-        let allAudits: any[] = [];
+        // 2. Fetch Audits across organization
+        const auditsQuery = query(
+          collection(db, 'audits'),
+          where('organizationId', '==', orgId!)
+        );
+        const auditsSnap = await getDocs(auditsQuery);
+        let allAudits = auditsSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+
+        // Filter audits to those relevant to this manager (either assigned to manager or at a managed location)
         if (managedLocationIds.length > 0) {
-          const auditsByLoc = query(
-            collection(db, 'audits'),
-            where('organizationId', '==', orgId!),
-            where('locationId', 'in', managedLocationIds.slice(0, 30))
+          const locSet = new Set(managedLocationIds);
+          const filtered = allAudits.filter(a => 
+            locSet.has(a.locationId) || a.assignedManagerId === uid || a.managerId === uid
           );
-          const auditsSnap = await getDocs(auditsByLoc);
-          allAudits = auditsSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+          if (filtered.length > 0) {
+            allAudits = filtered;
+          }
         }
 
         // 3. Fetch Auditors
         const auditorsQuery = query(
           collection(db, 'users'),
           where('organizationId', '==', orgId!),
-          where('managerId', '==', uid!),
           where('role', '==', 'AUDITOR')
         );
         const auditorsSnap = await getDocs(auditorsQuery);
-        const auditors = auditorsSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+        const allAuditors = auditorsSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+        
+        let auditors = allAuditors.filter(a => a.managerId === uid || a.assignedManagerId === uid);
+        if (auditors.length === 0) {
+          auditors = allAuditors;
+        }
 
-        // 4. Update Stats helper
-        const toDate = (val: any): Date => {
-          if (!val) return new Date(0);
-          if (typeof val.toDate === 'function') return val.toDate();
-          return new Date(val);
-        };
-
-        const pendingAudits = allAudits.filter(a => ['published', 'assigned', 'in_progress'].includes(a.status));
+        const pendingAudits = allAudits.filter(a => ['published', 'assigned', 'in_progress', 'scheduled'].includes(a.status));
         const completedThisMonth = allAudits.filter(a => 
           a.status === 'completed' && 
           toDate(a.completedAt) >= monthStart
         );
 
-        // Sorting: Closest future audits first
+        // Sorting: Closest future/active audits first
         const sortedAudits = [...allAudits].sort((a, b) => {
-          const dateA = toDate(a.scheduledDate);
-          const dateB = toDate(b.scheduledDate);
+          const dateA = toDate(a.scheduledDate || a.createdAt);
+          const dateB = toDate(b.scheduledDate || b.createdAt);
           
           const isFutureA = dateA >= now;
           const isFutureB = dateB >= now;
@@ -206,39 +247,46 @@ export default function ManagerDashboardPage() {
           return dateB.getTime() - dateA.getTime();
         });
 
-        // 5. Fetch Corrective Actions for managed locations
+        // 4. Fetch Corrective Actions
+        let fetchedCAs: any[] = [];
+        const caQuery = query(
+          collection(db, 'correctiveActions'),
+          where('organizationId', '==', orgId!)
+        );
+        const caSnap = await getDocs(caQuery).catch(() => ({ docs: [] }));
+        const allCAs = caSnap.docs.map((d: any) => ({ id: d.id, ...d.data() }));
+        
         if (managedLocationIds.length > 0) {
-          const caQuery = query(
-            collection(db, 'correctiveActions'),
-            where('organizationId', '==', orgId!),
-            where('locationId', 'in', managedLocationIds.slice(0, 30))
+          const locSet = new Set(managedLocationIds);
+          fetchedCAs = allCAs.filter((ca: any) => 
+            ca.assignedManagerId === uid || ca.managerId === uid || locSet.has(ca.locationId)
           );
-          const caSnap = await getDocs(caQuery);
-          const fetchedCAs = caSnap.docs.map(d => ({ id: d.id, ...d.data() } as any));
-          
-          fetchedCAs.sort((a, b) => {
-            const deadA = toDate(a.deadline).getTime();
-            const deadB = toDate(b.deadline).getTime();
-            if (deadA !== deadB) return deadA - deadB;
-            const prioMap: any = { critical: 0, medium: 1, low: 2 };
-            const prioA = prioMap[a.severity] ?? 99;
-            const prioB = prioMap[b.severity] ?? 99;
-            return (prioA - prioB);
-          });
-
-          setCorrectiveActions(fetchedCAs);
+        } else {
+          fetchedCAs = allCAs;
         }
+        
+        fetchedCAs.sort((a, b) => {
+          const deadA = toDate(a.deadline).getTime();
+          const deadB = toDate(b.deadline).getTime();
+          if (deadA !== deadB) return deadA - deadB;
+          const prioMap: any = { critical: 0, high: 0, medium: 1, low: 2 };
+          const prioA = prioMap[a.severity] ?? 99;
+          const prioB = prioMap[b.severity] ?? 99;
+          return (prioA - prioB);
+        });
+
+        setCorrectiveActions(fetchedCAs);
 
         setManagerExtraStats({
-          unassigned: allAudits.filter(a => a.status === 'published' && !a.assignedAuditorId).slice(0, 5),
-          nearDeadlines: pendingAudits.sort((a, b) => toDate(a.deadline).getTime() - toDate(b.deadline).getTime()).slice(0, 5)
+          unassigned: allAudits.filter(a => (a.status === 'published' || a.status === 'scheduled') && !a.assignedAuditorId).slice(0, 5),
+          nearDeadlines: pendingAudits.sort((a, b) => toDate(a.deadline || a.scheduledDate).getTime() - toDate(b.deadline || b.scheduledDate).getTime()).slice(0, 5)
         });
 
         setStats({
           assignedLocations: managedLocationIds.length,
           activeAuditors: auditors.length,
           recentAuditScores: allAudits
-            .filter(a => a.status === 'completed')
+            .filter(a => a.status === 'completed' && (a.finalScore !== undefined || a.scorePercentage !== undefined))
             .sort((a, b) => toDate(b.completedAt).getTime() - toDate(a.completedAt).getTime())
             .slice(0, 10)
             .map(a => ({
@@ -247,12 +295,12 @@ export default function ManagerDashboardPage() {
             }))
             .reverse(),
           auditorActivity: auditors.map(aud => {
-            const personalAudits = allAudits.filter(a => a.assignedAuditorId === aud.uid);
+            const personalAudits = allAudits.filter(a => a.assignedAuditorId === aud.uid || a.assignedAuditorId === aud.id);
             return {
-              id: aud.id,
-              name: aud.name,
+              id: aud.id || aud.uid,
+              name: aud.name || aud.email || 'Auditor',
               completed: personalAudits.filter(a => a.status === 'completed').length,
-              pending: personalAudits.filter(a => ['assigned', 'in_progress'].includes(a.status)).length
+              pending: personalAudits.filter(a => ['assigned', 'in_progress', 'published'].includes(a.status)).length
             };
           }),
           recentAudits: sortedAudits.slice(0, 5),
@@ -276,13 +324,14 @@ export default function ManagerDashboardPage() {
     const caQuery = query(
       collection(db, 'correctiveActions'),
       where('organizationId', '==', orgId),
-      where('assignedManagerId', '==', uid),
-      where('status', 'in', ['open', 'in_progress']),
-      orderBy('createdAt', 'desc')
+      where('status', 'in', ['open', 'in_progress'])
     );
 
     const unsubscribeCA = onSnapshot(caQuery, (snap) => {
-      setCorrectiveActions(snap.docs.map(d => ({ id: d.id, ...d.data() } as any)));
+      const allOrgCAs = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+      let filtered = allOrgCAs.filter(ca => ca.assignedManagerId === uid || ca.managerId === uid);
+      if (filtered.length === 0) filtered = allOrgCAs;
+      setCorrectiveActions(filtered);
     }, (err: any) => {
       if (err.name === 'AbortError') return;
       console.error('[ManagerDashboard] CA snapshot error:', err);
@@ -403,35 +452,35 @@ export default function ManagerDashboardPage() {
         {/* Top Summary Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="standard-card p-6 bg-card">
-            <p className="text-[11px] font-medium text-muted-text/50 uppercase tracking-[0.07em]">Locations</p>
-            <div className="text-[36px] font-bold text-heading tabular-nums leading-none mt-3" style={{ letterSpacing: '-0.02em' }}>
+            <p className="stat-label">Locations</p>
+            <div className="stat-number-lg text-heading mt-3">
               {stats?.assignedLocations}
             </div>
-            <p className="text-[11.5px] text-muted-text/70 mt-2.5">Managed branches</p>
+            <p className="stat-sub">Managed branches</p>
           </Card>
 
           <Card className="standard-card p-6 bg-card">
-            <p className="text-[11px] font-medium text-muted-text/50 uppercase tracking-[0.07em]">Pending Audits</p>
-            <div className="text-[36px] font-bold text-heading tabular-nums leading-none mt-3" style={{ letterSpacing: '-0.02em' }}>
+            <p className="stat-label">Pending Audits</p>
+            <div className="stat-number-lg text-heading mt-3">
               {(stats as any)?.totalPending || 0}
             </div>
-            <p className="text-[11.5px] text-muted-text/70 mt-2.5">Require attention</p>
+            <p className="stat-sub">Require attention</p>
           </Card>
 
           <Card className="standard-card p-6 bg-card">
-            <p className="text-[11px] font-medium text-muted-text/50 uppercase tracking-[0.07em]">Completed</p>
-            <div className="text-[36px] font-bold text-success tabular-nums leading-none mt-3" style={{ letterSpacing: '-0.02em' }}>
+            <p className="stat-label">Completed</p>
+            <div className="stat-number-lg text-success mt-3">
               {(stats as any)?.completedThisMonth || 0}
             </div>
-            <p className="text-[11.5px] text-muted-text/70 mt-2.5">Completed this month</p>
+            <p className="stat-sub">Completed this month</p>
           </Card>
 
           <Card className="standard-card p-6 bg-card">
-            <p className="text-[11px] font-medium text-muted-text/50 uppercase tracking-[0.07em]">Auditors</p>
-            <div className="text-[36px] font-bold text-heading tabular-nums leading-none mt-3" style={{ letterSpacing: '-0.02em' }}>
+            <p className="stat-label">Auditors</p>
+            <div className="stat-number-lg text-heading mt-3">
               {stats?.activeAuditors}
             </div>
-            <p className="text-[11.5px] text-muted-text/70 mt-2.5">Active team members</p>
+            <p className="stat-sub">Active team members</p>
           </Card>
         </div>
 
@@ -439,8 +488,8 @@ export default function ManagerDashboardPage() {
         <div className="standard-card bg-card p-6">
           <div className="flex items-center justify-between mb-5">
             <div className="space-y-0.5">
-              <h3 className="text-[14px] font-semibold text-heading">Corrective Actions</h3>
-              <p className="text-[11px] text-muted-text/60">Issues requiring immediate attention</p>
+              <h3 className="card-section-title">Corrective Actions</h3>
+              <p className="card-section-subtitle">Issues requiring immediate attention</p>
             </div>
             <Link href="/dashboard/manager/corrective-actions" className="text-[11.5px] font-medium text-primary hover:opacity-80 transition-opacity">
               View all
@@ -509,8 +558,8 @@ export default function ManagerDashboardPage() {
             {/* Performance Trend */}
             <Card className="standard-card p-6 bg-card">
               <div className="mb-6">
-                <h3 className="text-[14px] font-semibold text-heading">Performance Trend</h3>
-                <p className="text-[11px] text-muted-text/60 mt-0.5">Average compliance score across recent audits</p>
+                <h3 className="card-section-title">Performance Trend</h3>
+                <p className="card-section-subtitle">Average compliance score across recent audits</p>
               </div>
               <div className="h-[280px] w-full">
                 {isMounted ? (
@@ -576,18 +625,16 @@ export default function ManagerDashboardPage() {
             <Card className="standard-card p-6 bg-card flex flex-col">
               <div className="flex items-center justify-between mb-5">
                 <div className="space-y-0.5">
-                  <h3 className="text-[14px] font-semibold text-heading">Activity Log</h3>
-                  <p className="text-[11px] text-muted-text/60">Live updates and audit history</p>
+                  <h3 className="card-section-title">Activity Log</h3>
+                  <p className="card-section-subtitle">Live updates and audit history</p>
                 </div>
                 {/* Segment controller */}
-                <div className="bg-muted/30 p-0.5 rounded-lg flex gap-1 border border-border/20">
+                <div className="segment-control">
                   <button
                     onClick={() => setActiveActivityTab('audits')}
                     className={cn(
-                      "px-3 py-1 rounded-md text-[11px] font-medium transition-all",
-                      activeActivityTab === 'audits' 
-                        ? "bg-background text-heading shadow-sm" 
-                        : "text-muted-text/75 hover:text-heading"
+                      "segment-btn",
+                      activeActivityTab === 'audits' ? "segment-btn-active" : "segment-btn-inactive"
                     )}
                   >
                     Audits
@@ -595,10 +642,8 @@ export default function ManagerDashboardPage() {
                   <button
                     onClick={() => setActiveActivityTab('notifications')}
                     className={cn(
-                      "px-3 py-1 rounded-md text-[11px] font-medium transition-all",
-                      activeActivityTab === 'notifications' 
-                        ? "bg-background text-heading shadow-sm" 
-                        : "text-muted-text/75 hover:text-heading"
+                      "segment-btn",
+                      activeActivityTab === 'notifications' ? "segment-btn-active" : "segment-btn-inactive"
                     )}
                   >
                     Alerts
@@ -615,7 +660,7 @@ export default function ManagerDashboardPage() {
                         <div className="text-[11px] text-muted-text/50 flex items-center gap-1.5">
                           <MapPin className="h-3 w-3 opacity-60" /> {audit.locationName} 
                           <span>•</span> 
-                          <Clock className="h-3 w-3 opacity-60" /> {audit.completedAt ? format(audit.completedAt.toDate(), 'MMM d') : 'Scheduled'}
+                          <Clock className="h-3 w-3 opacity-60" /> {audit.completedAt ? format(toDate(audit.completedAt), 'MMM d') : audit.scheduledDate ? format(toDate(audit.scheduledDate), 'MMM d') : 'Scheduled'}
                         </div>
                       </div>
                       <div className="shrink-0 text-right">
@@ -648,7 +693,7 @@ export default function ManagerDashboardPage() {
                             <p className="text-[13px] font-medium text-heading leading-tight">{n.title}</p>
                           </div>
                           <span className="text-[10px] text-muted-text/40 tabular-nums">
-                            {n.createdAt ? format(n.createdAt.toDate(), 'MMM d, h:mm a') : 'Now'}
+                            {n.createdAt ? format(toDate(n.createdAt), 'MMM d, h:mm a') : 'Now'}
                           </span>
                         </div>
                         <p className="text-[11.5px] text-muted-text/70 leading-relaxed pr-6">{n.message}</p>
@@ -667,8 +712,8 @@ export default function ManagerDashboardPage() {
             {/* Auditor Workload */}
             <Card className="standard-card p-6 bg-card flex flex-col">
               <div className="mb-5">
-                <h3 className="text-[14px] font-semibold text-heading">Auditor Workload</h3>
-                <p className="text-[11px] text-muted-text/60 mt-0.5">Current audit assignment distribution</p>
+                <h3 className="card-section-title">Auditor Workload</h3>
+                <p className="card-section-subtitle">Current audit assignment distribution</p>
               </div>
               <div className="divide-y divide-border/25 flex-1 flex flex-col justify-start">
                 {stats?.auditorActivity.map((aud, i) => (
@@ -697,18 +742,16 @@ export default function ManagerDashboardPage() {
             <Card className="standard-card p-6 bg-card">
               <div className="flex items-center justify-between mb-5">
                 <div className="space-y-0.5">
-                  <h3 className="text-[14px] font-semibold text-heading">Operations</h3>
-                  <p className="text-[11px] text-muted-text/60">Manage dispatches and deadlines</p>
+                  <h3 className="card-section-title">Operations</h3>
+                  <p className="card-section-subtitle">Manage dispatches and deadlines</p>
                 </div>
                 {/* Segment controller */}
-                <div className="bg-muted/30 p-0.5 rounded-lg flex gap-1 border border-border/20">
+                <div className="segment-control">
                   <button
                     onClick={() => setActiveTasksTab('unassigned')}
                     className={cn(
-                      "px-3 py-1 rounded-md text-[11px] font-medium transition-all",
-                      activeTasksTab === 'unassigned' 
-                        ? "bg-background text-heading shadow-sm" 
-                        : "text-muted-text/75 hover:text-heading"
+                      "segment-btn",
+                      activeTasksTab === 'unassigned' ? "segment-btn-active" : "segment-btn-inactive"
                     )}
                   >
                     Unassigned ({managerExtraStats.unassigned.length})
@@ -716,10 +759,8 @@ export default function ManagerDashboardPage() {
                   <button
                     onClick={() => setActiveTasksTab('deadlines')}
                     className={cn(
-                      "px-3 py-1 rounded-md text-[11px] font-medium transition-all",
-                      activeTasksTab === 'deadlines' 
-                        ? "bg-background text-heading shadow-sm" 
-                        : "text-muted-text/75 hover:text-heading"
+                      "segment-btn",
+                      activeTasksTab === 'deadlines' ? "segment-btn-active" : "segment-btn-inactive"
                     )}
                   >
                     Deadlines
@@ -759,7 +800,7 @@ export default function ManagerDashboardPage() {
                         <div className="space-y-1 min-w-0 pr-4">
                           <p className="text-[13px] font-normal text-heading truncate">{audit.templateTitle}</p>
                           <p className="text-[11px] text-muted-text/50 flex items-center gap-1.5">
-                            <Clock className="h-3 w-3 opacity-60" /> {audit.deadline ? format(audit.deadline.toDate(), 'MMM d, yyyy') : '–'}
+                            <Clock className="h-3 w-3 opacity-60" /> {audit.deadline || audit.scheduledDate ? format(toDate(audit.deadline || audit.scheduledDate), 'MMM d, yyyy') : '–'}
                           </p>
                         </div>
                         <span className={cn(
@@ -832,12 +873,14 @@ export default function ManagerDashboardPage() {
                   {resolutionPhotos.map((url, i) => (
                     <div key={i} className="relative h-16 w-16 rounded-lg overflow-hidden border border-border/40 shrink-0 shadow-sm group">
                       <Image src={url} alt="Evidence" width={64} height={64} className="h-full w-full object-cover" />
-                      <button
-                        className="absolute top-1 right-1 bg-destructive text-white rounded-md p-1 opacity-0 group-hover:opacity-100 transition-all hover:bg-destructive/80"
-                        onClick={() => setResolutionPhotos(prev => prev.filter(p => p !== url))}
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          className="absolute top-1 right-1 bg-destructive text-white hover:bg-destructive/80"
+                          onClick={() => setResolutionPhotos(prev => prev.filter(p => p !== url))}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
                     </div>
                   ))}
                 </div>

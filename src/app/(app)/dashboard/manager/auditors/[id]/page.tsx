@@ -38,6 +38,7 @@ import {
   Clock,
   ClipboardList
 } from 'lucide-react';
+import { Skeleton } from "@/components/app-ui/skeleton";
 import { useAuthSync } from '@/components/AuthProvider';
 
 interface Auditor {
@@ -130,23 +131,30 @@ export default function PerformancePage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'assigned':
-        return <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[11px] font-normal">Assigned</Badge>;
+        return <Badge variant="secondary" className="status-badge-sm badge-warning">Assigned</Badge>;
       case 'in_progress':
-        return <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[11px] font-normal">In Progress</Badge>;
+        return <Badge variant="secondary" className="status-badge-sm badge-primary">In Progress</Badge>;
       case 'completed':
-        return <Badge variant="secondary" className="h-6 rounded-full bg-success/10 text-success border-none px-2.5 text-[11px] font-normal">Completed</Badge>;
+        return <Badge variant="secondary" className="status-badge-sm badge-success">Completed</Badge>;
       case 'missed':
-        return <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[11px] font-normal">SLA Breached</Badge>;
+        return <Badge variant="secondary" className="status-badge-sm badge-danger">SLA Breached</Badge>;
       default:
-        return <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-2.5 text-[11px] font-normal">{status}</Badge>;
+        return <Badge variant="secondary" className="status-badge-sm badge-muted">{status}</Badge>;
     }
   };
 
   if (loading) {
     return (
       <DashboardShell role="manager">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="dashboard-page-container">
+          <div className="flex items-center gap-4 mb-8">
+            <Skeleton className="h-5 w-5 rounded" />
+            <Skeleton className="h-7 w-48 rounded-lg" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32 rounded-xl" />)}
+          </div>
+          <Skeleton className="h-64 rounded-xl" />
         </div>
       </DashboardShell>
     );
@@ -158,16 +166,16 @@ export default function PerformancePage() {
         <div className="page-header-section mb-8">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-4">
-              <Link href="/dashboard/manager/auditors" className="text-muted-text hover:text-primary transition-colors flex items-center">
+              <Link href="/dashboard/manager/auditors" className="text-muted-foreground hover:text-primary transition-colors flex items-center">
                 <ArrowLeft className="h-5 w-5" />
               </Link>
               <div className="h-5 w-[1px] bg-border/80"></div>
               <h1 className="text-xl font-semibold text-heading flex items-center gap-3">
-                {auditor?.name || 'Loading Data...'}
+                {auditor?.name || 'Auditor Profile'}
                 {auditor && (
                   <Badge variant="secondary" className={cn(
-                    "h-6 rounded-full border-none px-2.5 text-[11px] font-normal",
-                    auditor.isActive ? "bg-success/10 text-success" : "bg-muted/20 text-muted-text"
+                    "status-badge-sm font-normal",
+                    auditor.isActive ? "badge-success" : "badge-muted"
                   )}>
                     {auditor.isActive ? 'Active' : 'Inactive'}
                   </Badge>
@@ -180,45 +188,45 @@ export default function PerformancePage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Total Audits</p>
+              <p className="stat-label">Total Audits</p>
               <ClipboardList className="h-4 w-4 text-primary/40 transition-colors" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{stats.total}</div>
-              <p className="body-text mt-2 font-normal">Total assigned</p>
+              <div className="stat-number text-heading">{stats.total}</div>
+              <p className="stat-sub">Total assigned</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Completion Rate</p>
+              <p className="stat-label">Completion Rate</p>
               <Target className="h-4 w-4 text-success/40 transition-colors" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{completionRate}%</div>
-              <p className="body-text mt-2 font-normal">Completion rate</p>
+              <div className="stat-number text-success">{completionRate}%</div>
+              <p className="stat-sub">Completion rate</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Pending</p>
+              <p className="stat-label">Pending</p>
               <Clock className="h-4 w-4 text-warning/40 transition-colors" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-warning tabular-nums leading-tight">{stats.inProgress}</div>
-              <p className="body-text mt-2 font-normal">Pending audits</p>
+              <div className="stat-number text-warning">{stats.inProgress}</div>
+              <p className="stat-sub">Pending audits</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Missed</p>
+              <p className="stat-label">Missed</p>
               <AlertCircle className="h-4 w-4 text-destructive/40 transition-colors" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-destructive tabular-nums leading-tight">{stats.missed}</div>
-              <p className="body-text mt-2 font-normal">Past deadline</p>
+              <div className="stat-number text-destructive">{stats.missed}</div>
+              <p className="stat-sub">Past deadline</p>
             </div>
           </Card>
         </div>

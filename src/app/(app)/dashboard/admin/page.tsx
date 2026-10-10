@@ -43,6 +43,7 @@ import {
   Cell
 } from 'recharts';
 import { Progress } from "@/components/app-ui/progress";
+import { Button } from "@/components/app-ui/button";
 import { startOfMonth } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Skeleton } from "@/components/app-ui/skeleton";
@@ -244,12 +245,14 @@ export default function AdminDashboardPage() {
                   >
                     View reports
                   </Link>
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
                     onClick={() => handleDismissAlert(alert.id)}
-                    className="p-1 hover:bg-warning/10 rounded-md transition-colors"
+                    className="hover:bg-warning/10 text-current"
                   >
                     <X className="w-3.5 h-3.5" />
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}
@@ -261,23 +264,23 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Audits</p>
+              <p className="stat-label">Audits</p>
               <ClipboardList className="h-4 w-4 text-primary/40 transition-colors" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{stats?.totalAuditsThisMonth}</div>
-              <p className="body-text mt-2">This month</p>
+              <div className="stat-number text-heading">{stats?.totalAuditsThisMonth}</div>
+              <p className="stat-sub">This month</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Completion rate</p>
+              <p className="stat-label">Completion rate</p>
               <CheckCircle2 className="h-4 w-4 text-success/40 transition-colors" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{stats?.completionRate}%</div>
-              <p className="body-text mt-2">Completed</p>
+              <div className="stat-number text-success">{stats?.completionRate}%</div>
+              <p className="stat-sub">Completed</p>
               <Progress value={stats?.completionRate} className="mt-4 h-1.5 bg-success/10" />
             </div>
           </Card>
@@ -285,12 +288,12 @@ export default function AdminDashboardPage() {
           <Link href="/dashboard/admin/corrective-actions" className="block group">
             <Card className="standard-card p-6 h-full group-hover:bg-destructive/5 transition-colors cursor-pointer">
               <div className="flex items-center justify-between mb-3">
-                <p className="section-heading">Actions</p>
+                <p className="stat-label">Actions</p>
                 <AlertCircle className="h-4 w-4 text-destructive/40 transition-colors" />
               </div>
               <div>
-                <div className="text-[32px] font-semibold tracking-tight text-destructive tabular-nums leading-tight">{stats?.openCorrectiveActions}</div>
-                <p className="body-text mt-2 text-destructive/60 font-medium">Open issues</p>
+                <div className="stat-number text-destructive">{stats?.openCorrectiveActions}</div>
+                <p className="stat-sub text-destructive/60 font-medium">Open issues</p>
                 <div className="mt-5 flex items-center gap-1.5 text-[11px] font-medium text-destructive bg-destructive/10 w-fit px-3 py-1.5 rounded-full">
                   View <TrendingUp className="h-3 w-3" />
                 </div>
@@ -303,8 +306,8 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 gap-6">
           <Card className="standard-card p-6">
             <div className="mb-6">
-              <h3 className="section-heading">Performance</h3>
-              <p className="body-text mt-1">Average score</p>
+              <h3 className="card-section-title">Performance</h3>
+              <p className="card-section-subtitle">Average compliance score by location</p>
             </div>
             <div className="h-[400px] w-full">
               {isMounted ? (

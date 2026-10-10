@@ -12,12 +12,20 @@ import { Badge } from '@/components/app-ui/badge';
 import { cn } from '@/lib/utils';
 import { useAuthSync } from '@/components/AuthProvider';
 
+const toDate = (val: any): Date | null => {
+  if (!val) return null;
+  if (typeof val.toDate === 'function') return val.toDate();
+  if (val instanceof Date) return val;
+  if (typeof val === 'number') return new Date(val);
+  const d = new Date(val);
+  return isNaN(d.getTime()) ? null : d;
+};
+
 export default function ManagerCalendarPage() {
   const { isSynced, uid, orgId } = useAuthSync();
   const [audits, setAudits] = useState<any[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     if (!isSynced) return;
@@ -28,70 +36,85 @@ export default function ManagerCalendarPage() {
 
     async function fetchCalendarData() {
       try {
-        // Robust Fetch for Location IDs
         let locationIds: string[] = [];
         
-        // Strategy 1: Check User Document
         const userRef = doc(db, 'users', uid!);
         const userSnap = await getDoc(userRef);
         const userData = userSnap.data();
         
-        if (userData?.assignedLocationIds || userData?.assignedLocations) {
-          locationIds = userData?.assignedLocationIds || userData?.assignedLocations || [];
-          console.log('Manager Calendar - Found locations in user doc:', locationIds);
+        if (userData?.assignedLocationIds?.length || userData?.assignedLocations?.length || userData?.managedLocationIds?.length || userData?.locationIds?.length) {
+          locationIds = userData?.assignedLocationIds || userData?.assignedLocations || userData?.managedLocationIds || userData?.locationIds || [];
         }
         
-        // Strategy 2: Fallback to Locations Collection Query
         if (locationIds.length === 0) {
-          console.log('Manager Calendar - No locations in user doc, querying locations collection...');
-          const locsByArrayQuery = query(
+          const snap1 = await getDocs(query(
             collection(db, 'locations'),
             where('organizationId', '==', orgId!),
             where('assignedManagerIds', 'array-contains', uid!)
-          );
-          const locsBySingleQuery = query(
+          )).catch(() => ({ docs: [] }));
+          const snap2 = await getDocs(query(
             collection(db, 'locations'),
-            where('organizationId', '==', orgId),
-            where('assignedManagerId', '==', uid)
-          );
-          
-          const [snapArray, snapSingle] = await Promise.all([
-            getDocs(locsByArrayQuery),
-            getDocs(locsBySingleQuery)
-          ]);
+            where('organizationId', '==', orgId!),
+            where('managerIds', 'array-contains', uid!)
+          )).catch(() => ({ docs: [] }));
+          const snap3 = await getDocs(query(
+            collection(db, 'locations'),
+            where('organizationId', '==', orgId!),
+            where('assignedManagerId', '==', uid!)
+          )).catch(() => ({ docs: [] }));
+          const snap4 = await getDocs(query(
+            collection(db, 'locations'),
+            where('organizationId', '==', orgId!),
+            where('managerId', '==', uid!)
+          )).catch(() => ({ docs: [] }));
           
           const foundIds = new Set<string>();
-          snapArray.docs.forEach(d => foundIds.add(d.id));
-          snapSingle.docs.forEach(d => foundIds.add(d.id));
+          snap1.docs.forEach((d: any) => foundIds.add(d.id));
+          snap2.docs.forEach((d: any) => foundIds.add(d.id));
+          snap3.docs.forEach((d: any) => foundIds.add(d.id));
+          snap4.docs.forEach((d: any) => foundIds.add(d.id));
           locationIds = Array.from(foundIds);
-          console.log('Manager Calendar - Found locations via collection query:', locationIds);
+
+          if (locationIds.length === 0) {
+            const allLocs = await getDocs(query(
+              collection(db, 'locations'),
+              where('organizationId', '==', orgId!)
+            )).catch(() => ({ docs: [] }));
+            locationIds = allLocs.docs.map((d: any) => d.id);
+          }
         }
 
-        if (locationIds.length === 0) {
-          setLoading(false);
-          return;
-        }
-
-        const usersSnap = await getDocs(query(collection(db, 'users'), where('organizationId', '==', orgId)));
+        const usersSnap = await getDocs(query(collection(db, 'users'), where('organizationId', '==', orgId!)));
         const usersMap = new Map();
-        usersSnap.forEach(doc => usersMap.set(doc.id, doc.data().name));
+        usersSnap.forEach(doc => usersMap.set(doc.id, doc.data().name || doc.data().email));
 
         const auditsQuery = query(
           collection(db, 'audits'),
-          where('organizationId', '==', orgId),
-          where('locationId', 'in', locationIds.slice(0, 30))
+          where('organizationId', '==', orgId!)
         );
 
         const snap = await getDocs(auditsQuery);
-        const fetchedAudits = snap.docs.map(doc => {
-          const data = doc.data();
+        let allAudits = snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
+
+        if (locationIds.length > 0) {
+          const locSet = new Set(locationIds);
+          const filtered = allAudits.filter(a => 
+            locSet.has(a.locationId) || a.assignedManagerId === uid || a.managerId === uid
+          );
+          if (filtered.length > 0) {
+            allAudits = filtered;
+          }
+        }
+
+        const fetchedAudits = allAudits.map(data => {
+          const parsedDate = toDate(data.scheduledDate) || toDate(data.completedAt) || toDate(data.createdAt);
           return {
-            id: doc.id,
             ...data,
-            auditorName: data.assignedAuditorId ? usersMap.get(data.assignedAuditorId) : 'Unassigned',
-            parsedDate: data.scheduledDate ? data.scheduledDate.toDate() : null
-          } as any;
-        }).filter((a: any) => !a.isSurprise && a.parsedDate && ['published', 'assigned', 'in_progress'].includes(a.status));
+            titleText: data.templateTitle || data.title || 'Audit',
+            auditorName: data.assignedAuditorId ? (usersMap.get(data.assignedAuditorId) || 'Assigned') : 'Unassigned',
+            parsedDate
+          };
+        }).filter((a: any) => a.isSurprise !== true && a.parsedDate);
 
         setAudits(fetchedAudits);
         setLoading(false);
@@ -195,7 +218,7 @@ export default function ManagerCalendarPage() {
                         {format(day, dateFormat)}
                       </span>
                       {dayEvents.length > 0 && (
-                        <div className="text-[9px] font-bold text-primary/40 mr-1">
+                        <div className="text-[9px] font-bold text-primary/60 mr-1">
                           {dayEvents.length} {dayEvents.length === 1 ? 'Audit' : 'Audits'}
                         </div>
                       )}
@@ -216,19 +239,23 @@ export default function ManagerCalendarPage() {
                               isExpanded 
                                 ? "border-primary/40 shadow-sm z-10 translate-x-0.5" 
                                 : "border-border/50 text-body hover:border-primary/20",
-                              event.status === 'in_progress' && !isExpanded && "border-l-2 border-l-primary"
+                              event.status === 'in_progress' && !isExpanded && "border-l-2 border-l-primary",
+                              event.status === 'completed' && !isExpanded && "border-l-2 border-l-success"
                             )}
                           >
                             <div className="flex items-center gap-2">
                               <div className={cn(
                                 "h-1.5 w-1.5 rounded-full shrink-0",
-                                event.status === 'in_progress' ? "bg-primary" : "bg-muted-text/30"
+                                event.status === 'completed' ? "bg-success" :
+                                event.status === 'in_progress' ? "bg-primary" :
+                                event.status === 'missed' ? "bg-destructive" :
+                                "bg-amber-500"
                               )} />
                               <div className={cn(
                                 "font-medium text-heading leading-tight truncate text-[12px]",
                                 isExpanded && "whitespace-normal text-[13px] font-semibold"
                               )}>
-                                {event.templateTitle}
+                                {event.titleText}
                               </div>
                             </div>
                             
@@ -242,17 +269,21 @@ export default function ManagerCalendarPage() {
                                   <User className="h-3 w-3 shrink-0 opacity-30" />
                                   <span className={cn(
                                     "font-normal leading-none",
-                                    !event.assignedAuditorId && "text-warning italic font-medium"
+                                    !event.assignedAuditorId && "text-amber-500 italic font-medium"
                                   )}>
                                     {event.auditorName || 'Unassigned'}
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-1 mt-1">
                                   <div className={cn(
-                                    "text-[9px] px-1.5 py-0.5 rounded-md font-bold",
-                                    event.status === 'in_progress' ? "bg-primary/10 text-primary" : "bg-muted/10 text-muted-text"
+                                    "text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider",
+                                    event.status === 'completed' ? "bg-success/10 text-success" :
+                                    event.status === 'in_progress' ? "bg-primary/10 text-primary" :
+                                    event.status === 'scheduled' ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" :
+                                    event.status === 'missed' ? "bg-destructive/10 text-destructive" :
+                                    "bg-muted/20 text-muted-text"
                                   )}>
-                                    {event.status === 'in_progress' ? 'In progress' : event.status.charAt(0).toUpperCase() + event.status.slice(1).replace('_', ' ')}
+                                    {event.status.replace('_', ' ')}
                                   </div>
                                 </div>
                               </div>

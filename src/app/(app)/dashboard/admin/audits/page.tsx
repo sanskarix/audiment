@@ -264,49 +264,25 @@ export default function AdminAuditsPage() {
     const isDeadlineHit = audit.status === 'missed' || (audit.status !== 'completed' && deadline && deadline < now);
 
     if (audit.status === 'completed') {
-      return (
-        <Badge variant="secondary" className="h-6 rounded-full bg-success/10 text-success border-none px-2.5 text-[12px] font-normal">
-          Completed
-        </Badge>
-      );
+      return <Badge variant="secondary" className="badge-completed">Completed</Badge>;
     }
 
     if (isDeadlineHit) {
-      return (
-        <Badge variant="secondary" className="h-6 rounded-full bg-destructive/10 text-destructive border-none px-2.5 text-[12px] font-normal">
-          Deadline hit
-        </Badge>
-      );
+      return <Badge variant="secondary" className="badge-danger">Deadline hit</Badge>;
     }
 
     if (audit.status === 'in_progress') {
-      return (
-        <Badge variant="secondary" className="h-6 rounded-full bg-primary/10 text-primary border-none px-2.5 text-[12px] font-normal">
-          In progress
-        </Badge>
-      );
+      return <Badge variant="secondary" className="badge-in-progress">In progress</Badge>;
     }
 
     if ((audit.status === 'published' || audit.status === 'assigned')) {
       if (scheduledDate && scheduledDate > now) {
-        return (
-          <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-2.5 text-[12px] font-normal">
-            Scheduled
-          </Badge>
-        );
+        return <Badge variant="secondary" className="status-badge badge-muted">Scheduled</Badge>;
       }
-      return (
-        <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">
-          Pending
-        </Badge>
-      );
+      return <Badge variant="secondary" className="badge-assigned">Pending</Badge>;
     }
 
-    return (
-      <Badge variant="secondary" className="h-6 rounded-full bg-muted/20 text-muted-text border-none px-2.5 text-[12px] font-normal">
-        {audit.status}
-      </Badge>
-    );
+    return <Badge variant="secondary" className="status-badge badge-muted">{audit.status}</Badge>;
   };
 
   const filteredAudits = audits.filter((audit) => {
@@ -650,11 +626,11 @@ export default function AdminAuditsPage() {
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative flex-1 group max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+          <div className="search-wrapper max-w-md">
+            <Search className="search-icon" />
             <Input
-              placeholder="Search..."
-              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
+              placeholder="Search audits..."
+              className="search-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -664,7 +640,7 @@ export default function AdminAuditsPage() {
               <Button
                 variant="ghost"
                 onClick={() => { setStatusFilter('all'); setLocationFilter('all'); setManagerFilter('all'); }}
-                className="h-11 px-3 text-[11px] font-medium text-muted-text hover:text-destructive transition-colors group"
+                className="h-11 px-3 text-[11px] font-medium text-muted-foreground hover:text-destructive transition-colors group"
               >
                 <X className="h-3 w-3 mr-1.5 opacity-40 group-hover:opacity-100" />
                 Clear
@@ -673,15 +649,15 @@ export default function AdminAuditsPage() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className={cn(
-                  "h-11 px-4 gap-2 font-medium text-xs border-border/50",
-                  (statusFilter !== 'all' || locationFilter !== 'all' || managerFilter !== 'all') ? "text-primary border-primary/20 bg-primary/5" : "text-muted-text"
+                  "filter-btn",
+                  (statusFilter !== 'all' || locationFilter !== 'all' || managerFilter !== 'all') && "text-primary border-primary/20 bg-primary/5"
                 )}>
                   <Filter className="h-4 w-4" />
                   Filters
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 overflow-y-auto max-h-[400px]">
-                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Status</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-xs font-normal text-muted-foreground/50 px-2 py-1.5">By Status</DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={statusFilter} onValueChange={setStatusFilter}>
                   <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Statuses</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="published" className="text-body cursor-pointer">Published</DropdownMenuRadioItem>
@@ -691,7 +667,7 @@ export default function AdminAuditsPage() {
                 </DropdownMenuRadioGroup>
 
                 <DropdownMenuSeparator />
-                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Location</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-xs font-normal text-muted-foreground/50 px-2 py-1.5">By Location</DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={locationFilter} onValueChange={setLocationFilter}>
                   <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Locations</DropdownMenuRadioItem>
                   {locations.map(loc => (
@@ -700,7 +676,7 @@ export default function AdminAuditsPage() {
                 </DropdownMenuRadioGroup>
 
                 <DropdownMenuSeparator />
-                <DropdownMenuLabel className="text-xs font-normal text-muted-text/50 px-2 py-1.5">By Manager</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-xs font-normal text-muted-foreground/50 px-2 py-1.5">By Manager</DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={managerFilter} onValueChange={setManagerFilter}>
                   <DropdownMenuRadioItem value="all" className="text-body cursor-pointer">All Managers</DropdownMenuRadioItem>
                   {managers.map(m => (
@@ -733,7 +709,7 @@ export default function AdminAuditsPage() {
                       <div className="bg-muted/10 p-4 rounded-full">
                         <CheckSquare className="h-8 w-8 opacity-20" />
                       </div>
-                      <p className="page-heading opacity-40">No audits published yet.</p>
+                      <p className="font-semibold text-heading opacity-40">No audits published yet.</p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -770,11 +746,11 @@ export default function AdminAuditsPage() {
                     </TableCell>
                     <TableCell className="standard-table-cell">
                       {a.isSurprise ? (
-                        <Badge variant="secondary" className="h-6 rounded-full bg-warning/10 text-warning border-none px-2.5 text-[12px] font-normal">
+                        <Badge variant="secondary" className="status-badge badge-warning">
                           Surprise
                         </Badge>
                       ) : (
-                        <span className="text-[14px] font-normal text-muted-text">Routine</span>
+                        <span className="text-[14px] font-normal text-muted-foreground">Routine</span>
                       )}
                     </TableCell>
                     <TableCell className="standard-table-cell text-right">
@@ -783,10 +759,10 @@ export default function AdminAuditsPage() {
                           <span className={cn("text-[14px] font-medium tabular-nums", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
                             {a.scorePercentage}%
                           </span>
-                          <span className="text-[11px] font-normal text-muted-text/50 tabular-nums">{a.totalScore} / {a.maxPossibleScore}</span>
+                          <span className="text-[11px] font-normal text-muted-foreground/50 tabular-nums">{a.totalScore} / {a.maxPossibleScore}</span>
                         </div>
                       ) : (
-                        <span className="text-[14px] font-normal text-muted-text">Pending</span>
+                        <span className="text-[14px] font-normal text-muted-foreground">Pending</span>
                       )}
                     </TableCell>
                     <TableCell className="px-4 py-3">

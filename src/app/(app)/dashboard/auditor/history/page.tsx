@@ -177,71 +177,71 @@ export default function AuditorHistoryPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-4">
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Total Audits</p>
+              <p className="stat-label">Total Audits</p>
               <FileCheck className="h-4 w-4 text-primary/40 transition-colors" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">{history.length}</div>
-              <p className="body-text mt-2">Successfully finalized audits</p>
+              <div className="stat-number text-heading">{history.length}</div>
+              <p className="stat-sub">Successfully finalized audits</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Avg. Performance</p>
+              <p className="stat-label">Avg. Performance</p>
               <Target className="h-4 w-4 text-success/40 transition-colors" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-success tabular-nums leading-tight">{avgScore}%</div>
-              <p className="body-text mt-2">Overall average score</p>
+              <div className="stat-number text-success">{avgScore}%</div>
+              <p className="stat-sub">Overall average score</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Personal Best</p>
+              <p className="stat-label">Personal Best</p>
               <Trophy className="h-4 w-4 text-warning/40 transition-colors" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-warning tabular-nums leading-tight">{highestScore}%</div>
-              <p className="body-text mt-2">Highest score achieved</p>
+              <div className="stat-number text-warning">{highestScore}%</div>
+              <p className="stat-sub">Highest score achieved</p>
             </div>
           </Card>
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative flex-1 group max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+          <div className="search-wrapper max-w-md">
+            <Search className="search-icon" />
             <Input
               placeholder="Search history by template or location..."
-              className="pl-9 h-11 text-body font-normal bg-background border border-border/40 placeholder:text-muted-text/60"
+              className="search-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-[12px] border-border/40 text-muted-text hover:bg-muted/50">
+          <Button variant="outline" className="filter-btn">
             <Filter className="h-4 w-4" />
             Filters
           </Button>
         </div>
 
         {/* History Table Section */}
-        <Card className="standard-card overflow-hidden border-border/40">
-          <div className="p-6 border-b border-border/40 bg-muted/5">
+        <Card className="standard-card overflow-hidden">
+          <div className="p-6 border-b border-border/40">
             <div className="flex flex-col gap-1">
-              <h3 className="section-heading">Completed Audits</h3>
-              <p className="body-text">View all previously submitted reports</p>
+              <h3 className="card-section-title">Completed Audits</h3>
+              <p className="card-section-subtitle">View all previously submitted reports</p>
             </div>
           </div>
           <CardContent className="p-0">
             <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-transparent border-border/40 bg-muted/5">
-                  <TableHead className="h-12 px-6 text-[12px] font-medium text-muted-text uppercase tracking-wider">Template</TableHead>
-                  <TableHead className="h-12 px-6 text-[12px] font-medium text-muted-text uppercase tracking-wider">Location</TableHead>
-                  <TableHead className="h-12 px-6 text-[12px] font-medium text-muted-text uppercase tracking-wider">Date</TableHead>
-                  <TableHead className="h-12 px-6 text-[12px] font-medium text-muted-text uppercase tracking-wider text-center">Score</TableHead>
-                  <TableHead className="h-12 px-6 text-[12px] font-medium text-muted-text uppercase tracking-wider text-right">Action</TableHead>
+              <TableHeader className="standard-table-header">
+                <TableRow className="hover:bg-transparent border-none">
+                  <TableHead className="standard-table-head pl-6">Template</TableHead>
+                  <TableHead className="standard-table-head">Location</TableHead>
+                  <TableHead className="standard-table-head">Date</TableHead>
+                  <TableHead className="standard-table-head text-center">Score</TableHead>
+                  <TableHead className="standard-table-head text-right pr-6">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

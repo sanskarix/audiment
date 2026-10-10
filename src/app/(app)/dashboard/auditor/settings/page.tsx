@@ -269,15 +269,15 @@ export default function AuditorSettingsPage() {
         <div className="space-y-6 pb-20">
           
           {/* Profile Section */}
-          <Card className="standard-card border-border/40 overflow-hidden">
+          <Card className="standard-card overflow-hidden">
             <CardHeader className="pb-6 border-b border-border/40 bg-muted/5">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                   <User className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <CardTitle className="text-[16px] font-semibold">Profile Settings</CardTitle>
-                  <CardDescription className="text-[13px]">Update your personal info and photo.</CardDescription>
+                  <CardTitle className="card-section-title">Profile Settings</CardTitle>
+                  <CardDescription className="card-section-subtitle">Update your personal info and photo.</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -285,7 +285,7 @@ export default function AuditorSettingsPage() {
               {/* Avatar upload */}
               <div className="flex flex-col sm:flex-row items-center gap-6 pb-2">
                 <div className="relative group">
-                  <Avatar className="h-24 w-24 rounded-full border-4 border-background shadow-xl ring-1 ring-border/50">
+                  <Avatar className="h-24 w-24 rounded-full border-4 border-background shadow-xl ring-1 border-border/50">
                     <AvatarImage src={userDoc?.photoUrl} className="object-cover" />
                     <AvatarFallback className="bg-primary/5 text-primary text-2xl font-semibold">
                       {userDoc?.name?.charAt(0) || <User2 className="h-8 w-8" />}
@@ -294,9 +294,9 @@ export default function AuditorSettingsPage() {
                   <button
                     onClick={() => userPhotoInputRef.current?.click()}
                     disabled={uploadingPhoto}
-                    className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg hover:scale-105 transition-transform disabled:opacity-50"
+                    className="avatar-camera-btn h-7 w-7"
                   >
-                    {uploadingPhoto ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                    {uploadingPhoto ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Camera className="h-3.5 w-3.5" />}
                   </button>
                   <input 
                     type="file" 
@@ -308,7 +308,7 @@ export default function AuditorSettingsPage() {
                 </div>
                 <div className="flex flex-col gap-1 text-center sm:text-left">
                   <p className="text-[15px] font-semibold text-heading">Profile Picture</p>
-                  <p className="text-[12px] text-muted-text max-w-[200px]">JPG, PNG or GIF. Recommended size 400x400px.</p>
+                  <p className="text-[12px] text-muted-foreground max-w-[200px]">JPG, PNG or GIF. Recommended size 400x400px.</p>
                   {userDoc?.photoUrl && (
                     <Button 
                       variant="ghost" 
@@ -325,31 +325,31 @@ export default function AuditorSettingsPage() {
               {/* Personal details fields */}
               <div className="grid gap-6">
                 <div className="grid gap-2">
-                  <Label className="text-[12px] font-semibold text-muted-text uppercase tracking-wider">Full Name</Label>
+                  <Label className="field-label">Full Name</Label>
                   <Input 
                     value={profileForm.name} 
                     onChange={e => setProfileForm(p => ({ ...p, name: e.target.value }))} 
-                    className="h-11 bg-background border-border/50 rounded-xl"
+                    className="h-11 bg-background border-border/50"
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label className="text-[12px] font-semibold text-muted-text uppercase tracking-wider">Email Address</Label>
+                  <Label className="field-label">Email Address</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text/40" />
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/40" />
                     <Input 
                       type="email" 
                       value={profileForm.email} 
                       onChange={e => setProfileForm(p => ({ ...p, email: e.target.value }))} 
-                      className="h-11 pl-10 bg-background border-border/50 rounded-xl"
+                      className="h-11 pl-10 bg-background border-border/50"
                     />
                   </div>
                 </div>
                 <div className="grid gap-2">
-                  <Label className="text-[12px] font-semibold text-muted-text uppercase tracking-wider">Preferred Language</Label>
+                  <Label className="field-label">Preferred Language</Label>
                   <Select value={profileForm.language} onValueChange={val => setProfileForm(p => ({ ...p, language: val }))}>
-                    <SelectTrigger className="h-11 bg-background border-border/50 rounded-xl">
+                    <SelectTrigger className="h-11 bg-background border-border/50">
                       <div className="flex items-center gap-2">
-                        <Globe className="h-4 w-4 text-muted-text/40" />
+                        <Globe className="h-4 w-4 text-muted-foreground/40" />
                         <SelectValue placeholder="Select language" />
                       </div>
                     </SelectTrigger>
@@ -359,7 +359,7 @@ export default function AuditorSettingsPage() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <p className="text-[11px] text-muted-text/60 italic">This will update the dashboard UI language.</p>
+                  <p className="text-[11px] text-muted-foreground/60 italic">This will update the dashboard UI language.</p>
                 </div>
               </div>
             </CardContent>

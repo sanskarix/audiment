@@ -65,7 +65,7 @@ export default function ManagerReportsPage() {
     try {
       const activeIds = ids || locations.map(l => l.id);
       const organizationId = orgIdFetched || orgId;
-      if (activeIds.length === 0 || !organizationId) {
+      if (!organizationId) {
         setReports([]);
         return;
       }
@@ -74,12 +74,19 @@ export default function ManagerReportsPage() {
         collection(db, 'audits'),
         where('organizationId', '==', organizationId),
         where('status', '==', 'completed'),
-        where('locationId', 'in', activeIds),
         orderBy('completedAt', 'desc')
       );
 
       const snap = await getDocs(q);
       let fetched = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
+
+      if (activeIds.length > 0) {
+        const activeSet = new Set(activeIds);
+        const filteredByLoc = fetched.filter(r => activeSet.has(r.locationId) || !r.locationId);
+        if (filteredByLoc.length > 0) {
+          fetched = filteredByLoc;
+        }
+      }
 
       if (selectedLocation !== 'all') {
         fetched = fetched.filter(r => r.locationId === selectedLocation);
@@ -87,7 +94,7 @@ export default function ManagerReportsPage() {
 
       setReports(fetched);
     } catch (error) {
-      console.error(error);
+      console.error("[ManagerReports] Error fetching reports:", error);
     } finally {
       setLoading(false);
     }
@@ -117,27 +124,41 @@ export default function ManagerReportsPage() {
         
         // Strategy 2: Fallback to Locations Collection Query
         if (locationIds.length === 0) {
-          console.log('Manager Reports - No locations in user doc, querying locations collection...');
-          const locsByArrayQuery = query(
+          const snap1 = await getDocs(query(
             collection(db, 'locations'),
             where('organizationId', '==', orgId!),
             where('assignedManagerIds', 'array-contains', uid!)
-          );
-          const locsBySingleQuery = query(
+          )).catch(() => ({ docs: [] }));
+          const snap2 = await getDocs(query(
+            collection(db, 'locations'),
+            where('organizationId', '==', orgId!),
+            where('managerIds', 'array-contains', uid!)
+          )).catch(() => ({ docs: [] }));
+          const snap3 = await getDocs(query(
             collection(db, 'locations'),
             where('organizationId', '==', orgId!),
             where('assignedManagerId', '==', uid!)
-          );
-          
-          const [snapArray, snapSingle] = await Promise.all([
-            getDocs(locsByArrayQuery),
-            getDocs(locsBySingleQuery)
-          ]);
+          )).catch(() => ({ docs: [] }));
+          const snap4 = await getDocs(query(
+            collection(db, 'locations'),
+            where('organizationId', '==', orgId!),
+            where('managerId', '==', uid!)
+          )).catch(() => ({ docs: [] }));
           
           const foundIds = new Set<string>();
-          snapArray.docs.forEach(d => foundIds.add(d.id));
-          snapSingle.docs.forEach(d => foundIds.add(d.id));
+          snap1.docs.forEach((d: any) => foundIds.add(d.id));
+          snap2.docs.forEach((d: any) => foundIds.add(d.id));
+          snap3.docs.forEach((d: any) => foundIds.add(d.id));
+          snap4.docs.forEach((d: any) => foundIds.add(d.id));
           locationIds = Array.from(foundIds);
+
+          if (locationIds.length === 0) {
+            const allLocs = await getDocs(query(
+              collection(db, 'locations'),
+              where('organizationId', '==', orgId!)
+            )).catch(() => ({ docs: [] }));
+            locationIds = allLocs.docs.map((d: any) => d.id);
+          }
           console.log('Manager Reports - Found locations via collection query:', locationIds);
         }
 
@@ -153,20 +174,11 @@ export default function ManagerReportsPage() {
           where('organizationId', '==', orgId!)
         ));
         
-        // Filter locations locally based on assigned ids
         const locs = locationsCollSnap.docs
-           .filter(d => locationIds.includes(d.id))
            .map(d => ({ id: d.id, name: d.data().name }));
            
         setLocations(locs);
-
-        const locIds = locs.map(l => l.id);
-        if (locIds.length > 0) {
-          await fetchReports(locIds, orgId!);
-        } else {
-          setReports([]);
-          setLoading(false);
-        }
+        await fetchReports(locs.map(l => l.id), orgId!);
       } catch (error) {
         console.error('[ManagerReports] Error fetching data:', error);
       } finally {

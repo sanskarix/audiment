@@ -372,18 +372,21 @@ export default function AdminUsersPage() {
         {success && <div className="bg-success/10 border border-success/50 text-success p-3 rounded-md text-sm font-normal animate-in fade-in slide-in-from-top-1">{success}</div>}
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+          <div className="search-wrapper">
+            <Search className="search-icon" />
             <Input
               placeholder="Search users by name, email, or role..."
-              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70"
+              className="search-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="h-11 px-4 gap-2 font-medium text-xs border-border/50 text-[#6b7280]">
+              <Button variant="outline" className={cn(
+                "filter-btn",
+                (managerFilter !== 'all' || locationFilter !== 'all') && "text-primary border-primary/20 bg-primary/5"
+              )}>
                 <Filter className="h-4 w-4" />
                 Filters
                 {(managerFilter !== 'all' || locationFilter !== 'all') && (
@@ -427,20 +430,23 @@ export default function AdminUsersPage() {
             <TableBody>
               {filteredUsers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="standard-table-cell h-32 text-center">
+                  <TableCell colSpan={6} className="standard-table-cell h-32 text-center text-muted-foreground">
                     No users found matching your search.
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredUsers.map((user) => (
                   <TableRow key={user.id} className="standard-table-row group">
-                    <TableCell className="standard-table-cell">{user.name}</TableCell>
-                    <TableCell className="standard-table-cell">{user.email}</TableCell>
+                    <TableCell className="standard-table-cell font-medium text-heading">{user.name}</TableCell>
+                    <TableCell className="standard-table-cell text-muted-foreground">{user.email}</TableCell>
                     <TableCell className="standard-table-cell">
                       <Badge
                         variant={user.role === 'ADMIN' ? 'default' : user.role === 'MANAGER' ? 'secondary' : 'outline'}
-                        className={cn("px-2 py-0.5 text-body", user.role === 'ADMIN' && "text-white")}
-                        style={{ fontSize: 12, fontWeight: 400 }}
+                        className={cn(
+                          "status-badge-sm font-normal",
+                          user.role === 'ADMIN' ? "bg-primary text-primary-foreground" :
+                          user.role === 'MANAGER' ? "bg-primary/10 text-primary border-none" : "bg-muted/40 text-foreground"
+                        )}
                       >
                         {String(user.role ?? '')
                           .toLowerCase()

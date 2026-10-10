@@ -253,48 +253,48 @@ export default function AdminCorrectiveActionsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
           <Card className="standard-card p-6 overflow-hidden relative">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Overdue</p>
+              <p className="stat-label">Overdue</p>
               <Clock className="h-4 w-4 text-destructive/40" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-destructive tabular-nums leading-tight">
+              <div className="stat-number text-destructive">
                 {actions.filter(a => a.deadline?.toDate ? a.deadline.toDate() < new Date() : new Date(a.deadline) < new Date()).length}
               </div>
-              <p className="body-text mt-2">Overdue</p>
+              <p className="stat-sub">Overdue</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6 overflow-hidden relative">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Critical</p>
+              <p className="stat-label">Critical</p>
               <AlertCircle className="h-4 w-4 text-warning/40" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-warning tabular-nums leading-tight">
+              <div className="stat-number text-warning">
                 {actions.filter(a => a.severity === 'critical').length}
               </div>
-              <p className="body-text mt-2">Critical</p>
+              <p className="stat-sub">Critical</p>
             </div>
           </Card>
 
           <Card className="standard-card p-6 overflow-hidden relative">
             <div className="flex items-center justify-between mb-4">
-              <p className="section-heading">Upcoming</p>
+              <p className="stat-label">Upcoming</p>
               <ClipboardList className="h-4 w-4 text-primary/40" />
             </div>
             <div>
-              <div className="text-[32px] font-semibold tracking-tight text-heading tabular-nums leading-tight">48h</div>
-              <p className="body-text mt-2">Upcoming</p>
+              <div className="stat-number text-heading">48h</div>
+              <p className="stat-sub">Upcoming window</p>
             </div>
           </Card>
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-text group-focus-within:text-primary transition-colors" />
+          <div className="search-wrapper max-w-md">
+            <Search className="search-icon" />
             <Input
-              placeholder="Search..."
-              className="pl-9 h-11 text-body font-normal bg-background border border-border/50 text-[#6b7280] placeholder:text-[#6b7280]/70 shadow-sm"
+              placeholder="Search corrective actions..."
+              className="search-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -302,7 +302,7 @@ export default function AdminCorrectiveActionsPage() {
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-[180px] h-11 bg-background text-body border-border/50">
               <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-[#6b7280]" />
+                <Filter className="h-4 w-4 text-muted-foreground" />
                 <SelectValue placeholder="All Statuses" />
               </div>
             </SelectTrigger>
@@ -343,12 +343,12 @@ export default function AdminCorrectiveActionsPage() {
                 ))
               ) : actions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="standard-table-cell py-24 text-center text-muted-text bg-muted/5 font-normal">
+                  <TableCell colSpan={6} className="standard-table-cell py-24 text-center text-muted-foreground bg-muted/5 font-normal">
                     <div className="flex flex-col items-center gap-4">
                       <div className="bg-success/10 p-4 rounded-full">
                         <CheckCircle2 className="h-8 w-8 text-success opacity-40" />
                       </div>
-                      <p className="page-heading text-lg opacity-40 tracking-tight font-medium">All systems operational. No open actions.</p>
+                      <p className="font-semibold text-heading text-base opacity-60">All systems operational. No open actions.</p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -365,8 +365,8 @@ export default function AdminCorrectiveActionsPage() {
                       </TableCell>
                       <TableCell className="py-4 px-4 align-middle">
                         <Badge className={cn(
-                          "h-6 rounded-full border-none px-2.5 text-[11px] font-normal capitalize",
-                          action.severity === 'critical' ? "bg-destructive/10 text-destructive" : "bg-warning/10 text-warning"
+                          "status-badge-xs capitalize",
+                          action.severity === 'critical' ? "badge-danger" : "badge-warning"
                         )}>
                           {action.severity}
                         </Badge>
@@ -374,23 +374,23 @@ export default function AdminCorrectiveActionsPage() {
                       <TableCell className="py-4 px-4 align-middle">
                         <div className={cn(
                           "text-[13px] font-normal tabular-nums",
-                          deadlineDate < new Date() ? "text-destructive font-medium" : "text-muted-text"
+                          deadlineDate < new Date() ? "text-destructive font-medium" : "text-muted-foreground"
                         )}>
                           {format(deadlineDate, 'MMM d, h:mm a')}
                         </div>
                       </TableCell>
                       <TableCell className="px-3 py-2 text-center text-[11px]">
                         <Badge variant="secondary" className={cn(
-                          "h-6 rounded-full border-none px-2.5 text-[11px] font-normal capitalize",
-                          action.status === 'in_progress' ? "bg-primary/10 text-primary" :
-                            action.status === 'completed' ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
+                          "status-badge-sm capitalize",
+                          action.status === 'in_progress' ? "badge-primary" :
+                            action.status === 'completed' || action.status === 'resolved' ? "badge-success" : "badge-warning"
                         )}>
                           {action.status.replace('_', ' ')}
                         </Badge>
                       </TableCell>
                       <TableCell className="px-3 py-2 text-right">
                         <div className="flex justify-end gap-2">
-                          <Button variant="outline" size="sm" className="h-7 px-3 text-[11px] font-medium border-border/50 text-muted-text" onClick={() => {
+                          <Button variant="outline" size="sm" className="h-7 px-3 text-[11px] font-medium border-border/50 text-muted-foreground" onClick={() => {
                             setEditingCA(action);
                             setSelectedManager(action.assignedManagerId || '');
                             setSelectedDate(action.deadline?.toDate ? action.deadline.toDate() : (action.deadline ? new Date(action.deadline) : undefined));

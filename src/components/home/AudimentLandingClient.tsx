@@ -825,20 +825,31 @@ export default function AudimentLandingClient() {
     gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
 
-    // Initialize UI micro-interactions
-    observeDotBorderButtons();
-    observeAnimations();
-    initCalEmbed();
+    let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const refreshTimer = setTimeout(() => {
-      ScrollTrigger.refresh();
-      if (timelineRef.current) {
-        setTimelineHeight(timelineRef.current.getBoundingClientRect().height);
-      }
-    }, 300);
+    // Defer non-critical micro-interactions and DOM observers to idle time
+    // so the main thread is unblocked during critical hero paint and LCP
+    const initDeferredInteractions = () => {
+      observeDotBorderButtons();
+      observeAnimations();
+      initCalEmbed();
+
+      refreshTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+        if (timelineRef.current) {
+          setTimelineHeight(timelineRef.current.getBoundingClientRect().height);
+        }
+      }, 300);
+    };
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(initDeferredInteractions, { timeout: 1000 });
+    } else {
+      setTimeout(initDeferredInteractions, 300);
+    }
 
     return () => {
-      clearTimeout(refreshTimer);
+      if (refreshTimer) clearTimeout(refreshTimer);
       gsap.ticker.remove(tickerCallback);
       lenis.destroy();
     };
@@ -886,7 +897,7 @@ export default function AudimentLandingClient() {
                   width={1920}
                   height={1080}
                   className="aud-hero-mockup-img"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1140px"
+                  sizes="(max-width: 640px) calc(100vw - 74px), (max-width: 1200px) min(calc(100vw - 64px), 1140px), 1140px"
                   priority
                 />
               </div>

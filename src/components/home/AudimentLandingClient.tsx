@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 import { Footer } from '@/components/website/Footer';
 import { Header } from '@/components/website/Header';
@@ -862,7 +863,7 @@ export default function AudimentLandingClient() {
       <main id="top">
         {/* ── §1 Hero Section (verbatim text + dashboard mockup) ── */}
         <section className="aud-hero">
-          <InView immediate>
+          <div>
             <h1>
               Audit management software<br />
               <span className="muted">for multi-location businesses</span>
@@ -879,15 +880,18 @@ export default function AudimentLandingClient() {
             {/* Dashboard Mockup Image Preview */}
             <div className="aud-hero-mockup-wrap">
               <div className="aud-hero-mockup-frame">
-                <img
-                  src="/landing/mockup.svg"
+                <Image
+                  src="/landing/mockup.webp"
                   alt="Audiment Dashboard Overview"
+                  width={1920}
+                  height={1080}
                   className="aud-hero-mockup-img"
-                  loading="eager"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1140px"
+                  priority
                 />
               </div>
             </div>
-          </InView>
+          </div>
         </section>
 
         {/* ── §2 Problem Section (Home Page Three Areas style) ── */}

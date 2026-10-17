@@ -899,6 +899,7 @@ export default function AudimentLandingClient() {
                   className="aud-hero-mockup-img"
                   sizes="(max-width: 640px) calc(100vw - 74px), (max-width: 1200px) min(calc(100vw - 64px), 1140px), 1140px"
                   priority
+                  fetchPriority="high"
                 />
               </div>
             </div>

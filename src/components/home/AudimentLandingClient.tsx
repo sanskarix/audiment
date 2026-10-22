@@ -489,11 +489,15 @@ const StickyFeaturesSection: React.FC = () => {
 
                 <div className="aud-feature-card-visual">
                   <div className="aud-feature-card-img-wrap">
-                    <img
+                    <Image
                       src={feature.imageUrl}
                       alt={feature.title}
+                      width={720}
+                      height={480}
                       loading="lazy"
-                      decoding="async"
+                      quality={75}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
                     />
                   </div>
                 </div>
@@ -816,20 +820,23 @@ export default function AudimentLandingClient() {
   const [timelineHeight, setTimelineHeight] = useState(0);
 
   useEffect(() => {
-    // Setup GSAP & Lenis smooth scrolling
-    gsap.registerPlugin(ScrollTrigger);
-
-    const lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
-    lenis.on('scroll', ScrollTrigger.update);
-    const tickerCallback = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(tickerCallback);
-    gsap.ticker.lagSmoothing(0);
-
+    let lenis: Lenis | null = null;
+    let tickerCallback: ((time: number) => void) | null = null;
     let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 
-    // Defer non-critical micro-interactions and DOM observers to idle time
+    // Defer GSAP, Lenis smooth scrolling, micro-interactions, and observers to idle time
     // so the main thread is unblocked during critical hero paint and LCP
     const initDeferredInteractions = () => {
+      gsap.registerPlugin(ScrollTrigger);
+
+      lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      tickerCallback = (time: number) => {
+        if (lenis) lenis.raf(time * 1000);
+      };
+      gsap.ticker.add(tickerCallback);
+      gsap.ticker.lagSmoothing(0);
+
       observeDotBorderButtons();
       observeAnimations();
       initCalEmbed();
@@ -850,8 +857,8 @@ export default function AudimentLandingClient() {
 
     return () => {
       if (refreshTimer) clearTimeout(refreshTimer);
-      gsap.ticker.remove(tickerCallback);
-      lenis.destroy();
+      if (tickerCallback) gsap.ticker.remove(tickerCallback);
+      if (lenis) lenis.destroy();
     };
   }, []);
 

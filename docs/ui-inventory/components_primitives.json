@@ -1,0 +1,802 @@
+[
+  {
+    "id": "COMP-UI-001",
+    "name": "accordion",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/accordion.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-002",
+    "name": "alert-dialog",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/alert-dialog.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-003",
+    "name": "animated-group",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/animated-group.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-004",
+    "name": "avatar",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/avatar.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-005",
+    "name": "background-beams",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/background-beams.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-006",
+    "name": "badge",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/badge.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-007",
+    "name": "bento-grid",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/bento-grid.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-008",
+    "name": "button",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/button.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-009",
+    "name": "cal-button",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/cal-button.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-010",
+    "name": "calendar",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/calendar.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-011",
+    "name": "card",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/card.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-012",
+    "name": "checkbox",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/checkbox.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-013",
+    "name": "combobox",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/combobox.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-014",
+    "name": "dialog",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/dialog.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-015",
+    "name": "dropdown-menu",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/dropdown-menu.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-016",
+    "name": "faq-accordion",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/faq-accordion.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-017",
+    "name": "flow-button",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/flow-button.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-018",
+    "name": "hero-section-3",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/hero-section-3.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-019",
+    "name": "infinite-moving-cards",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/infinite-moving-cards.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-020",
+    "name": "infinite-slider",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/infinite-slider.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-021",
+    "name": "input-group",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/input-group.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-022",
+    "name": "input",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/input.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-023",
+    "name": "label",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/label.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-024",
+    "name": "lamp",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/lamp.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-025",
+    "name": "login-1",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/login-1.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-026",
+    "name": "modem-animated-footer",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/modem-animated-footer.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-027",
+    "name": "navbar",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/navbar.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-028",
+    "name": "popover",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/popover.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-029",
+    "name": "progress",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/progress.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-030",
+    "name": "progressive-blur",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/progressive-blur.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-031",
+    "name": "scroll-area",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/scroll-area.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-032",
+    "name": "select",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/select.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-033",
+    "name": "separator",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/separator.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-034",
+    "name": "sheet",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/sheet.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-035",
+    "name": "shimmer-text",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/shimmer-text.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-036",
+    "name": "sidebar",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/sidebar.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-037",
+    "name": "skeleton",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/skeleton.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-038",
+    "name": "solutions-hero",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/solutions-hero.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-039",
+    "name": "spotlight",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/spotlight.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-040",
+    "name": "sticky-scroll-cards-section",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/sticky-scroll-cards-section.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-041",
+    "name": "switch",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/switch.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-042",
+    "name": "table",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/table.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-043",
+    "name": "tabs",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/tabs.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-044",
+    "name": "testimonial-v2",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/testimonial-v2.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-045",
+    "name": "text-generate-effect",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/text-generate-effect.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-046",
+    "name": "text-hover-effect",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/text-hover-effect.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-047",
+    "name": "textarea",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/textarea.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-048",
+    "name": "timeline",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/timeline.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-049",
+    "name": "tooltip",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/tooltip.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-UI-050",
+    "name": "wobble-card",
+    "category": "Base UI Primitive",
+    "sourceFile": "src/components/ui/wobble-card.tsx",
+    "system": "src/components/ui",
+    "description": "Standard Radix / Base UI primitive component"
+  },
+  {
+    "id": "COMP-APP-001",
+    "name": "accordion",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/accordion.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-002",
+    "name": "alert-dialog",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/alert-dialog.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-003",
+    "name": "animated-group",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/animated-group.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-004",
+    "name": "avatar",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/avatar.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-005",
+    "name": "background-beams",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/background-beams.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-006",
+    "name": "badge",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/badge.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-007",
+    "name": "bento-grid",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/bento-grid.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-008",
+    "name": "button",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/button.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-009",
+    "name": "cal-button",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/cal-button.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-010",
+    "name": "calendar",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/calendar.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-011",
+    "name": "card",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/card.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-012",
+    "name": "checkbox",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/checkbox.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-013",
+    "name": "combobox",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/combobox.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-014",
+    "name": "dialog",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/dialog.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-015",
+    "name": "dropdown-menu",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/dropdown-menu.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-016",
+    "name": "faq-accordion",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/faq-accordion.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-017",
+    "name": "flow-button",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/flow-button.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-018",
+    "name": "hero-section-3",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/hero-section-3.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-019",
+    "name": "infinite-moving-cards",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/infinite-moving-cards.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-020",
+    "name": "infinite-slider",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/infinite-slider.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-021",
+    "name": "input-group",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/input-group.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-022",
+    "name": "input",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/input.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-023",
+    "name": "label",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/label.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-024",
+    "name": "lamp",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/lamp.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-025",
+    "name": "login-1",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/login-1.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-026",
+    "name": "modem-animated-footer",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/modem-animated-footer.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-027",
+    "name": "navbar",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/navbar.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-028",
+    "name": "popover",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/popover.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-029",
+    "name": "progress",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/progress.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-030",
+    "name": "progressive-blur",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/progressive-blur.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-031",
+    "name": "scroll-area",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/scroll-area.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-032",
+    "name": "select",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/select.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-033",
+    "name": "separator",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/separator.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-034",
+    "name": "sheet",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/sheet.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-035",
+    "name": "shimmer-text",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/shimmer-text.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-036",
+    "name": "sidebar",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/sidebar.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-037",
+    "name": "skeleton",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/skeleton.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-038",
+    "name": "solutions-hero",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/solutions-hero.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-039",
+    "name": "spotlight",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/spotlight.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-040",
+    "name": "sticky-scroll-cards-section",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/sticky-scroll-cards-section.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-041",
+    "name": "switch",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/switch.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-042",
+    "name": "table",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/table.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-043",
+    "name": "tabs",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/tabs.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-044",
+    "name": "testimonial-v2",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/testimonial-v2.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-045",
+    "name": "text-generate-effect",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/text-generate-effect.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-046",
+    "name": "text-hover-effect",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/text-hover-effect.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-047",
+    "name": "textarea",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/textarea.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-048",
+    "name": "timeline",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/timeline.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-049",
+    "name": "tooltip",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/tooltip.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  },
+  {
+    "id": "COMP-APP-050",
+    "name": "wobble-card",
+    "category": "App Custom UI Component",
+    "sourceFile": "src/components/app-ui/wobble-card.tsx",
+    "system": "src/components/app-ui",
+    "description": "Application-customized or alternate implementation"
+  }
+]

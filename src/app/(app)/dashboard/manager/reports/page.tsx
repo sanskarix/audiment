@@ -304,12 +304,12 @@ export default function ManagerReportsPage() {
                   >
                     <TableCell className="standard-table-cell">
                       <Link href={`/dashboard/manager/reports/${report.id}`} className="block">
-                        <span className="text-[14px] font-normal text-body group-hover:text-primary transition-colors">{report.templateTitle}</span>
+                        <span className="text-[13px] font-normal text-body group-hover:text-primary transition-colors">{report.templateTitle}</span>
                       </Link>
                     </TableCell>
                     <TableCell className="standard-table-cell">
                       <Link href={`/dashboard/manager/reports/${report.id}`} className="block">
-                        <span className="text-[14px] font-normal text-body">{report.locationName}</span>
+                        <span className="text-[13px] font-normal text-body">{report.locationName}</span>
                       </Link>
                     </TableCell>
                     <TableCell className="standard-table-cell">

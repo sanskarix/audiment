@@ -44,9 +44,18 @@ let calInitPromise: Promise<void> | null = null;
 
 async function doInitCal() {
   try {
-    const namespaces = ["aeo", "discovery-call", "erp-discovery-call", "discovery"];
+    // Only initialize namespaces actually used on this page
+    const calButtons = document.querySelectorAll('[data-cal-namespace]');
+    const namespacesOnPage = new Set<string>();
+    calButtons.forEach((btn) => {
+      const ns = btn.getAttribute('data-cal-namespace');
+      if (ns) namespacesOnPage.add(ns);
+    });
+
+    if (namespacesOnPage.size === 0) return;
+
     await Promise.all(
-      namespaces.map(async (ns) => {
+      Array.from(namespacesOnPage).map(async (ns) => {
         const cal = await getCalApi({ namespace: ns });
         if (cal) {
           cal("ui", { hideEventTypeDetails: false, layout: "month_view" });

@@ -413,14 +413,14 @@ export default function ManagerAuditsPage() {
           </DialogTrigger>
           <DialogContent className="sm:max-w-lg p-6">
             <DialogHeader>
-              <DialogTitle className="text-xl font-semibold text-heading">New audit</DialogTitle>
-              <DialogDescription className="text-sm text-muted-text">Schedule a new audit for your branches.</DialogDescription>
+              <DialogTitle className="font-semibold text-heading">New audit</DialogTitle>
+              <DialogDescription className="text-[13px] text-muted-text">Schedule a new audit for your branches.</DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="template" className="text-xs text-muted-foreground">Template</Label>
+                  <Label htmlFor="template" className="text-body font-normal">Template</Label>
                   <Select value={formData.templateId} onValueChange={(val) => updateFormField('templateId', val)}>
                     <SelectTrigger id="template" className="h-10 text-body bg-muted/5 border-border/50">
                       <SelectValue placeholder="Select template" />
@@ -434,7 +434,7 @@ export default function ManagerAuditsPage() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="location" className="text-xs text-muted-foreground">Location</Label>
+                  <Label htmlFor="location" className="text-body font-normal">Location</Label>
                   <Select value={formData.locationId} onValueChange={(val) => updateFormField('locationId', val)}>
                     <SelectTrigger id="location" className="h-10 text-body bg-muted/5 border-border/50">
                       <SelectValue placeholder="Select location" />
@@ -450,10 +450,10 @@ export default function ManagerAuditsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
-                  <Label className="text-xs text-muted-foreground">Scheduled date</Label>
+                  <Label className="text-body font-normal">Scheduled date</Label>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.scheduledDate && "text-muted-text")}>
+                      <Button variant="outline" className={cn("h-10 text-[13px] w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.scheduledDate && "text-muted-text")}>
                         <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
                         {formData.scheduledDate ? format(formData.scheduledDate, "PPP") : "Pick a date"}
                       </Button>
@@ -471,10 +471,10 @@ export default function ManagerAuditsPage() {
                   </Popover>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label className="text-xs text-muted-foreground">Deadline</Label>
+                  <Label className="text-body font-normal">Deadline</Label>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.deadline && "text-muted-text")}>
+                      <Button variant="outline" className={cn("h-10 text-[13px] w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5", !formData.deadline && "text-muted-text")}>
                         <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
                         {formData.deadline ? format(formData.deadline, "PPP") : "Pick a date"}
                       </Button>
@@ -487,7 +487,7 @@ export default function ManagerAuditsPage() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <Label htmlFor="recurring" className="text-xs text-muted-foreground">Frequency</Label>
+                <Label htmlFor="recurring" className="text-body font-normal">Frequency</Label>
                 <Select value={formData.recurring} onValueChange={(val: any) => updateFormField('recurring', val)}>
                   <SelectTrigger id="recurring" className="h-10 text-body bg-muted/5 border-border/50">
                     <SelectValue placeholder="Frequency" />
@@ -504,10 +504,10 @@ export default function ManagerAuditsPage() {
               {formData.recurring !== 'none' && (
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-2">
-                    <Label className="text-xs text-muted-foreground">Repeat until</Label>
+                    <Label className="text-body font-normal">Repeat until</Label>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className={cn("h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-background", !formData.repeatUntil && "text-muted-text")}>
+                        <Button variant="outline" className={cn("h-10 text-[13px] w-full justify-start text-left font-normal text-body border-border/50 bg-background", !formData.repeatUntil && "text-muted-text")}>
                           <CalendarIcon className="mr-2 h-3.5 w-3.5 opacity-40" />
                           {formData.repeatUntil ? format(formData.repeatUntil, "PPP") : "Pick a date"}
                         </Button>
@@ -521,14 +521,15 @@ export default function ManagerAuditsPage() {
               )}
 
               <div className="flex items-center justify-between py-2 border-t border-border/50">
-                <Label htmlFor="isSurprise" className="text-sm font-medium">Surprise audit</Label>
+                <Label htmlFor="isSurprise" className="text-body font-normal">Surprise audit</Label>
                 <Switch id="isSurprise" checked={formData.isSurprise} onCheckedChange={(val) => updateFormField('isSurprise', val)} />
               </div>
             </div>
 
             <DialogFooter className="gap-2">
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+              <Button variant="outline" className="h-10 text-[13px]" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
               <Button
+                className="h-10 text-[13px]"
                 onClick={handlePublish}
                 disabled={loading || !formData.templateId || !formData.locationId || !formData.scheduledDate || !formData.deadline}
               >
@@ -660,7 +661,7 @@ export default function ManagerAuditsPage() {
                     </TableCell>
                     <TableCell className="standard-table-cell">
                       <div className="flex items-center gap-2">
-                        <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
+                        <span className="text-[13px] font-normal text-body">{a.templateTitle}</span>
                         {a.recurring && a.recurring !== 'none' && (
                           <div className="h-5 rounded-full bg-primary/10 text-primary px-2 flex items-center gap-1 w-fit text-[11px] font-normal capitalize shrink-0">
                             <span>{a.recurring}</span>
@@ -674,7 +675,7 @@ export default function ManagerAuditsPage() {
                       )}
                     </TableCell>
                     <TableCell className="standard-table-cell">
-                      <span className="text-[14px] font-normal text-body">{a.locationName}</span>
+                      <span className="text-[13px] font-normal text-body">{a.locationName}</span>
                     </TableCell>
                     <TableCell className="standard-table-cell">
                       <span className="text-[13px] font-normal text-muted-text">
@@ -684,7 +685,7 @@ export default function ManagerAuditsPage() {
                     <TableCell className="standard-table-cell">{getStatusBadge(a.status)}</TableCell>
                     <TableCell className="standard-table-cell">
                       {a.assignedAuditorId ? (
-                        <span className="text-[14px] font-normal text-body">
+                        <span className="text-[13px] font-normal text-body">
                           {auditors.find(aud => aud.id === a.assignedAuditorId)?.name || 'Assigned'}
                         </span>
                       ) : (
@@ -716,7 +717,7 @@ export default function ManagerAuditsPage() {
                               <DialogTitle className="font-semibold text-heading">
                                 {a.assignedAuditorId ? 'Reassign auditor' : 'Assign auditor'}
                               </DialogTitle>
-                              <DialogDescription className="text-muted-text text-sm">
+                              <DialogDescription className="text-muted-text text-[13px]">
                                 Assigning <strong className="text-heading font-medium">{a.templateTitle}</strong> to {a.locationName}
                               </DialogDescription>
                             </DialogHeader>
@@ -736,8 +737,8 @@ export default function ManagerAuditsPage() {
                               </div>
                             </div>
                             <DialogFooter>
-                              <Button variant="outline" onClick={() => setOpen(false)} className="font-normal text-sm">Cancel</Button>
-                              <Button onClick={handleAssign} disabled={loading || !selectedAuditor} className="font-normal text-sm">
+                              <Button variant="outline" onClick={() => setOpen(false)} className="h-10 text-[13px]">Cancel</Button>
+                              <Button onClick={handleAssign} disabled={loading || !selectedAuditor} className="h-10 text-[13px]">
                                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Assign
                               </Button>
@@ -763,7 +764,7 @@ export default function ManagerAuditsPage() {
         <DialogContent className="sm:max-w-[450px]">
           <DialogHeader>
             <DialogTitle className="font-semibold text-heading">Bulk assign audits</DialogTitle>
-            <DialogDescription className="text-muted-text text-sm">
+            <DialogDescription className="text-muted-text text-[13px]">
               Assign <strong className="text-heading font-medium">{selectedAuditIds.length}</strong> audits to a single auditor.
             </DialogDescription>
           </DialogHeader>
@@ -783,8 +784,8 @@ export default function ManagerAuditsPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setBulkDialogOpen(false)} className="font-normal text-sm">Cancel</Button>
-            <Button onClick={handleBulkAssign} disabled={loading || !bulkAuditor} className="font-normal text-sm">
+            <Button variant="outline" onClick={() => setBulkDialogOpen(false)} className="h-10 text-[13px]">Cancel</Button>
+            <Button onClick={handleBulkAssign} disabled={loading || !bulkAuditor} className="h-10 text-[13px]">
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Bulk assign
             </Button>

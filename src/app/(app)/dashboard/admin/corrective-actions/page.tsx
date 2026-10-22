@@ -357,10 +357,10 @@ export default function AdminCorrectiveActionsPage() {
                   const deadlineDate = action.deadline?.toDate ? action.deadline.toDate() : new Date(action.deadline);
                   return (
                     <TableRow key={action.id} className="standard-table-row group">
-                      <TableCell className="py-4 px-4 text-[14px] font-normal text-heading align-middle">
+                      <TableCell className="py-4 px-4 text-[13px] font-normal text-heading align-middle">
                         {action.locationName}
                       </TableCell>
-                      <TableCell className="py-4 px-4 text-[14px] font-normal text-body leading-relaxed align-middle">
+                      <TableCell className="py-4 px-4 text-[13px] font-normal text-body leading-relaxed align-middle">
                         {action.questionText}
                       </TableCell>
                       <TableCell className="py-4 px-4 align-middle">
@@ -419,7 +419,7 @@ export default function AdminCorrectiveActionsPage() {
             <div className="flex flex-col gap-2">
               <Label className="text-body font-normal">Assigned Manager</Label>
               <Select value={selectedManager} onValueChange={setSelectedManager}>
-                <SelectTrigger className="h-11 border-border/50 bg-background text-body">
+                <SelectTrigger className="h-10 border-border/50 bg-background text-body">
                   <SelectValue placeholder="Select manager" />
                 </SelectTrigger>
                 <SelectContent>
@@ -436,7 +436,7 @@ export default function AdminCorrectiveActionsPage() {
                   <Button
                     variant="outline"
                     className={cn(
-                      "h-11 w-full justify-start text-left font-normal border-border/50 bg-background text-body",
+                      "h-10 text-[13px] w-full justify-start text-left font-normal border-border/50 bg-background text-body",
                       !selectedDate && "text-muted-text"
                     )}
                   >
@@ -456,8 +456,8 @@ export default function AdminCorrectiveActionsPage() {
             </div>
           </div>
           <DialogFooter className="pt-2">
-            <Button variant="outline" className="h-11 px-5 border-border/50 text-body active:scale-95 transition-all" onClick={() => setEditingCA(null)}>Cancel</Button>
-            <Button className="h-11 px-6 bg-primary shadow-lg shadow-primary/20 font-medium active:scale-95 transition-all" onClick={handleAssign} disabled={isUpdating || !selectedManager || !selectedDate}>
+            <Button variant="outline" className="h-10 px-5 border-border/50 text-[13px] text-body active:scale-95 transition-all" onClick={() => setEditingCA(null)}>Cancel</Button>
+            <Button className="h-10 px-6 bg-primary shadow-lg shadow-primary/20 text-[13px] font-medium active:scale-95 transition-all" onClick={handleAssign} disabled={isUpdating || !selectedManager || !selectedDate}>
               {isUpdating ? "Saving..." : "Save Changes"}
             </Button>
           </DialogFooter>
@@ -501,10 +501,10 @@ export default function AdminCorrectiveActionsPage() {
             )}
           </div>
           <DialogFooter className="flex flex-row justify-between w-full items-center gap-4 sm:justify-between pt-4 border-t border-border/40">
-            <Button variant="outline" size="sm" className="h-9 px-4 border-destructive/30 text-destructive hover:bg-destructive/10 text-[12px] font-medium active:scale-95 transition-all" onClick={handleReject}>Reject Proof</Button>
+            <Button variant="outline" size="sm" className="h-9 px-4 border-destructive/30 text-destructive hover:bg-destructive/10 text-[13px] font-medium active:scale-95 transition-all" onClick={handleReject}>Reject Proof</Button>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="h-9 px-4 border-border/50 text-[12px] font-medium active:scale-95 transition-all" onClick={() => setResolvingCA(null)}>Cancel</Button>
-              <Button size="sm" className="h-9 px-4 bg-success text-success-foreground hover:bg-success/90 text-[12px] font-medium shadow-lg shadow-success/20 active:scale-95 transition-all" onClick={handleResolve}>Resolve Task</Button>
+              <Button variant="outline" size="sm" className="h-9 px-4 border-border/50 text-[13px] font-medium active:scale-95 transition-all" onClick={() => setResolvingCA(null)}>Cancel</Button>
+              <Button size="sm" className="h-9 px-4 bg-success text-success-foreground hover:bg-success/90 text-[13px] font-medium shadow-lg shadow-success/20 active:scale-95 transition-all" onClick={handleResolve}>Resolve Task</Button>
             </div>
           </DialogFooter>
         </DialogContent>

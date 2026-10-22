@@ -465,8 +465,8 @@ export default function AuditorSettingsPage() {
             )}
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
-            <Button variant="outline" className="rounded-xl h-11" onClick={() => setCropModalOpen(false)} disabled={uploadingPhoto}>Cancel</Button>
-            <Button className="rounded-xl h-11" onClick={handleCropSave} disabled={uploadingPhoto}>
+            <Button variant="outline" className="rounded-xl h-10 text-[13px]" onClick={() => setCropModalOpen(false)} disabled={uploadingPhoto}>Cancel</Button>
+            <Button className="rounded-xl h-10 text-[13px]" onClick={handleCropSave} disabled={uploadingPhoto}>
                {uploadingPhoto ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                {uploadingPhoto ? 'Uploading...' : 'Save Image'}
             </Button>

@@ -37,8 +37,8 @@ export function initDotBorderButtons() {
 
 export function observeDotBorderButtons() {
   initDotBorderButtons();
-  const observer = new MutationObserver(() => {
-    initDotBorderButtons();
-  });
-  observer.observe(document.body, { childList: true, subtree: true });
+
+  // Run once more after a short delay to catch late-mounted client components,
+  // instead of a MutationObserver which causes forced reflow on every DOM change.
+  setTimeout(() => initDotBorderButtons(), 1500);
 }

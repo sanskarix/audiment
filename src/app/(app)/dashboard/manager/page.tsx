@@ -826,10 +826,10 @@ export default function ManagerDashboardPage() {
       <Dialog open={!!selectedCA} onOpenChange={(open) => !open && setSelectedCA(null)}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader className="p-6 pb-2">
-            <DialogTitle className="text-xl font-semibold text-heading flex items-center gap-2">
+            <DialogTitle className="font-semibold text-heading flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-success" /> Resolve Issue
             </DialogTitle>
-            <DialogDescription className="text-sm text-muted-text mt-1 leading-normal">
+            <DialogDescription className="text-[13px] text-muted-text mt-1 leading-normal">
               {selectedCA?.questionText} at <span className="font-medium text-heading">{selectedCA?.locationName}</span>
             </DialogDescription>
           </DialogHeader>
@@ -842,7 +842,7 @@ export default function ManagerDashboardPage() {
                 placeholder="Explain how the issue was fixed..."
                 value={resolutionNote}
                 onChange={(e) => setResolutionNote(e.target.value)}
-                className="min-h-[120px] text-sm bg-background border-border/50 focus-visible:ring-primary/20 text-body resize-none"
+                className="min-h-[120px] text-[13px] bg-background border-border/50 focus-visible:ring-primary/20 text-body resize-none"
               />
             </div>
 
@@ -889,11 +889,11 @@ export default function ManagerDashboardPage() {
           </div>
 
           <DialogFooter className="p-6 border-t border-border/40 bg-muted/5 gap-2">
-            <Button variant="outline" onClick={() => setSelectedCA(null)} className="h-9 px-4 font-medium text-xs text-muted-text">Cancel</Button>
+            <Button variant="outline" onClick={() => setSelectedCA(null)} className="h-10 px-4 font-medium text-[13px] text-muted-text">Cancel</Button>
             <Button
               onClick={handleResolve}
               disabled={isResolving || !resolutionNote}
-              className="h-9 px-4 font-medium text-xs bg-success hover:bg-success/90 text-white shadow-lg shadow-success/10 transition-all active:scale-95"
+              className="h-10 px-4 font-medium text-[13px] bg-success hover:bg-success/90 text-white shadow-lg shadow-success/10 transition-all active:scale-95"
             >
               {isResolving ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : <CheckCircle2 className="h-3 w-3 mr-2" />}
               Resolve

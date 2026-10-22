@@ -844,7 +844,7 @@ export default function AuditExecutionPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <Button onClick={() => {
+            <Button className="h-10 text-[13px]" onClick={() => {
               setShowInitialLocationPrompt(false);
               getLocation(); // Trigger browser permission prompt natively
             }}>
@@ -866,8 +866,8 @@ export default function AuditExecutionPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Close</AlertDialogCancel>
-            <Button onClick={async () => {
+            <AlertDialogCancel className="h-10 text-[13px]">Close</AlertDialogCancel>
+            <Button className="h-10 text-[13px]" onClick={async () => {
               setShowLocationErrorDialog(false);
               await getLocation(); // Fire the prompt before they try to submit again
             }}>
@@ -887,13 +887,13 @@ export default function AuditExecutionPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 sm:gap-0">
-            <AlertDialogCancel className="font-medium h-11">Continue Auditing</AlertDialogCancel>
+            <AlertDialogCancel className="font-medium h-10 text-[13px]">Continue Auditing</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 setShowExitDialog(false);
                 router.push('/dashboard/auditor');
               }}
-              className="bg-muted hover:bg-muted/80 text-muted-foreground h-11 font-medium border-0"
+              className="bg-muted hover:bg-muted/80 text-muted-foreground h-10 text-[13px] font-medium border-0"
             >
               Exit Without Saving
             </AlertDialogAction>
@@ -902,7 +902,7 @@ export default function AuditExecutionPage() {
                 setShowExitDialog(false);
                 saveProgress(false).then(() => router.push('/dashboard/auditor'));
               }}
-              className="bg-primary hover:bg-primary/90 h-11 font-medium"
+              className="bg-primary hover:bg-primary/90 h-10 text-[13px] font-medium"
             >
               Save and Leave
             </AlertDialogAction>

@@ -1,0 +1,11 @@
+/* Scoped overrides to harmonize Twenty UI tokens with Audiment's 14px design system */
+:root {
+  --twenty-font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --twenty-font-size-sm: 13px;
+  --twenty-font-size-md: 14px;
+}
+
+/* Ensure form controls match Audiment's standard 40px (h-10) height and 14px font scale */
+.twenty-input-root {
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}

@@ -235,28 +235,33 @@ export default function AdminReportsPage() {
                   >
                     <TableCell className="standard-table-cell">
                       <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
-                        <span className="text-[14px] font-normal text-body group-hover:text-primary transition-colors">{report.templateTitle}</span>
+                        <span className="text-[13px] font-normal text-body group-hover:text-primary transition-colors">{report.templateTitle}</span>
                       </Link>
                     </TableCell>
                     <TableCell className="standard-table-cell">
                       <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
-                        <span className="text-[14px] font-normal text-body">{report.locationName}</span>
+                        <span className="text-[13px] font-normal text-body">{report.locationName}</span>
                       </Link>
                     </TableCell>
                     <TableCell className="standard-table-cell">
                       <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
-                        <span className="text-[14px] font-normal text-body">{report.completedAt ? format(report.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</span>
+                        <span className="text-[13px] font-normal text-body">{report.completedAt ? format(report.completedAt.toDate(), 'MMM d, yyyy') : 'N/A'}</span>
                       </Link>
                     </TableCell>
                     <TableCell className="standard-table-cell text-right">
-                      <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
-                        <span className={cn(
-                          "text-[14px] font-medium tabular-nums",
-                          report.scorePercentage < 70 ? "text-destructive" : report.scorePercentage >= 90 ? "text-success" : "text-primary"
-                        )}>
-                          {report.scorePercentage}%
-                        </span>
-                      </Link>
+                      {(() => {
+                        const scoreVal = report.finalScore ?? report.scorePercentage ?? 0;
+                        return (
+                          <Link href={`/dashboard/admin/reports/${report.id}`} className="block">
+                            <span className={cn(
+                              "text-[13px] font-medium tabular-nums",
+                              scoreVal < 70 ? "text-destructive" : scoreVal >= 90 ? "text-success" : "text-primary"
+                            )}>
+                              {scoreVal}%
+                            </span>
+                          </Link>
+                        );
+                      })()}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-right">
                       <Link href={`/dashboard/admin/reports/${report.id}`} className="flex items-center justify-end text-muted-text/30 group-hover:text-primary group-hover:translate-x-1 transition-all">

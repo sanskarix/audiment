@@ -101,17 +101,10 @@ export function AudimentBlogPostClient({
   const [activeSection, setActiveSection] = useState<string>(toc[0]?.id || '');
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+    let lenis: Lenis | null = null;
+    let ticker: ((time: number) => void) | null = null;
 
-    const lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
-    lenis.on('scroll', ScrollTrigger.update);
-    const ticker = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(ticker);
-    gsap.ticker.lagSmoothing(0);
-
-    observeDotBorderButtons();
-    initCalEmbed();
-
+    // TOC active-section tracking is lightweight — init immediately
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 160;
       for (let i = toc.length - 1; i >= 0; i--) {
@@ -123,19 +116,35 @@ export function AudimentBlogPostClient({
         }
       }
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    const t1 = setTimeout(() => ScrollTrigger.refresh(), 300);
-    const onLoad = () => ScrollTrigger.refresh();
-    window.addEventListener('load', onLoad);
+    // Defer heavy Lenis/GSAP/ScrollTrigger init to idle time
+    // so the main thread is unblocked during FCP→TTI
+    const initHeavy = () => {
+      gsap.registerPlugin(ScrollTrigger);
+
+      lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      ticker = (time: number) => lenis!.raf(time * 1000);
+      gsap.ticker.add(ticker);
+      gsap.ticker.lagSmoothing(0);
+
+      observeDotBorderButtons();
+      initCalEmbed();
+
+      setTimeout(() => ScrollTrigger.refresh(), 300);
+    };
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(initHeavy, { timeout: 1500 });
+    } else {
+      setTimeout(initHeavy, 400);
+    }
 
     return () => {
-      clearTimeout(t1);
-      window.removeEventListener('load', onLoad);
       window.removeEventListener('scroll', handleScroll);
-      gsap.ticker.remove(ticker);
-      lenis.destroy();
+      if (ticker) gsap.ticker.remove(ticker);
+      if (lenis) lenis.destroy();
     };
   }, [toc]);
 

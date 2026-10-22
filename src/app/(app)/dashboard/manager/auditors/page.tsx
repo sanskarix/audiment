@@ -243,7 +243,7 @@ export default function AuditorsPage() {
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle className="font-semibold text-heading">Add Auditor</DialogTitle>
-                <DialogDescription className="text-muted-text text-sm">
+                <DialogDescription className="text-muted-text text-[13px]">
                   Add a new auditor to your team.
                 </DialogDescription>
               </DialogHeader>
@@ -274,10 +274,10 @@ export default function AuditorsPage() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-normal text-sm">Cancel</Button>
-                  <Button type="submit" disabled={isSubmitting} className="font-normal text-sm">
+                  <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} className="h-10 text-[13px]">Cancel</Button>
+                  <Button type="submit" disabled={isSubmitting} className="h-10 text-[13px]">
                     {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
-                    add auditor
+                    Add auditor
                   </Button>
                 </DialogFooter>
               </form>
@@ -396,7 +396,7 @@ export default function AuditorsPage() {
                       onClick={() => router.push(`/dashboard/manager/auditors/${auditor.id}`)}
                     >
                       <TableCell className="standard-table-cell pl-6">
-                        <span className="text-[14px] font-normal text-heading">{auditor.name}</span>
+                        <span className="text-[13px] font-normal text-heading">{auditor.name}</span>
                       </TableCell>
                       <TableCell className="standard-table-cell">
                         <span className="text-[13px] font-normal text-body">{auditor.email}</span>

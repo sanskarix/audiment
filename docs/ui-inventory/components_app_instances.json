@@ -1,0 +1,1152 @@
+[
+  {
+    "id": "FIL-001",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 52,
+    "snippet": "const [searchQuery, setSearchQuery] = useState('');",
+    "variant": "Text Search Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-002",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 53,
+    "snippet": "const [statusFilter, setStatusFilter] = useState('all');",
+    "variant": "Dropdown Status Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "BDG-001",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 267,
+    "snippet": "return <Badge variant=\"secondary\" className=\"badge-completed\">Completed</Badge>;",
+    "variant": "Completed Status",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "BDG-002",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 271,
+    "snippet": "return <Badge variant=\"secondary\" className=\"badge-danger\">Deadline hit</Badge>;",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "BDG-003",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 275,
+    "snippet": "return <Badge variant=\"secondary\" className=\"badge-in-progress\">In progress</Badge>;",
+    "variant": "In Progress",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "BDG-004",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 280,
+    "snippet": "return <Badge variant=\"secondary\" className=\"status-badge badge-muted\">Scheduled</Badge>;",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "BDG-005",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 282,
+    "snippet": "return <Badge variant=\"secondary\" className=\"badge-assigned\">Pending</Badge>;",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "BDG-006",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 285,
+    "snippet": "return <Badge variant=\"secondary\" className=\"status-badge badge-muted\">{audit.status}</Badge>;",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-003",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 290,
+    "snippet": "audit.templateTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||",
+    "variant": "Text Search Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-004",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 291,
+    "snippet": "audit.locationName?.toLowerCase().includes(searchQuery.toLowerCase()) ||",
+    "variant": "Text Search Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-005",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 292,
+    "snippet": "audit.status?.toLowerCase().includes(searchQuery.toLowerCase()) ||",
+    "variant": "Text Search Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-006",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 293,
+    "snippet": "audit.assignedManagerName?.toLowerCase().includes(searchQuery.toLowerCase());",
+    "variant": "Text Search Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-007",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 295,
+    "snippet": "const matchesStatus = statusFilter === 'all' || audit.status === statusFilter;",
+    "variant": "Dropdown Status Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "MOD-001",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 311,
+    "snippet": "<Dialog open={open} onOpenChange={(val) => {",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "MOD-002",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 346,
+    "snippet": "<DialogTrigger asChild>",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "BTN-001",
+    "name": "Button (Default / Custom)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 347,
+    "snippet": "<Button size=\"default\" className=\"shadow-lg shadow-primary/20 h-11 px-5 text-[14px] font-medium gap-2 active:scale-95 tr",
+    "variant": "Default / Custom",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "MOD-003",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 351,
+    "snippet": "<DialogContent className=\"sm:max-w-lg p-6\">",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "MOD-004",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 352,
+    "snippet": "<DialogHeader>",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "MOD-005",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 353,
+    "snippet": "<DialogTitle className=\"page-heading\">",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-008",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 363,
+    "snippet": "<SelectTrigger id=\"template\" className=\"!h-11 text-body bg-muted/5 border-border/50\">",
+    "variant": "Dropdown Status Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-009",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 398,
+    "snippet": "<SelectTrigger id=\"location\" className=\"!h-11 text-body bg-muted/5 border-border/50\">",
+    "variant": "Dropdown Status Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-010",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 414,
+    "snippet": "<SelectTrigger id=\"manager\" className=\"!h-11 text-body bg-muted/5 border-border/50\">",
+    "variant": "Dropdown Status Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-011",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 517,
+    "snippet": "<SelectTrigger id=\"recurring\" className=\"!h-11 text-body bg-muted/5 border-border/50\">",
+    "variant": "Dropdown Status Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-012",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 535,
+    "snippet": "<SelectTrigger className=\"!h-11 text-body bg-background border-border/50\">",
+    "variant": "Dropdown Status Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-013",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 555,
+    "snippet": "<SelectTrigger className=\"!h-11 text-body bg-background border-border/50\">",
+    "variant": "Dropdown Status Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "MOD-006",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 612,
+    "snippet": "<DialogFooter className=\"gap-2\">",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "BTN-002",
+    "name": "Button (Outline)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 613,
+    "snippet": "<Button variant=\"outline\" className=\"h-11 px-6 font-medium\" onClick={() => setOpen(false)}>Cancel</Button>",
+    "variant": "Outline",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "FIL-014",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 630,
+    "snippet": "<Search className=\"search-icon\" />",
+    "variant": "Text Search Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-015",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 634,
+    "snippet": "value={searchQuery}",
+    "variant": "Text Search Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-016",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 639,
+    "snippet": "{(statusFilter !== 'all' || locationFilter !== 'all' || managerFilter !== 'all') && (",
+    "variant": "Dropdown Status Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "BTN-003",
+    "name": "Button (Outline)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 651,
+    "snippet": "<Button variant=\"outline\" className={cn(",
+    "variant": "Outline",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BTN-004",
+    "name": "Button (Filter Toolbar Button (.filter-btn))",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 652,
+    "snippet": "\"filter-btn\",",
+    "variant": "Filter Toolbar Button (.filter-btn)",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "FIL-017",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 653,
+    "snippet": "(statusFilter !== 'all' || locationFilter !== 'all' || managerFilter !== 'all') && \"text-primary border-primary/20 bg-pr",
+    "variant": "Dropdown Status Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-018",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 655,
+    "snippet": "<Filter className=\"h-4 w-4\" />",
+    "variant": "Dropdown Status Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "FIL-019",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 661,
+    "snippet": "<DropdownMenuRadioGroup value={statusFilter} onValueChange={setStatusFilter}>",
+    "variant": "Dropdown Status Filter",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-001",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 692,
+    "snippet": "<Table>",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-002",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 693,
+    "snippet": "<TableHeader className=\"standard-table-header\">",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-003",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 694,
+    "snippet": "<TableRow className=\"hover:bg-transparent\">",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-004",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 695,
+    "snippet": "<TableHead className=\"standard-table-head\">Template</TableHead>",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-005",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 696,
+    "snippet": "<TableHead className=\"standard-table-head\">Location</TableHead>",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-006",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 697,
+    "snippet": "<TableHead className=\"standard-table-head\">Status</TableHead>",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-007",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 698,
+    "snippet": "<TableHead className=\"standard-table-head\">Deadline</TableHead>",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-008",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 699,
+    "snippet": "<TableHead className=\"standard-table-head\">Surprise</TableHead>",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-009",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 700,
+    "snippet": "<TableHead className=\"standard-table-head text-right\">Score</TableHead>",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-010",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 701,
+    "snippet": "<TableHead className=\"standard-table-head w-[50px]\"></TableHead>",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-011",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 704,
+    "snippet": "<TableBody>",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-012",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 706,
+    "snippet": "<TableRow>",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-013",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 707,
+    "snippet": "<TableCell colSpan={7} className=\"standard-table-cell text-center py-24\">",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-014",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 723,
+    "snippet": "<TableRow key={a.id} className={cn(",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "TBL-015",
+    "name": "Data Table Instance",
+    "category": "Tables and Data Grids",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 727,
+    "snippet": "<TableCell className=\"standard-table-cell\">",
+    "variant": "Audit List Table",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "BDG-007",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 749,
+    "snippet": "<Badge variant=\"secondary\" className=\"status-badge badge-warning\">",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/audits/page.tsx"
+  },
+  {
+    "id": "BTN-005",
+    "name": "Button (Ghost)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "lineNumber": 772,
+    "snippet": "<Button variant=\"ghost\" className=\"h-8 w-8 p-0\"><MoreHorizontal className=\"h-4 w-4 opacity-50\" /></Button>",
+    "variant": "Ghost",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "FIL-020",
+    "name": "Filter / Search Control",
+    "category": "Filters and Search Bars",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 75,
+    "snippet": "const [searchQuery, setSearchQuery] = useState('');",
+    "variant": "Text Search Filter",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "BDG-008",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 246,
+    "snippet": "<Badge variant=\"secondary\" className=\"h-7 rounded-full bg-destructive/10 text-destructive border-none px-4 text-[12px] f",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "CRD-001",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 256,
+    "snippet": "<p className=\"stat-label\">Overdue</p>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "CRD-002",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 260,
+    "snippet": "<div className=\"stat-number text-destructive\">",
+    "variant": "Hero KPI Stat Display",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "CRD-003",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 269,
+    "snippet": "<p className=\"stat-label\">Critical</p>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "CRD-004",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 273,
+    "snippet": "<div className=\"stat-number text-warning\">",
+    "variant": "Hero KPI Stat Display",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "CRD-005",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 282,
+    "snippet": "<p className=\"stat-label\">Upcoming</p>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "CRD-006",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 286,
+    "snippet": "<div className=\"stat-number text-heading\">48h</div>",
+    "variant": "Hero KPI Stat Display",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "BDG-009",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 367,
+    "snippet": "<Badge className={cn(",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "BDG-010",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 368,
+    "snippet": "\"status-badge-xs capitalize\",",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "BDG-011",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 369,
+    "snippet": "action.severity === 'critical' ? \"badge-danger\" : \"badge-warning\"",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "BDG-012",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 383,
+    "snippet": "<Badge variant=\"secondary\" className={cn(",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "BDG-013",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 384,
+    "snippet": "\"status-badge-sm capitalize\",",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "BDG-014",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 385,
+    "snippet": "action.status === 'in_progress' ? \"badge-primary\" :",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "BDG-015",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 386,
+    "snippet": "action.status === 'completed' || action.status === 'resolved' ? \"badge-success\" : \"badge-warning\"",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "BTN-006",
+    "name": "Button (Outline)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 393,
+    "snippet": "<Button variant=\"outline\" size=\"sm\" className=\"h-7 px-3 text-[11px] font-medium border-border/50 text-muted-foreground\" ",
+    "variant": "Outline",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BTN-007",
+    "name": "Button (Default / Custom)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 399,
+    "snippet": "<Button size=\"sm\" className=\"h-7 px-3 text-[11px] font-medium bg-success/10 text-success hover:bg-success/20 border-none",
+    "variant": "Default / Custom",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "MOD-007",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 412,
+    "snippet": "<Dialog open={!!editingCA} onOpenChange={(open) => !open && setEditingCA(null)}>",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "MOD-008",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 413,
+    "snippet": "<DialogContent className=\"sm:max-w-[425px]\">",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "MOD-009",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 414,
+    "snippet": "<DialogHeader>",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "MOD-010",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 415,
+    "snippet": "<DialogTitle className=\"font-semibold text-heading\">Update Assignment</DialogTitle>",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "MOD-011",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 416,
+    "snippet": "<DialogDescription className=\"body-text text-muted-text\">Assign a manager and set a new resolution deadline.</DialogDesc",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "MOD-012",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 458,
+    "snippet": "<DialogFooter className=\"pt-2\">",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "BTN-008",
+    "name": "Button (Outline)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 459,
+    "snippet": "<Button variant=\"outline\" className=\"h-11 px-5 border-border/50 text-body active:scale-95 transition-all\" onClick={() =>",
+    "variant": "Outline",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BTN-009",
+    "name": "Button (Default / Custom)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 460,
+    "snippet": "<Button className=\"h-11 px-6 bg-primary shadow-lg shadow-primary/20 font-medium active:scale-95 transition-all\" onClick=",
+    "variant": "Default / Custom",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "MOD-013",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 467,
+    "snippet": "<Dialog open={!!resolvingCA} onOpenChange={(open) => !open && setResolvingCA(null)}>",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "MOD-014",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 468,
+    "snippet": "<DialogContent className=\"sm:max-w-[500px]\">",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "MOD-015",
+    "name": "Dialog / Modal / Sheet",
+    "category": "Dialogs, Modals, and Drawers",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 469,
+    "snippet": "<DialogHeader>",
+    "variant": "Modal Dialog",
+    "context": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx"
+  },
+  {
+    "id": "BTN-010",
+    "name": "Button (Outline)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 504,
+    "snippet": "<Button variant=\"outline\" size=\"sm\" className=\"h-9 px-4 border-destructive/30 text-destructive hover:bg-destructive/10 t",
+    "variant": "Outline",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BTN-011",
+    "name": "Button (Outline)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 506,
+    "snippet": "<Button variant=\"outline\" size=\"sm\" className=\"h-9 px-4 border-border/50 text-[12px] font-medium active:scale-95 transit",
+    "variant": "Outline",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BTN-012",
+    "name": "Button (Default / Custom)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "lineNumber": 507,
+    "snippet": "<Button size=\"sm\" className=\"h-9 px-4 bg-success text-success-foreground hover:bg-success/90 text-[12px] font-medium sha",
+    "variant": "Default / Custom",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BTN-013",
+    "name": "Button (Outline)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/flashmob/[flashmobId]/page.tsx",
+    "lineNumber": 92,
+    "snippet": "<Button variant=\"outline\" className=\"h-11 px-6 gap-2 border-border/50\">",
+    "variant": "Outline",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BDG-016",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/flashmob/[flashmobId]/page.tsx",
+    "lineNumber": 192,
+    "snippet": "<Badge variant=\"outline\" className=\"bg-primary/5 text-primary border-primary/20 text-[10px] px-2 py-0.5 font-bold upperc",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/flashmob/[flashmobId]/page.tsx"
+  },
+  {
+    "id": "BTN-014",
+    "name": "Button (Default / Custom)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+    "lineNumber": 207,
+    "snippet": "<Button size=\"default\" className=\"shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2 active:scale-95 tr",
+    "variant": "Default / Custom",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BDG-017",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+    "lineNumber": 498,
+    "snippet": "<Badge className=\"bg-black/40 backdrop-blur-md border-white/20 text-white text-[10px] uppercase tracking-widest font-bol",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/flashmob/page.tsx"
+  },
+  {
+    "id": "BTN-015",
+    "name": "Button (Outline)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+    "lineNumber": 514,
+    "snippet": "<Button variant=\"outline\" size=\"icon\" className=\"h-9 w-9 border-border/50 hover:bg-primary/5 hover:text-primary transiti",
+    "variant": "Outline",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BDG-018",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+    "lineNumber": 547,
+    "snippet": "<Badge variant=\"outline\" className={cn(",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/flashmob/page.tsx"
+  },
+  {
+    "id": "BTN-016",
+    "name": "Button (Default / Custom)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+    "lineNumber": 44,
+    "snippet": "<Button",
+    "variant": "Default / Custom",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BDG-019",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+    "lineNumber": 53,
+    "snippet": "<Badge",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/locations/page.tsx"
+  },
+  {
+    "id": "BTN-017",
+    "name": "Button (Default / Custom)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+    "lineNumber": 330,
+    "snippet": "<Button size=\"default\" className=\"shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2 active:scale-95 tr",
+    "variant": "Default / Custom",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BTN-018",
+    "name": "Button (Default / Custom)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+    "lineNumber": 370,
+    "snippet": "<DialogFooter><Button type=\"submit\" disabled={loading} className=\"w-full font-medium\">{loading ? 'Adding...' : 'Add Loca",
+    "variant": "Default / Custom",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BTN-019",
+    "name": "Button (Ghost)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+    "lineNumber": 410,
+    "snippet": "<Button variant=\"ghost\" className=\"h-8 w-8 p-0\"><MoreHorizontal className=\"h-4 w-4\" /></Button>",
+    "variant": "Ghost",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BTN-020",
+    "name": "Button (Default / Custom)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+    "lineNumber": 476,
+    "snippet": "<DialogFooter><Button type=\"submit\" disabled={loading} className=\"w-full font-medium\">{loading ? 'Updating...' : 'Save C",
+    "variant": "Default / Custom",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "CRD-007",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+    "lineNumber": 267,
+    "snippet": "<p className=\"stat-label\">Audits</p>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/admin/page.tsx"
+  },
+  {
+    "id": "CRD-008",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+    "lineNumber": 271,
+    "snippet": "<div className=\"stat-number text-heading\">{stats?.totalAuditsThisMonth}</div>",
+    "variant": "Hero KPI Stat Display",
+    "context": "src/app/(app)/dashboard/admin/page.tsx"
+  },
+  {
+    "id": "CRD-009",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+    "lineNumber": 278,
+    "snippet": "<p className=\"stat-label\">Completion rate</p>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/admin/page.tsx"
+  },
+  {
+    "id": "CRD-010",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+    "lineNumber": 282,
+    "snippet": "<div className=\"stat-number text-success\">{stats?.completionRate}%</div>",
+    "variant": "Hero KPI Stat Display",
+    "context": "src/app/(app)/dashboard/admin/page.tsx"
+  },
+  {
+    "id": "CRD-011",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+    "lineNumber": 291,
+    "snippet": "<p className=\"stat-label\">Actions</p>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/admin/page.tsx"
+  },
+  {
+    "id": "CRD-012",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+    "lineNumber": 295,
+    "snippet": "<div className=\"stat-number text-destructive\">{stats?.openCorrectiveActions}</div>",
+    "variant": "Hero KPI Stat Display",
+    "context": "src/app/(app)/dashboard/admin/page.tsx"
+  },
+  {
+    "id": "BTN-021",
+    "name": "Button (Outline)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/reports/page.tsx",
+    "lineNumber": 178,
+    "snippet": "<Button variant=\"outline\" className={cn(",
+    "variant": "Outline",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "CRD-013",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+    "lineNumber": 485,
+    "snippet": "<CardTitle className=\"card-section-title\">Personal Information</CardTitle>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/admin/settings/page.tsx"
+  },
+  {
+    "id": "BTN-022",
+    "name": "Button (Default / Custom)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+    "lineNumber": 538,
+    "snippet": "<Button onClick={updateProfile} disabled={updating === 'profile'} className=\"h-10 px-4 gap-2 text-[13px]\">",
+    "variant": "Default / Custom",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "CRD-014",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+    "lineNumber": 547,
+    "snippet": "<CardTitle className=\"text-[15px] font-semibold\">Security</CardTitle>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/admin/settings/page.tsx"
+  },
+  {
+    "id": "CRD-015",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+    "lineNumber": 597,
+    "snippet": "<CardTitle className=\"text-[15px] font-semibold\">Organization Profile</CardTitle>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/admin/settings/page.tsx"
+  },
+  {
+    "id": "BTN-023",
+    "name": "Button (Default / Custom)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+    "lineNumber": 668,
+    "snippet": "<Button onClick={updateOrganization} disabled={updating === 'org'} className=\"h-10 px-4 gap-2 text-[13px]\">",
+    "variant": "Default / Custom",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "CRD-016",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+    "lineNumber": 680,
+    "snippet": "<CardTitle className=\"text-[15px] font-semibold\">Notification Preferences</CardTitle>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/admin/settings/page.tsx"
+  },
+  {
+    "id": "CRD-017",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+    "lineNumber": 723,
+    "snippet": "<CardTitle className=\"text-[15px] font-semibold text-destructive\">Danger Zone</CardTitle>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/admin/settings/page.tsx"
+  },
+  {
+    "id": "BTN-024",
+    "name": "Button (Ghost)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+    "lineNumber": 749,
+    "snippet": "<Button variant=\"ghost\" disabled className=\"text-destructive h-9 px-5 font-medium text-[13px]\">Delete</Button>",
+    "variant": "Ghost",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BTN-025",
+    "name": "Button (Outline)",
+    "category": "Buttons and Actions",
+    "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+    "lineNumber": 779,
+    "snippet": "<Button variant=\"outline\" onClick={() => setCropModalOpen(false)} disabled={uploadingPhoto}>Cancel</Button>",
+    "variant": "Outline",
+    "context": "Admin Portal"
+  },
+  {
+    "id": "BDG-020",
+    "name": "Status Badge / Tag",
+    "category": "Badges, Tags, and Status Indicators",
+    "sourceFile": "src/app/(app)/dashboard/admin/templates/page.tsx",
+    "lineNumber": 199,
+    "snippet": "<Badge variant=\"secondary\" className=\"ml-2 status-badge-xs badge-success\">",
+    "variant": "General Status Badge",
+    "context": "src/app/(app)/dashboard/admin/templates/page.tsx"
+  },
+  {
+    "id": "CRD-018",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+    "lineNumber": 180,
+    "snippet": "<p className=\"stat-label\">Total Audits</p>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/auditor/history/page.tsx"
+  },
+  {
+    "id": "CRD-019",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+    "lineNumber": 184,
+    "snippet": "<div className=\"stat-number text-heading\">{history.length}</div>",
+    "variant": "Hero KPI Stat Display",
+    "context": "src/app/(app)/dashboard/auditor/history/page.tsx"
+  },
+  {
+    "id": "CRD-020",
+    "name": "KPI / Metric Dashboard Card",
+    "category": "Cards and Dashboard Widgets",
+    "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+    "lineNumber": 191,
+    "snippet": "<p className=\"stat-label\">Avg. Performance</p>",
+    "variant": "Dashboard Widget Card",
+    "context": "src/app/(app)/dashboard/auditor/history/page.tsx"
+  }
+]

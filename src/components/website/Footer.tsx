@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { getCalAttributes, CalServiceType } from '@/lib/cal';
 
@@ -67,7 +68,7 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
             {/* Brand & Studio Meta */}
             <div className="footer-col footer-col--brand">
               <Link className="brand" href="/">
-                <img src="/logos/audiment-white.svg" alt="Audiment" className="brand-logo-img" />
+                <Image src="/logos/audiment-white.svg" alt="Audiment" className="brand-logo-img" width={120} height={28} loading="lazy" />
               </Link>
               <p className="footer-desc">
                 Audit management software and operational compliance engine for multi-location businesses.

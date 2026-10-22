@@ -254,7 +254,7 @@ export default function PerformancePage() {
                   audits.map((audit) => (
                     <TableRow key={audit.id} className="standard-table-row group h-[72px]">
                       <TableCell className="standard-table-cell pl-6">
-                        <span className="text-[14px] font-normal text-heading block">{audit.templateTitle}</span>
+                        <span className="text-[13px] font-normal text-heading block">{audit.templateTitle}</span>
 
                       </TableCell>
                       <TableCell className="standard-table-cell">

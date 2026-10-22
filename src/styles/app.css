@@ -183,11 +183,11 @@
 
   /* Global App Design System Rules */
   .page-heading {
-    @apply text-[22px] font-semibold tracking-tight text-heading leading-tight;
+    @apply text-[22px] font-semibold tracking-[-0.02em] text-heading leading-tight;
   }
 
   .section-heading {
-    @apply text-[15px] font-medium text-heading tracking-tight;
+    @apply text-[15px] font-medium text-heading tracking-[-0.015em];
   }
 
   .dark .section-heading {
@@ -195,7 +195,7 @@
   }
 
   .body-text {
-    @apply text-[12px] font-normal leading-relaxed;
+    @apply text-[12px] font-normal leading-relaxed tracking-[-0.005em];
     color: var(--color-body);
   }
 
@@ -204,7 +204,7 @@
   }
 
   .muted-label {
-    @apply text-[12px] font-medium text-muted-text/80;
+    @apply text-[12px] font-medium text-muted-text/80 tracking-[0.015em];
   }
 
   .page-padding {
@@ -260,7 +260,7 @@
   }
 
   .standard-table-cell {
-    @apply px-4 py-3 text-[14px] font-normal;
+    @apply px-4 py-3 text-[13px] font-normal;
     color: #45474d;
   }
 
@@ -280,13 +280,13 @@
   /* ── Status Badges ──────────────────────────────────────────────────── */
   /* Canonical status badge: use these instead of repeating the className  */
   .status-badge {
-    @apply inline-flex items-center h-6 px-2.5 rounded-full border-none text-[12px] font-medium;
+    @apply inline-flex items-center h-6 px-2.5 rounded-full border-none text-[12px] font-medium tracking-[0.02em];
   }
   .status-badge-sm {
-    @apply inline-flex items-center px-2 py-0.5 rounded-full border-none text-[11px] font-medium;
+    @apply inline-flex items-center px-2 py-0.5 rounded-full border-none text-[11px] font-medium tracking-[0.02em];
   }
   .status-badge-xs {
-    @apply inline-flex items-center px-2 py-0.5 rounded-full border-none text-[10px] font-semibold;
+    @apply inline-flex items-center px-2 py-0.5 rounded-full border-none text-[10px] font-semibold tracking-[0.025em];
   }
 
   /* Semantic colour modifiers for status badges */
@@ -297,30 +297,30 @@
   .badge-muted     { @apply bg-muted/30 text-muted-foreground; }
 
   /* Audit status badges */
-  .badge-completed   { @apply inline-flex items-center h-6 px-2.5 rounded-full border-none text-[12px] font-medium bg-success/10 text-success; }
-  .badge-in-progress { @apply inline-flex items-center h-6 px-2.5 rounded-full border-none text-[12px] font-medium bg-primary/10 text-primary; }
-  .badge-assigned    { @apply inline-flex items-center h-6 px-2.5 rounded-full border-none text-[12px] font-medium bg-warning/10 text-warning; }
-  .badge-missed      { @apply inline-flex items-center h-6 px-2.5 rounded-full border-none text-[12px] font-medium bg-destructive/10 text-destructive; }
-  .badge-overdue     { @apply inline-flex items-center h-6 px-2.5 rounded-full border-none text-[12px] font-medium bg-destructive/10 text-destructive; }
+  .badge-completed   { @apply inline-flex items-center h-6 px-2.5 rounded-full border-none text-[12px] font-medium bg-success/10 text-success tracking-[0.02em]; }
+  .badge-in-progress { @apply inline-flex items-center h-6 px-2.5 rounded-full border-none text-[12px] font-medium bg-primary/10 text-primary tracking-[0.02em]; }
+  .badge-assigned    { @apply inline-flex items-center h-6 px-2.5 rounded-full border-none text-[12px] font-medium bg-warning/10 text-warning tracking-[0.02em]; }
+  .badge-missed      { @apply inline-flex items-center h-6 px-2.5 rounded-full border-none text-[12px] font-medium bg-destructive/10 text-destructive tracking-[0.02em]; }
+  .badge-overdue     { @apply inline-flex items-center h-6 px-2.5 rounded-full border-none text-[12px] font-medium bg-destructive/10 text-destructive tracking-[0.02em]; }
 
   /* CAPA severity badges */
-  .badge-high        { @apply inline-flex items-center px-2 py-0.5 rounded-full border-none text-[10px] font-semibold bg-destructive/10 text-destructive; }
-  .badge-medium      { @apply inline-flex items-center px-2 py-0.5 rounded-full border-none text-[10px] font-semibold bg-warning/10 text-warning; }
-  .badge-low         { @apply inline-flex items-center px-2 py-0.5 rounded-full border-none text-[10px] font-semibold bg-primary/10 text-primary; }
+  .badge-high        { @apply inline-flex items-center px-2 py-0.5 rounded-full border-none text-[10px] font-semibold bg-destructive/10 text-destructive tracking-[0.025em]; }
+  .badge-medium      { @apply inline-flex items-center px-2 py-0.5 rounded-full border-none text-[10px] font-semibold bg-warning/10 text-warning tracking-[0.025em]; }
+  .badge-low         { @apply inline-flex items-center px-2 py-0.5 rounded-full border-none text-[10px] font-semibold bg-primary/10 text-primary tracking-[0.025em]; }
 
   /* ── Stat / KPI number ──────────────────────────────────────────────── */
-  /* Big hero number in dashboard metric cards */
+  /* Big hero number in dashboard metric cards with optical sizing & tabular numerals */
   .stat-number {
-    @apply text-[32px] font-semibold tracking-tight tabular-nums leading-tight;
+    @apply text-[32px] font-semibold tracking-[-0.03em] tabular-nums leading-tight;
   }
   .stat-number-lg {
-    @apply text-[36px] font-bold tracking-tight tabular-nums leading-none;
+    @apply text-[36px] font-bold tracking-[-0.035em] tabular-nums leading-none;
   }
   .stat-label {
-    @apply text-[11px] font-medium text-muted-foreground uppercase tracking-[0.07em];
+    @apply text-[11px] font-medium text-muted-foreground uppercase tracking-[0.08em];
   }
   .stat-sub {
-    @apply text-[12px] text-muted-foreground mt-2;
+    @apply text-[12px] text-muted-foreground mt-2 tracking-[-0.005em];
   }
 
   /* ── Card sub-header pattern ────────────────────────────────────────── */
@@ -348,7 +348,7 @@
 
   /* ── Filter / toolbar button ────────────────────────────────────────── */
   .filter-btn {
-    @apply h-11 px-4 gap-2 font-medium text-[13px] border-border/50 text-muted-foreground;
+    @apply h-11 px-4 gap-2 font-medium text-[13px] border-border/50 text-muted-foreground transition-all duration-150 active:scale-[0.98];
   }
 
   /* ── Segment control (pill tab switcher) ────────────────────────────── */
@@ -356,7 +356,7 @@
     @apply bg-muted/30 p-0.5 rounded-lg flex gap-1 border border-border/20;
   }
   .segment-btn {
-    @apply px-3 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer;
+    @apply px-3 py-1 rounded-md text-[11px] font-medium transition-all duration-150 cursor-pointer active:scale-[0.97];
   }
   .segment-btn-active {
     @apply bg-background text-heading shadow-sm;
@@ -386,17 +386,17 @@
 
   /* ── Icon button (replaces bare <button> for icon-only actions) ─────── */
   .icon-action-btn {
-    @apply h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors;
+    @apply h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-150 active:scale-90;
   }
 
   /* ── Avatar camera overlay button ───────────────────────────────────── */
   .avatar-camera-btn {
-    @apply absolute -bottom-1 -right-1 h-6 w-6 flex items-center justify-center bg-primary text-primary-foreground rounded-full shadow-md hover:bg-primary/90 transition-opacity cursor-pointer;
+    @apply absolute -bottom-1 -right-1 h-6 w-6 flex items-center justify-center bg-primary text-primary-foreground rounded-full shadow-md hover:bg-primary/90 transition-all duration-150 cursor-pointer active:scale-95;
   }
 
   /* ── Settings tab nav ───────────────────────────────────────────────── */
   .settings-nav-btn {
-    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all w-full text-left;
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all duration-150 w-full text-left active:scale-[0.985];
   }
   .settings-nav-btn-active {
     @apply bg-primary/5 text-primary;
@@ -410,8 +410,19 @@
 
   /* ── Form field label ───────────────────────────────────────────────── */
   .field-label {
-    @apply text-[11px] font-semibold text-muted-foreground uppercase tracking-wider;
+    @apply text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.04em];
   }
+
+  /* ── Apple Tactile Press Utilities ──────────────────────────────────── */
+  .apple-press {
+    @apply transition-transform duration-100 ease-out active:scale-[0.975] active:opacity-95;
+    will-change: transform;
+  }
+  .apple-press-subtle {
+    @apply transition-transform duration-100 ease-out active:scale-[0.985];
+    will-change: transform;
+  }
+
 }
 
 @theme inline {
@@ -458,4 +469,17 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ── Apple Accessibility & System Preference Harmony ────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .apple-press,
+  .apple-press-subtle,
+  .segment-btn,
+  .icon-action-btn,
+  .filter-btn,
+  .settings-nav-btn {
+    transform: none !important;
+    transition: none !important;
+  }
 }

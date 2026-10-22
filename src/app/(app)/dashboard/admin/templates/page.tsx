@@ -192,7 +192,7 @@ export default function AdminTemplatesPage() {
               ) : (
                 templates.map((t) => (
                   <TableRow key={t.id} className="standard-table-row group">
-                    <TableCell className="standard-table-cell font-normal text-sm text-heading">
+                    <TableCell className="standard-table-cell font-normal text-heading">
                       <div className="flex items-center">
                         {t.title}
                         {t.isFssaiDefault && (

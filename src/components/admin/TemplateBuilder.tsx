@@ -14,8 +14,19 @@ import { Card } from '@/components/app-ui/card';
 import { cn } from '@/lib/utils';
 import { Plus, ArrowUp, ArrowDown, Trash2, ArrowLeft, Save, AlertCircle, Camera, FileText } from 'lucide-react';
 import { Skeleton } from "@/components/app-ui/skeleton";
+import { Textarea } from '@/components/app-ui/textarea';
 import { useRouter } from 'next/navigation';
 import { useAuthSync } from '@/components/AuthProvider';
+
+const CATEGORY_OPTIONS = [
+  { value: 'hygiene', label: 'Hygiene' },
+  { value: 'sanitation', label: 'Sanitation' },
+  { value: 'safety', label: 'Safety' },
+  { value: 'operations', label: 'Operations' },
+  { value: 'inventory', label: 'Inventory' },
+  { value: 'general', label: 'General' },
+  { value: 'custom', label: 'Other' },
+];
 
 type QuestionType = 'yes_no' | 'rating';
 type SeverityType = 'low' | 'medium' | 'critical';
@@ -56,8 +67,8 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
         const tDoc = await getDoc(doc(db, 'auditTemplates', templateId));
         if (tDoc.exists()) {
           const data = tDoc.data();
-          setTitle(data.title);
-          setCategory(data.category);
+          setTitle(data.title || '');
+          setCategory(data.category ? String(data.category).toLowerCase().trim() : 'hygiene');
 
           const qsQuery = query(collection(db, `auditTemplates/${templateId}/questions`));
           const snapshot = await getDocs(qsQuery);
@@ -279,25 +290,32 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
             <div className="p-5 space-y-4">
               <div className="flex flex-col gap-2">
                 <Label htmlFor="title" className="field-label">Template Title</Label>
-                <Input
+                <Textarea
                   id="title"
                   value={title}
                   onChange={e => setTitle(e.target.value)}
                   placeholder="e.g. Kitchen Hygiene Audit"
-                  className="text-body"
+                  rows={2}
+                  className="text-body min-h-[52px] resize-none text-[13px] leading-snug"
                 />
               </div>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="category" className="field-label">Category</Label>
-                <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger id="category" className="text-body">
-                    <SelectValue />
+                <Select value={category || 'hygiene'} onValueChange={setCategory}>
+                  <SelectTrigger id="category" className="w-full text-body bg-background border-border/50">
+                    <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="hygiene" className="text-body">Hygiene</SelectItem>
-                    <SelectItem value="safety" className="text-body">Safety</SelectItem>
-                    <SelectItem value="inventory" className="text-body">Inventory</SelectItem>
-                    <SelectItem value="custom" className="text-body">Other</SelectItem>
+                    {CATEGORY_OPTIONS.map(opt => (
+                      <SelectItem key={opt.value} value={opt.value} className="text-body">
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                    {category && !CATEGORY_OPTIONS.some(opt => opt.value === category) && (
+                      <SelectItem value={category} className="text-body">
+                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                      </SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -383,34 +401,34 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                   className="standard-card rounded-xl overflow-hidden group border border-border/50 data-[state=open]:border-primary/20"
                 >
                   {/* ── Question Header (trigger) ── */}
-                  <AccordionTrigger className="hover:no-underline px-5 py-4 data-[state=open]:bg-muted/20 transition-colors">
-                    <div className="flex items-center gap-4 text-left w-full pr-4">
+                  <AccordionTrigger className="hover:no-underline px-5 py-3.5 data-[state=open]:bg-muted/15 transition-colors">
+                    <div className="flex items-center gap-3.5 text-left flex-1 min-w-0">
                       {/* Order number */}
-                      <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-muted/60 font-medium text-sm tabular-nums text-heading border border-border/50 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-muted/40 font-semibold text-[13px] tabular-nums text-heading border border-border/60 group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/20 transition-all">
                         {q.order}
                       </div>
                       {/* Question text */}
-                      <div className="flex-1 min-w-0">
-                        <span className="body-text text-[14px] font-normal text-heading block truncate group-hover:text-primary transition-colors">
+                      <div className="flex-1 min-w-0 pr-3">
+                        <p className="text-[14px] font-medium text-heading line-clamp-2 leading-snug group-hover:text-primary transition-colors">
                           {q.questionText || 'New question...'}
-                        </span>
+                        </p>
                       </div>
                       {/* Badges */}
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex items-center gap-2 shrink-0 ml-auto mr-1">
                         {q.requiresPhoto && (
-                          <span className="status-badge-xs badge-muted gap-1">
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-muted/40 text-muted-foreground border border-border/50">
                             <Camera className="h-3 w-3" />
                             Photo
                           </span>
                         )}
                         <span
                           className={cn(
-                            'status-badge-xs',
+                            'inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium border',
                             q.severity === 'critical'
-                              ? 'badge-danger'
+                              ? 'bg-destructive/10 text-destructive border-destructive/20'
                               : q.severity === 'medium'
-                                ? 'badge-warning'
-                                : 'badge-muted'
+                                ? 'bg-warning/10 text-warning border-warning/20'
+                                : 'bg-muted/40 text-muted-foreground border-border/50'
                           )}
                         >
                           {q.severity.charAt(0).toUpperCase() + q.severity.slice(1)}
@@ -426,11 +444,12 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                       {/* Question text */}
                       <div className="md:col-span-12 flex flex-col gap-2">
                         <Label className="field-label">Question</Label>
-                        <Input
+                        <Textarea
                           value={q.questionText}
                           onChange={e => updateQuestion(idx, 'questionText', e.target.value)}
                           placeholder="What needs to be checked?"
-                          className="text-body"
+                          rows={2}
+                          className="text-body min-h-[64px] resize-y text-[13px] leading-relaxed"
                         />
                       </div>
 
@@ -438,7 +457,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                       <div className="md:col-span-4 flex flex-col gap-2">
                         <Label className="field-label">Response Type</Label>
                         <Select value={q.questionType} onValueChange={val => updateQuestion(idx, 'questionType', val)}>
-                          <SelectTrigger className="text-body">
+                          <SelectTrigger className="w-full text-body bg-background border-border/50">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -452,7 +471,7 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                       <div className="md:col-span-4 flex flex-col gap-2">
                         <Label className="field-label">Severity</Label>
                         <Select value={q.severity} onValueChange={val => updateQuestion(idx, 'severity', val)}>
-                          <SelectTrigger className="text-body">
+                          <SelectTrigger className="w-full text-body bg-background border-border/50">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -464,10 +483,11 @@ export default function TemplateBuilder({ templateId }: TemplateBuilderProps) {
                       </div>
 
                       {/* Photo toggle */}
-                      <div className="md:col-span-4 flex items-end">
-                        <div className="flex items-center justify-between w-full h-11 px-4 rounded-md border border-border bg-background">
+                      <div className="md:col-span-4 flex flex-col gap-2">
+                        <Label className="field-label invisible md:visible">Photo Proof</Label>
+                        <div className="flex items-center justify-between w-full h-10 px-3.5 rounded-md border border-border/50 bg-background">
                           <Label
-                            className="field-label cursor-pointer"
+                            className="text-body font-normal text-[13px] cursor-pointer"
                             htmlFor={`photo-${idx}`}
                           >
                             Require Photo

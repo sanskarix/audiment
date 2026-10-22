@@ -252,7 +252,7 @@ export default function AuditorHistoryPage() {
                         <div className="bg-muted/10 p-4 rounded-full">
                           <History className="h-8 w-8 opacity-20" />
                         </div>
-                        <p className="text-[14px] font-medium opacity-40">{searchQuery ? "No matching history found." : "No audit history yet."}</p>
+                        <p className="text-[13px] font-medium opacity-40">{searchQuery ? "No matching history found." : "No audit history yet."}</p>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -262,7 +262,7 @@ export default function AuditorHistoryPage() {
                       <TableCell className="px-6 py-4">
                         <div className="flex flex-col gap-1">
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-heading text-[14px] leading-tight">{item.templateTitle}</span>
+                            <span className="font-medium text-heading text-[13px] leading-tight">{item.templateTitle}</span>
                             {item.type === 'flashmob' && (
                               <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[10px] h-4 px-1.5 font-bold uppercase">Flashmob</Badge>
                             )}

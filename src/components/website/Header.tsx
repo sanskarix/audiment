@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getCalAttributes, CalServiceType } from '@/lib/cal';
 
 export interface HeaderProps {
@@ -24,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
     <header className={mobileMenuOpen ? 'open' : ''}>
       <div className="header-inner">
         <Link className="brand" href="/" onClick={closeMenu}>
-          <img src="/logos/audiment.svg" alt="Audiment" className="brand-logo-img" />
+          <Image src="/logos/audiment.svg" alt="Audiment" className="brand-logo-img" width={120} height={28} priority />
         </Link>
 
         <nav>

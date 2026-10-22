@@ -1,0 +1,3993 @@
+[
+  {
+    "familyId": "FAM-SEARCH",
+    "familyName": "Search Input",
+    "description": "Search text input with leading/trailing icon and keyboard filter trigger",
+    "distinctVariantCount": 1,
+    "totalUsageCount": 13,
+    "variants": [
+      {
+        "variantId": "VAR-SEARCH-ICON-INPUT",
+        "name": "Standard Icon Search Bar",
+        "differencesFromFamily": "Search input with magnifying glass leading icon (pl-9/pl-8), rounded-lg border.",
+        "sampleItemId": "FIL-001",
+        "sampleSnippet": "const [searchQuery, setSearchQuery] = useState('');",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Input change, keyboard navigation, focus ring",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "FIL-001",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 52,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [searchQuery, setSearchQuery] = useState('');"
+          },
+          {
+            "rawInstanceId": "FIL-003",
+            "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+            "lineNumber": 75,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [searchQuery, setSearchQuery] = useState('');"
+          },
+          {
+            "rawInstanceId": "FIL-005",
+            "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+            "lineNumber": 82,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "placeholder=\"Search managers...\""
+          },
+          {
+            "rawInstanceId": "FIL-006",
+            "sourceFile": "src/app/(app)/dashboard/admin/reports/page.tsx",
+            "lineNumber": 62,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [searchQuery, setSearchQuery] = useState('');"
+          },
+          {
+            "rawInstanceId": "FIL-007",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 129,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [searchQuery, setSearchQuery] = useState('');"
+          },
+          {
+            "rawInstanceId": "FIL-008",
+            "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+            "lineNumber": 67,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [searchQuery, setSearchQuery] = useState('');"
+          },
+          {
+            "rawInstanceId": "FIL-009",
+            "sourceFile": "src/app/(app)/dashboard/auditor/page.tsx",
+            "lineNumber": 45,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [searchQuery, setSearchQuery] = useState('');"
+          },
+          {
+            "rawInstanceId": "FIL-010",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+            "lineNumber": 97,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [searchQuery, setSearchQuery] = useState('');"
+          },
+          {
+            "rawInstanceId": "FIL-012",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 66,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [searchQuery, setSearchQuery] = useState('');"
+          },
+          {
+            "rawInstanceId": "FIL-014",
+            "sourceFile": "src/app/(app)/dashboard/manager/reports/page.tsx",
+            "lineNumber": 57,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [searchQuery, setSearchQuery] = useState('');"
+          },
+          {
+            "rawInstanceId": "FIL-015",
+            "sourceFile": "src/app/(website)/blog/page.tsx",
+            "lineNumber": 35,
+            "portalContext": "Public Marketing",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const searchQuery = resolvedSearchParams?.q || '';"
+          },
+          {
+            "rawInstanceId": "FIL-016",
+            "sourceFile": "src/components/blog/AudimentBlogHubClient.tsx",
+            "lineNumber": 122,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [searchQuery, setSearchQuery] = useState(initialSearchQuery);"
+          },
+          {
+            "rawInstanceId": "FIL-017",
+            "sourceFile": "src/components/glossary/AudimentGlossaryClient.tsx",
+            "lineNumber": 209,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "placeholder=\"Search operational terms (e.g. FSSAI, Operational Drift, CAPA)...\""
+          }
+        ],
+        "usageCount": 13
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-FILTER",
+    "familyName": "Filter Dropdown & Toolbar Trigger",
+    "description": "Facet filter button and dropdown controls for table/list filtering",
+    "distinctVariantCount": 1,
+    "totalUsageCount": 4,
+    "variants": [
+      {
+        "variantId": "VAR-FILTER-SELECT-DROPDOWN",
+        "name": "Select Dropdown Filter",
+        "differencesFromFamily": "Dropdown menu trigger with chevron and status facet options.",
+        "sampleItemId": "FIL-002",
+        "sampleSnippet": "const [statusFilter, setStatusFilter] = useState('all');",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Input change, keyboard navigation, focus ring",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "FIL-002",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 53,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [statusFilter, setStatusFilter] = useState('all');"
+          },
+          {
+            "rawInstanceId": "FIL-004",
+            "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+            "lineNumber": 83,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [statusFilter, setStatusFilter] = useState<string>('all');"
+          },
+          {
+            "rawInstanceId": "FIL-011",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+            "lineNumber": 98,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [statusFilter, setStatusFilter] = useState('all');"
+          },
+          {
+            "rawInstanceId": "FIL-013",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 67,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "const [statusFilter, setStatusFilter] = useState('all');"
+          }
+        ],
+        "usageCount": 4
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-BTN",
+    "familyName": "Action Button",
+    "description": "Interactive button controls across primary, secondary, tactile, outline, and icon actions",
+    "distinctVariantCount": 5,
+    "totalUsageCount": 91,
+    "variants": [
+      {
+        "variantId": "VAR-BTN-PRIMARY",
+        "name": "Primary Solid Button",
+        "differencesFromFamily": "Solid bg-primary text-primary-foreground with rounded-lg radius.",
+        "sampleItemId": "BTN-001",
+        "sampleSnippet": "<Button size=\"default\" className=\"shadow-lg shadow-primary/20 h-11 px-5 text-[14px] font-medium gap-2 active:scale-95 transition-all\">",
+        "classes": "shadow-lg shadow-primary/20 h-11 px-5 text-[14px] font-medium gap-2 active:scale-95 transition-all",
+        "spec": {
+          "dimensions": "Height: 44px (h-11)",
+          "padding": "Inherited",
+          "gap": "8px (gap-2)",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Medium (500)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "shadow-lg"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Standard click action / trigger",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "BTN-001",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 347,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 44px (h-11)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button size=\"default\" className=\"shadow-lg shadow-primary/20 h-11 px-5 text-[14px] font-medium gap-2 active:scale-95 transition-all\">"
+          },
+          {
+            "rawInstanceId": "BTN-005",
+            "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+            "lineNumber": 399,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 28px (h-7)",
+            "paddingUsed": "px-3 (12px horizontal)",
+            "snippet": "<Button size=\"sm\" className=\"h-7 px-3 text-[11px] font-medium bg-success/10 text-success hover:bg-success/20 border-none\" onClick={() => setResolvingC"
+          },
+          {
+            "rawInstanceId": "BTN-007",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/[flashmobId]/page.tsx",
+            "lineNumber": 123,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-008",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+            "lineNumber": 207,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 44px (h-11)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button size=\"default\" className=\"shadow-lg shadow-primary/20 font-medium h-11 px-5 text-[14px] gap-2 active:scale-95 transition-all\">"
+          },
+          {
+            "rawInstanceId": "BTN-010",
+            "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+            "lineNumber": 44,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-012",
+            "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+            "lineNumber": 248,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-013",
+            "sourceFile": "src/app/(app)/dashboard/admin/reports/[auditId]/page.tsx",
+            "lineNumber": 154,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-015",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 459,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-019",
+            "sourceFile": "src/app/(app)/dashboard/admin/templates/page.tsx",
+            "lineNumber": 151,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-021",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 109,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-025",
+            "sourceFile": "src/app/(app)/dashboard/auditor/audits/[auditId]/page.tsx",
+            "lineNumber": 633,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-027",
+            "sourceFile": "src/app/(app)/dashboard/auditor/flashmob/page.tsx",
+            "lineNumber": 518,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-029",
+            "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+            "lineNumber": 303,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-031",
+            "sourceFile": "src/app/(app)/dashboard/auditor/page.tsx",
+            "lineNumber": 256,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Height: 36px (h-9)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button size=\"sm\" className=\"h-9 px-5 font-semibold text-[13px] shadow-lg shadow-primary/10 active:scale-95 transition-all\" asChild>"
+          },
+          {
+            "rawInstanceId": "BTN-032",
+            "sourceFile": "src/app/(app)/dashboard/auditor/settings/page.tsx",
+            "lineNumber": 294,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-034",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+            "lineNumber": 239,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Height: 44px (h-11)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button className=\"h-11 px-5 gap-2 font-medium text-xs shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all\">"
+          },
+          {
+            "rawInstanceId": "BTN-037",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 410,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Height: 44px (h-11)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button size=\"default\" className=\"shadow-lg shadow-primary/20 h-11 px-5 text-[14px] font-medium gap-2 active:scale-95 transition-all\">"
+          },
+          {
+            "rawInstanceId": "BTN-040",
+            "sourceFile": "src/app/(app)/dashboard/manager/calendar/page.tsx",
+            "lineNumber": 162,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-041",
+            "sourceFile": "src/app/(app)/dashboard/manager/corrective-actions/page.tsx",
+            "lineNumber": 390,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-043",
+            "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+            "lineNumber": 511,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-045",
+            "sourceFile": "src/app/(app)/dashboard/manager/reports/[auditId]/page.tsx",
+            "lineNumber": 153,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-047",
+            "sourceFile": "src/app/(app)/dashboard/manager/settings/page.tsx",
+            "lineNumber": 267,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-050",
+            "sourceFile": "src/app/(app)/login/page.tsx",
+            "lineNumber": 148,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Height: 44px (h-11)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button type=\"submit\" className=\"w-full h-11 text-[14px] font-normal transition-all hover:scale-[1.01]\" disabled={loading}>"
+          },
+          {
+            "rawInstanceId": "BTN-052",
+            "sourceFile": "src/app/(app)/test-recording/page.tsx",
+            "lineNumber": 113,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button onClick={startCamera} disabled={status !== 'idle'}>1. Start Camera</button>"
+          },
+          {
+            "rawInstanceId": "BTN-053",
+            "sourceFile": "src/components/ConsentBanner.tsx",
+            "lineNumber": 143,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-054",
+            "sourceFile": "src/components/DashboardShell.tsx",
+            "lineNumber": 252,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Height: 36px (h-9)",
+            "paddingUsed": "Inherited",
+            "snippet": "<button className=\"h-9 w-9 rounded-full border border-border/50 flex items-center justify-center bg-primary/10 shrink-0 overflow-hidden relative\">"
+          },
+          {
+            "rawInstanceId": "BTN-056",
+            "sourceFile": "src/components/NotificationBell.tsx",
+            "lineNumber": 241,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-057",
+            "sourceFile": "src/components/ThemeToggle.tsx",
+            "lineNumber": 23,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-058",
+            "sourceFile": "src/components/admin/TemplateBuilder.tsx",
+            "lineNumber": 222,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button onClick={() => router.back()} className=\"text-muted-text hover:text-primary transition-colors flex items-center\">"
+          },
+          {
+            "rawInstanceId": "BTN-059",
+            "sourceFile": "src/components/app-ui/alert-dialog.tsx",
+            "lineNumber": 158,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant={variant} size={size} asChild>"
+          },
+          {
+            "rawInstanceId": "BTN-060",
+            "sourceFile": "src/components/app-ui/cal-button.tsx",
+            "lineNumber": 42,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-061",
+            "sourceFile": "src/components/app-ui/calendar.tsx",
+            "lineNumber": 198,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-062",
+            "sourceFile": "src/components/app-ui/dialog.tsx",
+            "lineNumber": 72,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-064",
+            "sourceFile": "src/components/app-ui/faq-accordion.tsx",
+            "lineNumber": 56,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-065",
+            "sourceFile": "src/components/app-ui/hero-section-3.tsx",
+            "lineNumber": 75,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button asChild size=\"lg\" className=\"rounded-full px-8 h-12 text-base\">"
+          },
+          {
+            "rawInstanceId": "BTN-066",
+            "sourceFile": "src/components/app-ui/input-group.tsx",
+            "lineNumber": 94,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-067",
+            "sourceFile": "src/components/app-ui/login-1.tsx",
+            "lineNumber": 30,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-068",
+            "sourceFile": "src/components/app-ui/modem-animated-footer.tsx",
+            "lineNumber": 11,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-069",
+            "sourceFile": "src/components/app-ui/navbar.tsx",
+            "lineNumber": 44,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-070",
+            "sourceFile": "src/components/app-ui/sheet.tsx",
+            "lineNumber": 73,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-071",
+            "sourceFile": "src/components/app-ui/sidebar.tsx",
+            "lineNumber": 261,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-073",
+            "sourceFile": "src/components/blog/AudimentBlogHubClient.tsx",
+            "lineNumber": 250,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-074",
+            "sourceFile": "src/components/glossary/AudimentGlossaryClient.tsx",
+            "lineNumber": 226,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-075",
+            "sourceFile": "src/components/home/AudimentLandingClient.tsx",
+            "lineNumber": 716,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-076",
+            "sourceFile": "src/components/theme-toggle.tsx",
+            "lineNumber": 22,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-077",
+            "sourceFile": "src/components/ui/alert-dialog.tsx",
+            "lineNumber": 158,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant={variant} size={size} asChild>"
+          },
+          {
+            "rawInstanceId": "BTN-078",
+            "sourceFile": "src/components/ui/cal-button.tsx",
+            "lineNumber": 42,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-079",
+            "sourceFile": "src/components/ui/calendar.tsx",
+            "lineNumber": 198,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-080",
+            "sourceFile": "src/components/ui/dialog.tsx",
+            "lineNumber": 72,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-082",
+            "sourceFile": "src/components/ui/faq-accordion.tsx",
+            "lineNumber": 56,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-083",
+            "sourceFile": "src/components/ui/hero-section-3.tsx",
+            "lineNumber": 75,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button asChild size=\"lg\" className=\"rounded-full px-8 h-12 text-base\">"
+          },
+          {
+            "rawInstanceId": "BTN-084",
+            "sourceFile": "src/components/ui/input-group.tsx",
+            "lineNumber": 94,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-085",
+            "sourceFile": "src/components/ui/login-1.tsx",
+            "lineNumber": 30,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-086",
+            "sourceFile": "src/components/ui/modem-animated-footer.tsx",
+            "lineNumber": 11,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-087",
+            "sourceFile": "src/components/ui/navbar.tsx",
+            "lineNumber": 44,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          },
+          {
+            "rawInstanceId": "BTN-088",
+            "sourceFile": "src/components/ui/sheet.tsx",
+            "lineNumber": 73,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-089",
+            "sourceFile": "src/components/ui/sidebar.tsx",
+            "lineNumber": 261,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button"
+          },
+          {
+            "rawInstanceId": "BTN-091",
+            "sourceFile": "src/components/website/Header.tsx",
+            "lineNumber": 112,
+            "portalContext": "Public Marketing",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<button"
+          }
+        ],
+        "usageCount": 58
+      },
+      {
+        "variantId": "VAR-BTN-OUTLINE",
+        "name": "Outline Bordered Button",
+        "differencesFromFamily": "1px border-border, transparent background, text-foreground.",
+        "sampleItemId": "BTN-002",
+        "sampleSnippet": "<Button variant=\"outline\" className=\"h-11 px-6 font-medium\" onClick={() => setOpen(false)}>Cancel</Button>",
+        "classes": "h-11 px-6 font-medium",
+        "spec": {
+          "dimensions": "Height: 44px (h-11)",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Medium (500)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Standard click action / trigger",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "BTN-002",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 613,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 44px (h-11)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" className=\"h-11 px-6 font-medium\" onClick={() => setOpen(false)}>Cancel</Button>"
+          },
+          {
+            "rawInstanceId": "BTN-004",
+            "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+            "lineNumber": 393,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 28px (h-7)",
+            "paddingUsed": "px-3 (12px horizontal)",
+            "snippet": "<Button variant=\"outline\" size=\"sm\" className=\"h-7 px-3 text-[11px] font-medium border-border/50 text-muted-foreground\" onClick={() => {"
+          },
+          {
+            "rawInstanceId": "BTN-006",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/[flashmobId]/page.tsx",
+            "lineNumber": 92,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 44px (h-11)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" className=\"h-11 px-6 gap-2 border-border/50\">"
+          },
+          {
+            "rawInstanceId": "BTN-009",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+            "lineNumber": 514,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 36px (h-9)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" size=\"icon\" className=\"h-9 w-9 border-border/50 hover:bg-primary/5 hover:text-primary transition-colors\">"
+          },
+          {
+            "rawInstanceId": "BTN-014",
+            "sourceFile": "src/app/(app)/dashboard/admin/reports/page.tsx",
+            "lineNumber": 178,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" className={cn("
+          },
+          {
+            "rawInstanceId": "BTN-018",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 779,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" onClick={() => setCropModalOpen(false)} disabled={uploadingPhoto}>Cancel</Button>"
+          },
+          {
+            "rawInstanceId": "BTN-022",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 386,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" className={cn("
+          },
+          {
+            "rawInstanceId": "BTN-024",
+            "sourceFile": "src/app/(app)/dashboard/auditor/audits/[auditId]/page.tsx",
+            "lineNumber": 613,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" onClick={() => router.push('/dashboard/auditor')}>"
+          },
+          {
+            "rawInstanceId": "BTN-026",
+            "sourceFile": "src/app/(app)/dashboard/auditor/flashmob/page.tsx",
+            "lineNumber": 498,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Height: 44px (h-11)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" className=\"h-11 px-6 border-border/50\" onClick={() => router.push('/dashboard/auditor')}>"
+          },
+          {
+            "rawInstanceId": "BTN-033",
+            "sourceFile": "src/app/(app)/dashboard/auditor/settings/page.tsx",
+            "lineNumber": 468,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Height: 44px (h-11)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" className=\"rounded-xl h-11\" onClick={() => setCropModalOpen(false)} disabled={uploadingPhoto}>Cancel</Button>"
+          },
+          {
+            "rawInstanceId": "BTN-035",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+            "lineNumber": 277,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button type=\"button\" variant=\"outline\" onClick={() => setIsAddDialogOpen(false)} className=\"font-normal text-sm\">Cancel</Button>"
+          },
+          {
+            "rawInstanceId": "BTN-038",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 456,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" className={cn(\"h-10 w-full justify-start text-left font-normal text-body border-border/50 bg-muted/5\", !formData.scheduledDa"
+          },
+          {
+            "rawInstanceId": "BTN-042",
+            "sourceFile": "src/app/(app)/dashboard/manager/corrective-actions/page.tsx",
+            "lineNumber": 548,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" onClick={stopCamera}>Cancel</Button>"
+          },
+          {
+            "rawInstanceId": "BTN-044",
+            "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+            "lineNumber": 785,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Height: 28px (h-7)",
+            "paddingUsed": "px-3 (12px horizontal)",
+            "snippet": "<Button size=\"sm\" variant=\"outline\" className=\"h-7 px-3 text-[11px] font-medium border-border/50 text-muted-text hover:text-heading hover:border-borde"
+          },
+          {
+            "rawInstanceId": "BTN-046",
+            "sourceFile": "src/app/(app)/dashboard/manager/reports/page.tsx",
+            "lineNumber": 241,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" className={cn("
+          },
+          {
+            "rawInstanceId": "BTN-049",
+            "sourceFile": "src/app/(app)/dashboard/manager/settings/page.tsx",
+            "lineNumber": 427,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" onClick={() => setCropModalOpen(false)} disabled={uploadingPhoto}>Cancel</Button>"
+          },
+          {
+            "rawInstanceId": "BTN-063",
+            "sourceFile": "src/components/app-ui/dialog.tsx",
+            "lineNumber": 118,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\">Close</Button>"
+          },
+          {
+            "rawInstanceId": "BTN-072",
+            "sourceFile": "src/components/app-ui/solutions-hero.tsx",
+            "lineNumber": 77,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button asChild size=\"lg\" variant=\"outline\" className=\"rounded-full px-8 h-14 text-base border-neutral-200 text-neutral-600 hover:bg-neutral-50\">"
+          },
+          {
+            "rawInstanceId": "BTN-081",
+            "sourceFile": "src/components/ui/dialog.tsx",
+            "lineNumber": 118,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\">Close</Button>"
+          },
+          {
+            "rawInstanceId": "BTN-090",
+            "sourceFile": "src/components/ui/solutions-hero.tsx",
+            "lineNumber": 77,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button asChild size=\"lg\" variant=\"outline\" className=\"rounded-full px-8 h-14 text-base border-neutral-200 text-neutral-600 hover:bg-neutral-50\">"
+          }
+        ],
+        "usageCount": 20
+      },
+      {
+        "variantId": "VAR-BTN-GHOST",
+        "name": "Ghost Button",
+        "differencesFromFamily": "Borderless transparent background with subtle hover background tint.",
+        "sampleItemId": "BTN-003",
+        "sampleSnippet": "<Button variant=\"ghost\" className=\"h-8 w-8 p-0\"><MoreHorizontal className=\"h-4 w-4 opacity-50\" /></Button>",
+        "classes": "h-8 w-8 p-0",
+        "spec": {
+          "dimensions": "Height: 32px (h-8)",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Standard click action / trigger",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "BTN-003",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 772,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"ghost\" className=\"h-8 w-8 p-0\"><MoreHorizontal className=\"h-4 w-4 opacity-50\" /></Button>"
+          },
+          {
+            "rawInstanceId": "BTN-011",
+            "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+            "lineNumber": 410,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"ghost\" className=\"h-8 w-8 p-0\"><MoreHorizontal className=\"h-4 w-4\" /></Button>"
+          },
+          {
+            "rawInstanceId": "BTN-017",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 749,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 36px (h-9)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"ghost\" disabled className=\"text-destructive h-9 px-5 font-medium text-[13px]\">Delete</Button>"
+          },
+          {
+            "rawInstanceId": "BTN-020",
+            "sourceFile": "src/app/(app)/dashboard/admin/templates/page.tsx",
+            "lineNumber": 224,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"ghost\" className=\"h-8 w-8 p-0\"><MoreHorizontal className=\"h-4 w-4\" /></Button>"
+          },
+          {
+            "rawInstanceId": "BTN-023",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 470,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"ghost\" className=\"h-8 w-8 p-0\"><MoreHorizontal className=\"h-4 w-4\" /></Button>"
+          },
+          {
+            "rawInstanceId": "BTN-036",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+            "lineNumber": 417,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"ghost\" className=\"h-8 w-8 p-0 text-muted-text hover:text-primary transition-colors\">"
+          },
+          {
+            "rawInstanceId": "BTN-039",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 749,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button size=\"sm\" variant=\"ghost\" className=\"h-8 text-[11px] font-normal text-muted-text hover:text-primary\">"
+          },
+          {
+            "rawInstanceId": "BTN-051",
+            "sourceFile": "src/app/(app)/login/page.tsx",
+            "lineNumber": 159,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Height: 44px (h-11)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button type=\"button\" variant=\"ghost\" className=\"w-full h-11 text-[14px] font-normal\" onClick={() => { setResetMode(false); setError(''); setResetSucc"
+          },
+          {
+            "rawInstanceId": "BTN-055",
+            "sourceFile": "src/components/NotificationBell.tsx",
+            "lineNumber": 198,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Height: 28px (h-7)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"ghost\" size=\"sm\" onClick={markAllAsRead} className=\"h-7 text-[10px]  font-medium text-primary hover:text-primary hover:bg-primary/10 "
+          }
+        ],
+        "usageCount": 9
+      },
+      {
+        "variantId": "VAR-BTN-SETTINGS-NAV",
+        "name": "Settings Navigation Item Button (.settings-nav-btn)",
+        "differencesFromFamily": "Full-width left-aligned text-[13px] navigation item with hover/active state.",
+        "sampleItemId": "BTN-016",
+        "sampleSnippet": "'settings-nav-btn',",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Standard click action / trigger",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "BTN-016",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 463,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "'settings-nav-btn',"
+          },
+          {
+            "rawInstanceId": "BTN-048",
+            "sourceFile": "src/app/(app)/dashboard/manager/settings/page.tsx",
+            "lineNumber": 271,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "'settings-nav-btn',"
+          }
+        ],
+        "usageCount": 2
+      },
+      {
+        "variantId": "VAR-BTN-FILTER-TOOLBAR",
+        "name": "Filter Toolbar Button (.filter-btn)",
+        "differencesFromFamily": "Explicit h-11 height, text-[13px], border-border/50, active:scale-[0.98].",
+        "sampleItemId": "BTN-028",
+        "sampleSnippet": "<Button variant=\"outline\" className=\"filter-btn\">",
+        "classes": "filter-btn",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Standard click action / trigger",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "BTN-028",
+            "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+            "lineNumber": 222,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" className=\"filter-btn\">"
+          },
+          {
+            "rawInstanceId": "BTN-030",
+            "sourceFile": "src/app/(app)/dashboard/auditor/page.tsx",
+            "lineNumber": 178,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Button variant=\"outline\" className=\"filter-btn shrink-0 hidden md:flex\">"
+          }
+        ],
+        "usageCount": 2
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-TABLE",
+    "familyName": "Data Table & Grid",
+    "description": "Tabular data display components with headers, rows, and action cells",
+    "distinctVariantCount": 3,
+    "totalUsageCount": 16,
+    "variants": [
+      {
+        "variantId": "VAR-TBL-STANDARD",
+        "name": "Standard Entity Data Table",
+        "differencesFromFamily": "Striped/bordered table grid with header row and status pill column.",
+        "sampleItemId": "TBL-001",
+        "sampleSnippet": "<Table>",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "TBL-001",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 692,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Table>"
+          },
+          {
+            "rawInstanceId": "TBL-002",
+            "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+            "lineNumber": 321,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Table>"
+          },
+          {
+            "rawInstanceId": "TBL-003",
+            "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+            "lineNumber": 379,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Table>"
+          },
+          {
+            "rawInstanceId": "TBL-005",
+            "sourceFile": "src/app/(app)/dashboard/admin/templates/page.tsx",
+            "lineNumber": 172,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Table>"
+          },
+          {
+            "rawInstanceId": "TBL-007",
+            "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+            "lineNumber": 237,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Table>"
+          },
+          {
+            "rawInstanceId": "TBL-008",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/[id]/page.tsx",
+            "lineNumber": 237,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Table>"
+          },
+          {
+            "rawInstanceId": "TBL-009",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+            "lineNumber": 375,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Table>"
+          },
+          {
+            "rawInstanceId": "TBL-010",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 611,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Table>"
+          },
+          {
+            "rawInstanceId": "TBL-012",
+            "sourceFile": "src/app/(website)/blog/[slug]/page.tsx",
+            "lineNumber": 220,
+            "portalContext": "Public Marketing",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<table className=\"aud-prose-table\" {...props} />"
+          },
+          {
+            "rawInstanceId": "TBL-013",
+            "sourceFile": "src/components/app-ui/table.tsx",
+            "lineNumber": 13,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<table"
+          },
+          {
+            "rawInstanceId": "TBL-014",
+            "sourceFile": "src/components/compare/AudimentCompareDetailClient.tsx",
+            "lineNumber": 293,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<table style={{ width: '100%', minWidth: '760px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14.5px' }}>"
+          },
+          {
+            "rawInstanceId": "TBL-015",
+            "sourceFile": "src/components/solutions/AudimentSolutionDetailClient.tsx",
+            "lineNumber": 336,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<table className=\"aud-checklist-clean-table\">"
+          },
+          {
+            "rawInstanceId": "TBL-016",
+            "sourceFile": "src/components/ui/table.tsx",
+            "lineNumber": 13,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<table"
+          }
+        ],
+        "usageCount": 13
+      },
+      {
+        "variantId": "VAR-TBL-REPORT",
+        "name": "Report Summary Data Table",
+        "differencesFromFamily": "Custom scoring columns, compliance percentage badges, and date filters.",
+        "sampleItemId": "TBL-004",
+        "sampleSnippet": "<Table>",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "TBL-004",
+            "sourceFile": "src/app/(app)/dashboard/admin/reports/page.tsx",
+            "lineNumber": 208,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Table>"
+          },
+          {
+            "rawInstanceId": "TBL-011",
+            "sourceFile": "src/app/(app)/dashboard/manager/reports/page.tsx",
+            "lineNumber": 269,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Table>"
+          }
+        ],
+        "usageCount": 2
+      },
+      {
+        "variantId": "VAR-TBL-USERS",
+        "name": "User Management Directory Table",
+        "differencesFromFamily": "Avatar indicators, role badges, and row-level context action buttons.",
+        "sampleItemId": "TBL-006",
+        "sampleSnippet": "<Table>",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "TBL-006",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 420,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Table>"
+          }
+        ],
+        "usageCount": 1
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-BADGE",
+    "familyName": "Status Badge & Tag",
+    "description": "Pill badges denoting audit statuses, severities, and record states",
+    "distinctVariantCount": 3,
+    "totalUsageCount": 19,
+    "variants": [
+      {
+        "variantId": "VAR-BDG-COMPLETED",
+        "name": "Audit Completed Badge (.badge-completed)",
+        "differencesFromFamily": "h-6 px-2.5 rounded-full bg-success/10 text-success text-[12px] tracking-[0.02em].",
+        "sampleItemId": "BDG-001",
+        "sampleSnippet": "return <Badge variant=\"secondary\" className=\"badge-completed\">Completed</Badge>;",
+        "classes": "badge-completed",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "BDG-001",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 267,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "return <Badge variant=\"secondary\" className=\"badge-completed\">Completed</Badge>;"
+          }
+        ],
+        "usageCount": 1
+      },
+      {
+        "variantId": "VAR-BDG-INFORMATIONAL",
+        "name": "Generic Informational Tag",
+        "differencesFromFamily": "Muted background tag with text-[10px] label.",
+        "sampleItemId": "BDG-002",
+        "sampleSnippet": "return <Badge variant=\"secondary\" className=\"badge-danger\">Deadline hit</Badge>;",
+        "classes": "badge-danger",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "BDG-002",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 271,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "return <Badge variant=\"secondary\" className=\"badge-danger\">Deadline hit</Badge>;"
+          },
+          {
+            "rawInstanceId": "BDG-004",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 282,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "return <Badge variant=\"secondary\" className=\"badge-assigned\">Pending</Badge>;"
+          },
+          {
+            "rawInstanceId": "BDG-005",
+            "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+            "lineNumber": 246,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 28px (h-7)",
+            "paddingUsed": "px-4 (16px horizontal)",
+            "snippet": "<Badge variant=\"secondary\" className=\"h-7 rounded-full bg-destructive/10 text-destructive border-none px-4 text-[12px] font-medium animate-pulse\">"
+          },
+          {
+            "rawInstanceId": "BDG-006",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/[flashmobId]/page.tsx",
+            "lineNumber": 192,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "px-2 (8px horizontal)",
+            "snippet": "<Badge variant=\"outline\" className=\"bg-primary/5 text-primary border-primary/20 text-[10px] px-2 py-0.5 font-bold uppercase tracking-wider\">"
+          },
+          {
+            "rawInstanceId": "BDG-007",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+            "lineNumber": 498,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Badge className=\"bg-black/40 backdrop-blur-md border-white/20 text-white text-[10px] uppercase tracking-widest font-bold py-1\">"
+          },
+          {
+            "rawInstanceId": "BDG-008",
+            "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+            "lineNumber": 53,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Badge"
+          },
+          {
+            "rawInstanceId": "BDG-009",
+            "sourceFile": "src/app/(app)/dashboard/admin/templates/page.tsx",
+            "lineNumber": 199,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Badge variant=\"secondary\" className=\"ml-2 status-badge-xs badge-success\">"
+          },
+          {
+            "rawInstanceId": "BDG-010",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 393,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Badge variant=\"secondary\" className=\"ml-1 px-1 py-0 h-4 text-[10px] rounded-sm\">1</Badge>"
+          },
+          {
+            "rawInstanceId": "BDG-011",
+            "sourceFile": "src/app/(app)/dashboard/auditor/audits/[auditId]/page.tsx",
+            "lineNumber": 675,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Badge"
+          },
+          {
+            "rawInstanceId": "BDG-012",
+            "sourceFile": "src/app/(app)/dashboard/auditor/flashmob/page.tsx",
+            "lineNumber": 532,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Badge className=\"ml-2 bg-primary text-white border-none py-0 px-1.5 h-4 min-w-[16px] flex items-center justify-center text-[9px] font-bold\">"
+          },
+          {
+            "rawInstanceId": "BDG-013",
+            "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+            "lineNumber": 267,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Badge variant=\"outline\" className=\"bg-primary/5 text-primary border-primary/20 text-[10px] h-4 px-1.5 font-bold uppercase\">Flashmob</Badge>"
+          },
+          {
+            "rawInstanceId": "BDG-014",
+            "sourceFile": "src/app/(app)/dashboard/auditor/page.tsx",
+            "lineNumber": 163,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Badge variant=\"secondary\" className=\"status-badge-sm badge-primary tabular-nums\">"
+          },
+          {
+            "rawInstanceId": "BDG-015",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/[id]/page.tsx",
+            "lineNumber": 134,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "return <Badge variant=\"secondary\" className=\"status-badge-sm badge-warning\">Assigned</Badge>;"
+          },
+          {
+            "rawInstanceId": "BDG-016",
+            "sourceFile": "src/app/(app)/dashboard/manager/corrective-actions/page.tsx",
+            "lineNumber": 354,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "px-2 (8px horizontal)",
+            "snippet": "<Badge className=\"bg-amber-500/10 text-amber-600 border-none px-2 py-0.5 rounded-full text-[10px] font-semibold\">In progress</Badge>"
+          },
+          {
+            "rawInstanceId": "BDG-017",
+            "sourceFile": "src/app/(app)/dashboard/manager/reports/page.tsx",
+            "lineNumber": 322,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Badge className={cn("
+          },
+          {
+            "rawInstanceId": "BDG-018",
+            "sourceFile": "src/components/NotificationBell.tsx",
+            "lineNumber": 182,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Badge className=\"h-4 w-4 p-0 flex items-center justify-center bg-primary text-[10px] font-medium border-2 border-background animate-in zoom-in durati"
+          },
+          {
+            "rawInstanceId": "BDG-019",
+            "sourceFile": "src/components/admin/TemplateBuilder.tsx",
+            "lineNumber": 337,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<span className=\"status-badge-xs badge-muted\">"
+          }
+        ],
+        "usageCount": 17
+      },
+      {
+        "variantId": "VAR-BDG-IN-PROGRESS",
+        "name": "In Progress Badge (.badge-in-progress)",
+        "differencesFromFamily": "h-6 px-2.5 rounded-full bg-primary/10 text-primary text-[12px] tracking-[0.02em].",
+        "sampleItemId": "BDG-003",
+        "sampleSnippet": "return <Badge variant=\"secondary\" className=\"badge-in-progress\">In progress</Badge>;",
+        "classes": "badge-in-progress",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "BDG-003",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 275,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "return <Badge variant=\"secondary\" className=\"badge-in-progress\">In progress</Badge>;"
+          }
+        ],
+        "usageCount": 1
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-INPUT",
+    "familyName": "Text Input & Form Field",
+    "description": "Single-line and multi-line form text inputs and textareas",
+    "distinctVariantCount": 2,
+    "totalUsageCount": 42,
+    "variants": [
+      {
+        "variantId": "VAR-INP-TEXT",
+        "name": "Standard Text Input Field",
+        "differencesFromFamily": "Single-line input with border-border/60 and focus ring.",
+        "sampleItemId": "INP-001",
+        "sampleSnippet": "<Input",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Input change, keyboard navigation, focus ring",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "INP-001",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 631,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-002",
+            "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+            "lineNumber": 295,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-003",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+            "lineNumber": 423,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-004",
+            "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+            "lineNumber": 80,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<input"
+          },
+          {
+            "rawInstanceId": "INP-005",
+            "sourceFile": "src/app/(app)/dashboard/admin/reports/page.tsx",
+            "lineNumber": 167,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-006",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 504,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<input type=\"file\" accept=\"image/*\" ref={userPhotoInputRef} className=\"hidden\" onChange={e => handleFileSelect(e, 'user')} />"
+          },
+          {
+            "rawInstanceId": "INP-007",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 532,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 40px (h-10)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input type=\"email\" value={profileForm.email} onChange={e => setProfileForm(p => ({ ...p, email: e.target.value }))} className=\"h-10 pl-9\" />"
+          },
+          {
+            "rawInstanceId": "INP-008",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 554,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 40px (h-10)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input type=\"password\" value={passwordForm.currentPassword} onChange={e => setPasswordForm(p => ({ ...p, currentPassword: e.target.value }))} classNam"
+          },
+          {
+            "rawInstanceId": "INP-009",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 30,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-011",
+            "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+            "lineNumber": 215,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-012",
+            "sourceFile": "src/app/(app)/dashboard/auditor/page.tsx",
+            "lineNumber": 171,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-013",
+            "sourceFile": "src/app/(app)/dashboard/auditor/settings/page.tsx",
+            "lineNumber": 301,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<input"
+          },
+          {
+            "rawInstanceId": "INP-014",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+            "lineNumber": 254,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-015",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 547,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-017",
+            "sourceFile": "src/app/(app)/dashboard/manager/corrective-actions/page.tsx",
+            "lineNumber": 569,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<input"
+          },
+          {
+            "rawInstanceId": "INP-019",
+            "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+            "lineNumber": 868,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<input type=\"file\" className=\"hidden\" ref={fileInputRef} accept=\"image/*\" onChange={handleFileUpload} />"
+          },
+          {
+            "rawInstanceId": "INP-020",
+            "sourceFile": "src/app/(app)/dashboard/manager/reports/page.tsx",
+            "lineNumber": 231,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-021",
+            "sourceFile": "src/app/(app)/dashboard/manager/settings/page.tsx",
+            "lineNumber": 310,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<input type=\"file\" accept=\"image/*\" ref={userPhotoInputRef} className=\"hidden\" onChange={handleFileSelect} />"
+          },
+          {
+            "rawInstanceId": "INP-022",
+            "sourceFile": "src/app/(app)/dashboard/manager/settings/page.tsx",
+            "lineNumber": 338,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Height: 40px (h-10)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input type=\"email\" value={profileForm.email} onChange={e => setProfileForm(p => ({ ...p, email: e.target.value }))} className=\"h-10 pl-9\" />"
+          },
+          {
+            "rawInstanceId": "INP-023",
+            "sourceFile": "src/app/(app)/dashboard/manager/settings/page.tsx",
+            "lineNumber": 364,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Height: 40px (h-10)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input type=\"password\" value={passwordForm.currentPassword} onChange={e => setPasswordForm(p => ({ ...p, currentPassword: e.target.value }))} classNam"
+          },
+          {
+            "rawInstanceId": "INP-024",
+            "sourceFile": "src/app/(app)/login/page.tsx",
+            "lineNumber": 104,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-025",
+            "sourceFile": "src/components/ConsentBanner.tsx",
+            "lineNumber": 214,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<input"
+          },
+          {
+            "rawInstanceId": "INP-026",
+            "sourceFile": "src/components/admin/TemplateBuilder.tsx",
+            "lineNumber": 282,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-027",
+            "sourceFile": "src/components/app-ui/combobox.tsx",
+            "lineNumber": 65,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<InputGroup className={cn(\"w-auto\", className)}>"
+          },
+          {
+            "rawInstanceId": "INP-028",
+            "sourceFile": "src/components/app-ui/input-group.tsx",
+            "lineNumber": 121,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-030",
+            "sourceFile": "src/components/app-ui/input.tsx",
+            "lineNumber": 7,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<input"
+          },
+          {
+            "rawInstanceId": "INP-031",
+            "sourceFile": "src/components/app-ui/login-1.tsx",
+            "lineNumber": 117,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-032",
+            "sourceFile": "src/components/app-ui/sidebar.tsx",
+            "lineNumber": 322,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-034",
+            "sourceFile": "src/components/blog/AudimentBlogHubClient.tsx",
+            "lineNumber": 242,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<input"
+          },
+          {
+            "rawInstanceId": "INP-035",
+            "sourceFile": "src/components/glossary/AudimentGlossaryClient.tsx",
+            "lineNumber": 207,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<input"
+          },
+          {
+            "rawInstanceId": "INP-036",
+            "sourceFile": "src/components/ui/combobox.tsx",
+            "lineNumber": 65,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<InputGroup className={cn(\"w-auto\", className)}>"
+          },
+          {
+            "rawInstanceId": "INP-037",
+            "sourceFile": "src/components/ui/input-group.tsx",
+            "lineNumber": 121,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-039",
+            "sourceFile": "src/components/ui/input.tsx",
+            "lineNumber": 7,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<input"
+          },
+          {
+            "rawInstanceId": "INP-040",
+            "sourceFile": "src/components/ui/login-1.tsx",
+            "lineNumber": 117,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          },
+          {
+            "rawInstanceId": "INP-041",
+            "sourceFile": "src/components/ui/sidebar.tsx",
+            "lineNumber": 322,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Input"
+          }
+        ],
+        "usageCount": 35
+      },
+      {
+        "variantId": "VAR-INP-TEXTAREA",
+        "name": "Multiline Form Textarea",
+        "differencesFromFamily": "Resizable/fixed vertical textarea with multiline text overflow.",
+        "sampleItemId": "INP-010",
+        "sampleSnippet": "<Textarea",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Input change, keyboard navigation, focus ring",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "INP-010",
+            "sourceFile": "src/app/(app)/dashboard/auditor/audits/[auditId]/page.tsx",
+            "lineNumber": 789,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Textarea"
+          },
+          {
+            "rawInstanceId": "INP-016",
+            "sourceFile": "src/app/(app)/dashboard/manager/corrective-actions/page.tsx",
+            "lineNumber": 489,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Textarea"
+          },
+          {
+            "rawInstanceId": "INP-018",
+            "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+            "lineNumber": 840,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Textarea"
+          },
+          {
+            "rawInstanceId": "INP-029",
+            "sourceFile": "src/components/app-ui/input-group.tsx",
+            "lineNumber": 137,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Textarea"
+          },
+          {
+            "rawInstanceId": "INP-033",
+            "sourceFile": "src/components/app-ui/textarea.tsx",
+            "lineNumber": 7,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<textarea"
+          },
+          {
+            "rawInstanceId": "INP-038",
+            "sourceFile": "src/components/ui/input-group.tsx",
+            "lineNumber": 137,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Textarea"
+          },
+          {
+            "rawInstanceId": "INP-042",
+            "sourceFile": "src/components/ui/textarea.tsx",
+            "lineNumber": 7,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<textarea"
+          }
+        ],
+        "usageCount": 7
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-SELECT",
+    "familyName": "Select & Context Menu",
+    "description": "Dropdown selection pickers and action menus",
+    "distinctVariantCount": 2,
+    "totalUsageCount": 25,
+    "variants": [
+      {
+        "variantId": "VAR-SEL-FORM-PICKER",
+        "name": "Form Select Picker",
+        "differencesFromFamily": "Select dropdown with value display and chevron trigger.",
+        "sampleItemId": "SEL-001",
+        "sampleSnippet": "<Select value={formData.templateId} onValueChange={(val) => updateFormField('templateId', val)}>",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Open / close animated overlay with Esc key dismissal",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "SEL-001",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 362,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Select value={formData.templateId} onValueChange={(val) => updateFormField('templateId', val)}>"
+          },
+          {
+            "rawInstanceId": "SEL-003",
+            "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+            "lineNumber": 303,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 44px (h-11)",
+            "paddingUsed": "Inherited",
+            "snippet": "<SelectTrigger className=\"w-[180px] h-11 bg-background text-body border-border/50\">"
+          },
+          {
+            "rawInstanceId": "SEL-004",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+            "lineNumber": 227,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Select value={selectedLocation} onValueChange={(val) => {"
+          },
+          {
+            "rawInstanceId": "SEL-007",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 639,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Select value={orgForm.timezone} onValueChange={val => setOrgForm(p => ({ ...p, timezone: val }))}>"
+          },
+          {
+            "rawInstanceId": "SEL-009",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 65,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Select value={formData.role} onValueChange={(val) => setFormData({ ...formData, role: val })}>"
+          },
+          {
+            "rawInstanceId": "SEL-011",
+            "sourceFile": "src/app/(app)/dashboard/auditor/flashmob/page.tsx",
+            "lineNumber": 681,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Select"
+          },
+          {
+            "rawInstanceId": "SEL-012",
+            "sourceFile": "src/app/(app)/dashboard/auditor/settings/page.tsx",
+            "lineNumber": 349,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Select value={profileForm.language} onValueChange={val => setProfileForm(p => ({ ...p, language: val }))}>"
+          },
+          {
+            "rawInstanceId": "SEL-014",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 424,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Select value={formData.templateId} onValueChange={(val) => updateFormField('templateId', val)}>"
+          },
+          {
+            "rawInstanceId": "SEL-019",
+            "sourceFile": "src/components/admin/TemplateBuilder.tsx",
+            "lineNumber": 292,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Select value={category} onValueChange={setCategory}>"
+          },
+          {
+            "rawInstanceId": "SEL-020",
+            "sourceFile": "src/components/app-ui/combobox.tsx",
+            "lineNumber": 28,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<ComboboxPrimitive.Trigger"
+          },
+          {
+            "rawInstanceId": "SEL-022",
+            "sourceFile": "src/components/app-ui/select.tsx",
+            "lineNumber": 20,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<SelectPrimitive.Group"
+          },
+          {
+            "rawInstanceId": "SEL-023",
+            "sourceFile": "src/components/ui/combobox.tsx",
+            "lineNumber": 28,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<ComboboxPrimitive.Trigger"
+          },
+          {
+            "rawInstanceId": "SEL-025",
+            "sourceFile": "src/components/ui/select.tsx",
+            "lineNumber": 20,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<SelectPrimitive.Group"
+          }
+        ],
+        "usageCount": 13
+      },
+      {
+        "variantId": "VAR-SEL-DROPDOWN-MENU",
+        "name": "Context Action Dropdown Menu",
+        "differencesFromFamily": "Floating overlay menu triggered by icon or button click.",
+        "sampleItemId": "SEL-002",
+        "sampleSnippet": "<DropdownMenu>",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Open / close animated overlay with Esc key dismissal",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "SEL-002",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 649,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DropdownMenu>"
+          },
+          {
+            "rawInstanceId": "SEL-005",
+            "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+            "lineNumber": 408,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DropdownMenu>"
+          },
+          {
+            "rawInstanceId": "SEL-006",
+            "sourceFile": "src/app/(app)/dashboard/admin/reports/page.tsx",
+            "lineNumber": 176,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DropdownMenu>"
+          },
+          {
+            "rawInstanceId": "SEL-008",
+            "sourceFile": "src/app/(app)/dashboard/admin/templates/page.tsx",
+            "lineNumber": 222,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DropdownMenu>"
+          },
+          {
+            "rawInstanceId": "SEL-010",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 384,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DropdownMenu>"
+          },
+          {
+            "rawInstanceId": "SEL-013",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+            "lineNumber": 351,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DropdownMenu>"
+          },
+          {
+            "rawInstanceId": "SEL-015",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 575,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DropdownMenu>"
+          },
+          {
+            "rawInstanceId": "SEL-016",
+            "sourceFile": "src/app/(app)/dashboard/manager/reports/page.tsx",
+            "lineNumber": 239,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DropdownMenu>"
+          },
+          {
+            "rawInstanceId": "SEL-017",
+            "sourceFile": "src/components/DashboardShell.tsx",
+            "lineNumber": 167,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DropdownMenu>"
+          },
+          {
+            "rawInstanceId": "SEL-018",
+            "sourceFile": "src/components/NotificationBell.tsx",
+            "lineNumber": 191,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DropdownMenuContent align={variant === 'sidebar-item' ? 'start' : 'end'} side={variant === 'sidebar-item' ? 'right' : 'bottom'} className=\"w-85 md:w-"
+          },
+          {
+            "rawInstanceId": "SEL-021",
+            "sourceFile": "src/components/app-ui/dropdown-menu.tsx",
+            "lineNumber": 19,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DropdownMenuPrimitive.Portal data-slot=\"dropdown-menu-portal\" {...props} />"
+          },
+          {
+            "rawInstanceId": "SEL-024",
+            "sourceFile": "src/components/ui/dropdown-menu.tsx",
+            "lineNumber": 19,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DropdownMenuPrimitive.Portal data-slot=\"dropdown-menu-portal\" {...props} />"
+          }
+        ],
+        "usageCount": 12
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-CARD",
+    "familyName": "Card & Metric Widget",
+    "description": "KPI hero statistics and surface container cards",
+    "distinctVariantCount": 2,
+    "totalUsageCount": 28,
+    "variants": [
+      {
+        "variantId": "VAR-CRD-SURFACE",
+        "name": "Standard Card Container",
+        "differencesFromFamily": "Bordered white/dark card with rounded-xl radius and subtle shadow.",
+        "sampleItemId": "CRD-001",
+        "sampleSnippet": "<Card className=\"standard-card\">",
+        "classes": "standard-card",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "CRD-001",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 691,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"standard-card\">"
+          },
+          {
+            "rawInstanceId": "CRD-002",
+            "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+            "lineNumber": 254,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "p-6 (24px all sides)",
+            "snippet": "<Card className=\"standard-card p-6 overflow-hidden relative\">"
+          },
+          {
+            "rawInstanceId": "CRD-004",
+            "sourceFile": "src/app/(app)/dashboard/admin/loading.tsx",
+            "lineNumber": 16,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card key={i} className=\"standard-card\">"
+          },
+          {
+            "rawInstanceId": "CRD-005",
+            "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+            "lineNumber": 378,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"standard-card\">"
+          },
+          {
+            "rawInstanceId": "CRD-006",
+            "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+            "lineNumber": 265,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "p-6 (24px all sides)",
+            "snippet": "<Card className=\"standard-card p-6\">"
+          },
+          {
+            "rawInstanceId": "CRD-008",
+            "sourceFile": "src/app/(app)/dashboard/admin/reports/page.tsx",
+            "lineNumber": 207,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"standard-card\">"
+          },
+          {
+            "rawInstanceId": "CRD-009",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 483,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"standard-card\">"
+          },
+          {
+            "rawInstanceId": "CRD-010",
+            "sourceFile": "src/app/(app)/dashboard/admin/templates/page.tsx",
+            "lineNumber": 171,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"standard-card\">"
+          },
+          {
+            "rawInstanceId": "CRD-011",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 419,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"standard-card\">"
+          },
+          {
+            "rawInstanceId": "CRD-012",
+            "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+            "lineNumber": 178,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "p-6 (24px all sides)",
+            "snippet": "<Card className=\"standard-card p-6\">"
+          },
+          {
+            "rawInstanceId": "CRD-014",
+            "sourceFile": "src/app/(app)/dashboard/auditor/page.tsx",
+            "lineNumber": 133,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "p-4 (16px all sides)",
+            "snippet": "<Card className=\"standard-card p-4 md:p-6\">"
+          },
+          {
+            "rawInstanceId": "CRD-016",
+            "sourceFile": "src/app/(app)/dashboard/auditor/settings/page.tsx",
+            "lineNumber": 272,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"standard-card overflow-hidden\">"
+          },
+          {
+            "rawInstanceId": "CRD-017",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/[id]/page.tsx",
+            "lineNumber": 189,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "p-6 (24px all sides)",
+            "snippet": "<Card className=\"standard-card p-6\">"
+          },
+          {
+            "rawInstanceId": "CRD-019",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+            "lineNumber": 289,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "p-6 (24px all sides)",
+            "snippet": "<Card className=\"standard-card p-6\">"
+          },
+          {
+            "rawInstanceId": "CRD-020",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 609,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"standard-card\">"
+          },
+          {
+            "rawInstanceId": "CRD-021",
+            "sourceFile": "src/app/(app)/dashboard/manager/calendar/page.tsx",
+            "lineNumber": 186,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"standard-card\">"
+          },
+          {
+            "rawInstanceId": "CRD-022",
+            "sourceFile": "src/app/(app)/dashboard/manager/corrective-actions/page.tsx",
+            "lineNumber": 346,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card key={ca.id} className=\"p-0 border border-border/50 overflow-hidden hover:border-primary/30 shadow-sm hover:shadow-md transition-all group bg-bac"
+          },
+          {
+            "rawInstanceId": "CRD-023",
+            "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+            "lineNumber": 454,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "p-6 (24px all sides)",
+            "snippet": "<Card className=\"standard-card p-6 bg-card\">"
+          },
+          {
+            "rawInstanceId": "CRD-025",
+            "sourceFile": "src/app/(app)/dashboard/manager/reports/page.tsx",
+            "lineNumber": 268,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"standard-card\">"
+          },
+          {
+            "rawInstanceId": "CRD-026",
+            "sourceFile": "src/app/(app)/dashboard/manager/settings/page.tsx",
+            "lineNumber": 288,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"standard-card\">"
+          },
+          {
+            "rawInstanceId": "CRD-027",
+            "sourceFile": "src/app/(app)/login/page.tsx",
+            "lineNumber": 91,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"border-border/50 shadow-xl shadow-black/[0.02] backdrop-blur-sm bg-card/80\">"
+          },
+          {
+            "rawInstanceId": "CRD-028",
+            "sourceFile": "src/components/admin/TemplateBuilder.tsx",
+            "lineNumber": 272,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Card className=\"standard-card\">"
+          }
+        ],
+        "usageCount": 22
+      },
+      {
+        "variantId": "VAR-CRD-KPI-HERO",
+        "name": "Hero KPI Stat Display (.stat-number)",
+        "differencesFromFamily": "Text-[32px] optical tracking-[-0.03em] tabular numerals with uppercase stat label.",
+        "sampleItemId": "CRD-003",
+        "sampleSnippet": "<div className=\"stat-number text-destructive\">",
+        "classes": "stat-number text-destructive",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Destructive Ruby (var(--destructive))",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "CRD-003",
+            "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+            "lineNumber": 260,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<div className=\"stat-number text-destructive\">"
+          },
+          {
+            "rawInstanceId": "CRD-007",
+            "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+            "lineNumber": 271,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<div className=\"stat-number text-heading\">{stats?.totalAuditsThisMonth}</div>"
+          },
+          {
+            "rawInstanceId": "CRD-013",
+            "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+            "lineNumber": 184,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<div className=\"stat-number text-heading\">{history.length}</div>"
+          },
+          {
+            "rawInstanceId": "CRD-015",
+            "sourceFile": "src/app/(app)/dashboard/auditor/page.tsx",
+            "lineNumber": 139,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<div className=\"stat-number text-heading\">{completedAudits.length}</div>"
+          },
+          {
+            "rawInstanceId": "CRD-018",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/[id]/page.tsx",
+            "lineNumber": 195,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<div className=\"stat-number text-heading\">{stats.total}</div>"
+          },
+          {
+            "rawInstanceId": "CRD-024",
+            "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+            "lineNumber": 456,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<div className=\"stat-number-lg text-heading mt-3\">"
+          }
+        ],
+        "usageCount": 6
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-MODAL",
+    "familyName": "Dialog, Modal & Sheet",
+    "description": "Modal windows, alert confirmation overlays, and slide-over sheets",
+    "distinctVariantCount": 3,
+    "totalUsageCount": 24,
+    "variants": [
+      {
+        "variantId": "VAR-MOD-MODAL",
+        "name": "Standard Interactive Modal Window",
+        "differencesFromFamily": "Centered overlay modal with header, body content, and action footer.",
+        "sampleItemId": "MOD-001",
+        "sampleSnippet": "<Dialog open={open} onOpenChange={(val) => {",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Open / close animated overlay with Esc key dismissal",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "MOD-001",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 311,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={open} onOpenChange={(val) => {"
+          },
+          {
+            "rawInstanceId": "MOD-002",
+            "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+            "lineNumber": 412,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={!!editingCA} onOpenChange={(open) => !open && setEditingCA(null)}>"
+          },
+          {
+            "rawInstanceId": "MOD-003",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+            "lineNumber": 195,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={isDialogOpen} onOpenChange={(open) => {"
+          },
+          {
+            "rawInstanceId": "MOD-004",
+            "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+            "lineNumber": 42,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={open} onOpenChange={setOpen}>"
+          },
+          {
+            "rawInstanceId": "MOD-005",
+            "sourceFile": "src/app/(app)/dashboard/admin/reports/[auditId]/page.tsx",
+            "lineNumber": 376,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={!!selectedImage} onOpenChange={(open) => !open && setSelectedImage(null)}>"
+          },
+          {
+            "rawInstanceId": "MOD-006",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 759,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={cropModalOpen} onOpenChange={setCropModalOpen}>"
+          },
+          {
+            "rawInstanceId": "MOD-007",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 341,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>"
+          },
+          {
+            "rawInstanceId": "MOD-010",
+            "sourceFile": "src/app/(app)/dashboard/auditor/settings/page.tsx",
+            "lineNumber": 448,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={cropModalOpen} onOpenChange={setCropModalOpen}>"
+          },
+          {
+            "rawInstanceId": "MOD-011",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+            "lineNumber": 237,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>"
+          },
+          {
+            "rawInstanceId": "MOD-012",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 408,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>"
+          },
+          {
+            "rawInstanceId": "MOD-013",
+            "sourceFile": "src/app/(app)/dashboard/manager/corrective-actions/page.tsx",
+            "lineNumber": 477,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={!!selectedCA} onOpenChange={(open) => !open && setSelectedCA(null)}>"
+          },
+          {
+            "rawInstanceId": "MOD-014",
+            "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+            "lineNumber": 826,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={!!selectedCA} onOpenChange={(open) => !open && setSelectedCA(null)}>"
+          },
+          {
+            "rawInstanceId": "MOD-015",
+            "sourceFile": "src/app/(app)/dashboard/manager/reports/[auditId]/page.tsx",
+            "lineNumber": 372,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={!!selectedImage} onOpenChange={(open) => !open && setSelectedImage(null)}>"
+          },
+          {
+            "rawInstanceId": "MOD-016",
+            "sourceFile": "src/app/(app)/dashboard/manager/settings/page.tsx",
+            "lineNumber": 407,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Dialog open={cropModalOpen} onOpenChange={setCropModalOpen}>"
+          },
+          {
+            "rawInstanceId": "MOD-018",
+            "sourceFile": "src/components/app-ui/dialog.tsx",
+            "lineNumber": 39,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DialogPrimitive.Overlay"
+          },
+          {
+            "rawInstanceId": "MOD-022",
+            "sourceFile": "src/components/ui/dialog.tsx",
+            "lineNumber": 39,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<DialogPrimitive.Overlay"
+          }
+        ],
+        "usageCount": 16
+      },
+      {
+        "variantId": "VAR-MOD-ALERT",
+        "name": "Confirmation Alert Dialog",
+        "differencesFromFamily": "Centered modal overlay for critical confirm/cancel actions.",
+        "sampleItemId": "MOD-008",
+        "sampleSnippet": "<AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Open / close animated overlay with Esc key dismissal",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "MOD-008",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 531,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>"
+          },
+          {
+            "rawInstanceId": "MOD-009",
+            "sourceFile": "src/app/(app)/dashboard/auditor/audits/[auditId]/page.tsx",
+            "lineNumber": 836,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<AlertDialog open={showInitialLocationPrompt}>"
+          },
+          {
+            "rawInstanceId": "MOD-017",
+            "sourceFile": "src/components/app-ui/alert-dialog.tsx",
+            "lineNumber": 19,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<AlertDialogPrimitive.Trigger data-slot=\"alert-dialog-trigger\" {...props} />"
+          },
+          {
+            "rawInstanceId": "MOD-021",
+            "sourceFile": "src/components/ui/alert-dialog.tsx",
+            "lineNumber": 19,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<AlertDialogPrimitive.Trigger data-slot=\"alert-dialog-trigger\" {...props} />"
+          }
+        ],
+        "usageCount": 4
+      },
+      {
+        "variantId": "VAR-MOD-SHEET",
+        "name": "Slide-over Drawer Sheet",
+        "differencesFromFamily": "Side sliding panel animation anchored to right viewport edge.",
+        "sampleItemId": "MOD-019",
+        "sampleSnippet": "<SheetPrimitive.Overlay",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Open / close animated overlay with Esc key dismissal",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "MOD-019",
+            "sourceFile": "src/components/app-ui/sheet.tsx",
+            "lineNumber": 37,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<SheetPrimitive.Overlay"
+          },
+          {
+            "rawInstanceId": "MOD-020",
+            "sourceFile": "src/components/app-ui/sidebar.tsx",
+            "lineNumber": 183,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>"
+          },
+          {
+            "rawInstanceId": "MOD-023",
+            "sourceFile": "src/components/ui/sheet.tsx",
+            "lineNumber": 37,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<SheetPrimitive.Overlay"
+          },
+          {
+            "rawInstanceId": "MOD-024",
+            "sourceFile": "src/components/ui/sidebar.tsx",
+            "lineNumber": 183,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>"
+          }
+        ],
+        "usageCount": 4
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-NAV",
+    "familyName": "Tabs & Segment Navigation",
+    "description": "Horizontal segment pills, tab bars, and settings navigation lists",
+    "distinctVariantCount": 2,
+    "totalUsageCount": 14,
+    "variants": [
+      {
+        "variantId": "VAR-NAV-UNDERLINE-TAB",
+        "name": "Underline Tab Strip",
+        "differencesFromFamily": "Horizontal tab row with active bottom border highlight.",
+        "sampleItemId": "NAV-001",
+        "sampleSnippet": "<Tabs defaultValue=\"all\" className=\"w-full\">",
+        "classes": "w-full",
+        "spec": {
+          "dimensions": "Width: 100% (w-full)",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "NAV-001",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+            "lineNumber": 410,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Width: 100% (w-full)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Tabs defaultValue=\"all\" className=\"w-full\">"
+          },
+          {
+            "rawInstanceId": "NAV-002",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 457,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<nav className=\"w-48 flex-shrink-0 flex flex-col gap-1\">"
+          },
+          {
+            "rawInstanceId": "NAV-003",
+            "sourceFile": "src/app/(app)/dashboard/auditor/flashmob/page.tsx",
+            "lineNumber": 527,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Tabs value={viewTab} onValueChange={(v) => setViewTab(v as any)}>"
+          },
+          {
+            "rawInstanceId": "NAV-004",
+            "sourceFile": "src/app/(app)/dashboard/manager/corrective-actions/page.tsx",
+            "lineNumber": 319,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Tabs defaultValue=\"active\" className=\"space-y-6\">"
+          },
+          {
+            "rawInstanceId": "NAV-006",
+            "sourceFile": "src/app/(app)/dashboard/manager/settings/page.tsx",
+            "lineNumber": 265,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<nav className=\"w-48 flex-shrink-0 flex flex-col gap-1\">"
+          },
+          {
+            "rawInstanceId": "NAV-007",
+            "sourceFile": "src/components/DashboardShell.tsx",
+            "lineNumber": 309,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "px-2 (8px horizontal)",
+            "snippet": "<nav className=\"shrink-0 fixed bottom-0 left-0 right-0 z-30 pb-[env(safe-area-inset-bottom,0px)] h-[calc(4rem+env(safe-area-inset-bottom,0px))] bg-bac"
+          },
+          {
+            "rawInstanceId": "NAV-008",
+            "sourceFile": "src/components/app-ui/navbar.tsx",
+            "lineNumber": 31,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<nav"
+          },
+          {
+            "rawInstanceId": "NAV-009",
+            "sourceFile": "src/components/app-ui/tabs.tsx",
+            "lineNumber": 15,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<TabsPrimitive.Root"
+          },
+          {
+            "rawInstanceId": "NAV-010",
+            "sourceFile": "src/components/blog/AudimentBlogHubClient.tsx",
+            "lineNumber": 266,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<nav className=\"aud-blog-tabs-nav\" ref={tabsNavRef}>"
+          },
+          {
+            "rawInstanceId": "NAV-011",
+            "sourceFile": "src/components/blog/AudimentBlogPostClient.tsx",
+            "lineNumber": 191,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<nav className=\"aud-toc-list\">"
+          },
+          {
+            "rawInstanceId": "NAV-012",
+            "sourceFile": "src/components/ui/navbar.tsx",
+            "lineNumber": 31,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<nav"
+          },
+          {
+            "rawInstanceId": "NAV-013",
+            "sourceFile": "src/components/ui/tabs.tsx",
+            "lineNumber": 15,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<TabsPrimitive.Root"
+          },
+          {
+            "rawInstanceId": "NAV-014",
+            "sourceFile": "src/components/website/Header.tsx",
+            "lineNumber": 30,
+            "portalContext": "Public Marketing",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<nav>"
+          }
+        ],
+        "usageCount": 13
+      },
+      {
+        "variantId": "VAR-NAV-SEGMENT-PILL",
+        "name": "Segment Control Switcher Pill (.segment-btn)",
+        "differencesFromFamily": "Background track with active tab pill transition and active:scale-[0.97].",
+        "sampleItemId": "NAV-005",
+        "sampleSnippet": "\"segment-btn\",",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "NAV-005",
+            "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+            "lineNumber": 636,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "\"segment-btn\","
+          }
+        ],
+        "usageCount": 1
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-LOADING",
+    "familyName": "Loading Indicator & Skeleton",
+    "description": "Content shimmer placeholder blocks and spinning loaders",
+    "distinctVariantCount": 1,
+    "totalUsageCount": 33,
+    "variants": [
+      {
+        "variantId": "VAR-SKL-PULSE",
+        "name": "Animated Pulse Skeleton Shimmer",
+        "differencesFromFamily": "Rounded grey blocks with pulse opacity animation.",
+        "sampleItemId": "SKL-001",
+        "sampleSnippet": "{loading && <Loader2 className=\"h-4 w-4 animate-spin mr-2\" />}",
+        "classes": "h-4 w-4 animate-spin mr-2",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "SKL-001",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 619,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "{loading && <Loader2 className=\"h-4 w-4 animate-spin mr-2\" />}"
+          },
+          {
+            "rawInstanceId": "SKL-002",
+            "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+            "lineNumber": 220,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-[32px] w-[250px]\" />"
+          },
+          {
+            "rawInstanceId": "SKL-003",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/[flashmobId]/page.tsx",
+            "lineNumber": 64,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 40px (h-10)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-10 w-10 rounded-lg\" />"
+          },
+          {
+            "rawInstanceId": "SKL-004",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/[flashmobId]/page.tsx",
+            "lineNumber": 132,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "{isDeleting ? <Loader2 className=\"h-4 w-4 animate-spin\" /> : <Trash2 className=\"h-4 w-4\" />}"
+          },
+          {
+            "rawInstanceId": "SKL-005",
+            "sourceFile": "src/app/(app)/dashboard/admin/loading.tsx",
+            "lineNumber": 10,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 36px (h-9)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-9 w-48\" />"
+          },
+          {
+            "rawInstanceId": "SKL-006",
+            "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+            "lineNumber": 192,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-[32px] w-[250px]\" />"
+          },
+          {
+            "rawInstanceId": "SKL-007",
+            "sourceFile": "src/app/(app)/dashboard/admin/reports/[auditId]/page.tsx",
+            "lineNumber": 114,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Clock className=\"h-5 w-5 animate-spin text-muted-text/40\" />"
+          },
+          {
+            "rawInstanceId": "SKL-008",
+            "sourceFile": "src/app/(app)/dashboard/admin/reports/page.tsx",
+            "lineNumber": 140,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-8 w-64\" />"
+          },
+          {
+            "rawInstanceId": "SKL-009",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 429,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 36px (h-9)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-9 w-40 mb-2\" />"
+          },
+          {
+            "rawInstanceId": "SKL-010",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 502,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "{uploadingPhoto ? <Loader2 className=\"h-3 w-3 animate-spin\" /> : <Camera className=\"h-3 w-3\" />}"
+          },
+          {
+            "rawInstanceId": "SKL-011",
+            "sourceFile": "src/app/(app)/dashboard/auditor/audits/[auditId]/page.tsx",
+            "lineNumber": 590,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Height: 24px (h-6)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-6 w-48\" />"
+          },
+          {
+            "rawInstanceId": "SKL-012",
+            "sourceFile": "src/app/(app)/dashboard/auditor/audits/[auditId]/page.tsx",
+            "lineNumber": 659,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "{saving ? <Loader2 className=\"h-3 w-3 animate-spin\" /> : <UploadCloud className=\"h-3.5 w-3.5\" />} Save"
+          },
+          {
+            "rawInstanceId": "SKL-013",
+            "sourceFile": "src/app/(app)/dashboard/auditor/flashmob/page.tsx",
+            "lineNumber": 474,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-8 w-48\" />"
+          },
+          {
+            "rawInstanceId": "SKL-014",
+            "sourceFile": "src/app/(app)/dashboard/auditor/flashmob/page.tsx",
+            "lineNumber": 899,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<div className=\"h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent\" />"
+          },
+          {
+            "rawInstanceId": "SKL-015",
+            "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+            "lineNumber": 146,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-8 w-64\" />"
+          },
+          {
+            "rawInstanceId": "SKL-016",
+            "sourceFile": "src/app/(app)/dashboard/auditor/page.tsx",
+            "lineNumber": 188,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Width: 100% (w-full)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-2 w-full\" />"
+          },
+          {
+            "rawInstanceId": "SKL-017",
+            "sourceFile": "src/app/(app)/dashboard/auditor/settings/page.tsx",
+            "lineNumber": 249,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Height: 36px (h-9)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-9 w-40 mb-2\" />"
+          },
+          {
+            "rawInstanceId": "SKL-018",
+            "sourceFile": "src/app/(app)/dashboard/auditor/settings/page.tsx",
+            "lineNumber": 299,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "{uploadingPhoto ? <Loader2 className=\"h-3.5 w-3.5 animate-spin\" /> : <Camera className=\"h-3.5 w-3.5\" />}"
+          },
+          {
+            "rawInstanceId": "SKL-019",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/[id]/page.tsx",
+            "lineNumber": 151,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-5 w-5 rounded\" />"
+          },
+          {
+            "rawInstanceId": "SKL-020",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+            "lineNumber": 223,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Loader2 className=\"h-8 w-8 animate-spin text-primary\" />"
+          },
+          {
+            "rawInstanceId": "SKL-021",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 535,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "{loading && <Loader2 className=\"h-4 w-4 animate-spin mr-2\" />}"
+          },
+          {
+            "rawInstanceId": "SKL-022",
+            "sourceFile": "src/app/(app)/dashboard/manager/corrective-actions/page.tsx",
+            "lineNumber": 303,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Loader2 className=\"h-8 w-8 animate-spin text-primary\" />"
+          },
+          {
+            "rawInstanceId": "SKL-023",
+            "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+            "lineNumber": 418,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-8 w-64\" />"
+          },
+          {
+            "rawInstanceId": "SKL-024",
+            "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+            "lineNumber": 860,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Loader2 className=\"h-5 w-5 animate-spin text-primary\" />"
+          },
+          {
+            "rawInstanceId": "SKL-025",
+            "sourceFile": "src/app/(app)/dashboard/manager/reports/[auditId]/page.tsx",
+            "lineNumber": 113,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Clock className=\"h-5 w-5 animate-spin text-muted-text/40\" />"
+          },
+          {
+            "rawInstanceId": "SKL-026",
+            "sourceFile": "src/app/(app)/dashboard/manager/reports/page.tsx",
+            "lineNumber": 200,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Height: 32px (h-8)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-8 w-64\" />"
+          },
+          {
+            "rawInstanceId": "SKL-027",
+            "sourceFile": "src/app/(app)/dashboard/manager/settings/page.tsx",
+            "lineNumber": 241,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Height: 36px (h-9)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-9 w-40 mb-2\" />"
+          },
+          {
+            "rawInstanceId": "SKL-028",
+            "sourceFile": "src/app/(app)/dashboard/manager/settings/page.tsx",
+            "lineNumber": 308,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "{uploadingPhoto ? <Loader2 className=\"h-3 w-3 animate-spin\" /> : <Camera className=\"h-3 w-3\" />}"
+          },
+          {
+            "rawInstanceId": "SKL-029",
+            "sourceFile": "src/app/(app)/login/page.tsx",
+            "lineNumber": 151,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<span className=\"w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin\" />"
+          },
+          {
+            "rawInstanceId": "SKL-030",
+            "sourceFile": "src/components/admin/TemplateBuilder.tsx",
+            "lineNumber": 198,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Height: 24px (h-6)",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton className=\"h-6 w-48\" />"
+          },
+          {
+            "rawInstanceId": "SKL-031",
+            "sourceFile": "src/components/admin/TemplateBuilder.tsx",
+            "lineNumber": 252,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "? <div className=\"h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent\" />"
+          },
+          {
+            "rawInstanceId": "SKL-032",
+            "sourceFile": "src/components/app-ui/sidebar.tsx",
+            "lineNumber": 609,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton"
+          },
+          {
+            "rawInstanceId": "SKL-033",
+            "sourceFile": "src/components/ui/sidebar.tsx",
+            "lineNumber": 609,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<Skeleton"
+          }
+        ],
+        "usageCount": 33
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-EMPTY",
+    "familyName": "Empty & Error State View",
+    "description": "Zero-state and no-records feedback containers",
+    "distinctVariantCount": 1,
+    "totalUsageCount": 18,
+    "variants": [
+      {
+        "variantId": "VAR-EMP-ZERO-STATE",
+        "name": "Dashed Border Zero State Container",
+        "differencesFromFamily": "Centered feedback with dashed border-border/70 and search icon.",
+        "sampleItemId": "EMP-001",
+        "sampleSnippet": "<p className=\"font-semibold text-heading opacity-40\">No audits published yet.</p>",
+        "classes": "font-semibold text-heading opacity-40",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Semi-bold (600)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "EMP-001",
+            "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+            "lineNumber": 712,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<p className=\"font-semibold text-heading opacity-40\">No audits published yet.</p>"
+          },
+          {
+            "rawInstanceId": "EMP-002",
+            "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+            "lineNumber": 442,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<h3 className=\"empty-state-title\">No audit logs found</h3>"
+          },
+          {
+            "rawInstanceId": "EMP-003",
+            "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+            "lineNumber": 90,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "No manager found."
+          },
+          {
+            "rawInstanceId": "EMP-004",
+            "sourceFile": "src/app/(app)/dashboard/admin/reports/page.tsx",
+            "lineNumber": 226,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<p className=\"page-heading opacity-40\">No matching reports found.</p>"
+          },
+          {
+            "rawInstanceId": "EMP-005",
+            "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+            "lineNumber": 359,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "if (!audits.length) { alert('No data to export'); return; }"
+          },
+          {
+            "rawInstanceId": "EMP-006",
+            "sourceFile": "src/app/(app)/dashboard/admin/templates/page.tsx",
+            "lineNumber": 188,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<p className=\"text-body\">No templates found. Start by loading defaults or creating a new template.</p>"
+          },
+          {
+            "rawInstanceId": "EMP-007",
+            "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+            "lineNumber": 434,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "No users found matching your search."
+          },
+          {
+            "rawInstanceId": "EMP-008",
+            "sourceFile": "src/app/(app)/dashboard/auditor/audits/[auditId]/page.tsx",
+            "lineNumber": 611,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<p className=\"font-semibold text-heading text-lg\">No questions found</p>"
+          },
+          {
+            "rawInstanceId": "EMP-009",
+            "sourceFile": "src/app/(app)/dashboard/auditor/page.tsx",
+            "lineNumber": 201,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<p className=\"text-[13px] font-medium text-muted-text opacity-50\">No active audits assigned.</p>"
+          },
+          {
+            "rawInstanceId": "EMP-010",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/[id]/page.tsx",
+            "lineNumber": 250,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "No audits found for this auditor."
+          },
+          {
+            "rawInstanceId": "EMP-011",
+            "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+            "lineNumber": 388,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "No auditors found in your reporting list."
+          },
+          {
+            "rawInstanceId": "EMP-012",
+            "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+            "lineNumber": 640,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "No audits found matching your criteria."
+          },
+          {
+            "rawInstanceId": "EMP-013",
+            "sourceFile": "src/app/(app)/dashboard/manager/corrective-actions/page.tsx",
+            "lineNumber": 418,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<p className=\"font-semibold text-heading opacity-40\">No history found</p>"
+          },
+          {
+            "rawInstanceId": "EMP-014",
+            "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+            "lineNumber": 774,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<p className=\"py-6 text-center text-xs text-muted-text/40\">No unassigned audits.</p>"
+          },
+          {
+            "rawInstanceId": "EMP-015",
+            "sourceFile": "src/app/(app)/dashboard/manager/reports/page.tsx",
+            "lineNumber": 294,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": ": \"No matching reports found.\"}"
+          },
+          {
+            "rawInstanceId": "EMP-016",
+            "sourceFile": "src/app/(app)/login/page.tsx",
+            "lineNumber": 67,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "else if (code === 'auth/user-not-found') setError('No account found with this email.');"
+          },
+          {
+            "rawInstanceId": "EMP-017",
+            "sourceFile": "src/components/blog/AudimentBlogHubClient.tsx",
+            "lineNumber": 442,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<h3>No articles found</h3>"
+          },
+          {
+            "rawInstanceId": "EMP-018",
+            "sourceFile": "src/components/home/AudimentLandingClient.tsx",
+            "lineNumber": 349,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "{ industry: 'Retail chain – 45 stores', headline: 'No more skipped or backdated audits', story: 'Paper audits were routinely skipped or filled in hour"
+          }
+        ],
+        "usageCount": 18
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-CHART",
+    "familyName": "Data Visualization Chart",
+    "description": "Trend line charts, bar visualizations, and metric graphs",
+    "distinctVariantCount": 1,
+    "totalUsageCount": 3,
+    "variants": [
+      {
+        "variantId": "VAR-CHT-BAR-TREND",
+        "name": "Bar & Trend Visualization Chart",
+        "differencesFromFamily": "Recharts responsive svg bar and trend visualization wrapper.",
+        "sampleItemId": "CHT-001",
+        "sampleSnippet": "<ResponsiveContainer width=\"100%\" height=\"100%\" minHeight={400}>",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "CHT-001",
+            "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+            "lineNumber": 314,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<ResponsiveContainer width=\"100%\" height=\"100%\" minHeight={400}>"
+          },
+          {
+            "rawInstanceId": "CHT-002",
+            "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+            "lineNumber": 315,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<BarChart data={stats?.locationScores} margin={{ top: 20, right: 30, left: 0, bottom: 0 }} barSize={40}>"
+          },
+          {
+            "rawInstanceId": "CHT-003",
+            "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+            "lineNumber": 566,
+            "portalContext": "Manager Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "<ResponsiveContainer width=\"100%\" height=\"100%\">"
+          }
+        ],
+        "usageCount": 3
+      }
+    ]
+  },
+  {
+    "familyId": "FAM-SPECIALIZED",
+    "familyName": "Specialized Audit Tool",
+    "description": "Checklist template builders, camera viewfinder feeds, and audio/video harnesses",
+    "distinctVariantCount": 1,
+    "totalUsageCount": 3,
+    "variants": [
+      {
+        "variantId": "VAR-SPU-EXECUTION",
+        "name": "Audit Execution & Camera Verification Step",
+        "differencesFromFamily": "Geo-tagged photo capture node and drag-and-drop question builder item.",
+        "sampleItemId": "SPU-001",
+        "sampleSnippet": "{STEPS.map((step, i) => {",
+        "classes": "",
+        "spec": {
+          "dimensions": "Auto / Fluid",
+          "padding": "Inherited",
+          "gap": "None",
+          "typography": {
+            "fontSize": "14px (text-sm)",
+            "fontWeight": "Normal (font-normal)",
+            "textColor": "Foreground (text-foreground)",
+            "tracking": "Standard"
+          },
+          "styling": {
+            "background": "Default / Transparent",
+            "border": "None",
+            "radius": "var(--radius) (10px)",
+            "shadow": "None"
+          },
+          "structure": "Text Label / Node",
+          "interaction": "Static display",
+          "confidence": "Source-confirmed"
+        },
+        "usages": [
+          {
+            "rawInstanceId": "SPU-001",
+            "sourceFile": "src/app/(app)/dashboard/auditor/flashmob/page.tsx",
+            "lineNumber": 71,
+            "portalContext": "Auditor Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "{STEPS.map((step, i) => {"
+          },
+          {
+            "rawInstanceId": "SPU-002",
+            "sourceFile": "src/app/(app)/test-recording/page.tsx",
+            "lineNumber": 89,
+            "portalContext": "Shared Component System",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "setStatus('recording');"
+          },
+          {
+            "rawInstanceId": "SPU-003",
+            "sourceFile": "src/components/admin/TemplateBuilder.tsx",
+            "lineNumber": 25,
+            "portalContext": "Admin Portal",
+            "containerLayout": "Auto / Fluid",
+            "paddingUsed": "Inherited",
+            "snippet": "questionText: string;"
+          }
+        ],
+        "usageCount": 3
+      }
+    ]
+  }
+]

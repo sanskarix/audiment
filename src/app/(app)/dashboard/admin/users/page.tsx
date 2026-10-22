@@ -32,7 +32,7 @@ const UserFormFields = React.memo(({ formData, setFormData, activeManagers, isEd
           onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
           required 
           placeholder="John Doe" 
-          className="text-body h-11" 
+          className="text-body" 
         />
       </div>
       
@@ -46,7 +46,7 @@ const UserFormFields = React.memo(({ formData, setFormData, activeManagers, isEd
               onChange={(e) => setFormData({ ...formData, email: e.target.value })} 
               required 
               placeholder="john@example.com" 
-              className="text-body h-11" 
+              className="text-body" 
             />
           </div>
           <div className="space-y-2">
@@ -57,13 +57,13 @@ const UserFormFields = React.memo(({ formData, setFormData, activeManagers, isEd
               onChange={(e) => setFormData({ ...formData, password: e.target.value })} 
               required 
               minLength={6} 
-              className="text-body h-11" 
+              className="text-body" 
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="role" className="text-body font-normal">Role</Label>
             <Select value={formData.role} onValueChange={(val) => setFormData({ ...formData, role: val })}>
-              <SelectTrigger className="text-body h-11"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="text-body w-full"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="MANAGER" className="text-body">Manager</SelectItem>
                 <SelectItem value="AUDITOR" className="text-body">Auditor</SelectItem>
@@ -78,7 +78,7 @@ const UserFormFields = React.memo(({ formData, setFormData, activeManagers, isEd
           <div className="space-y-2">
             <Label htmlFor="managerId" className="text-body font-normal">Assigned Manager</Label>
             <Select value={formData.managerId} onValueChange={(val) => setFormData({ ...formData, managerId: val })} required>
-              <SelectTrigger className="text-body h-11"><SelectValue placeholder="Select active manager" /></SelectTrigger>
+              <SelectTrigger className="text-body w-full"><SelectValue placeholder="Select active manager" /></SelectTrigger>
               <SelectContent>
                 {activeManagers.length === 0 ? (
                   <SelectItem value="none" disabled className="text-muted-text">No active managers found</SelectItem>
@@ -92,7 +92,7 @@ const UserFormFields = React.memo(({ formData, setFormData, activeManagers, isEd
           {isEdit && (
             <div className="flex items-center justify-between p-3 border rounded-lg bg-muted/10 mt-4">
               <div className="space-y-0.5">
-                <Label className="text-sm font-medium">Flashmob Access</Label>
+                <Label className="text-[13px] font-medium">Flashmob Access</Label>
                 <p className="text-xs text-muted-text">Allow auditor to record flashmob videos</p>
               </div>
               <Switch
@@ -360,7 +360,7 @@ export default function AdminUsersPage() {
                 />
                 {error && <p className="text-sm text-destructive mb-4">{error}</p>}
                 <DialogFooter>
-                  <Button type="submit" disabled={loading} className="w-full h-11 font-medium transition-all active:scale-[0.98]">
+                  <Button type="submit" disabled={loading} className="w-full h-10 text-[13px] font-medium transition-all active:scale-[0.98]">
                     {loading ? 'Adding...' : 'Add User'}
                   </Button>
                 </DialogFooter>
@@ -517,8 +517,8 @@ export default function AdminUsersPage() {
               {error && <p className="text-sm text-destructive mb-4">{error}</p>}
               <DialogFooter>
                 <div className="flex w-full gap-3 pt-2">
-                  <Button type="button" variant="ghost" className="flex-1 h-11" onClick={() => setIsEditOpen(false)}>Cancel</Button>
-                  <Button type="submit" disabled={loading} className="flex-1 h-11 font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-[0.98]">
+                  <Button type="button" variant="ghost" className="flex-1 h-10 text-[13px]" onClick={() => setIsEditOpen(false)}>Cancel</Button>
+                  <Button type="submit" disabled={loading} className="flex-1 h-10 text-[13px] font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-[0.98]">
                     {loading ? 'Updating...' : 'Save Changes'}
                   </Button>
                 </div>

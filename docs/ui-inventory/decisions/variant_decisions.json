@@ -1,0 +1,312 @@
+{
+  "decisions": {
+    "VAR-SEARCH-ICON-INPUT": {
+      "decisionId": "DEC-VAR-SEARCH-ICON-INPUT",
+      "familyId": "FAM-SEARCH",
+      "sourceVariantId": "VAR-SEARCH-ICON-INPUT",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.249Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-FILTER-SELECT-DROPDOWN": {
+      "decisionId": "DEC-VAR-FILTER-SELECT-DROPDOWN",
+      "familyId": "FAM-FILTER",
+      "sourceVariantId": "VAR-FILTER-SELECT-DROPDOWN",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-BTN-PRIMARY": {
+      "decisionId": "DEC-VAR-BTN-PRIMARY",
+      "familyId": "FAM-BTN",
+      "sourceVariantId": "VAR-BTN-PRIMARY",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-BTN-OUTLINE": {
+      "decisionId": "DEC-VAR-BTN-OUTLINE",
+      "familyId": "FAM-BTN",
+      "sourceVariantId": "VAR-BTN-OUTLINE",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-BTN-GHOST": {
+      "decisionId": "DEC-VAR-BTN-GHOST",
+      "familyId": "FAM-BTN",
+      "sourceVariantId": "VAR-BTN-GHOST",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-BTN-SETTINGS-NAV": {
+      "decisionId": "DEC-VAR-BTN-SETTINGS-NAV",
+      "familyId": "FAM-BTN",
+      "sourceVariantId": "VAR-BTN-SETTINGS-NAV",
+      "decisionType": "merge",
+      "targetVariantId": "VAR-BTN-PRIMARY",
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-BTN-FILTER-TOOLBAR": {
+      "decisionId": "DEC-VAR-BTN-FILTER-TOOLBAR",
+      "familyId": "FAM-BTN",
+      "sourceVariantId": "VAR-BTN-FILTER-TOOLBAR",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-TBL-STANDARD": {
+      "decisionId": "DEC-VAR-TBL-STANDARD",
+      "familyId": "FAM-TABLE",
+      "sourceVariantId": "VAR-TBL-STANDARD",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-TBL-REPORT": {
+      "decisionId": "DEC-VAR-TBL-REPORT",
+      "familyId": "FAM-TABLE",
+      "sourceVariantId": "VAR-TBL-REPORT",
+      "decisionType": "merge",
+      "targetVariantId": "VAR-TBL-STANDARD",
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-TBL-USERS": {
+      "decisionId": "DEC-VAR-TBL-USERS",
+      "familyId": "FAM-TABLE",
+      "sourceVariantId": "VAR-TBL-USERS",
+      "decisionType": "merge",
+      "targetVariantId": "VAR-TBL-STANDARD",
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-BDG-COMPLETED": {
+      "decisionId": "DEC-VAR-BDG-COMPLETED",
+      "familyId": "FAM-BADGE",
+      "sourceVariantId": "VAR-BDG-COMPLETED",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-BDG-INFORMATIONAL": {
+      "decisionId": "DEC-VAR-BDG-INFORMATIONAL",
+      "familyId": "FAM-BADGE",
+      "sourceVariantId": "VAR-BDG-INFORMATIONAL",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-BDG-IN-PROGRESS": {
+      "decisionId": "DEC-VAR-BDG-IN-PROGRESS",
+      "familyId": "FAM-BADGE",
+      "sourceVariantId": "VAR-BDG-IN-PROGRESS",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-INP-TEXT": {
+      "decisionId": "DEC-VAR-INP-TEXT",
+      "familyId": "FAM-INPUT",
+      "sourceVariantId": "VAR-INP-TEXT",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.254Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-INP-TEXTAREA": {
+      "decisionId": "DEC-VAR-INP-TEXTAREA",
+      "familyId": "FAM-INPUT",
+      "sourceVariantId": "VAR-INP-TEXTAREA",
+      "decisionType": "merge",
+      "targetVariantId": "VAR-INP-TEXT",
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-SEL-FORM-PICKER": {
+      "decisionId": "DEC-VAR-SEL-FORM-PICKER",
+      "familyId": "FAM-SELECT",
+      "sourceVariantId": "VAR-SEL-FORM-PICKER",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-SEL-DROPDOWN-MENU": {
+      "decisionId": "DEC-VAR-SEL-DROPDOWN-MENU",
+      "familyId": "FAM-SELECT",
+      "sourceVariantId": "VAR-SEL-DROPDOWN-MENU",
+      "decisionType": "merge",
+      "targetVariantId": "VAR-SEL-FORM-PICKER",
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-CRD-SURFACE": {
+      "decisionId": "DEC-VAR-CRD-SURFACE",
+      "familyId": "FAM-CARD",
+      "sourceVariantId": "VAR-CRD-SURFACE",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-CRD-KPI-HERO": {
+      "decisionId": "DEC-VAR-CRD-KPI-HERO",
+      "familyId": "FAM-CARD",
+      "sourceVariantId": "VAR-CRD-KPI-HERO",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-MOD-MODAL": {
+      "decisionId": "DEC-VAR-MOD-MODAL",
+      "familyId": "FAM-MODAL",
+      "sourceVariantId": "VAR-MOD-MODAL",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-MOD-ALERT": {
+      "decisionId": "DEC-VAR-MOD-ALERT",
+      "familyId": "FAM-MODAL",
+      "sourceVariantId": "VAR-MOD-ALERT",
+      "decisionType": "merge",
+      "targetVariantId": "VAR-MOD-MODAL",
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-MOD-SHEET": {
+      "decisionId": "DEC-VAR-MOD-SHEET",
+      "familyId": "FAM-MODAL",
+      "sourceVariantId": "VAR-MOD-SHEET",
+      "decisionType": "merge",
+      "targetVariantId": "VAR-MOD-MODAL",
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-NAV-UNDERLINE-TAB": {
+      "decisionId": "DEC-VAR-NAV-UNDERLINE-TAB",
+      "familyId": "FAM-NAV",
+      "sourceVariantId": "VAR-NAV-UNDERLINE-TAB",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-NAV-SEGMENT-PILL": {
+      "decisionId": "DEC-VAR-NAV-SEGMENT-PILL",
+      "familyId": "FAM-NAV",
+      "sourceVariantId": "VAR-NAV-SEGMENT-PILL",
+      "decisionType": "merge",
+      "targetVariantId": "VAR-NAV-UNDERLINE-TAB",
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-SKL-PULSE": {
+      "decisionId": "DEC-VAR-SKL-PULSE",
+      "familyId": "FAM-LOADING",
+      "sourceVariantId": "VAR-SKL-PULSE",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-EMP-ZERO-STATE": {
+      "decisionId": "DEC-VAR-EMP-ZERO-STATE",
+      "familyId": "FAM-EMPTY",
+      "sourceVariantId": "VAR-EMP-ZERO-STATE",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-CHT-BAR-TREND": {
+      "decisionId": "DEC-VAR-CHT-BAR-TREND",
+      "familyId": "FAM-CHART",
+      "sourceVariantId": "VAR-CHT-BAR-TREND",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    },
+    "VAR-SPU-EXECUTION": {
+      "decisionId": "DEC-VAR-SPU-EXECUTION",
+      "familyId": "FAM-SPECIALIZED",
+      "sourceVariantId": "VAR-SPU-EXECUTION",
+      "decisionType": "keep_separate",
+      "targetVariantId": null,
+      "notes": "",
+      "updatedAt": "2026-10-13T05:32:16.255Z",
+      "status": "design_decision_recorded_pending_system_definition",
+      "isImplemented": false
+    }
+  }
+}

@@ -477,8 +477,8 @@ export default function ManagerCorrectiveActionsPage() {
       <Dialog open={!!selectedCA} onOpenChange={(open) => !open && setSelectedCA(null)}>
         <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden border-none shadow-2xl">
           <DialogHeader className="p-6 pb-4">
-            <DialogTitle className="font-semibold text-heading text-xl">Resolve issue</DialogTitle>
-            <DialogDescription className="text-muted-text text-sm">
+            <DialogTitle className="font-semibold text-heading">Resolve issue</DialogTitle>
+            <DialogDescription className="text-muted-text text-[13px]">
               Provide evidence and steps taken to remediate this non-compliance.
             </DialogDescription>
           </DialogHeader>
@@ -578,9 +578,9 @@ export default function ManagerCorrectiveActionsPage() {
           </div>
 
           <DialogFooter className="p-6 pt-2 bg-muted/5 border-t border-border/50 gap-3">
-            <Button variant="outline" onClick={() => setSelectedCA(null)} className="font-medium">Cancel</Button>
+            <Button variant="outline" onClick={() => setSelectedCA(null)} className="h-10 text-[13px] font-medium">Cancel</Button>
             <Button
-              className="font-semibold shadow-lg shadow-primary/20 px-6 active:scale-95 transition-all"
+              className="h-10 text-[13px] font-semibold shadow-lg shadow-primary/20 px-6 active:scale-95 transition-all"
               onClick={handleComplete}
               disabled={isResolving || !resolutionNote}
             >

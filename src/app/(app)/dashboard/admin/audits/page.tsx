@@ -350,7 +350,7 @@ export default function AdminAuditsPage() {
               </DialogTrigger>
               <DialogContent className="sm:max-w-lg p-6">
                 <DialogHeader>
-                  <DialogTitle className="page-heading">
+                  <DialogTitle className="font-semibold text-heading">
                     {editingAuditId ? 'Edit audit' : 'New audit'}
                   </DialogTitle>
                 </DialogHeader>
@@ -360,7 +360,7 @@ export default function AdminAuditsPage() {
                     <div className="flex flex-col gap-2">
                       <Label htmlFor="template" className="text-body font-normal">Template</Label>
                       <Select value={formData.templateId} onValueChange={(val) => updateFormField('templateId', val)}>
-                        <SelectTrigger id="template" className="!h-11 text-body bg-muted/5 border-border/50">
+                        <SelectTrigger id="template" className="h-10 text-body bg-muted/5 border-border/50">
                           <SelectValue placeholder="Select template" />
                         </SelectTrigger>
                         <SelectContent>
@@ -395,7 +395,7 @@ export default function AdminAuditsPage() {
                           return updates;
                         });
                       }}>
-                        <SelectTrigger id="location" className="!h-11 text-body bg-muted/5 border-border/50">
+                        <SelectTrigger id="location" className="h-10 text-body bg-muted/5 border-border/50">
                           <SelectValue placeholder="Select location" />
                         </SelectTrigger>
                         <SelectContent>
@@ -411,7 +411,7 @@ export default function AdminAuditsPage() {
                     <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2">
                       <Label htmlFor="manager" className="text-body font-normal">Manager</Label>
                       <Select value={formData.managerId} onValueChange={(val) => updateFormField('managerId', val)}>
-                        <SelectTrigger id="manager" className="!h-11 text-body bg-muted/5 border-border/50">
+                        <SelectTrigger id="manager" className="h-10 text-body bg-muted/5 border-border/50">
                           <SelectValue placeholder="Select manager" />
                         </SelectTrigger>
                         <SelectContent>
@@ -438,7 +438,7 @@ export default function AdminAuditsPage() {
                           <Button
                             variant="outline"
                             className={cn(
-                              "!h-11 w-full justify-start text-left font-normal border-border/50 bg-muted/5 text-body",
+                              "h-10 text-[13px] w-full justify-start text-left font-normal border-border/50 bg-muted/5 text-body",
                               !formData.scheduledDate && "text-muted-text"
                             )}
                           >
@@ -478,7 +478,7 @@ export default function AdminAuditsPage() {
                           <Button
                             variant="outline"
                             className={cn(
-                              "!h-11 w-full justify-start text-left font-normal border-border/50 bg-muted/5 text-body",
+                              "h-10 text-[13px] w-full justify-start text-left font-normal border-border/50 bg-muted/5 text-body",
                               !formData.deadline && "text-muted-text"
                             )}
                           >
@@ -514,7 +514,7 @@ export default function AdminAuditsPage() {
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="recurring" className="text-body font-normal">Frequency</Label>
                     <Select value={formData.recurring} onValueChange={(val: any) => updateFormField('recurring', val)}>
-                      <SelectTrigger id="recurring" className="!h-11 text-body bg-muted/5 border-border/50">
+                      <SelectTrigger id="recurring" className="h-10 text-body bg-muted/5 border-border/50">
                         <SelectValue placeholder="Frequency" />
                       </SelectTrigger>
                       <SelectContent>
@@ -532,7 +532,7 @@ export default function AdminAuditsPage() {
                         <div className="flex flex-col gap-2">
                           <Label className="text-body font-normal">Repeat on day</Label>
                           <Select value={formData.recurringDay.toString()} onValueChange={(val) => updateFormField('recurringDay', parseInt(val))}>
-                            <SelectTrigger className="!h-11 text-body bg-background border-border/50">
+                            <SelectTrigger className="h-10 text-body bg-background border-border/50">
                               <SelectValue placeholder="Select day" />
                             </SelectTrigger>
                             <SelectContent>
@@ -552,7 +552,7 @@ export default function AdminAuditsPage() {
                         <div className="flex flex-col gap-2">
                           <Label className="text-body font-normal">Repeat on date</Label>
                           <Select value={formData.recurringDay.toString()} onValueChange={(val) => updateFormField('recurringDay', parseInt(val))}>
-                            <SelectTrigger className="!h-11 text-body bg-background border-border/50">
+                            <SelectTrigger className="h-10 text-body bg-background border-border/50">
                               <SelectValue placeholder="Select date" />
                             </SelectTrigger>
                             <SelectContent>
@@ -571,7 +571,7 @@ export default function AdminAuditsPage() {
                             <Button
                               variant="outline"
                               className={cn(
-                                "!h-11 w-full justify-start text-left font-normal border-border/50 bg-background text-body",
+                                "h-10 text-[13px] w-full justify-start text-left font-normal border-border/50 bg-background text-body",
                                 !formData.repeatUntil && "text-muted-text"
                               )}
                             >
@@ -610,9 +610,9 @@ export default function AdminAuditsPage() {
                 </div>
 
                 <DialogFooter className="gap-2">
-                  <Button variant="outline" className="h-11 px-6 font-medium" onClick={() => setOpen(false)}>Cancel</Button>
+                  <Button variant="outline" className="h-10 px-5 text-[13px] font-medium" onClick={() => setOpen(false)}>Cancel</Button>
                   <Button
-                    className="h-11 px-6 font-medium shadow-lg shadow-primary/20"
+                    className="h-10 px-5 text-[13px] font-medium shadow-lg shadow-primary/20"
                     onClick={handlePublish}
                     disabled={loading || !formData.templateId || !formData.locationId || !formData.managerId || !formData.scheduledDate || !formData.deadline}
                   >
@@ -726,7 +726,7 @@ export default function AdminAuditsPage() {
                     )}>
                       <TableCell className="standard-table-cell">
                         <div className="flex items-center gap-2">
-                          <span className="text-[14px] font-normal text-body">{a.templateTitle}</span>
+                          <span className="text-[13px] font-normal text-body">{a.templateTitle}</span>
                           {a.recurring && a.recurring !== 'none' && (
                             <div className="h-5 rounded-full bg-primary/10 text-primary px-2 flex items-center gap-1.5 w-fit text-[11px] font-normal">
                               <Clock className="w-2.5 h-2.5" />
@@ -735,13 +735,13 @@ export default function AdminAuditsPage() {
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="standard-table-cell text-[14px] font-normal text-body">
+                      <TableCell className="standard-table-cell text-[13px] font-normal text-body">
                         {a.locationName}
                       </TableCell>
                       <TableCell className="standard-table-cell">{getStatusBadge(a)}</TableCell>
                     <TableCell className="standard-table-cell">
                       <div className="flex flex-col gap-1.5 font-normal">
-                        <span className="text-[14px] font-normal text-body">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                        <span className="text-[13px] font-normal text-body">{a.deadline?.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                       </div>
                     </TableCell>
                     <TableCell className="standard-table-cell">
@@ -750,19 +750,19 @@ export default function AdminAuditsPage() {
                           Surprise
                         </Badge>
                       ) : (
-                        <span className="text-[14px] font-normal text-muted-foreground">Routine</span>
+                        <span className="text-[13px] font-normal text-muted-foreground">Routine</span>
                       )}
                     </TableCell>
                     <TableCell className="standard-table-cell text-right">
                       {a.status === 'completed' ? (
                         <div className="flex flex-col items-end gap-0.5">
-                          <span className={cn("text-[14px] font-medium tabular-nums", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
+                          <span className={cn("text-[13px] font-medium tabular-nums", a.scorePercentage < 70 ? "text-destructive" : "text-success")}>
                             {a.scorePercentage}%
                           </span>
                           <span className="text-[11px] font-normal text-muted-foreground/50 tabular-nums">{a.totalScore} / {a.maxPossibleScore}</span>
                         </div>
                       ) : (
-                        <span className="text-[14px] font-normal text-muted-foreground">Pending</span>
+                        <span className="text-[13px] font-normal text-muted-foreground">Pending</span>
                       )}
                     </TableCell>
                     <TableCell className="px-4 py-3">

@@ -146,7 +146,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                     <SidebarMenuButton
                       asChild
                       isActive={pathname === item.href}
-                      className="h-10 text-muted-text hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-primary/5 data-[active=true]:text-primary data-[active=true]:font-medium transition-all duration-200 px-3 rounded-lg"
+                      className="h-10 text-muted-text hover:bg-accent hover:text-accent-foreground data-[active=true]:bg-primary/5 data-[active=true]:text-primary data-[active=true]:font-medium transition-all duration-150 px-3 rounded-lg active:scale-[0.985]"
                     >
                       <Link href={item.href} className="flex items-center gap-3 w-full">
                         <item.icon className="h-4 w-4 shrink-0" />
@@ -209,6 +209,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                           <span>Settings</span>
                         </Link>
                       </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
                         <div className="relative mr-2 h-4 w-4 flex items-center justify-center">
                           <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -283,6 +284,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                     <span>Settings</span>
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
                   <div className="relative mr-2 h-4 w-4 flex items-center justify-center">
                     <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -301,19 +303,19 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
         </header>
 
         {/* Scrollable content */}
-        <main className="flex-1 overflow-y-auto pb-20">
+        <main className="flex-1 overflow-y-auto pb-[calc(5rem+env(safe-area-inset-bottom,0px))]">
           {children}
         </main>
 
         {/* Bottom navigation bar */}
-        <nav className="shrink-0 fixed bottom-0 left-0 right-0 z-30 h-16 bg-background border-t border-border/80 flex items-center justify-around px-2">
+        <nav className="shrink-0 fixed bottom-0 left-0 right-0 z-30 pb-[env(safe-area-inset-bottom,0px)] h-[calc(4rem+env(safe-area-inset-bottom,0px))] bg-background border-t border-border/80 flex items-center justify-around px-2">
           {mobileNavItems.map((item: any) => {
             const isActive = pathname === item.href;
 
             if (item.component) {
               const Comp = item.component;
               return (
-                <div key={item.title} className="flex flex-col items-center justify-center gap-1 flex-1 h-full rounded-xl transition-colors text-muted-text/60">
+                <div key={item.title} className="flex flex-col items-center justify-center gap-1 flex-1 h-full rounded-xl transition-all duration-150 active:scale-95 text-muted-text/60">
                   <div className="h-10 w-12 flex items-center justify-center">
                     <Comp variant="sidebar-item" userRole={role} />
                   </div>
@@ -327,7 +329,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-1 flex-1 h-full rounded-xl transition-colors",
+                  "flex flex-col items-center justify-center gap-1 flex-1 h-full rounded-xl transition-all duration-150 active:scale-95",
                   isActive ? "text-primary" : "text-muted-text/60 hover:text-muted-text"
                 )}
               >

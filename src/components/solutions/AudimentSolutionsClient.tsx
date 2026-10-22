@@ -262,27 +262,42 @@ export function AudimentSolutionsClient() {
   const cal = getCalAttributes('general');
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+    let lenis: Lenis | null = null;
+    let ticker: ((time: number) => void) | null = null;
+    let t1: ReturnType<typeof setTimeout> | undefined;
 
-    const lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
-    lenis.on('scroll', ScrollTrigger.update);
-    const ticker = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(ticker);
-    gsap.ticker.lagSmoothing(0);
-
-    observeDotBorderButtons();
-    observeAnimations();
-    initCalEmbed();
-
-    const t1 = setTimeout(() => ScrollTrigger.refresh(), 300);
     const onLoad = () => ScrollTrigger.refresh();
-    window.addEventListener('load', onLoad);
+
+    const initHeavy = () => {
+      gsap.registerPlugin(ScrollTrigger);
+
+      lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      ticker = (time: number) => {
+        if (lenis) lenis.raf(time * 1000);
+      };
+      gsap.ticker.add(ticker);
+      gsap.ticker.lagSmoothing(0);
+
+      observeDotBorderButtons();
+      observeAnimations();
+      initCalEmbed();
+
+      t1 = setTimeout(() => ScrollTrigger.refresh(), 300);
+      window.addEventListener('load', onLoad);
+    };
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(initHeavy, { timeout: 1200 });
+    } else {
+      setTimeout(initHeavy, 300);
+    }
 
     return () => {
-      clearTimeout(t1);
+      if (t1) clearTimeout(t1);
       window.removeEventListener('load', onLoad);
-      gsap.ticker.remove(ticker);
-      lenis.destroy();
+      if (ticker) gsap.ticker.remove(ticker);
+      if (lenis) lenis.destroy();
     };
   }, []);
 

@@ -45,7 +45,7 @@ function ManagerMultiSelect({ managers, value, onChange }: { managers: any[], va
             variant="outline" 
             role="combobox" 
             aria-expanded={open}
-            className="w-full min-h-11 h-auto justify-between border-border/50 bg-background hover:bg-muted/5 p-2 px-3 transition-colors active:scale-[0.98]"
+            className="w-full min-h-10 h-auto justify-between border-border/50 bg-background hover:bg-muted/5 p-2 px-3 text-[13px] transition-colors active:scale-[0.98]"
           >
             <div className="flex flex-wrap gap-1.5 items-center">
               {selectedManagers.length > 0 ? (
@@ -66,7 +66,7 @@ function ManagerMultiSelect({ managers, value, onChange }: { managers: any[], va
                   </Badge>
                 ))
               ) : (
-                <span className="text-muted-text text-sm font-normal">Select managers...</span>
+                <span className="text-muted-text text-[13px] font-normal">Select managers...</span>
               )}
             </div>
             <ChevronDownIcon className="h-4 w-4 shrink-0 opacity-50" />
@@ -78,7 +78,7 @@ function ManagerMultiSelect({ managers, value, onChange }: { managers: any[], va
           <div className="flex items-center border-b border-border/50 px-3">
             <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
             <input
-              className="flex h-11 w-full bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-10 w-full bg-transparent py-2.5 text-[13px] outline-none placeholder:text-[13px] placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
               placeholder="Search managers..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -86,7 +86,7 @@ function ManagerMultiSelect({ managers, value, onChange }: { managers: any[], va
           </div>
           <div className="max-h-[300px] overflow-y-auto p-1 custom-scrollbar">
             {filteredManagers.length === 0 ? (
-              <div className="py-6 text-center text-sm text-muted-foreground">
+              <div className="py-6 text-center text-[13px] text-muted-foreground">
                 No manager found.
               </div>
             ) : (
@@ -95,7 +95,7 @@ function ManagerMultiSelect({ managers, value, onChange }: { managers: any[], va
                   <div
                     key={manager.id}
                     className={cn(
-                      "flex items-center gap-2 rounded-md px-2 py-2 text-sm cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors",
+                      "flex items-center gap-2 rounded-md px-2.5 py-2 text-[13px] cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors",
                       value.includes(manager.id) ? "bg-accent/50" : ""
                     )}
                     onClick={() => toggleManager(manager.id)}
@@ -107,7 +107,7 @@ function ManagerMultiSelect({ managers, value, onChange }: { managers: any[], va
                       {value.includes(manager.id) && <Check className="h-3 w-3 text-primary-foreground" />}
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-medium">{manager.name}</span>
+                      <span className="text-[13px] font-medium">{manager.name}</span>
                       <span className="text-[10px] text-muted-text">{manager.email}</span>
                     </div>
                   </div>
@@ -358,8 +358,8 @@ export default function AdminLocationsPage() {
                     <Input type="time" value={formData.defaultEndTime} onChange={(e) => setFormData({ ...formData, defaultEndTime: e.target.value })} className="text-body" />
                   </div>
                 </div>
-                <div className="flex flex-col gap-4">
-                  <span className="text-body font-normal text-sm">Managers</span>
+                <div className="flex flex-col gap-2">
+                  <Label className="text-body font-normal">Managers</Label>
                   <ManagerMultiSelect
                     managers={managers}
                     value={formData.assignedManagerIds}
@@ -367,7 +367,7 @@ export default function AdminLocationsPage() {
                   />
                 </div>
                 {error && <p className="text-sm text-destructive">{error}</p>}
-                <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Adding...' : 'Add Location'}</Button></DialogFooter>
+                <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium h-10 text-[13px]">{loading ? 'Adding...' : 'Add Location'}</Button></DialogFooter>
               </form>
             </DialogContent>
           </Dialog>
@@ -396,7 +396,7 @@ export default function AdminLocationsPage() {
               ) : (
                 locations.map((location: any) => (
                   <TableRow key={location.id} className="standard-table-row group">
-                    <TableCell className="standard-table-cell font-normal text-sm text-body">
+                    <TableCell className="standard-table-cell font-normal text-body">
                       {location.name}
                     </TableCell>
                     <TableCell className="standard-table-cell text-body font-normal">{location.city}</TableCell>
@@ -464,8 +464,8 @@ export default function AdminLocationsPage() {
                   <Input type="time" value={editFormData.defaultEndTime} onChange={(e) => setEditFormData({ ...editFormData, defaultEndTime: e.target.value })} className="text-body" />
                 </div>
               </div>
-              <div className="space-y-4">
-                <span className="text-body font-normal text-sm">Assigned Managers</span>
+              <div className="space-y-2">
+                <Label className="text-body font-normal">Assigned Managers</Label>
                 <ManagerMultiSelect
                   managers={managers}
                   value={editFormData.assignedManagerIds}
@@ -473,7 +473,7 @@ export default function AdminLocationsPage() {
                 />
               </div>
               {error && <p className="text-sm text-destructive">{error}</p>}
-              <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium">{loading ? 'Updating...' : 'Save Changes'}</Button></DialogFooter>
+              <DialogFooter><Button type="submit" disabled={loading} className="w-full font-medium h-10 text-[13px]">{loading ? 'Updating...' : 'Save Changes'}</Button></DialogFooter>
             </form>
           </DialogContent>
         </Dialog>

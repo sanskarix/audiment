@@ -1,0 +1,1470 @@
+[
+  {
+    "id": "PAGE-001",
+    "sourceFile": "src/app/(app)/dashboard/admin/audits/page.tsx",
+    "routePath": "/dashboard/admin/audits",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 13,
+    "components": [
+      "DashboardShell",
+      "Table",
+      "TableBody",
+      "TableCell",
+      "TableHead",
+      "TableHeader",
+      "TableRow",
+      "Button",
+      "useAuthSync",
+      "Badge",
+      "Dialog",
+      "DialogContent",
+      "DialogDescription",
+      "DialogFooter",
+      "DialogHeader",
+      "DialogTitle",
+      "DialogTrigger",
+      "Input",
+      "Label",
+      "Select",
+      "SelectContent",
+      "SelectItem",
+      "SelectTrigger",
+      "SelectValue",
+      "Switch",
+      "Calendar",
+      "Popover",
+      "PopoverContent",
+      "PopoverTrigger",
+      "Card"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-002",
+    "sourceFile": "src/app/(app)/dashboard/admin/corrective-actions/page.tsx",
+    "routePath": "/dashboard/admin/corrective-actions",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 9,
+    "components": [
+      "DashboardShell",
+      "Label",
+      "Input",
+      "Card",
+      "CardContent",
+      "CardHeader",
+      "CardTitle",
+      "CardDescription",
+      "Badge",
+      "Calendar",
+      "Skeleton",
+      "Button",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-003",
+    "sourceFile": "src/app/(app)/dashboard/admin/flashmob/[flashmobId]/page.tsx",
+    "routePath": "/dashboard/admin/flashmob/[flashmobId]",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 4,
+    "components": [
+      "DashboardShell",
+      "Button",
+      "Badge",
+      "Skeleton"
+    ],
+    "states": {
+      "loading": true,
+      "empty": false,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-004",
+    "sourceFile": "src/app/(app)/dashboard/admin/flashmob/page.tsx",
+    "routePath": "/dashboard/admin/flashmob",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 9,
+    "components": [
+      "useAuthSync",
+      "DashboardShell",
+      "Button",
+      "Input",
+      "Label",
+      "Select",
+      "SelectContent",
+      "SelectItem",
+      "SelectTrigger",
+      "SelectValue",
+      "Calendar",
+      "Badge",
+      "Tabs",
+      "TabsList",
+      "TabsTrigger",
+      "TabsContent"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-005",
+    "sourceFile": "src/app/(app)/dashboard/admin/locations/page.tsx",
+    "routePath": "/dashboard/admin/locations",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 12,
+    "components": [
+      "DashboardShell",
+      "Table",
+      "TableBody",
+      "TableCell",
+      "TableHead",
+      "TableHeader",
+      "TableRow",
+      "Button",
+      "Badge",
+      "Dialog",
+      "DialogContent",
+      "DialogDescription",
+      "DialogFooter",
+      "DialogHeader",
+      "DialogTitle",
+      "DialogTrigger",
+      "Input",
+      "Label",
+      "Select",
+      "SelectContent",
+      "SelectItem",
+      "SelectTrigger",
+      "SelectValue",
+      "Switch",
+      "DropdownMenu",
+      "DropdownMenuContent",
+      "DropdownMenuItem",
+      "DropdownMenuTrigger",
+      "Card",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-006",
+    "sourceFile": "src/app/(app)/dashboard/admin/page.tsx",
+    "routePath": "/dashboard/admin",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 5,
+    "components": [
+      "DashboardShell",
+      "Progress",
+      "Button",
+      "Skeleton",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": false,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-007",
+    "sourceFile": "src/app/(app)/dashboard/admin/reports/[auditId]/page.tsx",
+    "routePath": "/dashboard/admin/reports/[auditId]",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 3,
+    "components": [
+      "DashboardShell",
+      "Button",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-008",
+    "sourceFile": "src/app/(app)/dashboard/admin/reports/page.tsx",
+    "routePath": "/dashboard/admin/reports",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 7,
+    "components": [
+      "DashboardShell",
+      "Label",
+      "Input",
+      "Button",
+      "Card",
+      "CardContent",
+      "Skeleton",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-009",
+    "sourceFile": "src/app/(app)/dashboard/admin/settings/page.tsx",
+    "routePath": "/dashboard/admin/settings",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 11,
+    "components": [
+      "DashboardShell",
+      "Dialog",
+      "DialogContent",
+      "DialogHeader",
+      "DialogTitle",
+      "DialogFooter",
+      "useAuthSync",
+      "Card",
+      "CardContent",
+      "CardDescription",
+      "CardHeader",
+      "CardTitle",
+      "CardFooter",
+      "Label",
+      "Input",
+      "Button",
+      "Switch",
+      "Avatar",
+      "AvatarFallback",
+      "AvatarImage",
+      "Select",
+      "SelectContent",
+      "SelectItem",
+      "SelectTrigger",
+      "SelectValue",
+      "Skeleton"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-010",
+    "sourceFile": "src/app/(app)/dashboard/admin/templates/[id]/edit/page.tsx",
+    "routePath": "/dashboard/admin/templates/[id]/edit",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 2,
+    "components": [
+      "DashboardShell",
+      "TemplateBuilder"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-011",
+    "sourceFile": "src/app/(app)/dashboard/admin/templates/new/page.tsx",
+    "routePath": "/dashboard/admin/templates/new",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 2,
+    "components": [
+      "DashboardShell",
+      "TemplateBuilder"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-012",
+    "sourceFile": "src/app/(app)/dashboard/admin/templates/page.tsx",
+    "routePath": "/dashboard/admin/templates",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 13,
+    "components": [
+      "DashboardShell",
+      "Table",
+      "TableBody",
+      "TableCell",
+      "TableHead",
+      "TableHeader",
+      "TableRow",
+      "Button",
+      "Badge",
+      "Dialog",
+      "DialogContent",
+      "DialogDescription",
+      "DialogFooter",
+      "DialogHeader",
+      "DialogTitle",
+      "DialogTrigger",
+      "Label",
+      "Select",
+      "SelectContent",
+      "SelectItem",
+      "SelectTrigger",
+      "SelectValue",
+      "Switch",
+      "Card",
+      "ScrollArea",
+      "Accordion",
+      "AccordionContent",
+      "AccordionItem",
+      "AccordionTrigger",
+      "DropdownMenu",
+      "DropdownMenuContent",
+      "DropdownMenuItem",
+      "DropdownMenuTrigger",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-013",
+    "sourceFile": "src/app/(app)/dashboard/admin/users/page.tsx",
+    "routePath": "/dashboard/admin/users",
+    "role": "Admin",
+    "layout": "DashboardShell",
+    "importsCount": 13,
+    "components": [
+      "DashboardShell",
+      "Table",
+      "TableBody",
+      "TableCell",
+      "TableHead",
+      "TableHeader",
+      "TableRow",
+      "Button",
+      "Badge",
+      "Dialog",
+      "DialogContent",
+      "DialogDescription",
+      "DialogFooter",
+      "DialogHeader",
+      "DialogTitle",
+      "DialogTrigger",
+      "Input",
+      "Label",
+      "Select",
+      "SelectContent",
+      "SelectItem",
+      "SelectTrigger",
+      "SelectValue",
+      "Switch",
+      "DropdownMenu",
+      "DropdownMenuContent",
+      "DropdownMenuItem",
+      "DropdownMenuTrigger",
+      "DropdownMenuLabel",
+      "DropdownMenuSeparator",
+      "DropdownMenuRadioGroup",
+      "DropdownMenuRadioItem",
+      "AlertDialog",
+      "AlertDialogAction",
+      "AlertDialogCancel",
+      "AlertDialogContent",
+      "AlertDialogDescription",
+      "AlertDialogFooter",
+      "AlertDialogHeader",
+      "AlertDialogTitle",
+      "Card",
+      "CardContent",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-014",
+    "sourceFile": "src/app/(app)/dashboard/auditor/audits/[auditId]/page.tsx",
+    "routePath": "/dashboard/auditor/audits/[auditId]",
+    "role": "Auditor",
+    "layout": "DashboardShell",
+    "importsCount": 7,
+    "components": [
+      "Button",
+      "Progress",
+      "Label",
+      "Textarea",
+      "Badge",
+      "Skeleton",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-015",
+    "sourceFile": "src/app/(app)/dashboard/auditor/flashmob/page.tsx",
+    "routePath": "/dashboard/auditor/flashmob",
+    "role": "Auditor",
+    "layout": "DashboardShell",
+    "importsCount": 9,
+    "components": [
+      "DashboardShell",
+      "Card",
+      "CardContent",
+      "Button",
+      "Select",
+      "SelectContent",
+      "SelectItem",
+      "SelectTrigger",
+      "SelectValue",
+      "Label",
+      "Tabs",
+      "TabsList",
+      "TabsTrigger",
+      "TabsContent",
+      "Skeleton",
+      "Badge",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-016",
+    "sourceFile": "src/app/(app)/dashboard/auditor/history/page.tsx",
+    "routePath": "/dashboard/auditor/history",
+    "role": "Auditor",
+    "layout": "DashboardShell",
+    "importsCount": 6,
+    "components": [
+      "DashboardShell",
+      "Skeleton",
+      "Badge",
+      "Button",
+      "Input",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-017",
+    "sourceFile": "src/app/(app)/dashboard/auditor/page.tsx",
+    "routePath": "/dashboard/auditor",
+    "role": "Auditor",
+    "layout": "DashboardShell",
+    "importsCount": 7,
+    "components": [
+      "DashboardShell",
+      "Card",
+      "CardContent",
+      "CardDescription",
+      "CardFooter",
+      "CardHeader",
+      "CardTitle",
+      "Button",
+      "Badge",
+      "Input",
+      "Skeleton",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-018",
+    "sourceFile": "src/app/(app)/dashboard/auditor/settings/page.tsx",
+    "routePath": "/dashboard/auditor/settings",
+    "role": "Auditor",
+    "layout": "DashboardShell",
+    "importsCount": 10,
+    "components": [
+      "DashboardShell",
+      "Dialog",
+      "DialogContent",
+      "DialogHeader",
+      "DialogTitle",
+      "DialogFooter",
+      "Card",
+      "CardContent",
+      "CardDescription",
+      "CardHeader",
+      "CardTitle",
+      "CardFooter",
+      "Label",
+      "Input",
+      "Button",
+      "Avatar",
+      "AvatarFallback",
+      "AvatarImage",
+      "Select",
+      "SelectContent",
+      "SelectItem",
+      "SelectTrigger",
+      "SelectValue",
+      "Skeleton",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-019",
+    "sourceFile": "src/app/(app)/dashboard/manager/auditors/[id]/page.tsx",
+    "routePath": "/dashboard/manager/auditors/[id]",
+    "role": "Manager",
+    "layout": "DashboardShell",
+    "importsCount": 5,
+    "components": [
+      "DashboardShell",
+      "Button",
+      "Badge",
+      "Skeleton",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-020",
+    "sourceFile": "src/app/(app)/dashboard/manager/auditors/page.tsx",
+    "routePath": "/dashboard/manager/auditors",
+    "role": "Manager",
+    "layout": "DashboardShell",
+    "importsCount": 7,
+    "components": [
+      "DashboardShell",
+      "Badge",
+      "Button",
+      "Input",
+      "Label",
+      "Switch",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-021",
+    "sourceFile": "src/app/(app)/dashboard/manager/audits/page.tsx",
+    "routePath": "/dashboard/manager/audits",
+    "role": "Manager",
+    "layout": "DashboardShell",
+    "importsCount": 13,
+    "components": [
+      "DashboardShell",
+      "Table",
+      "TableBody",
+      "TableCell",
+      "TableHead",
+      "TableHeader",
+      "TableRow",
+      "Button",
+      "Badge",
+      "Dialog",
+      "DialogContent",
+      "DialogDescription",
+      "DialogFooter",
+      "DialogHeader",
+      "DialogTitle",
+      "DialogTrigger",
+      "Label",
+      "Input",
+      "Select",
+      "SelectContent",
+      "SelectItem",
+      "SelectTrigger",
+      "SelectValue",
+      "Card",
+      "useAuthSync",
+      "Popover",
+      "PopoverContent",
+      "PopoverTrigger",
+      "Calendar",
+      "Switch"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-022",
+    "sourceFile": "src/app/(app)/dashboard/manager/calendar/page.tsx",
+    "routePath": "/dashboard/manager/calendar",
+    "role": "Manager",
+    "layout": "DashboardShell",
+    "importsCount": 5,
+    "components": [
+      "DashboardShell",
+      "Card",
+      "CardContent",
+      "Button",
+      "Badge",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-023",
+    "sourceFile": "src/app/(app)/dashboard/manager/corrective-actions/page.tsx",
+    "routePath": "/dashboard/manager/corrective-actions",
+    "role": "Manager",
+    "layout": "DashboardShell",
+    "importsCount": 7,
+    "components": [
+      "DashboardShell",
+      "Badge",
+      "Button",
+      "Textarea",
+      "Label",
+      "Tabs",
+      "TabsContent",
+      "TabsList",
+      "TabsTrigger",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-024",
+    "sourceFile": "src/app/(app)/dashboard/manager/page.tsx",
+    "routePath": "/dashboard/manager",
+    "role": "Manager",
+    "layout": "DashboardShell",
+    "importsCount": 9,
+    "components": [
+      "DashboardShell",
+      "Badge",
+      "Button",
+      "Textarea",
+      "Input",
+      "Label",
+      "Skeleton",
+      "ScrollArea",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-025",
+    "sourceFile": "src/app/(app)/dashboard/manager/reports/[auditId]/page.tsx",
+    "routePath": "/dashboard/manager/reports/[auditId]",
+    "role": "Manager",
+    "layout": "DashboardShell",
+    "importsCount": 3,
+    "components": [
+      "DashboardShell",
+      "Button",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-026",
+    "sourceFile": "src/app/(app)/dashboard/manager/reports/page.tsx",
+    "routePath": "/dashboard/manager/reports",
+    "role": "Manager",
+    "layout": "DashboardShell",
+    "importsCount": 8,
+    "components": [
+      "DashboardShell",
+      "Label",
+      "Input",
+      "Button",
+      "Badge",
+      "Card",
+      "CardContent",
+      "CardHeader",
+      "CardTitle",
+      "CardDescription",
+      "Skeleton",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-027",
+    "sourceFile": "src/app/(app)/dashboard/manager/settings/page.tsx",
+    "routePath": "/dashboard/manager/settings",
+    "role": "Manager",
+    "layout": "DashboardShell",
+    "importsCount": 9,
+    "components": [
+      "DashboardShell",
+      "Dialog",
+      "DialogContent",
+      "DialogHeader",
+      "DialogTitle",
+      "DialogFooter",
+      "Card",
+      "CardContent",
+      "CardDescription",
+      "CardHeader",
+      "CardTitle",
+      "CardFooter",
+      "Label",
+      "Input",
+      "Button",
+      "Avatar",
+      "AvatarFallback",
+      "AvatarImage",
+      "Skeleton",
+      "useAuthSync"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-028",
+    "sourceFile": "src/app/(app)/login/page.tsx",
+    "routePath": "/login",
+    "role": "Public / Unauthenticated",
+    "layout": "LoginLayout",
+    "importsCount": 5,
+    "components": [
+      "Button",
+      "Input",
+      "Label",
+      "Card",
+      "CardContent",
+      "CardDescription",
+      "CardHeader",
+      "CardTitle",
+      "ShimmerText"
+    ],
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-029",
+    "sourceFile": "src/app/(app)/test-recording/page.tsx",
+    "routePath": "/test-recording",
+    "role": "Dev / Internal Tool",
+    "layout": "TestRecordingLayout",
+    "importsCount": 0,
+    "components": [],
+    "states": {
+      "loading": false,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-030",
+    "sourceFile": "src/app/(website)/(public)/cookie-policy/page.tsx",
+    "routePath": "/cookie-policy",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "AudimentCookieClient"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-031",
+    "sourceFile": "src/app/(website)/(public)/privacy-policy/page.tsx",
+    "routePath": "/privacy-policy",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "AudimentPrivacyClient"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-032",
+    "sourceFile": "src/app/(website)/(public)/terms-of-service/page.tsx",
+    "routePath": "/terms-of-service",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "AudimentTermsClient"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-033",
+    "sourceFile": "src/app/(website)/about/page.tsx",
+    "routePath": "/about",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "AudimentAboutClient"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-034",
+    "sourceFile": "src/app/(website)/blog/[slug]/page.tsx",
+    "routePath": "/blog/[slug]",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "BlogMetadataPublisher"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-035",
+    "sourceFile": "src/app/(website)/blog/page.tsx",
+    "routePath": "/blog",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "AudimentBlogHubClient"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-036",
+    "sourceFile": "src/app/(website)/compare/audiment-vs-checklist-apps/page.tsx",
+    "routePath": "/compare/audiment-vs-checklist-apps",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "CompareTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-037",
+    "sourceFile": "src/app/(website)/compare/audiment-vs-goaudits/page.tsx",
+    "routePath": "/compare/audiment-vs-goaudits",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "CompareTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-038",
+    "sourceFile": "src/app/(website)/compare/audiment-vs-jolt/page.tsx",
+    "routePath": "/compare/audiment-vs-jolt",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "CompareTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": true,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-039",
+    "sourceFile": "src/app/(website)/compare/audiment-vs-safetyculture/page.tsx",
+    "routePath": "/compare/audiment-vs-safetyculture",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "CompareTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-040",
+    "sourceFile": "src/app/(website)/compare/audiment-vs-zenput/page.tsx",
+    "routePath": "/compare/audiment-vs-zenput",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "CompareTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-041",
+    "sourceFile": "src/app/(website)/compare/page.tsx",
+    "routePath": "/compare",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "AudimentCompareClient"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-042",
+    "sourceFile": "src/app/(website)/fssai-audit-software/page.tsx",
+    "routePath": "/fssai-audit-software",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-043",
+    "sourceFile": "src/app/(website)/glossary/page.tsx",
+    "routePath": "/glossary",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "AudimentGlossaryClient"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-044",
+    "sourceFile": "src/app/(website)/healthcare-audit-software/page.tsx",
+    "routePath": "/healthcare-audit-software",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-045",
+    "sourceFile": "src/app/(website)/hidden-operational-issues/page.tsx",
+    "routePath": "/hidden-operational-issues",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-046",
+    "sourceFile": "src/app/(website)/improving-accountability/page.tsx",
+    "routePath": "/improving-accountability",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-047",
+    "sourceFile": "src/app/(website)/maintaining-standards-across-locations/page.tsx",
+    "routePath": "/maintaining-standards-across-locations",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-048",
+    "sourceFile": "src/app/(website)/multi-location-audit-software/page.tsx",
+    "routePath": "/multi-location-audit-software",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-049",
+    "sourceFile": "src/app/(website)/operational-drift/page.tsx",
+    "routePath": "/operational-drift",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-050",
+    "sourceFile": "src/app/(website)/page.tsx",
+    "routePath": "/",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "AudimentLandingClient"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-051",
+    "sourceFile": "src/app/(website)/platform/corrective-actions/page.tsx",
+    "routePath": "/platform/corrective-actions",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-052",
+    "sourceFile": "src/app/(website)/platform/geo-verified-audits/page.tsx",
+    "routePath": "/platform/geo-verified-audits",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-053",
+    "sourceFile": "src/app/(website)/platform/issue-tracking/page.tsx",
+    "routePath": "/platform/issue-tracking",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-054",
+    "sourceFile": "src/app/(website)/platform/operational-dashboards/page.tsx",
+    "routePath": "/platform/operational-dashboards",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-055",
+    "sourceFile": "src/app/(website)/platform/proof-based-audits/page.tsx",
+    "routePath": "/platform/proof-based-audits",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-056",
+    "sourceFile": "src/app/(website)/solutions/food-safety-audit-software/page.tsx",
+    "routePath": "/solutions/food-safety-audit-software",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SolutionPageTemplate"
+    ],
+    "states": {
+      "loading": true,
+      "empty": false,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-057",
+    "sourceFile": "src/app/(website)/solutions/franchise-audit-software/page.tsx",
+    "routePath": "/solutions/franchise-audit-software",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SolutionPageTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": true,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-058",
+    "sourceFile": "src/app/(website)/solutions/hotel-audit-software/page.tsx",
+    "routePath": "/solutions/hotel-audit-software",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SolutionPageTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-059",
+    "sourceFile": "src/app/(website)/solutions/manufacturing-audit-software/page.tsx",
+    "routePath": "/solutions/manufacturing-audit-software",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SolutionPageTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": true,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-060",
+    "sourceFile": "src/app/(website)/solutions/page.tsx",
+    "routePath": "/solutions",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "AudimentSolutionsClient"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-061",
+    "sourceFile": "src/app/(website)/solutions/qsr-audit-software/page.tsx",
+    "routePath": "/solutions/qsr-audit-software",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SolutionPageTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-062",
+    "sourceFile": "src/app/(website)/solutions/restaurant-audit-software/page.tsx",
+    "routePath": "/solutions/restaurant-audit-software",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SolutionPageTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": true
+    }
+  },
+  {
+    "id": "PAGE-063",
+    "sourceFile": "src/app/(website)/solutions/retail-audit-software/page.tsx",
+    "routePath": "/solutions/retail-audit-software",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SolutionPageTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": true,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-064",
+    "sourceFile": "src/app/(website)/staying-ahead-of-compliance/page.tsx",
+    "routePath": "/staying-ahead-of-compliance",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "SeoContentPage"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-065",
+    "sourceFile": "src/app/(website)/use-cases/audit-checklist-software/page.tsx",
+    "routePath": "/use-cases/audit-checklist-software",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "UseCaseTemplate"
+    ],
+    "states": {
+      "loading": true,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-066",
+    "sourceFile": "src/app/(website)/use-cases/corrective-action-tracking/page.tsx",
+    "routePath": "/use-cases/corrective-action-tracking",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "UseCaseTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-067",
+    "sourceFile": "src/app/(website)/use-cases/inspection-management-software/page.tsx",
+    "routePath": "/use-cases/inspection-management-software",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "UseCaseTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-068",
+    "sourceFile": "src/app/(website)/use-cases/multi-location-compliance/page.tsx",
+    "routePath": "/use-cases/multi-location-compliance",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "UseCaseTemplate"
+    ],
+    "states": {
+      "loading": false,
+      "empty": true,
+      "error": false
+    }
+  },
+  {
+    "id": "PAGE-069",
+    "sourceFile": "src/app/(website)/use-cases/page.tsx",
+    "routePath": "/use-cases",
+    "role": "Public",
+    "layout": "WebsiteLayout",
+    "importsCount": 1,
+    "components": [
+      "AudimentUseCasesClient"
+    ],
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false
+    }
+  }
+]

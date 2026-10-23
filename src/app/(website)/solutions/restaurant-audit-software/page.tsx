@@ -2,8 +2,8 @@ import SolutionPageTemplate from '@/components/solutions/SolutionPageTemplate'
 import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
-  title: 'Restaurant Audit Software',
-  description: 'Audiment is audit management software for restaurant chains. Run hygiene, safety, and brand standard audits across every kitchen with proof, tracking, and corrective actions.',
+  title: 'Restaurant Audit Software for Multi-Outlet Chains',
+  description: 'Restaurant audit software for multi-location chains. Standardize kitchen hygiene audits, track FSSAI compliance records, and verify corrective action closure.',
   path: '/solutions/restaurant-audit-software',
 })
 
@@ -14,7 +14,7 @@ export default function RestaurantAuditSoftware() {
       <SolutionPageTemplate
       industry="Restaurants"
       heroH1="Restaurant Audits You Can Actually Trust"
-      heroSubheadline="Replace scattered paper checklists with digital audits built for multi-location restaurant operators. Know what's actually happening in every kitchen."
+      heroSubheadline="Standardize hygiene and operational audits across every kitchen. Document on-site findings with live photo proof, auto-assign corrective actions for compliance failures, and track resolution across all locations."
       painPoints={[
         {
           title: "Inconsistent Hygiene Standards",

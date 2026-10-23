@@ -33,12 +33,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: 'https://audiment.in/use-cases/inspection-management-software', lastModified: new Date('2026-07-01'), changeFrequency: 'monthly', priority: 0.7 },
     { url: 'https://audiment.in/use-cases/multi-location-compliance', lastModified: new Date('2026-07-01'), changeFrequency: 'monthly', priority: 0.7 },
     // Comparisons
-    { url: 'https://audiment.in/compare', lastModified: new Date('2026-07-01'), changeFrequency: 'monthly', priority: 0.7 },
-    { url: 'https://audiment.in/compare/audiment-vs-safetyculture', lastModified: new Date('2026-07-01'), changeFrequency: 'monthly', priority: 0.7 },
-    { url: 'https://audiment.in/compare/audiment-vs-goaudits', lastModified: new Date('2026-07-01'), changeFrequency: 'monthly', priority: 0.7 },
-    { url: 'https://audiment.in/compare/audiment-vs-zenput', lastModified: new Date('2026-07-01'), changeFrequency: 'monthly', priority: 0.7 },
-    { url: 'https://audiment.in/compare/audiment-vs-jolt', lastModified: new Date('2026-07-01'), changeFrequency: 'monthly', priority: 0.7 },
-    { url: 'https://audiment.in/compare/audiment-vs-checklist-apps', lastModified: new Date('2026-07-01'), changeFrequency: 'monthly', priority: 0.7 },
+    { url: 'https://audiment.in/compare', lastModified: new Date('2026-10-22'), changeFrequency: 'weekly', priority: 0.8 },
+    { url: 'https://audiment.in/compare/audiment-vs-safetyculture', lastModified: new Date('2026-10-22'), changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://audiment.in/compare/audiment-vs-goaudits', lastModified: new Date('2026-10-22'), changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://audiment.in/compare/audiment-vs-zenput', lastModified: new Date('2026-10-22'), changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://audiment.in/compare/audiment-vs-jolt', lastModified: new Date('2026-10-22'), changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://audiment.in/compare/audiment-vs-checklist-apps', lastModified: new Date('2026-10-22'), changeFrequency: 'monthly', priority: 0.8 },
     // Platform features
     { url: 'https://audiment.in/platform/proof-based-audits', lastModified: new Date('2026-07-01'), changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://audiment.in/platform/issue-tracking', lastModified: new Date('2026-07-01'), changeFrequency: 'monthly', priority: 0.8 },

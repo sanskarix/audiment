@@ -4044,11 +4044,17 @@ h2 em {
 
 .aud-article-dual-grid {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 240px minmax(0, 1fr);
   gap: 64px;
   align-items: flex-start;
   max-width: 1140px;
   margin: 0 auto;
+}
+
+.aud-article-main-col {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
 }
 
 /* Sticky TOC Sidebar */
@@ -4253,7 +4259,7 @@ h2 em {
 /* 3. Align content headers in all blog posts */
 .aud-article-dual-grid {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 240px minmax(0, 1fr);
   gap: 64px;
   align-items: flex-start;
   max-width: 1140px;
@@ -4266,7 +4272,9 @@ h2 em {
 }
 
 .aud-article-prose {
+  min-width: 0;
   max-width: 760px;
+  width: 100%;
   font-size: 16px;
   line-height: 1.8;
   color: #2c3038;
@@ -4609,12 +4617,26 @@ h2 em {
 /* Responsive Rules for Article Page */
 @media (max-width: 1024px) {
   .aud-article-dual-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 40px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .aud-article-sidebar {
     display: none;
+  }
+
+  .aud-article-main-col {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .aud-article-prose {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
   }
 }
 

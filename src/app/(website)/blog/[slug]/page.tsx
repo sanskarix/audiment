@@ -83,12 +83,13 @@ function getTOC(content: string): TOCItem[] {
   const headings = content.match(/^##\s+(.*)/gm);
   if (!headings) return [];
   return headings.map((h) => {
-    const text = h.replace(/^##\s+/, '');
-    const id = text
+    const rawText = h.replace(/^##\s+/, '');
+    const cleanText = rawText.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*_`]/g, '').trim();
+    const id = cleanText
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
-    return { text, id };
+    return { text: cleanText, id };
   });
 }
 

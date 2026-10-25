@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { getCalAttributes, CalServiceType } from '@/lib/cal';
 
 export interface HeaderProps {
-  activeNav?: 'features' | 'solutions' | 'use-cases' | 'about' | 'blog';
+  activeNav?: 'features' | 'solutions' | 'use-cases' | 'about' | 'blog' | 'docs';
   ctaId?: string;
   service?: CalServiceType;
 }
@@ -63,6 +63,13 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={closeMenu}
           >
             Blog
+          </Link>
+          <Link
+            href="/docs"
+            className={activeNav === 'docs' ? 'active' : ''}
+            onClick={closeMenu}
+          >
+            Docs
           </Link>
           <Link
             href="/login"

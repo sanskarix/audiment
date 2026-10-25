@@ -1,0 +1,87 @@
+---
+title: "Scoring & Grade Standards"
+metaTitle: "Audit Scoring System & Grade Standards | Audiment Documentation"
+description: "Understand how Audiment calculates weighted inspection scores, handles critical failure grade overrides, and benchmarks operational health."
+category: "Standards & Scoring"
+categoryOrder: 4
+order: 1
+role: "All Roles"
+badge: "Standards"
+lastModified: "2026-10-24"
+tags: ["scoring", "grading", "benchmarks", "critical-failure", "standards"]
+---
+
+# Audit Scoring System & Grade Standards
+
+Audiment's scoring engine provides a fair, weighted mathematical assessment of operational quality while ensuring that catastrophic safety breaches are never masked by high scores on routine checklist items.
+
+---
+
+## The Philosophy of Weighted Scoring
+
+In a restaurant or retail setting, having a spotless uniform does not balance out storing raw poultry at room temperature. A traditional unweighted average allows a location with critical safety failures to score 90% simply by acing minor cosmetic items.
+
+Audiment solves this with a **two-tier evaluation model**:
+1. **Weighted Question Scoring** (based on operational severity)
+2. **Critical Failure Overrides** (automatic grade capping)
+
+---
+
+## 1. Severity Weights & Normalization
+
+Every question in a blueprint is assigned a severity tier with a specific mathematical weight:
+
+| Question Severity | Weight Multiplier | Intended Use Case |
+| :--- | :---: | :--- |
+| **Low** | `1x` | Minor aesthetic, clerical, or procedural standards (e.g., nametag compliance, menu board dusting). |
+| **Medium** | `2x` | Operational deficiencies that impact customer experience or efficiency (e.g., service speed, condiment stocking, bathroom supplies). |
+| **Critical** | `5x` | **Severe health, safety, fire, or regulatory breaches** (e.g., cross-contamination, food temperature violations, blocked emergency exits). |
+
+### Question Value Calculation
+- **Yes / No Questions:**
+  - *Yes:* 100% compliance (normalized value: `1.0`)
+  - *No:* 0% compliance (normalized value: `0.0`)
+  - *Critical No:* Triggers an instant **Critical Failure**.
+- **Rating (1–10) Questions:**
+  - Rating is normalized linearly (`Rating / 10.0`).
+  - *Critical Rating < 6:* Triggers a **Critical Failure**.
+
+---
+
+## 2. Final Score Calculation
+
+The overall audit percentage is computed from the ratio of earned weighted points to maximum possible weighted points:
+
+<ScoringFormulaIllustration />
+
+---
+
+## 3. Performance Grades & Critical Overrides
+
+Final percentage scores map to standard operational compliance tiers:
+
+| Performance Tier | Score Range | Operational Meaning | System Action |
+| :--- | :---: | :--- | :--- |
+| **Tier 1: Excellent** | `≥ 90%` | Outstanding operational execution across all standards. | Logged in high-performance benchmarks. |
+| **Tier 2: Good** | `75% – 89%` | Compliant with minor operational drift. | Routine follow-up during next cycle. |
+| **Tier 3: Needs Improvement** | `60% – 74%` | Noticeable standards decay across multiple areas. | Manager notified; review recommended. |
+| **Tier 4: Sub-Standard** | `< 60%` | Unacceptable operational breakdown. | Immediate escalation to Area Manager. |
+| **Critical Failure Override** | *Any Score* | **Triggered if ANY critical question fails.** | **Grade is overridden to Critical Fail regardless of score percentage; automated 48-hour CAPA created.** |
+
+### The Critical Failure Safety Valve
+Even if an outlet earns 92% across all other items, failing a single **Critical** question instantly stamps the audit grade as **Critical Fail**. This ensures that headquarters leadership is never misled by a high composite score when an egregious violation exists.
+
+---
+
+## 4. Multi-Audit Trend Detection
+
+Audiment monitors score trajectories across consecutive inspections:
+- **Consecutive Failure Alert:** If a location scores below 60% on **3 consecutive audits**, the system flags the branch with an active **Trend Alert**.
+- **Trend Banners:** Warning banners appear across Admin and Manager overview dashboards, prompting immediate supervisory visits before health inspectors or customers take notice.
+
+---
+
+## Next Steps
+
+- Explore how critical failures are rectified in [Automated 48-Hour CAPA Workflows](/docs/capa-workflows).
+- Review all platform capabilities in the [Platform Overview](/docs/overview).

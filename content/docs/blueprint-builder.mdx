@@ -1,0 +1,79 @@
+---
+title: "Blueprint Template Builder"
+metaTitle: "Blueprint Builder & FSSAI Standards | Audiment Documentation"
+description: "Author customized audit checklists with weighted scoring, severity gates, mandatory photo enforcement, and 1-click FSSAI food safety templates."
+category: "Core Features"
+categoryOrder: 2
+order: 1
+role: "Admin"
+badge: "Core Feature"
+lastModified: "2026-10-24"
+tags: ["blueprint", "templates", "checklist", "fssai", "scoring"]
+---
+
+# Blueprint Template Builder & FSSAI Standards
+
+The **Blueprint Builder** is the foundational authoring engine in Audiment. Accessible to Organization Admins, it enables operations heads to translate operational standards, standard operating procedures (SOPs), and hygiene checklists into structured digital inspection blueprints.
+
+---
+
+## Blueprint Builder Interface
+
+<BlueprintBuilderIllustration />
+
+---
+
+## Core Question Properties
+
+Each question in a blueprint can be configured with specific attributes that dictate how field auditors answer and how scores are calculated:
+
+### 1. Question Text
+Clear, concise instructions specifying what standard is being evaluated. Keep questions objective and unambiguous (e.g., *"Are raw meats stored separately from ready-to-eat items?"* rather than *"Is the kitchen clean?"*).
+
+### 2. Response Types
+- **Yes / No:** Binary evaluation. A "Yes" represents full compliance (1.0), while "No" represents total failure (0.0).
+- **Rating Scale (1 to 10):** Numeric evaluation for graduated assessment (e.g., staff uniform cleanliness, customer area ambiance, food presentation). Scores are normalized linearly.
+
+### 3. Severity Weighting
+Audiment weights questions based on real-world operational risk:
+
+| Severity Level | Mathematical Weight | Failure Consequence |
+| :--- | :---: | :--- |
+| **Low** | `1x` | Minor aesthetic or administrative deficiency. Reduces overall score slightly. |
+| **Medium** | `2x` | Operational drift that requires attention. Moderate score impact. |
+| **Critical** | `5x` | **Severe breach.** A failure immediately triggers an automated 48-hour Corrective Action (CAPA) ticket and overrides the audit grade. |
+
+### 4. Mandatory Photo Proof (`requiresPhoto`)
+When toggled on, the auditor's mobile interface physically blocks progression until at least one photo is captured through the in-app camera or uploaded. This is recommended for:
+- Food contact surface sanitation
+- Temperature display gauges
+- Fire exit clearance
+- Pest control traps and logbooks
+
+---
+
+## 1-Click FSSAI Food Safety Defaults
+
+For food service, restaurant, and cloud kitchen operators in India, Audiment includes pre-built **FSSAI (Food Safety and Standards Authority of India)** compliance standards.
+
+Clicking **Load FSSAI Defaults** in the builder automatically populates an exhaustive standard checklist adhering to statutory Schedule 4 requirements, covering:
+- **Location and Surroundings:** Clean surroundings, drainage, distance from contamination sources.
+- **Layout and Design:** Pest exclusion, cross-contamination barriers, non-absorbent surfaces.
+- **Equipment and Utensils:** Food-grade contact surfaces, calibration, temperature monitoring.
+- **Personal Hygiene:** Clean chef coats, hairnets, medical fitness records, handwashing stations.
+- **Water Quality & Waste:** Potable water testing certifications, segregated waste bins with lids.
+
+---
+
+## Best Practices for Authoring Blueprints
+
+1. **Keep Checklists Focused:** A field inspection should rarely exceed 35–45 questions to prevent auditor fatigue and rushed answers.
+2. **Prioritize Critical Failure Points:** Limit Critical severity to true deal-breakers (e.g., cross-contamination, expired permits, severe pest sightings). Marking every question as Critical dilutes manager urgency.
+3. **Use Logical Grouping:** Order questions in the natural physical path an auditor walks through the facility (Receiving Bay → Dry Storage → Walk-in Coolers → Prep Line → Cooking Line → Service Counter).
+
+---
+
+## Next Steps
+
+- Learn how inspections verify on-site truth with [Photo Proof & Geolocation](/docs/photo-and-geo-verification).
+- See how critical failures trigger [Automated 48-Hour CAPA Workflows](/docs/capa-workflows).

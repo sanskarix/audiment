@@ -1,0 +1,99 @@
+---
+title: "Roles & Permissions"
+metaTitle: "Roles & Access Control Architecture | Audiment Documentation"
+description: "Learn how Audiment enforces enterprise-grade role separation across Admins, Branch Managers, and Field Auditors with multi-tenant data isolation."
+category: "Platform Overview"
+categoryOrder: 1
+order: 2
+role: "All Roles"
+badge: "Security"
+lastModified: "2026-10-24"
+tags: ["roles", "rbac", "permissions", "security", "multi-tenancy"]
+---
+
+# Roles & Access Control Architecture
+
+Audiment enforces strict Role-Based Access Control (RBAC) to ensure that every team member sees exactly what they need—and nothing they shouldn't.
+
+Whether you run 3 company-owned flagship stores or a network of 200+ franchise outlets, permissions are strictly partitioned across three primary roles.
+
+---
+
+## The Role Hierarchy
+
+<RoleHierarchyIllustration />
+
+---
+
+## Detailed Role Comparison Matrix
+
+| Feature / Capability | Admin | Branch Manager | Field Auditor |
+| :--- | :---: | :---: | :---: |
+| **Manage Organization Settings** | Yes | No | No |
+| **Create & Edit Locations** | Yes | No | No |
+| **Invite & Disable Users** | Yes | No | No |
+| **Build & Publish Master Blueprints** | Yes | No | No |
+| **Schedule Recurring Audits** | Yes | Yes (Assigned Outlets) | No |
+| **Publish Surprise Audits** | Yes | No | No |
+| **Dispatch Flash Verification Audits** | Yes | No | No |
+| **Delegate Audits to Field Auditors** | Yes | Yes | No |
+| **Execute Mobile Checklists On-Site** | No | No | Yes |
+| **Submit Live Photo & GPS Evidence** | No | No | Yes |
+| **Resolve Corrective Actions (CAPA)** | Review & Close | Resolve with Evidence | View Only |
+| **View Organization Health Trends** | Org-wide | Assigned Outlets | Assigned History |
+| **Export Official PDF Reports** | Yes | Yes (Assigned Outlets) | No |
+| **Export CSV Organization Audit Data** | Yes | No | No |
+
+---
+
+## Role Deep-Dives
+
+### 1. The Admin Role
+The Admin account represents company headquarters, franchise directors, or quality assurance (QA) leadership.
+
+- **Primary URL:** `/dashboard/admin`
+- **Key Responsibilities:**
+  - Standardize operational standards across all brand locations.
+  - Create and manage the master directory of outlets and branches.
+  - Provision team member accounts (assigning Managers to specific branches and pairing Auditors).
+  - Review network-wide compliance analytics, spot underperforming branches, and receive real-time trend warnings.
+  - Final sign-off on resolved high-severity Corrective Actions.
+
+### 2. The Branch Manager Role
+The Manager account is tailored for General Managers, Area Managers, or Kitchen Supervisors overseeing one or several branches.
+
+- **Primary URL:** `/dashboard/manager`
+- **Key Responsibilities:**
+  - Receive automated audit assignments for their designated locations.
+  - Delegate inspection queues to field auditors.
+  - Respond immediately to critical audit failures and overdue warnings.
+  - Resolve open CAPA tickets within the 48-hour SLA window by uploading photographic proof of resolution and descriptive corrective actions.
+  - Track branch score trajectories and staff performance through the monthly audit calendar.
+
+### 3. The Field Auditor Role
+The Auditor account is built exclusively for field quality inspectors, compliance officers, and kitchen hygiene evaluators operating on mobile phones.
+
+- **Primary URL:** `/dashboard/auditor`
+- **Key Responsibilities:**
+  - Access their daily queue of pending inspections.
+  - Complete checklist criteria step-by-step with zero distractions.
+  - Capture live, un-manipulated photographic evidence using the browser-based camera viewfinder.
+  - Confirm physical presence on-site via enforced high-accuracy GPS verification.
+  - Execute stealth Flash Verification video presence sweeps when dispatched.
+
+---
+
+## Multi-Tenant Security & Data Isolation
+
+Audiment guarantees absolute data privacy and isolation between different client organizations:
+
+1. **Organization Boundary:** Every data entity—blueprints, questions, responses, photos, and compliance scores—is stamped with an immutable organization identifier.
+2. **Zero Cross-Org Leakage:** An auditor or manager in Brand A cannot view, query, or interact with records belonging to Brand B.
+3. **Session Verification:** Every API call and page load verifies role claims server-side before serving inspection data or audit reports.
+
+---
+
+## Next Steps
+
+- Explore how to configure templates with the [Blueprint Builder](/docs/blueprint-builder).
+- Read the [Admin Operational Handbook](/docs/admin-handbook) for step-by-step administration instructions.

@@ -4084,176 +4084,46 @@ h2 em {
 .aud-toc-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
 .aud-toc-item-wrap {
-  position: relative;
-  display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  border-radius: 4px;
-  padding: 5px 8px !important;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-  border: 1px solid transparent;
-  box-sizing: border-box !important;
-  text-align: left !important;
-  justify-content: flex-start !important;
-  align-items: flex-start !important;
-}
-
-/* Hide bottom line of effect completely for TOC items */
-.aud-toc-item-wrap .line.bottom,
-.aud-toc-item-wrap .line.horizontal.bottom,
-.aud-toc-item-wrap * .line.bottom,
-.aud-toc-item-wrap.active .line.bottom,
-.aud-toc-item-wrap:hover .line.bottom {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  width: 0 !important;
-  border: none !important;
-  background: none !important;
-  animation: none !important;
-}
-
-.aud-toc-item-wrap .line.vertical {
-  height: calc(100% - 2px) !important;
-}
-
-.aud-toc-item-wrap.active {
-  border-color: rgba(255, 84, 0, 0.3);
-  background: rgba(255, 84, 0, 0.03);
-}
-
-.aud-toc-item-wrap.active::after {
-  animation: opacity-anim calc(var(--animation-speed) * 3) ease-in-out forwards;
-}
-
-.aud-toc-item-wrap.active .dot.top.left {
-  top: 50%;
-  left: 20%;
-  animation: move-top-left var(--animation-speed) ease-in-out forwards;
-}
-
-.aud-toc-item-wrap.active .dot.top.right {
-  top: 50%;
-  right: 20%;
-  animation: move-top-right var(--animation-speed) ease-in-out forwards;
-  animation-delay: calc(var(--animation-speed) * 0.6);
-}
-
-.aud-toc-item-wrap.active .dot.bottom.right {
-  bottom: 50%;
-  right: 20%;
-  animation: move-bottom-right-toc var(--animation-speed) ease-in-out forwards;
-  animation-delay: calc(var(--animation-speed) * 1.2);
-}
-
-.aud-toc-item-wrap.active .dot.bottom.left {
-  bottom: 50%;
-  left: 20%;
-  animation: move-bottom-left-toc var(--animation-speed) ease-in-out forwards;
-  animation-delay: calc(var(--animation-speed) * 1.8);
-}
-
-@keyframes move-bottom-right-toc {
-  80% {
-    opacity: 0.6;
-  }
-  100% {
-    bottom: calc(var(--dot-size) * -0.5);
-    right: calc(var(--dot-size) * -0.5);
-    opacity: 1;
-  }
-}
-
-@keyframes move-bottom-left-toc {
-  80% {
-    opacity: 0.6;
-  }
-  100% {
-    bottom: calc(var(--dot-size) * -0.5);
-    left: calc(var(--dot-size) * -0.5);
-    opacity: 1;
-  }
-}
-
-.aud-toc-item-wrap .line.left {
-  transform-origin: top left !important;
-}
-
-.aud-toc-item-wrap .line.right {
-  transform-origin: top right !important;
-}
-
-.aud-toc-item-wrap.active .line.top {
-  animation: draw-top var(--animation-speed) ease-in-out forwards;
-}
-
-.aud-toc-item-wrap.active .line.left {
-  animation: draw-left-toc var(--animation-speed) ease-in-out forwards;
-  animation-delay: calc(var(--animation-speed) * 1.8);
-}
-
-.aud-toc-item-wrap.active .line.right {
-  animation: draw-right-toc var(--animation-speed) ease-in-out forwards;
-  animation-delay: calc(var(--animation-speed) * 0.6);
-}
-
-@keyframes draw-left-toc {
-  100% {
-    transform: rotate(0deg) scaleY(1);
-  }
-}
-
-@keyframes draw-right-toc {
-  100% {
-    transform: rotate(0deg) scaleY(1);
-  }
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
 }
 
 .aud-toc-link {
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1.45;
   color: #64748b;
-  text-decoration: none !important;
-  display: block !important;
-  width: 100% !important;
-  text-align: left !important;
+  text-decoration: none;
+  display: inline-block;
+  text-align: left;
   transition: color 0.15s ease;
   font-weight: 450;
-  border-bottom: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  padding: 2px 0;
 }
 
 .aud-toc-link:hover,
-.aud-toc-link:focus,
-.aud-toc-link:active,
-.aud-toc-link:visited {
-  text-decoration: none !important;
-  border-bottom: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
 .aud-toc-item-wrap:hover .aud-toc-link {
   color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .aud-toc-link.active,
 .aud-toc-item-wrap.active .aud-toc-link {
   color: var(--orange);
   font-weight: 600;
-  text-decoration: none !important;
-  border-bottom: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-  background-image: none !important;
+}
+
+.aud-toc-link.active:hover,
+.aud-toc-item-wrap.active:hover .aud-toc-link {
+  color: var(--orange);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* 3. Align content headers in all blog posts */

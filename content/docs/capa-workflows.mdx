@@ -1,0 +1,65 @@
+---
+title: "Automated CAPA Workflows"
+metaTitle: "Automated 48-Hour CAPA Lifecycle | Audiment Documentation"
+description: "Turn critical inspection failures into trackable, SLA-bound corrective action workflows with mandatory photo proof and manager accountability."
+category: "Core Features"
+categoryOrder: 2
+order: 4
+role: "Manager"
+badge: "Core Feature"
+lastModified: "2026-10-24"
+tags: ["capa", "corrective-actions", "sla", "workflow", "remediation"]
+---
+
+# Automated Corrective Action (CAPA) Workflows
+
+Audits without enforcement are just paperwork. When an auditor records a major violation—such as improper refrigeration temperatures, blocked emergency exits, or missing food labels—simply logging the problem is not enough.
+
+Audiment features an automated **CAPA (Corrective and Preventive Action)** engine that bridges the gap between inspection findings and physical operational resolution.
+
+---
+
+## The 48-Hour CAPA Lifecycle
+
+<CapaLifecycleIllustration />
+
+---
+
+## 1. Automatic Ticket Generation
+
+Whenever an auditor answers "No" to a critical Yes/No question, or awards a low score on a critical rating question:
+- Audiment's scoring engine marks the response as a **Critical Failure**.
+- A new CAPA record is instantly generated in the organization's database.
+- The CAPA inherits the auditor's field notes, question description, and location metadata.
+- A **48-hour deadline countdown** starts immediately.
+- The designated Branch Manager receives an automated high-priority alert.
+
+---
+
+## 2. Manager Resolution Workflow
+
+Branch Managers do not need desktop computers to handle CAPA tasks. They can review and rectify issues directly from their smartphone dashboard:
+
+<CapaResolutionModalIllustration />
+
+### Resolution Requirements
+1. **Mandatory Resolution Notes:** The manager must explain what corrective action was taken and what preventative measures were established.
+2. **Mandatory Photographic Proof:** Words alone cannot close a CAPA. The manager must use the in-app camera or file picker to upload verified photos showing the violation has been fixed.
+3. **Audit Trail Timestamp:** The resolution is stamped with the exact time of completion and manager ID.
+
+---
+
+## 3. Executive Review & Governance
+
+Once marked completed by a manager, Organization Admins review the resolution evidence:
+
+- **Accept / Resolved:** The admin verifies the photographic proof and marks the CAPA as officially `resolved`.
+- **Reject / Re-open:** If the photo is unclear, incomplete, or the corrective action is deemed insufficient, the admin rejects the submission, sending the item back to `in_progress` with feedback notes.
+- **Overdue Tracking:** If a CAPA exceeds 48 hours without resolution, it transitions to `overdue` status, triggering escalated notifications to headquarters and docking the location's compliance health score.
+
+---
+
+## Next Steps
+
+- Learn how unannounced checks prevent pre-audit bias with [Surprise Audits & Scheduling](/docs/surprise-audits).
+- Read the [Manager Handbook](/docs/manager-handbook) for resolution workflows.

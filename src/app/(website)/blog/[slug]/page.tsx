@@ -165,14 +165,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <>
-      <BlogMetadataPublisher category={post.category} slug={post.slug} />
-      <Script
-        id={`article-schema-${post.slug}`}
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      <Script
-        id={`breadcrumb-schema-${post.slug}`}
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }}
       />
@@ -188,7 +185,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         relatedPosts={relatedPosts}
       >
         <MDXRemote
-          source={post.content}
+          source={post.content.replace(/<script\b[\s\S]*?(?:<\/script>|\/>)/gi, '')}
           options={{
             mdxOptions: {
               remarkPlugins: [remarkGfm],
@@ -196,6 +193,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           }}
           components={{
             h1: () => null,
+            script: () => null,
             BlogCTA: () => null,
             h2: ({ children, ...props }: any) => {
               const getText = (node: any): string => {
@@ -221,6 +219,16 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <table className="aud-prose-table" {...props} />
               </div>
             ),
+            div: ({ className, children, ...props }: any) => {
+              if (className && (className.includes('shadow-') || className.includes('rounded-2xl') || className.includes('rounded-xl'))) {
+                const sanitized = className
+                  .replace(/\bshadow-(?:sm|md|lg|xl|2xl)\b/g, '')
+                  .replace(/\brounded-(?:xl|2xl|3xl)\b/g, 'rounded-none')
+                  .trim();
+                return <div className={sanitized} {...props}>{children}</div>;
+              }
+              return <div className={className} {...props}>{children}</div>;
+            },
           }}
         />
       </AudimentBlogPostClient>

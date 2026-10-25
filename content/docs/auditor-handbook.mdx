@@ -1,0 +1,85 @@
+---
+title: "Auditor Field Inspection Handbook"
+metaTitle: "Auditor Field Inspection Handbook | Audiment Documentation"
+description: "Field guide for inspectors: navigating mobile checklists, in-app camera controls, photo requirements, auto-save drafts, and GPS-verified submissions."
+category: "User Handbooks"
+categoryOrder: 3
+order: 3
+role: "Auditor"
+badge: "Handbook"
+lastModified: "2026-10-24"
+tags: ["auditor", "handbook", "mobile", "field-inspection", "camera", "gps"]
+---
+
+# Auditor Field Inspection Handbook
+
+The **Auditor Mobile Web Interface** (`/dashboard/auditor`) is optimized for smartphones and tablets. It enables field inspectors, quality auditors, and internal evaluators to conduct thorough on-site assessments smoothly.
+
+---
+
+## Mobile Field Workflow
+
+<AuditorLifecycleIllustration />
+
+---
+
+## 1. Auditor Dashboard (`/dashboard/auditor`)
+
+Upon logging in on your mobile browser, your dashboard displays your assigned inspection queue:
+
+- **Assigned Audits List:** Automatically sorted by deadline urgency (closest deadline first). Missed or overdue audits are highlighted at the top in red.
+- **KPI Metrics:** Total completed audits and your average compliance score across all past assignments.
+- **Audit Lock Guard:** If an audit is scheduled for a future date, you cannot start it early. The system unlocks the inspection when the scheduled start time arrives.
+
+---
+
+## 2. Conducting an Inspection (`/auditor/audits/[id]`)
+
+Tap any unlocked audit to enter the focused inspection engine:
+
+<AuditorInspectionEngineIllustration />
+
+### Answering Questions
+- **Binary (Yes / No):** Tap **Yes** for compliant conditions or **No** for non-compliance.
+- **Rating Scales (1 to 10):** Tap the appropriate numeric box on the 1–10 grid.
+- **Notes Field:** Enter concise, factual context explaining the finding.
+- **Progression Gate:** If a question has the `PHOTO REQUIRED` badge, the **Next Question** button remains locked until at least one photo is captured and uploaded.
+
+---
+
+## 3. Using the In-App Camera
+
+When taking evidence photos:
+1. Tap **Launch Camera**.
+2. If prompted, allow your browser camera permission.
+3. Align the subject within the on-screen corner viewfinder guides.
+4. **Camera Flip:** Tap the camera flip icon to switch between front and rear cameras.
+5. Tap the capture button. The image is automatically compressed, un-mirrored, and uploaded directly to encrypted storage.
+6. A thumbnail appears on the question card confirming successful upload.
+
+---
+
+## 4. Draft Auto-Save & Abort Guardrails
+
+- **Automatic Draft Saving:** Your answers, notes, and photos save continuously as you progress. If your mobile phone runs low on battery, or you need to step away, your responses are preserved.
+- **Accidental Exit Guard:** If you accidentally swipe back or tap an exit link, a confirmation prompt offers three clear options:
+  - *Continue Auditing* (stay on the screen)
+  - *Save and Leave* (commit all current answers to resume later)
+  - *Exit Without Saving* (discard unsaved modifications)
+
+---
+
+## 5. Final Geolocation Lock & Submission
+
+When all questions are answered, tap **Review & Submit**:
+
+1. Audiment queries your device's high-accuracy GPS coordinates (`navigator.geolocation`).
+2. **GPS Prerequisite:** If location permissions are blocked, submission is aborted, and a prompt guides you to enable location access.
+3. Once coordinates are validated, your responses are permanently recorded, scores are computed, and any critical failures automatically dispatch CAPA alerts to the store manager.
+
+---
+
+## Next Steps
+
+- Learn about covert video sweeps in [Flash Verification](/docs/flash-verification).
+- Read how scores and grades are determined in [Scoring & Grade Standards](/docs/scoring-and-benchmarks).

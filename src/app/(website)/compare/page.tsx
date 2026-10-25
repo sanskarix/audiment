@@ -118,23 +118,19 @@ const breadcrumbSchema = {
 export default function CompareHub() {
   return (
     <>
-      <Script
-        id="compare-webpage-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
       />
-      <Script
-        id="compare-itemlist-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
       />
-      <Script
-        id="compare-faq-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(hubFaqSchema) }}
       />
-      <Script
-        id="compare-breadcrumb-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />

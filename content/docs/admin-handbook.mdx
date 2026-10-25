@@ -1,0 +1,105 @@
+---
+title: "Admin Operational Handbook"
+metaTitle: "Admin Operational Handbook | Audiment Documentation"
+description: "Step-by-step master guide for Organization Admins: setting up locations, provisioning users, authoring templates, and auditing compliance health."
+category: "User Handbooks"
+categoryOrder: 3
+order: 1
+role: "Admin"
+badge: "Handbook"
+lastModified: "2026-10-24"
+tags: ["admin", "handbook", "setup", "operations", "management"]
+---
+
+# Admin Operational Handbook
+
+The **Admin Dashboard** (`/dashboard/admin`) is the headquarters control room for your organization. As an Admin, you configure the master rules, manage outlets, invite personnel, and review network compliance.
+
+---
+
+## Quick Setup: Launching Your Organization in 4 Steps
+
+<AdminOnboardingIllustration />
+
+---
+
+## 1. Managing Locations (`/dashboard/admin/locations`)
+
+Locations represent your physical business units (restaurants, retail stores, warehouses, or clinics).
+
+### Adding a New Location
+1. Navigate to **Locations** in the admin sidebar.
+2. Click **Add Location**.
+3. Fill in the required fields:
+   - **Location Name:** Clear branch identifier (e.g., *"Indiranagar Flagship - Store #04"*).
+   - **Address & City:** Physical location details.
+   - **Default Operating Hours:** Set `defaultStartTime` and `defaultEndTime`. When audits are scheduled for this outlet, start and deadline times auto-populate to match these hours.
+   - **Assigned Managers:** Multi-select one or more Managers responsible for supervising this branch.
+4. Click **Save Location**.
+
+> **Note on Cascading Updates:** If you rename a location later, Audiment automatically updates all historical and active audits, CAPA records, and reports associated with that branch.
+
+---
+
+## 2. Managing Users & Staff (`/dashboard/admin/users`)
+
+Admins manage user accounts for both Managers and Field Auditors.
+
+### Inviting a New Team Member
+1. Navigate to **Users** in the sidebar.
+2. Click **New User**.
+3. Select the role:
+   - **Manager:** Has authority over designated locations, assigns audits, and resolves CAPAs.
+   - **Auditor:** Field inspector conducting mobile checklist audits.
+4. Provide the user's name, email, and a temporary password.
+5. **Auditor-Specific Settings:**
+   - **Managing Manager:** Assign which Manager oversees this auditor's tasks.
+   - **Flashmob Access Toggle (`isFlashmobEnabled`):** Enable or disable whether this auditor can receive stealth video presence audit requests.
+6. Click **Create User**.
+
+### Editing & Managing Existing Users
+- **Password Resets:** Click the pencil icon on any user row and select **Send Password Reset Email** to send a secure recovery link.
+- **Deactivate User:** Toggle the active switch to immediately disable access without losing historical audit logs.
+
+---
+
+## 3. Creating Master Blueprints (`/dashboard/admin/templates`)
+
+Blueprints are the master templates used to conduct audits.
+
+1. Navigate to **Templates** > **New Template**.
+2. Enter the template title, category (e.g., *Hygiene*, *Safety*, *Merchandising*), and brief instructions.
+3. Click **Add Question** or **Load FSSAI Defaults** for pre-configured food safety questions.
+4. Configure severity weights (`Low`, `Medium`, `Critical`) and toggle **Requires Photo** for essential visual criteria.
+5. Save the blueprint to make it available for audit scheduling.
+
+---
+
+## 4. Scheduling & Dispatching Audits (`/dashboard/admin/audits`)
+
+1. Click **New Audit**.
+2. Select the **Template**, **Target Location**, and **Assigned Manager**.
+3. Choose the **Scheduled Date** and **Deadline**.
+4. Configure recurrence:
+   - **One-time:** Single inspection.
+   - **Daily / Weekly / Monthly:** Automatic recurring generation.
+5. **Surprise Audit Toggle:** Turn on to make the inspection unannounced (hidden from the manager's upcoming calendar).
+6. Click **Publish Audit**.
+
+---
+
+## 5. Overseeing Corrective Actions (`/dashboard/admin/corrective-actions`)
+
+1. Review the org-wide CAPA queue sorted by urgency (Closest Deadline → Critical Severity → Status).
+2. Filter by status: `Open`, `In Progress`, `Resolved`, or `Overdue`.
+3. When a manager completes a CAPA with notes and photo evidence, click **Review**:
+   - Tap the resolution photo thumbnail to view full-screen high-res proof.
+   - Click **Accept & Resolve** to formally close the violation.
+   - Click **Reject** to send it back to the manager if evidence is unsatisfactory.
+
+---
+
+## Next Steps
+
+- Learn how branch staff resolve issues in the [Manager Handbook](/docs/manager-handbook).
+- View mobile inspection execution in the [Auditor Handbook](/docs/auditor-handbook).

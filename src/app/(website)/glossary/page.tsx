@@ -78,13 +78,11 @@ const breadcrumbSchema = {
 export default function GlossaryPage() {
   return (
     <>
-      <Script
-        id="glossary-term-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(definedTermSetSchema) }}
       />
-      <Script
-        id="glossary-breadcrumb-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />

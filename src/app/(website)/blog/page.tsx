@@ -56,13 +56,12 @@ export default async function BlogPage({
 
   return (
     <>
-      <Script
-        id="blog-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
       />
       <AudimentBlogHubClient
-        posts={posts}
+        posts={posts.map(({ content, ...rest }) => ({ ...rest, content: '' }))}
         initialCategory={categoryQuery}
         initialSearchQuery={searchQuery}
         semanticCategories={semanticCategories}

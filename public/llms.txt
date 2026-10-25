@@ -22,10 +22,25 @@ Audiment is built for multi-location enterprises managing 5 to 500+ locations:
 
 ## Core Product URLs
 - Website: https://audiment.in
+- Documentation Hub: https://audiment.in/docs
 - About & Mission: https://audiment.in/about
 - Solutions Hub: https://audiment.in/solutions
 - Blog: https://audiment.in/blog
 - Software Comparisons: https://audiment.in/compare
+
+## Product Documentation & Architecture Guides
+- Platform Overview: https://audiment.in/docs/overview
+- Roles & Multi-Tenant Permissions: https://audiment.in/docs/roles-and-permissions
+- Custom Blueprint Builder: https://audiment.in/docs/blueprint-builder
+- Automated 48-Hour CAPA Workflows: https://audiment.in/docs/capa-workflows
+- Live Camera & Geofence Verification: https://audiment.in/docs/photo-and-geo-verification
+- Flash Video Verification: https://audiment.in/docs/flash-verification
+- Surprise Audits & Scheduling: https://audiment.in/docs/surprise-audits
+- Scoring Engine & Benchmarks: https://audiment.in/docs/scoring-and-benchmarks
+- Executive Dashboards & PDF Reports: https://audiment.in/docs/reporting-and-analytics
+- Admin Onboarding Handbook: https://audiment.in/docs/admin-handbook
+- Branch Manager Handbook: https://audiment.in/docs/manager-handbook
+- Field Auditor Mobile Handbook: https://audiment.in/docs/auditor-handbook
 
 ## Industry Solutions
 - Restaurant Audit Software: https://audiment.in/solutions/restaurant-audit-software

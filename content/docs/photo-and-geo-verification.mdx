@@ -1,0 +1,67 @@
+---
+title: "Photo Proof & Geolocation Enforcement"
+metaTitle: "Photo Proof & Geolocation Enforcement | Audiment Documentation"
+description: "How Audiment prevents remote inspection fraud through in-app live camera viewfinders, anti-tampering orientation, and mandatory GPS coordinates."
+category: "Core Features"
+categoryOrder: 2
+order: 2
+role: "Auditor"
+badge: "Core Feature"
+lastModified: "2026-10-24"
+tags: ["photos", "gps", "geolocation", "anti-fraud", "verification"]
+---
+
+# Photo Proof & Geolocation Enforcement
+
+Traditional checklist applications allow auditors to fill out forms from their living room, coffee shop, or car outside the premises. In high-stakes multi-location operations, this "pencil-whipping" blinds leadership to real conditions.
+
+Audiment enforces **hardware-level verification** at two checkpoints:
+1. **Live In-App Photo Capture** (Visual Ground Truth)
+2. **GPS Geolocation Locking** (Physical Presence Verification)
+
+---
+
+## 1. Live In-App Camera Viewfinder
+
+When an audit question specifies `requiresPhoto`, field auditors cannot bypass it with a text note or synthetic checkmark.
+
+<CameraCaptureIllustration />
+
+### Key Camera Capabilities
+- **Native Device Stream:** Directly taps into the smartphone or tablet camera hardware via modern browser APIs.
+- **Camera Flipping:** Seamlessly switch between the rear environment camera (for equipment, shelves, food prep areas) and front camera (for selfie presence checks).
+- **Selfie Mirror Correction:** Front-camera captures are horizontally flipped automatically to ensure text on uniforms, badges, or signage reads legibly.
+- **Multi-Photo Evidence:** Auditors can attach multiple photographs to a single question when comprehensive visual documentation is required.
+- **Cloud Upload Pipeline:** Captured photos are streamed securely to encrypted cloud media storage without caching sensitive files on unauthorized personal device folders.
+
+---
+
+## 2. GPS Geolocation Enforcement
+
+Even with live photos, how can leadership be certain the auditor didn't take pictures yesterday or receive them via chat?
+
+Audiment binds every audit submission to real-time physical GPS coordinates.
+
+<GeoVerificationIllustration />
+
+### Geolocation Safety Rules
+- **Enforced at Final Submission:** The auditor's browser must supply high-accuracy geolocation (`enableHighAccuracy: true`).
+- **Submission Blocked on Failure:** If location permissions are blocked, or the device GPS is disabled, **the audit CANNOT be finalized**. A prompt guides the auditor to re-enable location services.
+- **Audit Ledger Metadata:** Once approved, exact coordinates and capture timestamps are permanently written into the immutable audit record and rendered on executive PDF reports.
+
+---
+
+## Preventing Operational Drift with Visual Truth
+
+When field auditors know that:
+1. Photos are required on critical health items, and
+2. Their physical presence is confirmed by GPS coordinates,
+
+Compliance accuracy increases dramatically. Operational drift is caught in days rather than waiting for quarterly executive branch tours.
+
+---
+
+## Next Steps
+
+- Explore unannounced video spot-checks with [Flash Verification](/docs/flash-verification).
+- See how field staff navigate checklists in the [Auditor Handbook](/docs/auditor-handbook).

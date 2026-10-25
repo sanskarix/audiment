@@ -3,11 +3,10 @@ import { BlogPost } from '@/lib/blog'
 
 export function BlogCard({ post }: { post: BlogPost }) {
   return (
-    <div className="flex flex-col rounded-2xl border border-border overflow-hidden bg-card hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 group h-full">
-      <Link href={`/blog/${post.slug}`} className="block h-52 bg-muted relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent group-hover:scale-105 transition-transform duration-700"></div>
+    <div className="flex flex-col border border-[#e8e8e8] overflow-hidden bg-white hover:border-neutral-400 transition-all duration-200 group h-full">
+      <Link href={`/blog/${post.slug}`} className="block h-52 bg-neutral-100 relative overflow-hidden">
         <div className="absolute bottom-4 left-4">
-          <span className="text-[10px] font-bold px-2 py-1 rounded bg-background/80 backdrop-blur-md text-foreground border border-border uppercase tracking-widest">
+          <span className="font-mono text-[10px] px-2 py-0.5 bg-white text-neutral-800 border border-[#e8e8e8] uppercase tracking-wider">
             {post.category}
           </span>
         </div>

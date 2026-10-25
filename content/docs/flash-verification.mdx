@@ -1,0 +1,70 @@
+---
+title: "Flash Verification (Flashmob)"
+metaTitle: "Flash Verification (Flashmob Video Audits) | Audiment Documentation"
+description: "How covert, 20-second video sweeps eliminate inspection fraud and provide unedited ground-truth views of branch premises."
+category: "Core Features"
+categoryOrder: 2
+order: 3
+role: "Auditor"
+badge: "Exclusive"
+lastModified: "2026-10-24"
+tags: ["flashmob", "video", "surveillance", "anti-fraud", "presence"]
+---
+
+# Flash Verification (Flashmob)
+
+**Flash Verification** (known internally as *Flashmob*) is Audiment's covert, rapid video-based presence verification engine. It was developed specifically to solve the hardest problem in multi-location audit integrity: **how to verify what an outlet actually looks like right now, without warning.**
+
+---
+
+## Why Standard Checklists Aren't Always Enough
+
+Standard scheduled checklists give branch managers advance warning. While scheduled audits are essential for routine compliance, they suffer from the **"inspection effect"**:
+- Staff clean up 30 minutes before the scheduled audit time.
+- Temporary fixes hide systemic operational violations.
+- Once the auditor leaves, habits return to unmonitored drift.
+
+Flash Verification breaks this cycle by dispatching unannounced, unedited video audit requests that take under 2 minutes to complete.
+
+---
+
+## How Flash Verification Works
+
+<FlashVerificationIllustration />
+
+---
+
+## Step-by-Step Execution Flow
+
+### Step 1: Permission Gate & Location Selection
+- Flashmob capabilities are role-gated. Admins grant permission individually to trusted auditors via the User Management panel (`isFlashmobEnabled = true`).
+- The Admin selects a target location and dispatches a time-sensitive flash request.
+
+### Step 2: 20-Second Surroundings Sweep
+- Upon opening the request on their mobile phone, the auditor steps onto the floor and initiates the recording.
+- The interface opens a continuous 20-second video stream with a live recording counter (`REC 00:20`).
+- The auditor performs an unedited 360-degree pan of the dining room, kitchen line, service counter, or back-of-house storage.
+
+### Step 3: Face Guide & Circular Selfie Verification
+- Immediately after the 20-second sweep finishes, the camera prompts the auditor to switch to the front camera.
+- A circular viewfinder overlay requires the auditor to align their face within the target guide, ensuring that the person capturing the video is the authorized inspector.
+
+### Step 4: Encrypted Direct Streaming & GPS Binding
+- The completed video clip and selfie are bundled with high-accuracy GPS coordinates and transmitted directly to encrypted cloud storage.
+- Video files are processed for instant streaming playback on the Admin executive dashboard.
+
+---
+
+## Typical Use Cases for Flashmob Audits
+
+1. **Peak Rush Hour Audits:** See kitchen line order, hygiene, and cleanliness during Friday night dinner peak without disrupting service.
+2. **Franchise Brand Compliance:** Verify menu board signage, uniforms, and marketing posters across franchise networks without sending formal warning.
+3. **Pest & Cleanliness Spot Checks:** Inspect dumpster pads, grease trap corners, and dry storage areas during closing shifts.
+4. **Immediate Incident Verification:** If a customer complaint or safety report is filed, dispatch an auditor within the hour to capture unvarnished proof.
+
+---
+
+## Next Steps
+
+- Discover how critical violations are resolved with [Automated 48-Hour CAPA Workflows](/docs/capa-workflows).
+- Learn about unannounced scheduling with [Surprise Audits](/docs/surprise-audits).

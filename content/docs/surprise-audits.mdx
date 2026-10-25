@@ -1,0 +1,65 @@
+---
+title: "Surprise Audits & Recurring Scheduling"
+metaTitle: "Surprise Audits & Recurring Scheduling Engine | Audiment Documentation"
+description: "Eliminate prep bias with unannounced surprise audits and automate standard recurring compliance schedules across your entire store network."
+category: "Core Features"
+categoryOrder: 2
+order: 5
+role: "Admin"
+badge: "Core Feature"
+lastModified: "2026-10-24"
+tags: ["surprise-audits", "scheduling", "recurring", "automation", "planning"]
+---
+
+# Surprise Audits & Recurring Scheduling Engine
+
+In multi-location operations, the element of timing dictates the reliability of inspection data. Audiment provides two complementary scheduling engines:
+
+1. **Surprise Audits:** Unannounced, short-deadline inspections designed to capture unvarnished reality.
+2. **Recurring Audits:** Fully automated schedules (daily, weekly, monthly) that maintain continuous operational discipline.
+
+---
+
+## 1. Surprise Audits Engine
+
+When store staff know an inspector arrives every Tuesday at 10:00 AM, they spend Monday night deep-cleaning and correcting deficiencies. The audit score looks pristine, but operations return to normal the moment the inspector departs.
+
+Audiment's **Surprise Audit** capability eliminates this artificial "prep bias."
+
+<SurpriseAuditIllustration />
+
+### Key Surprise Audit Mechanics
+- **Hidden from Branch Views:** Surprise audits do not appear on manager calendar views or upcoming audit queues ahead of time.
+- **Short Execution Windows:** Tight deadlines prevent staff from tipping off neighboring branches.
+- **Dedicated Alert Channels:** When published, managers receive an unannounced alert notification, while auditors receive real-time dispatch directions.
+
+---
+
+## 2. Automated Recurring Schedules
+
+For standard operational routines—such as daily kitchen opening checklists, weekly pest control logs, or monthly brand merchandising checks—Audiment automates recurring generation.
+
+<RecurringScheduleIllustration />
+
+### Supported Frequencies & Rules
+- **Daily Audits:** Automatically publishes every calendar day at the location's designated start time.
+- **Weekly Audits:** Configured for specific days of the week (e.g., Every Monday or Every Thursday).
+- **Monthly Audits:** Configured for specific days of the month (e.g., 1st or 15th of every month).
+- **Duration Window Inheritance:** The time delta between the scheduled start time and deadline (e.g., 3 hours) is preserved across all future recurring instances.
+- **Location-Specific Default Times:** If a branch opens at 07:00 AM instead of the organization default of 09:00 AM, the scheduler automatically respects the branch-level operating hours.
+
+---
+
+## 3. Automated Missed Audit Handling
+
+If an auditor fails to complete an inspection before its deadline:
+- The system automatically transitions the audit status to **Missed**.
+- Both the branch manager and headquarters receive an immediate missed audit alert.
+- The missed event is recorded in the branch's historical reliability metrics, preventing "forgotten" audits from slipping through the cracks.
+
+---
+
+## Next Steps
+
+- Explore performance benchmarking in [Reporting, Analytics & PDF Engine](/docs/reporting-and-analytics).
+- Learn how to configure schedules in the [Admin Handbook](/docs/admin-handbook).

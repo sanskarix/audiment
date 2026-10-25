@@ -52,13 +52,11 @@ const breadcrumbSchema = {
 export default function UseCasesHub() {
   return (
     <>
-      <Script
-        id="usecases-itemlist-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
       />
-      <Script
-        id="usecases-breadcrumb-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />

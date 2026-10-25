@@ -1,0 +1,61 @@
+---
+title: "Reporting, Analytics & PDF Engine"
+metaTitle: "Reporting, Analytics & PDF Engine | Audiment Documentation"
+description: "Monitor real-time compliance health, benchmark multi-branch performance, detect operational drift trends, and generate executive PDF inspection reports."
+category: "Core Features"
+categoryOrder: 2
+order: 6
+role: "Admin"
+badge: "Core Feature"
+lastModified: "2026-10-24"
+tags: ["reporting", "analytics", "pdf-export", "trends", "dashboards"]
+---
+
+# Reporting, Analytics & PDF Export Engine
+
+Raw audit data is only valuable if operations leaders can spot patterns, compare branches, and take decisive action. Audiment pairs real-time compliance dashboards with a client-side, high-fidelity PDF export engine.
+
+---
+
+## 1. Executive Compliance Dashboards
+
+Audiment's analytics dashboards aggregate performance across all active locations, highlighting operational drift before it impacts customers or regulators.
+
+<ComplianceDashboardIllustration />
+
+### Dashboard Capabilities
+- **Real-Time Score Aggregation:** Average scores recalculate instantaneously as field auditors submit inspections.
+- **Color-Coded Health Bands:**
+  - **High Compliance (≥ 90%):** Pristine compliance and brand consistency.
+  - **Operational Drift (70% – 89%):** Satisfactory performance with minor operational drift.
+  - **Critical Risk (< 70%):** High-risk branch requiring immediate operational review.
+- **Trend Detection Alerts:** If an outlet scores below threshold on 3 or more consecutive inspections, Audiment triggers a high-visibility warning banner across Admin and Manager homepages.
+
+---
+
+## 2. High-Fidelity PDF Export Engine
+
+For board meetings, franchise owner reviews, health inspector submissions, and insurance audits, digital screenshots are inadequate. Audiment features a built-in client-side PDF export pipeline that renders clean, branded audit documentation.
+
+<PdfReportIllustration />
+
+### PDF Export Specifications
+- **Multi-Page Layout:** Renders crisp multi-page A4 documents with running headers and pagination.
+- **Embedded Evidence Photos:** High-resolution evidence photos are scaled, framed, and embedded directly beside their corresponding checklist questions.
+- **Audit Metadata Stamping:** Includes verified auditor name, branch address, GPS coordinates, date, and final scoring grade.
+- **Consistent Naming Scheme:** Exports adhere to standardized naming: `{Location}-{Template}-{ddMMMyyy}.pdf` for effortless archiving in Google Drive, Dropbox, or company servers.
+
+---
+
+## 3. CSV Data Export
+
+Admins can also export all raw historical audit data across their entire organization to CSV directly from Settings:
+- Includes audit titles, outlet names, assigned managers, field inspectors, completion dates, final scores, and completion statuses.
+- Formatted for immediate import into Business Intelligence (BI) platforms such as Tableau, PowerBI, or Google Sheets.
+
+---
+
+## Next Steps
+
+- Review role-based operational procedures in the [Admin Handbook](/docs/admin-handbook).
+- Read how scores are calculated in [Audit Scoring & Grade Standards](/docs/scoring-and-benchmarks).

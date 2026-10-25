@@ -1,8 +1,10 @@
 import { getAllPosts } from '@/lib/blog'
+import { getAllDocs } from '@/lib/docs'
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts()
+  const docs = getAllDocs()
   
   const blogUrls = posts.map(post => ({
     url: `https://audiment.in/blog/${post.slug}`,
@@ -10,10 +12,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))
+
+  const docUrls = docs.map(doc => ({
+    url: `https://audiment.in/docs/${doc.slug}`,
+    lastModified: new Date(doc.lastModified || '2026-10-24'),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }))
   
   return [
     // Core pages
     { url: 'https://audiment.in', changeFrequency: 'weekly', priority: 1.0 },
+    { url: 'https://audiment.in/docs', changeFrequency: 'weekly', priority: 0.9 },
     { url: 'https://audiment.in/about', changeFrequency: 'monthly', priority: 0.7 },
     { url: 'https://audiment.in/glossary', changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://audiment.in/blog', changeFrequency: 'weekly', priority: 0.8 },
@@ -59,6 +69,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: 'https://audiment.in/privacy-policy', changeFrequency: 'yearly', priority: 0.2 },
     { url: 'https://audiment.in/cookie-policy', changeFrequency: 'yearly', priority: 0.2 },
     { url: 'https://audiment.in/terms-of-service', changeFrequency: 'yearly', priority: 0.2 },
+    ...docUrls,
     ...blogUrls,
   ]
 }

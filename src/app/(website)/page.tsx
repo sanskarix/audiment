@@ -187,8 +187,7 @@ function StructuredData() {
   };
 
   return (
-    <Script
-      id="structured-data"
+    <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
     />

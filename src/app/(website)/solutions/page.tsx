@@ -66,13 +66,11 @@ const breadcrumbSchema = {
 export default function SolutionsHub() {
   return (
     <>
-      <Script
-        id="solutions-itemlist-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
       />
-      <Script
-        id="solutions-breadcrumb-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />

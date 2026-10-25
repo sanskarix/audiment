@@ -203,15 +203,8 @@ export function AudimentBlogPostClient({
                         return (
                           <div
                             key={item.id}
-                            className={`aud-toc-item-wrap btn-wrapper btn-wrapper--orange ${isActive ? 'active' : ''}`}
+                            className={`aud-toc-item-wrap ${isActive ? 'active' : ''}`}
                           >
-                            <span className="dot top left" />
-                            <span className="dot top right" />
-                            <span className="dot bottom left" />
-                            <span className="dot bottom right" />
-                            <span className="line horizontal top" />
-                            <span className="line vertical left" />
-                            <span className="line vertical right" />
                             <a
                               href={`#${item.id}`}
                               className={`aud-toc-link ${isActive ? 'active' : ''}`}

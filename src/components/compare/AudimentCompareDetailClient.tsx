@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Footer } from '@/components/website/Footer';
 import { Header } from '@/components/website/Header';
+import { FAQSection } from '@/components/website/FAQSection';
 import { observeDotBorderButtons } from '@/lib/dotBorder';
 import { observeAnimations } from '@/lib/animations';
 import { initCalEmbed, getCalAttributes } from '@/lib/cal';
@@ -50,6 +51,18 @@ const DotBtn: React.FC<{
   );
 };
 
+export interface RelatedResource {
+  title: string;
+  href: string;
+  category?: string;
+  description?: string;
+}
+
+export interface RelatedComparison {
+  title: string;
+  href: string;
+}
+
 export interface CompareDetailProps {
   competitor: string;
   heroH1: string;
@@ -81,6 +94,9 @@ export interface CompareDetailProps {
     answer: string;
   }[];
   path: string;
+  variant?: 'clean' | 'default';
+  relatedGuides?: RelatedResource[];
+  relatedComparisons?: RelatedComparison[];
 }
 
 export function AudimentCompareDetailClient({
@@ -95,6 +111,9 @@ export function AudimentCompareDetailClient({
   operationalDifferences,
   operationalOutcomeDifference,
   faqs,
+  variant = 'clean',
+  relatedGuides,
+  relatedComparisons,
 }: CompareDetailProps) {
   const cal = getCalAttributes('general');
 
@@ -149,37 +168,38 @@ export function AudimentCompareDetailClient({
       <main id="top">
         {/* ── §1 Hero Section (Exact Asellus .hero) ── */}
         <section className="hero">
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: 'rgba(255, 84, 0, 0.08)',
-            border: '1px solid rgba(255, 84, 0, 0.22)',
-            padding: '5px 12px',
-            borderRadius: '4px',
-            marginBottom: '20px',
-            fontSize: '11px',
-            fontWeight: 600,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            color: 'var(--orange)',
-          }}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--orange)', display: 'inline-block' }} />
-            <span>VERIFIED COMPARISON • UPDATED {lastUpdated.toUpperCase()}</span>
-          </div>
+          {variant !== 'clean' && (
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(255, 84, 0, 0.08)',
+              border: '1px solid rgba(255, 84, 0, 0.22)',
+              padding: '5px 12px',
+              borderRadius: '4px',
+              marginBottom: '20px',
+              fontSize: '11px',
+              fontWeight: 600,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: 'var(--orange)',
+            }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--orange)', display: 'inline-block' }} />
+              <span>VERIFIED COMPARISON • UPDATED {lastUpdated.toUpperCase()}</span>
+            </div>
+          )}
           <h1>
-            {heroH1.includes(' – ') ? (
+            {variant === 'clean' ? (
+              <>
+                Audiment vs <span className="muted">{competitor}</span>
+              </>
+            ) : heroH1.includes(' – ') ? (
               <>
                 {heroH1.split(' – ')[0]} <span className="muted">– {heroH1.split(' – ').slice(1).join(' – ')}</span>
               </>
             ) : heroH1.includes(' - ') ? (
               <>
                 {heroH1.split(' - ')[0]} <span className="muted">- {heroH1.split(' - ').slice(1).join(' - ')}</span>
-              </>
-            ) : heroH1.split(' ').length > 2 ? (
-              <>
-                {heroH1.split(' ').slice(0, Math.ceil(heroH1.split(' ').length / 2)).join(' ')}{' '}
-                <span className="muted">{heroH1.split(' ').slice(Math.ceil(heroH1.split(' ').length / 2)).join(' ')}</span>
               </>
             ) : (
               heroH1
@@ -207,8 +227,16 @@ export function AudimentCompareDetailClient({
             <section className="intro" id="verdict">
               <div>
                 <h2>
-                  Executive summary<br />
-                  &amp; quick <span className="aud-text-orange">verdict.</span>
+                  {variant === 'clean' ? (
+                    <>
+                      Executive summary <span className="muted">&amp; quick verdict</span>
+                    </>
+                  ) : (
+                    <>
+                      Executive summary<br />
+                      &amp; quick <span className="aud-text-orange">verdict.</span>
+                    </>
+                  )}
                 </h2>
                 <p>
                   A direct comparison for operations directors evaluating {competitor} against Audiment for multi-location standards.
@@ -219,14 +247,22 @@ export function AudimentCompareDetailClient({
             <section className="patterned" style={{ padding: '32px 24px', borderTop: 'none', borderBottom: '1px solid var(--line)' }}>
               <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                 <article className="work-card" style={{ padding: '36px 32px', background: '#fff', marginBottom: '24px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
-                    <span style={{ color: 'var(--orange)', fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 700 }}>
-                      // THE CORE DISTINCTION
-                    </span>
-                    <span style={{ color: 'var(--muted)', fontSize: '12px', fontWeight: 500 }}>
-                      AI &amp; Search Consensus Guide
-                    </span>
-                  </div>
+                  {variant === 'clean' ? (
+                    <div style={{ marginBottom: '16px' }}>
+                      <span style={{ color: 'var(--orange)', fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600 }}>
+                        The Core Distinction
+                      </span>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
+                      <span style={{ color: 'var(--orange)', fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 700 }}>
+                        // THE CORE DISTINCTION
+                      </span>
+                      <span style={{ color: 'var(--muted)', fontSize: '12px', fontWeight: 500 }}>
+                        AI &amp; Search Consensus Guide
+                      </span>
+                    </div>
+                  )}
                   <p style={{ fontSize: '16px', lineHeight: 1.7, color: 'var(--ink)', margin: 0, fontWeight: 450 }}>
                     {quickVerdict.verdictSummary}
                   </p>
@@ -241,9 +277,10 @@ export function AudimentCompareDetailClient({
                   <article className="work-card" style={{
                     padding: '32px 28px',
                     background: '#faf9f6',
-                    borderLeft: '4px solid var(--orange)',
+                    border: variant === 'clean' ? '1px solid var(--line)' : undefined,
+                    borderLeft: variant === 'clean' ? '1px solid var(--line)' : '4px solid var(--orange)',
                   }}>
-                    <span style={{ color: 'var(--orange)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', display: 'block', marginBottom: '12px' }}>
+                    <span style={{ color: 'var(--orange)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', marginBottom: '12px' }}>
                       Choose Audiment If
                     </span>
                     <p style={{ margin: 0, fontSize: '14.5px', lineHeight: 1.68, color: 'var(--ink)' }}>
@@ -255,9 +292,10 @@ export function AudimentCompareDetailClient({
                   <article className="work-card" style={{
                     padding: '32px 28px',
                     background: '#ffffff',
-                    borderLeft: '4px solid #888',
+                    border: variant === 'clean' ? '1px solid var(--line)' : undefined,
+                    borderLeft: variant === 'clean' ? '1px solid var(--line)' : '4px solid #888',
                   }}>
-                    <span style={{ color: '#555', fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', display: 'block', marginBottom: '12px' }}>
+                    <span style={{ color: '#555', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', marginBottom: '12px' }}>
                       Choose {competitor} If
                     </span>
                     <p style={{ margin: 0, fontSize: '14.5px', lineHeight: 1.68, color: 'var(--ink)' }}>
@@ -276,8 +314,16 @@ export function AudimentCompareDetailClient({
             <section className="intro" id="migration">
               <div>
                 <h2>
-                  What switching<br />
-                  actually <span className="aud-text-orange">looks like.</span>
+                  {variant === 'clean' ? (
+                    <>
+                      What switching <span className="muted">actually looks like</span>
+                    </>
+                  ) : (
+                    <>
+                      What switching<br />
+                      actually <span className="aud-text-orange">looks like.</span>
+                    </>
+                  )}
                 </h2>
                 <p>
                   Migrating to Audiment is fast and structured. Our team handles checklist conversion and location setup so you can run in parallel without downtime.
@@ -379,8 +425,16 @@ export function AudimentCompareDetailClient({
         <section className="intro" id="differences">
           <div>
             <h2>
-              How they differ<br />
-              in <span className="aud-text-orange">practice.</span>
+              {variant === 'clean' ? (
+                <>
+                  How they differ <span className="muted">in practice</span>
+                </>
+              ) : (
+                <>
+                  How they differ<br />
+                  in <span className="aud-text-orange">practice.</span>
+                </>
+              )}
             </h2>
             <p>
               A side-by-side breakdown of how each platform handles the operational workflows that matter most to multi-location teams.
@@ -396,29 +450,31 @@ export function AudimentCompareDetailClient({
             maxWidth: '1200px',
             margin: '0 auto',
           }}>
-            {/* Semantic Comparison Table for AI Search Crawlers & Rapid Scanning */}
+            {/* Semantic Comparison Table */}
             <div style={{
               overflowX: 'auto',
               background: '#ffffff',
               border: '1px solid var(--line)',
               borderRadius: '4px',
               marginBottom: '16px',
-              boxShadow: '0 2px 12px rgba(0, 0, 0, 0.03)',
+              boxShadow: variant === 'clean' ? 'none' : '0 2px 12px rgba(0, 0, 0, 0.03)',
             }}>
               <table style={{ width: '100%', minWidth: '760px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14.5px' }}>
-                <caption style={{
-                  textAlign: 'left',
-                  padding: '12px 24px',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  letterSpacing: '0.05em',
-                  textTransform: 'uppercase',
-                  color: 'var(--muted)',
-                  background: '#faf9f6',
-                  borderBottom: '1px solid var(--line)',
-                }}>
-                  Feature &amp; Operational Matrix: Audiment vs {competitor}
-                </caption>
+                {variant !== 'clean' && (
+                  <caption style={{
+                    textAlign: 'left',
+                    padding: '12px 24px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                    color: 'var(--muted)',
+                    background: '#faf9f6',
+                    borderBottom: '1px solid var(--line)',
+                  }}>
+                    Feature &amp; Operational Matrix: Audiment vs {competitor}
+                  </caption>
+                )}
                 <thead>
                   <tr style={{ background: '#f7f6f3', borderBottom: '1px solid var(--line)' }}>
                     <th scope="col" style={{ padding: '20px 24px', fontWeight: 600, fontSize: '14.5px', color: 'var(--ink)', width: '25%', verticalAlign: 'middle' }}>
@@ -497,14 +553,22 @@ export function AudimentCompareDetailClient({
                 className="work-card"
                 style={{ padding: '36px 32px', background: '#fff' }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-                  <span style={{ color: '#9a9a9a', fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 600 }}>
-                    0{i + 1} // OPERATIONAL AREA
-                  </span>
-                  <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 500, letterSpacing: '-0.03em', color: 'var(--ink)' }}>
-                    {diff.area}
-                  </h3>
-                </div>
+                {variant === 'clean' ? (
+                  <div style={{ marginBottom: '20px' }}>
+                    <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 500, letterSpacing: '-0.03em', color: 'var(--ink)' }}>
+                      {diff.area}
+                    </h3>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+                    <span style={{ color: '#9a9a9a', fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 600 }}>
+                      0{i + 1} // OPERATIONAL AREA
+                    </span>
+                    <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 500, letterSpacing: '-0.03em', color: 'var(--ink)' }}>
+                      {diff.area}
+                    </h3>
+                  </div>
+                )}
 
                 <div style={{
                   display: 'grid',
@@ -516,8 +580,8 @@ export function AudimentCompareDetailClient({
                     padding: '24px 24px',
                     background: '#faf9f6',
                     border: '1px solid var(--line)',
-                    borderLeftWidth: '3px',
-                    borderLeftColor: 'var(--orange)',
+                    borderLeftWidth: variant === 'clean' ? '1px' : '3px',
+                    borderLeftColor: variant === 'clean' ? 'var(--line)' : 'var(--orange)',
                   }}>
                     <span style={{ color: 'var(--orange)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>
                       Audiment
@@ -532,8 +596,8 @@ export function AudimentCompareDetailClient({
                     padding: '24px 24px',
                     background: '#f8f8f8',
                     border: '1px solid var(--line)',
-                    borderLeftWidth: '3px',
-                    borderLeftColor: '#999',
+                    borderLeftWidth: variant === 'clean' ? '1px' : '3px',
+                    borderLeftColor: variant === 'clean' ? 'var(--line)' : '#999',
                   }}>
                     <span style={{ color: '#444', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>
                       {competitor}
@@ -552,8 +616,16 @@ export function AudimentCompareDetailClient({
         <section className="intro">
           <div>
             <h2>
-              Operational strengths<br />
-              &amp; platform <span className="aud-text-orange">fit.</span>
+              {variant === 'clean' ? (
+                <>
+                  Operational strengths <span className="muted">&amp; platform fit</span>
+                </>
+              ) : (
+                <>
+                  Operational strengths<br />
+                  &amp; platform <span className="aud-text-orange">fit.</span>
+                </>
+              )}
             </h2>
             <p>
               Choose the tool built for your operating model. Here is an honest appraisal of where each platform leads.
@@ -585,7 +657,13 @@ export function AudimentCompareDetailClient({
                   fontSize: '14px',
                   flexShrink: 0,
                 }}>
-                  ✓
+                  {variant === 'clean' ? (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  ) : (
+                    '✓'
+                  )}
                 </span>
                 <h3 style={{ margin: 0, fontSize: '22px', fontWeight: 500, letterSpacing: '-0.03em', color: 'var(--ink)' }}>
                   Where Audiment is stronger
@@ -622,7 +700,15 @@ export function AudimentCompareDetailClient({
                   fontSize: '14px',
                   flexShrink: 0,
                 }}>
-                  ℹ
+                  {variant === 'clean' ? (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="16" x2="12" y2="12" />
+                      <line x1="12" y1="8" x2="12.01" y2="8" />
+                    </svg>
+                  ) : (
+                    'ℹ'
+                  )}
                 </span>
                 <h3 style={{ margin: 0, fontSize: '22px', fontWeight: 500, letterSpacing: '-0.03em', color: 'var(--ink)' }}>
                   When {competitor} may be a better fit
@@ -649,7 +735,12 @@ export function AudimentCompareDetailClient({
         {operationalOutcomeDifference && (
           <section style={{ padding: '80px 24px', background: '#fff', borderBottom: '1px solid var(--line)' }}>
             <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-              <article className="work-card" style={{ padding: '40px 36px', background: '#faf9f6', borderLeft: '4px solid var(--orange)' }}>
+              <article className="work-card" style={{
+                padding: '40px 36px',
+                background: '#faf9f6',
+                border: variant === 'clean' ? '1px solid var(--line)' : undefined,
+                borderLeft: variant === 'clean' ? '1px solid var(--line)' : '4px solid var(--orange)',
+              }}>
                 <h3 style={{ margin: '0 0 12px', fontSize: '22px', fontWeight: 500, letterSpacing: '-0.03em', color: 'var(--ink)' }}>
                   {operationalOutcomeDifference.title}
                 </h3>
@@ -661,24 +752,102 @@ export function AudimentCompareDetailClient({
           </section>
         )}
 
-        {/* ── §6 Frequently Asked Questions (Exact Asellus /audiment .faq style) ── */}
-        <section className="faq" id="faq" style={{ borderTop: 'none' }}>
-          <div className="faq-left">
-            <h2>Frequently asked<br />questions.</h2>
-            <p>Common questions when comparing Audiment to {competitor}.</p>
-          </div>
-          <div className="accordions">
-            {faqs.map((item, i) => (
-              <details key={i}>
-                <summary>
-                  <span>{item.question}</span>
-                  <span className="faq-icon">+</span>
-                </summary>
-                <p>{item.answer}</p>
-              </details>
-            ))}
-          </div>
-        </section>
+        {/* ── §6 Frequently Asked Questions (Universal Component) ── */}
+        {faqs && faqs.length > 0 && (
+          <FAQSection
+            id="faq"
+            style={{ borderTop: 'none' }}
+            subtitle={<>Common questions when comparing Audiment to {competitor}.</>}
+            faqs={faqs}
+          />
+        )}
+
+        {/* ── §6.5 Related Industry Guides & Alternative Comparisons ── */}
+        {((relatedGuides && relatedGuides.length > 0) || (relatedComparisons && relatedComparisons.length > 0)) && (
+          <section style={{ padding: '80px 24px', background: '#faf9f6', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
+            <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+              <div style={{ marginBottom: '36px' }}>
+                <h2 style={{ fontSize: '30px', fontWeight: 500, letterSpacing: '-0.03em', color: 'var(--ink)', marginBottom: '10px' }}>
+                  Related Industry Guides &amp; Comparisons
+                </h2>
+                <p style={{ margin: 0, fontSize: '15.5px', color: 'var(--muted)', maxWidth: '680px', lineHeight: 1.6 }}>
+                  Explore industry-specific inspection checklists, operational benchmarks, and alternative platform evaluations.
+                </p>
+              </div>
+
+              {relatedGuides && relatedGuides.length > 0 && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: relatedComparisons && relatedComparisons.length > 0 ? '36px' : '0' }}>
+                  {relatedGuides.map((guide, idx) => (
+                    <a
+                      key={idx}
+                      href={guide.href}
+                      className="work-card"
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: '24px 20px',
+                        background: '#ffffff',
+                        border: '1px solid var(--line)',
+                        borderRadius: '4px',
+                        textDecoration: 'none',
+                        transition: 'border-color 0.2s ease, transform 0.2s ease',
+                      }}
+                    >
+                      {guide.category && (
+                        <span style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--orange)', marginBottom: '8px' }}>
+                          {guide.category}
+                        </span>
+                      )}
+                      <h3 style={{ fontSize: '16.5px', fontWeight: 600, color: 'var(--ink)', lineHeight: 1.35, margin: '0 0 8px' }}>
+                        {guide.title}
+                      </h3>
+                      {guide.description && (
+                        <p style={{ fontSize: '13.5px', color: 'var(--muted)', lineHeight: 1.55, margin: 0, flex: 1 }}>
+                          {guide.description}
+                        </p>
+                      )}
+                      <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 500, color: 'var(--ink)' }}>
+                        <span>Read In-Depth Guide</span>
+                        <span>→</span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              {relatedComparisons && relatedComparisons.length > 0 && (
+                <div style={{ paddingTop: '28px', borderTop: '1px solid var(--line)' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted)', display: 'block', marginBottom: '14px' }}>
+                    Compare Other Alternatives to {competitor}
+                  </span>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {relatedComparisons.map((comp, idx) => (
+                      <a
+                        key={idx}
+                        href={comp.href}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          padding: '8px 14px',
+                          background: '#ffffff',
+                          border: '1px solid var(--line)',
+                          borderRadius: '4px',
+                          fontSize: '13.5px',
+                          fontWeight: 500,
+                          color: 'var(--ink)',
+                          textDecoration: 'none',
+                          transition: 'border-color 0.2s ease, color 0.2s ease',
+                        }}
+                      >
+                        {comp.title} →
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         {/* ── §7 Final CTA (Exact Asellus .center-head) ── */}
         <section className="center-head" style={{ borderTop: '1px solid var(--line)', padding: '110px 32px 120px' }}>

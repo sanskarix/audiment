@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Footer } from '@/components/website/Footer';
 import { Header } from '@/components/website/Header';
+import { FAQSection } from '@/components/website/FAQSection';
 import { observeDotBorderButtons } from '@/lib/dotBorder';
 import { observeAnimations } from '@/lib/animations';
 import { initCalEmbed, getCalAttributes } from '@/lib/cal';
@@ -148,11 +149,6 @@ export function AudimentSeoContentClient({
                   <>
                     {heroH1.split(' - ')[0]} <span className="muted">- {heroH1.split(' - ').slice(1).join(' - ')}</span>
                   </>
-                ) : heroH1.split(' ').length > 2 ? (
-                  <>
-                    {heroH1.split(' ').slice(0, Math.ceil(heroH1.split(' ').length / 2)).join(' ')}{' '}
-                    <span className="muted">{heroH1.split(' ').slice(Math.ceil(heroH1.split(' ').length / 2)).join(' ')}</span>
-                  </>
                 ) : (
                   heroH1
                 )}
@@ -191,25 +187,14 @@ export function AudimentSeoContentClient({
           </div>
         </section>
 
-        {/* ── §3 FAQ Section (100% Identical to Homepage .faq Structure) ── */}
+        {/* ── §3 FAQ Section (Universal Component) ── */}
         {faqs && faqs.length > 0 && (
-          <section className="faq" id="faq" style={{ marginTop: 0, borderTop: 'none', borderBottom: '1px solid var(--line)', paddingBottom: 120 }}>
-            <div className="faq-left">
-              <h2>Frequently asked<br />questions.</h2>
-              <p>Clear, honest answers about our operational approach.</p>
-            </div>
-            <div className="accordions">
-              {faqs.map((item, i) => (
-                <details key={i}>
-                  <summary>
-                    <span>{item.question}</span>
-                    <span className="faq-icon">+</span>
-                  </summary>
-                  <p>{item.answer}</p>
-                </details>
-              ))}
-            </div>
-          </section>
+          <FAQSection
+            id="faq"
+            style={{ marginTop: 0, borderTop: 'none', borderBottom: '1px solid var(--line)', paddingBottom: 120 }}
+            subtitle={<>Clear, honest answers about our operational approach.</>}
+            faqs={faqs}
+          />
         )}
 
         {/* ── §4 CTA & Related Topics ── */}

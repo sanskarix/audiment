@@ -106,7 +106,6 @@ export const Footer = ({
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/compare/audiment-vs-safetyculture">vs SafetyCulture</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/compare/audiment-vs-goaudits">vs GoAudits</Link>
                 <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/compare/audiment-vs-zenput">vs Zenput</Link>
-                <Link className="hover:text-heading transition-colors duration-200 text-muted-text" href="/compare/audiment-vs-jolt">vs Jolt</Link>
               </div>
               <div className="flex flex-col gap-4">
                 <h3 className="font-medium text-heading mb-2">Company</h3>

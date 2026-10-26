@@ -124,7 +124,6 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
                 <li><Link href="/compare">All Comparisons</Link></li>
                 <li><Link href="/compare/audiment-vs-safetyculture">vs SafetyCulture</Link></li>
                 <li><Link href="/compare/audiment-vs-goaudits">vs GoAudits</Link></li>
-                <li><Link href="/compare/audiment-vs-jolt">vs Jolt</Link></li>
                 <li><Link href="/compare/audiment-vs-zenput">vs Zenput</Link></li>
                 <li><Link href="/about">About Audiment</Link></li>
                 <li><Link href="/docs">Documentation</Link></li>

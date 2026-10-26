@@ -50,7 +50,7 @@
 }
 
 .aud-hero h1 .muted {
-  color: #999999;
+  color: #666666;
   font-weight: 400;
 }
 
@@ -3144,7 +3144,7 @@ h2 em {
   font-family: 'Geist', Arial, sans-serif;
   transition: color 0.15s ease;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -3651,7 +3651,7 @@ h2 em {
 }
 
 .aud-solutions-hero-head h1 .muted {
-  color: #999999;
+  color: #666666;
   font-weight: 400;
 }
 
@@ -3659,7 +3659,7 @@ h2 em {
 .aud-solutions-hero-head h1 em {
   font-style: normal;
   font-weight: 400;
-  color: #999999;
+  color: #666666;
 }
 
 .aud-solutions-hero-sub {
@@ -4267,14 +4267,16 @@ h2 em {
 }
 
 .aud-article-prose pre {
-  background: #0f1115;
-  color: #f1f5f9;
+  background: #fcfcfd;
+  color: #181818;
+  border: 1px solid #e8e8e8;
   padding: 22px 24px;
   border-radius: 6px;
   overflow-x: auto;
-  margin: 28px 0;
-  font-size: 13.5px;
-  line-height: 1.6;
+  margin: 32px 0;
+  font-size: 13px;
+  line-height: 1.65;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
 .aud-article-prose pre code {
@@ -4282,7 +4284,266 @@ h2 em {
   border: none;
   padding: 0;
   color: inherit;
+  font-family: var(--font-mono, monospace);
 }
+
+/* ── Prose FAQ Accordion (100% Home Page Consistent) ── */
+.aud-article-prose details,
+.aud-prose-faq-item {
+  padding: 24px 0;
+  border-top: none;
+  border-bottom: 1px solid var(--line);
+  margin: 0;
+}
+
+.aud-article-prose details:first-of-type,
+.aud-prose-faq-item:first-of-type {
+  border-top: 1px solid var(--line);
+  margin-top: 20px;
+}
+
+.aud-article-prose summary,
+.aud-prose-faq-summary {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.45;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  transition: color 0.2s ease;
+  padding: 0;
+}
+
+.aud-article-prose summary::-webkit-details-marker,
+.aud-prose-faq-summary::-webkit-details-marker {
+  display: none;
+}
+
+.aud-article-prose summary:hover,
+.aud-prose-faq-summary:hover {
+  color: var(--orange);
+}
+
+.aud-article-prose summary strong,
+.aud-prose-faq-summary strong {
+  font-weight: 500;
+  color: inherit;
+}
+
+.aud-article-prose summary::after,
+.aud-prose-faq-summary::after {
+  content: "+";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  font-size: 16px;
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.aud-article-prose details[open] summary::after,
+.aud-prose-faq-item[open] summary::after {
+  transform: rotate(45deg);
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+.aud-article-prose .faq-icon {
+  display: none;
+}
+
+.aud-article-prose details p,
+.aud-prose-faq-item p {
+  margin: 14px 0 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 680px;
+}
+
+/* ── Minimalist Bot-Readable Process Illustration Card ── */
+.aud-workflow-card {
+  margin: 36px 0;
+  border: 1px solid #e7e7e5;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+}
+
+.aud-workflow-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: #fafaf8;
+  border-bottom: 1px solid #e7e7e5;
+}
+
+.aud-workflow-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aud-workflow-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--orange, #ff5400);
+  border-radius: 1px;
+}
+
+.aud-workflow-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink, #111111);
+}
+
+.aud-workflow-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted, #666666);
+}
+
+.aud-workflow-body {
+  padding: 28px 24px;
+  background: #ffffff;
+}
+
+.aud-workflow-step-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.aud-workflow-step-item {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.aud-workflow-node-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+.aud-workflow-step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #f5f5f3;
+  border: 1px solid #e4e4e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666666;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.aud-workflow-node-card {
+  flex: 1;
+  min-width: 0;
+  background: #ffffff;
+  border: 1px solid #e8e8e6;
+  border-radius: 6px;
+  padding: 14px 18px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.aud-workflow-step-title {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--ink, #111111);
+  margin: 0;
+}
+
+.aud-workflow-details-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.aud-workflow-detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #fbfbfa;
+  border-radius: 4px;
+  border: 1px solid #eeeeec;
+}
+
+.aud-workflow-detail-bullet {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--orange, #ff5400);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.aud-workflow-detail-text {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #555555;
+}
+
+.aud-workflow-connector-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 32px;
+  height: 24px;
+  margin: 2px 0;
+}
+
+.aud-workflow-connector-line {
+  width: 1.5px;
+  height: 14px;
+  background: #dededb;
+}
+
+.aud-workflow-connector-arrow {
+  color: #999999;
+  margin-top: -3px;
+}
+
+.aud-workflow-fallback {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink, #111111);
+  margin: 0;
+}
+
+
 
 .aud-article-prose hr,
 .aud-prose-divider {
@@ -4471,6 +4732,7 @@ h2 em {
 .aud-related-posts-section {
   padding: 64px 32px 100px;
   background: var(--paper);
+  border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
 
@@ -4576,7 +4838,7 @@ h2 em {
 }
 
 .aud-sol-detail-hero h1 .muted {
-  color: #999999;
+  color: #666666;
   font-weight: 400;
 }
 
@@ -4584,7 +4846,7 @@ h2 em {
 .aud-sol-detail-hero h1 em {
   font-style: normal;
   font-weight: 400;
-  color: #999999;
+  color: #666666;
 }
 
 .aud-sol-detail-hero-sub {

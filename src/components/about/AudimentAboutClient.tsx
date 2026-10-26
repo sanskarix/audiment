@@ -125,7 +125,7 @@ export function AudimentAboutClient() {
                   When you had one or two locations, you could see everything yourself. At 20 or 200, you can't. Standards drift, managers self-report, issues stay hidden, and problems surface too late.
                 </p>
                 <p>
-                  The companies that maintain quality consistency at scale don't do it through more oversight or more reports. They do it by building execution systems that verify standards are being met – not trust-based systems that assume they are.
+                  The companies that maintain quality consistency at scale don't do it through more oversight or more reports. They do it by building execution systems that verify standards are being met, not trust-based systems that assume they are.
                 </p>
               </motion.div>
 
@@ -133,7 +133,7 @@ export function AudimentAboutClient() {
               <motion.div className="aud-about-duo-col aud-about-prose" variants={fadeUp}>
                 <h2>Why self-reporting fails in distributed teams</h2>
                 <p>
-                  A completed checklist doesn't prove a standard was actually met. Without photo evidence and tracked follow-through, reports can look healthy while quality is slipping. This isn't a motivation problem – it's a system problem.
+                  A completed checklist doesn't prove a standard was actually met. Without photo evidence and tracked follow-through, reports can look healthy while quality is slipping. This isn't a motivation problem; it is a system problem.
                 </p>
                 <p>
                   Under shift pressure, managers make rational short-term decisions. They complete audits from memory. They mark checks done that they believe were done. Over weeks and months, these small inaccuracies compound into a significant gap between reported performance and actual performance.
@@ -232,7 +232,7 @@ export function AudimentAboutClient() {
               <motion.div className="aud-solution-card" variants={fadeUp}>
                 <div className="aud-solution-icon"><SVG d={I.users} size={20} /></div>
                 <p>
-                  The strongest fit is businesses with 10–500+ locations that can't rely on paper checklists and WhatsApp threads to maintain standards.
+                  The strongest fit is businesses with 10 to 500+ locations that can't rely on paper checklists and WhatsApp threads to maintain standards.
                 </p>
               </motion.div>
 
@@ -298,7 +298,7 @@ export function AudimentAboutClient() {
               <motion.div className="aud-about-info-col" variants={fadeUp}>
                 <h2>Built by Asellus LLP</h2>
                 <p>
-                  Audiment is developed by Asellus LLP, an India-based technology company focused on operational software for distributed businesses. The platform runs in any mobile browser with no app download required – designed for field teams who need to run audits quickly and reliably across locations.
+                  Audiment is developed by Asellus LLP, an India-based technology company focused on operational software for distributed businesses. The platform runs in any mobile browser with no app download required, designed for field teams who need to run audits quickly and reliably across locations.
                 </p>
               </motion.div>
 
@@ -307,7 +307,7 @@ export function AudimentAboutClient() {
                 <h2>Get in touch</h2>
                 <p>
                   For inquiries, demos, or partnership discussions:<br />
-                  <strong>Email:</strong> <a href="mailto:hello@audiment.com" className="aud-contact-email-link">hello@audiment.com</a>
+                  <strong>Email:</strong> <a href="mailto:hello@audiment.in" className="aud-contact-email-link">hello@audiment.in</a>
                 </p>
               </motion.div>
             </motion.div>

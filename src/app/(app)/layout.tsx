@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://audiment.in'),
   title: {
     template: '%s | Audiment App',
     default: 'Audiment App',

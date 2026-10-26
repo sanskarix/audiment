@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import '@/styles/app.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://audiment.in'),
   title: 'Audiment UI Lab — Visual Inventory',
   robots: {
     index: false,

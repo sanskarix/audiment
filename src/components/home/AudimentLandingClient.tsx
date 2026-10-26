@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 import { Footer } from '@/components/website/Footer';
 import { Header } from '@/components/website/Header';
+import { FAQSection } from '@/components/website/FAQSection';
 import { IconHover3D } from '@/components/website/icon-3d-hover';
 import { LogosSection } from '@/components/website/LogosSection';
 import { observeDotBorderButtons } from '@/lib/dotBorder';
@@ -1346,24 +1347,8 @@ export default function AudimentLandingClient() {
           </div>
         </section>
 
-        {/* ── § Frequently Asked Questions ── */}
-        <section className="faq" id="faq">
-          <div className="faq-left">
-            <h2>Frequently asked<br />questions.</h2>
-            <p>Clear, honest answers<br />about how Audiment works.</p>
-          </div>
-          <div className="accordions">
-            {faqs.map((item, i) => (
-              <details key={i}>
-                <summary>
-                  <span>{item.q}</span>
-                  <span className="faq-icon">+</span>
-                </summary>
-                <p>{item.a}</p>
-              </details>
-            ))}
-          </div>
-        </section>
+        {/* ── § Frequently Asked Questions (Universal Component) ── */}
+        <FAQSection faqs={faqs} />
       </main>
 
       <Footer service="general" />

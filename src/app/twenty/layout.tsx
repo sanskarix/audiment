@@ -13,6 +13,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://audiment.in'),
   title: "Twenty UI Showcase | Audiment",
   robots: {
     index: false,

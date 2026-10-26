@@ -3,7 +3,10 @@ import Script from 'next/script';
 import {
   AudimentCompareDetailClient,
   CompareDetailProps,
+  RelatedResource,
+  RelatedComparison,
 } from '@/components/compare/AudimentCompareDetailClient';
+import { getCompareResources } from './compareResources';
 
 interface CompareProps {
   competitor: string;
@@ -37,6 +40,9 @@ interface CompareProps {
     answer: string;
   }[];
   path: string;
+  variant?: 'clean' | 'default';
+  relatedGuides?: RelatedResource[];
+  relatedComparisons?: RelatedComparison[];
 }
 
 export default function CompareTemplate({
@@ -53,7 +59,13 @@ export default function CompareTemplate({
   operationalOutcomeDifference,
   faqs: customFaqs,
   path,
+  variant = 'clean',
+  relatedGuides: customRelatedGuides,
+  relatedComparisons: customRelatedComparisons,
 }: CompareProps) {
+  const defaultResources = getCompareResources(path, competitor);
+  const finalGuides = customRelatedGuides && customRelatedGuides.length > 0 ? customRelatedGuides : defaultResources.relatedGuides;
+  const finalComparisons = customRelatedComparisons && customRelatedComparisons.length > 0 ? customRelatedComparisons : defaultResources.relatedComparisons;
   const defaultFaqs = [
     {
       question: `Is Audiment a direct alternative to ${competitor}?`,
@@ -204,6 +216,9 @@ export default function CompareTemplate({
         operationalOutcomeDifference={operationalOutcomeDifference}
         faqs={activeFaqs}
         path={path}
+        variant={variant}
+        relatedGuides={finalGuides}
+        relatedComparisons={finalComparisons}
       />
     </>
   );

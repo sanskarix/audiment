@@ -7,6 +7,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Footer } from '@/components/website/Footer';
 import { Header } from '@/components/website/Header';
+import { FAQSection, FAQItem } from '@/components/website/FAQSection';
+export type { FAQItem };
 import { observeDotBorderButtons } from '@/lib/dotBorder';
 import { observeAnimations } from '@/lib/animations';
 import { initCalEmbed, getCalAttributes } from '@/lib/cal';
@@ -73,6 +75,7 @@ export interface RelatedPost {
   readingTime?: string;
 }
 
+
 export interface BlogPostClientProps {
   title: string;
   description: string;
@@ -83,6 +86,7 @@ export interface BlogPostClientProps {
   slug: string;
   toc: TOCItem[];
   relatedPosts: RelatedPost[];
+  faqs?: FAQItem[];
   children: React.ReactNode;
 }
 
@@ -95,6 +99,7 @@ export function AudimentBlogPostClient({
   readingTime,
   toc,
   relatedPosts,
+  faqs,
   children,
 }: BlogPostClientProps) {
   const cal = getCalAttributes('general');
@@ -259,6 +264,29 @@ export function AudimentBlogPostClient({
             </div>
           </div>
         </section>
+
+        {/* ── §3 Frequently Asked Questions (Universal Component) ── */}
+        {faqs && faqs.length > 0 && (
+          <FAQSection
+            id="faq"
+            anchorId="frequently-asked-questions"
+            title={
+              <>
+                Frequently asked
+                <br />
+                questions.
+              </>
+            }
+            subtitle={
+              <>
+                Clear, practical answers
+                <br />
+                about this audit workflow.
+              </>
+            }
+            faqs={faqs}
+          />
+        )}
 
         {/* Related Posts Section */}
         {relatedPosts && relatedPosts.length > 0 && (

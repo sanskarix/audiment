@@ -81,6 +81,17 @@ const nextConfig: NextConfig = {
         destination: 'https://audiment.in/:path*',
         permanent: true,
       },
+      // /blogs alias redirect
+      {
+        source: '/blogs',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/blogs/:slug*',
+        destination: '/blog/:slug*',
+        permanent: true,
+      },
       // Existing path redirects
       {
         source: '/solutions/restaurant-operations',

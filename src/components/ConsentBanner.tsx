@@ -128,23 +128,23 @@ export function ConsentBanner() {
         <div
           role="region"
           aria-label="Cookie consent banner"
-          className="fixed bottom-0 inset-x-0 z-50 p-4 sm:p-6 bg-background/95 border-t border-border shadow-2xl backdrop-blur-md transition-all animate-in slide-in-from-bottom duration-300"
+          className="fixed bottom-0 inset-x-0 z-50 p-2.5 sm:px-6 sm:py-3 bg-background/95 border-t border-border shadow-lg backdrop-blur-md transition-all animate-in slide-in-from-bottom duration-300"
         >
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="space-y-1.5 max-w-3xl">
-              <h2 className="text-base font-semibold text-foreground">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-2.5 md:gap-4">
+            <div className="space-y-0.5 max-w-3xl">
+              <h2 className="text-xs sm:text-sm font-semibold text-foreground">
                 We value your privacy
               </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              <p className="text-[11px] sm:text-xs text-muted-foreground leading-normal">
                 We use essential technologies to operate the site. With your consent, Google Analytics and advertising technologies may be used to understand website usage and measure marketing performance.
               </p>
             </div>
-            <div className="flex flex-wrap items-center gap-2 shrink-0 w-full md:w-auto">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0 w-full md:w-auto">
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto h-7 sm:h-8 px-2.5 text-xs"
                 onClick={openPreferences}
               >
                 Manage Preferences
@@ -153,7 +153,7 @@ export function ConsentBanner() {
                 type="button"
                 variant="secondary"
                 size="sm"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto h-7 sm:h-8 px-2.5 text-xs"
                 onClick={rejectNonEssential}
               >
                 Reject Non-Essential
@@ -162,7 +162,7 @@ export function ConsentBanner() {
                 type="button"
                 variant="default"
                 size="sm"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto h-7 sm:h-8 px-3 text-xs"
                 onClick={acceptAll}
               >
                 Accept All

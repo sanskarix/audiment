@@ -50,12 +50,15 @@ Disallow: /login
 Disallow: /test-recording
 Disallow: /test-scoring
 
-User-agent: CCBot
+User-agent: Bingbot
 Allow: /
 Disallow: /dashboard/
 Disallow: /api/
 Disallow: /login
 Disallow: /test-recording
 Disallow: /test-scoring
+
+User-agent: Applebot-Extended
+Allow: /
 
 Sitemap: https://audiment.in/sitemap.xml

@@ -18,8 +18,8 @@ This is the corrective-action problem in [multi-location](/use-cases/multi-locat
 
 CAPA is the system for closing audit failures with accountability and preventing repeat failures across locations.
 
-- **Corrective action** – fixing a specific problem that was found during an audit
-- **Preventive action** – identifying why that problem happened and changing the process so it cannot happen again
+- **Corrective action**: fixing a specific problem that was found during an audit
+- **Preventive action**: identifying why that problem happened and changing the process so it cannot happen again
 
 Most restaurant and retail chains do corrective action badly and preventive action not at all. Someone sends a message in a group chat saying "the cold storage seal at Koramangala needs replacing." The message gets 12 thumbs ups. Three weeks later the seal is still broken. The next audit flags it again.
 
@@ -53,7 +53,7 @@ When an auditor flags a failed checkpoint, the system should immediately classif
 
 | Severity level | Example | Response time |
 |---|---|---|
-| Critical | Pest sighting in food prep area | Immediate – escalation alert to owner |
+| Critical | Pest sighting in food prep area | Immediate, escalation alert to owner |
 | High | Cold storage above safe temperature | 24 hours |
 | Medium | Handwashing station soap empty | 48 hours |
 | Low | Floor slightly wet, non-slip mat missing | 72 hours |
@@ -62,7 +62,7 @@ This classification matters because it determines who gets notified, how fast, a
 
 ### Stage 2: How should corrective actions be assigned?
 
-The moment a failure is detected, the system creates a corrective action task and assigns it to a specific person – not a group, not a role in general, a named individual. The task includes:
+The moment a failure is detected, the system creates a corrective action task and assigns it to a specific person, not a group, not a role in general, a named individual. The task includes:
 
 - What the problem is (pulled directly from the audit finding)
 - Who is responsible for fixing it
@@ -79,7 +79,7 @@ This removes the follow-up burden from the owner entirely. You should not have t
 
 ### Stage 4: How should closure be verified?
 
-The task cannot be marked complete without photo evidence. The manager uploads a photo showing the issue has been fixed – the new refrigerator seal, the pest control treatment record, the replenished soap dispenser.
+The task cannot be marked complete without photo evidence. The manager uploads a photo showing the issue has been fixed, the new refrigerator seal, the pest control treatment record, the replenished soap dispenser.
 
 This single requirement changes everything. It makes accountability concrete and impossible to fake. A manager cannot type "done" and move on.
 
@@ -87,7 +87,7 @@ This single requirement changes everything. It makes accountability concrete and
 
 For high and critical severity failures, the system should prompt the manager to log the root cause before the task can be closed. Was the refrigerator seal broken because of a one-time damage event or because the cleaning procedure puts pressure on seals over time? The answer determines whether corrective action is enough or whether the process itself needs to change.
 
-This is where most operators stop investing attention, and it is exactly where the long-term value lives. If your Bandra branch has had three cold storage failures in four months, that is a pattern – not three separate incidents. This is also where [CAPA connects to the broader audit management system](/blog/audit-management-guide): pattern data only emerges when audit records are structured, consistent, and centrally visible.
+This is where most operators stop investing attention, and it is exactly where the long-term value lives. If your Bandra branch has had three cold storage failures in four months, that is a pattern, not three separate incidents. This is also where [CAPA connects to the broader audit management system](/blog/audit-management-guide): pattern data only emerges when audit records are structured, consistent, and centrally visible.
 
 ---
 
@@ -115,7 +115,7 @@ Here is why 48 hours works:
 
 - It is short enough to prevent issues from compounding or becoming safety incidents
 - It is realistic enough that managers can plan around it without it creating operational chaos
-- It creates a clear accountability line – if it is not done in 48 hours, escalation is automatic
+- It creates a clear accountability line, if it is not done in 48 hours, escalation is automatic
 
 For critical issues, the standard should be same-day resolution with an immediate owner alert. For low severity issues, 72 hours is acceptable.
 
@@ -131,7 +131,7 @@ Here is a concrete example:
 
 > Audit data shows that three branches have had repeated failures on "staff wearing proper hairnets during food preparation" over six consecutive audits. Each time, the branch manager submits corrective action: "Reminded staff of policy."
 
-The corrective action is being completed every time. The problem keeps recurring. This means the corrective action is wrong – the root cause is not a one-time oversight, it is a training or culture problem.
+The corrective action is being completed every time. The problem keeps recurring. This means the corrective action is wrong, the root cause is not a one-time oversight, it is a training or culture problem.
 
 Preventive action here might be: adding hairnet compliance to the pre-shift briefing checklist, posting a reminder sign at the kitchen entrance, or making hairnet availability part of the daily equipment checklist so staff cannot say they did not have one.
 
@@ -139,22 +139,32 @@ Preventive action can only be identified when you have trend data across multipl
 
 ---
 
-## Frequently asked questions
+## Frequently Asked Questions
 
-**What is the difference between corrective action and preventive action?**
-Corrective action fixes the specific problem that was found – replacing a broken seal, cleaning a contaminated surface, retraining a specific staff member. Preventive action addresses the root cause so the problem cannot recur – changing a process, updating a checklist, or adding a system control.
+<details>
+<summary><strong>What is the difference between corrective action and preventive action?</strong></summary>
+<p>Corrective action fixes the specific problem that was found, replacing a broken seal, cleaning a contaminated surface, retraining a specific staff member. Preventive action addresses the root cause so the problem cannot recur, changing a process, updating a checklist, or adding a system control.</p>
+</details>
 
-**How quickly should corrective actions be resolved?**
-This depends on severity. Critical issues (pest sightings, temperature breaches in food storage) should be resolved same-day with an immediate escalation alert. High severity issues should be resolved within 24 hours. Medium severity within 48 hours. Low severity within 72 hours. These deadlines should be enforced automatically, not tracked manually.
+<details>
+<summary><strong>How quickly should corrective actions be resolved?</strong></summary>
+<p>This depends on severity. Critical issues (pest sightings, temperature breaches in food storage) should be resolved same-day with an immediate escalation alert. High severity issues should be resolved within 24 hours. Medium severity within 48 hours. Low severity within 72 hours. These deadlines should be enforced automatically, not tracked manually.</p>
+</details>
 
-**What proof of resolution should I require?**
-At minimum, a photo showing the issue has been corrected. For critical issues, require a photo plus a root cause note explaining why the failure happened and what has changed to prevent recurrence. For high severity issues, a follow-up audit checkpoint at the next scheduled audit to verify the fix held.
+<details>
+<summary><strong>What proof of resolution should I require?</strong></summary>
+<p>At minimum, a photo showing the issue has been corrected. For critical issues, require a photo plus a root cause note explaining why the failure happened and what has changed to prevent recurrence. For high severity issues, a follow-up audit checkpoint at the next scheduled audit to verify the fix held.</p>
+</details>
 
-**How do I identify recurring issues across branches?**
-You need audit data aggregated at the chain level, not just the branch level. If your audit platform tracks failures by category and branch over time, you can generate a view that shows – for example – which branches have had more than two temperature-related failures in the past 90 days. Without this cross-branch view, you are managing each branch as an isolated incident rather than a system.
+<details>
+<summary><strong>How do I identify recurring issues across branches?</strong></summary>
+<p>You need audit data aggregated at the chain level, not just the branch level. If your audit platform tracks failures by category and branch over time, you can generate a view that shows, for example, which branches have had more than two temperature-related failures in the past 90 days. Without this cross-branch view, you are managing each branch as an isolated incident rather than a system.</p>
+</details>
 
-**Can automated CAPA systems integrate with my existing tools?**
-Most modern audit platforms offer webhook or API integrations with tools like Slack, WhatsApp Business API, or email. The audit platform should handle task creation, assignment, and escalation natively – integrations are for notification delivery only. If the CAPA workflow itself relies on an external tool to function, that is a fragility risk.
+<details>
+<summary><strong>Can automated CAPA systems integrate with my existing tools?</strong></summary>
+<p>Most modern audit platforms offer webhook or API integrations with tools like Slack, WhatsApp Business API, or email. The audit platform should handle task creation, assignment, and escalation natively, integrations are for notification delivery only. If the CAPA workflow itself relies on an external tool to function, that is a fragility risk.</p>
+</details>
 
 ---
 

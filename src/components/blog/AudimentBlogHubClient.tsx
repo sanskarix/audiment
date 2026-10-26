@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { Footer } from '@/components/website/Footer';
 import { Header } from '@/components/website/Header';
 import { observeDotBorderButtons } from '@/lib/dotBorder';
-import { observeAnimations } from '@/lib/animations';
+import { observeAnimations, initScrollReveals } from '@/lib/animations';
 import { initCalEmbed, getCalAttributes } from '@/lib/cal';
 
 // ─── Inline SVG Icons ────────────────────────────────────────────────────────
@@ -125,6 +125,7 @@ export function AudimentBlogHubClient({
   const [subscribedEmail, setSubscribedEmail] = useState('');
   const [subscribedSuccess, setSubscribedSuccess] = useState(false);
   const tabsNavRef = React.useRef<HTMLElement>(null);
+  const lenisRef = React.useRef<Lenis | null>(null);
 
   const handleScrollRight = () => {
     if (tabsNavRef.current) {
@@ -136,13 +137,18 @@ export function AudimentBlogHubClient({
     let lenis: Lenis | null = null;
     let ticker: ((time: number) => void) | null = null;
     let t1: ReturnType<typeof setTimeout> | undefined;
+    let resizeObserver: ResizeObserver | null = null;
 
-    const onLoad = () => ScrollTrigger.refresh();
+    const onLoad = () => {
+      lenis?.resize();
+      ScrollTrigger.refresh();
+    };
 
     const initHeavy = () => {
       gsap.registerPlugin(ScrollTrigger);
 
       lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+      lenisRef.current = lenis;
       lenis.on('scroll', ScrollTrigger.update);
       ticker = (time: number) => {
         if (lenis) lenis.raf(time * 1000);
@@ -154,7 +160,18 @@ export function AudimentBlogHubClient({
       observeAnimations();
       initCalEmbed();
 
-      t1 = setTimeout(() => ScrollTrigger.refresh(), 300);
+      if (typeof ResizeObserver !== 'undefined' && typeof document !== 'undefined' && document.body) {
+        resizeObserver = new ResizeObserver(() => {
+          lenis?.resize();
+          ScrollTrigger.refresh();
+        });
+        resizeObserver.observe(document.body);
+      }
+
+      t1 = setTimeout(() => {
+        lenis?.resize();
+        ScrollTrigger.refresh();
+      }, 300);
       window.addEventListener('load', onLoad);
     };
 
@@ -166,17 +183,40 @@ export function AudimentBlogHubClient({
 
     return () => {
       if (t1) clearTimeout(t1);
+      if (resizeObserver) resizeObserver.disconnect();
       window.removeEventListener('load', onLoad);
       if (ticker) gsap.ticker.remove(ticker);
-      if (lenis) lenis.destroy();
+      if (lenis) {
+        lenis.destroy();
+        lenisRef.current = null;
+      }
     };
   }, []);
+
+  // Recalculate scroll dimensions whenever visible posts or categories change
+  useEffect(() => {
+    const refreshDimensions = () => {
+      lenisRef.current?.resize();
+      ScrollTrigger.refresh();
+      initScrollReveals();
+    };
+
+    refreshDimensions();
+    const t1 = setTimeout(refreshDimensions, 60);
+    const t2 = setTimeout(refreshDimensions, 300);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [visibleCount, searchQuery, selectedCategory]);
 
   // Category counts
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = { 'All topics': posts.length };
     posts.forEach((p) => {
-      counts[p.category] = (counts[p.category] || 0) + 1;
+      const cat = p.category || 'Audit Management';
+      counts[cat] = (counts[cat] || 0) + 1;
     });
     return counts;
   }, [posts]);
@@ -184,14 +224,14 @@ export function AudimentBlogHubClient({
   const filteredPosts = useMemo(() => {
     return posts.filter((p) => {
       const matchesCategory =
-        selectedCategory === 'All topics' || p.category === selectedCategory;
+        selectedCategory === 'All topics' || (p.category || 'Audit Management') === selectedCategory;
       const q = searchQuery.trim().toLowerCase();
       const matchesSearch =
         !q ||
-        p.title.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q) ||
-        (p.tags && p.tags.some((t) => t.toLowerCase().includes(q)));
+        (p.title && p.title.toLowerCase().includes(q)) ||
+        (p.description && p.description.toLowerCase().includes(q)) ||
+        (p.category && p.category.toLowerCase().includes(q)) ||
+        (Array.isArray(p.tags) && p.tags.some((t) => t && t.toLowerCase().includes(q)));
       return matchesCategory && matchesSearch;
     });
   }, [posts, searchQuery, selectedCategory]);
@@ -507,7 +547,13 @@ export function AudimentBlogHubClient({
                     <button
                       type="button"
                       className="aud-blog-loadmore-btn"
-                      onClick={() => setVisibleCount((prev) => prev + 12)}
+                      onClick={() => {
+                        setVisibleCount((prev) => prev + 12);
+                        requestAnimationFrame(() => {
+                          lenisRef.current?.resize();
+                          ScrollTrigger.refresh();
+                        });
+                      }}
                     >
                       Load More Articles ({gridPosts.length - visibleCount} remaining)
                     </button>

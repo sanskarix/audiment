@@ -9,7 +9,9 @@ import {
   AudimentBlogPostClient,
   TOCItem,
   RelatedPost,
+  FAQItem,
 } from '@/components/blog/AudimentBlogPostClient';
+import { WorkflowIllustration } from '@/components/blog/WorkflowIllustration';
 
 export async function generateStaticParams() {
   const posts = getAllPosts();
@@ -18,43 +20,12 @@ export async function generateStaticParams() {
   }));
 }
 
-function cleanBlogTitle(title: string): string {
-  const separators = ['?', ':', '(', '-'];
-  let clean = title;
-
-  let firstSepIdx = -1;
-  let matchingSep = '';
-  for (const sep of separators) {
-    const idx = clean.indexOf(sep);
-    if (idx !== -1 && (firstSepIdx === -1 || idx < firstSepIdx)) {
-      firstSepIdx = idx;
-      matchingSep = sep;
-    }
-  }
-
-  if (firstSepIdx !== -1) {
-    clean = clean.substring(0, firstSepIdx).trim();
-    if (matchingSep === '?') {
-      clean += '?';
-    }
-  }
-
-  clean = clean
-    .replace(/\bfor Multi-Location Businesses\b/gi, '')
-    .replace(/\bfor Multi-Outlet Restaurants\b/gi, '')
-    .replace(/\bAcross Multiple Locations\b/gi, '')
-    .replace(/\bAcross Locations\b/gi, '')
-    .trim();
-
-  return clean;
-}
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
   const post = getPostBySlug(resolvedParams.slug);
   if (!post) return {};
 
-  const displayTitle = post.metaTitle || cleanBlogTitle(post.title);
+  const displayTitle = post.metaTitle || post.title;
   const metaTitle = displayTitle;
 
   return {
@@ -79,18 +50,66 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-function getTOC(content: string): TOCItem[] {
+function extractFAQsAndClean(content: string): {
+  faqs: FAQItem[];
+  cleanContent: string;
+} {
+  const pattern = /(##\s+Frequently Asked Questions[\s\S]*?)(?=\n##\s+|$)/i;
+  const match = content.match(pattern);
+  const faqs: FAQItem[] = [];
+  let cleanContent = content;
+
+  if (match) {
+    const faqText = match[1];
+    const detailsMatches = faqText.matchAll(
+      /<details[\s\S]*?<summary[^>]*>([\s\S]*?)<\/summary>[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>[\s\S]*?<\/details>/gi
+    );
+    for (const m of detailsMatches) {
+      const q = m[1].replace(/<[^>]+>/g, '').trim();
+      const a = m[2].replace(/<[^>]+>/g, '').trim();
+      if (q && a) {
+        faqs.push({ question: q, answer: a });
+      }
+    }
+
+    if (faqs.length === 0) {
+      const h3Matches = faqText.matchAll(/<h3[^>]*>([\s\S]*?)<\/h3>[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/gi);
+      for (const m of h3Matches) {
+        const q = m[1].replace(/<[^>]+>/g, '').trim();
+        const a = m[2].replace(/<[^>]+>/g, '').trim();
+        if (q && a) {
+          faqs.push({ question: q, answer: a });
+        }
+      }
+    }
+
+    cleanContent =
+      content.slice(0, match.index) + content.slice((match.index || 0) + match[0].length);
+  }
+
+  return { faqs, cleanContent };
+}
+
+function getTOC(content: string, hasFaqs: boolean): TOCItem[] {
   const headings = content.match(/^##\s+(.*)/gm);
-  if (!headings) return [];
-  return headings.map((h) => {
-    const rawText = h.replace(/^##\s+/, '');
-    const cleanText = rawText.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*_`]/g, '').trim();
-    const id = cleanText
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
-    return { text: cleanText, id };
-  });
+  const items: TOCItem[] = [];
+  if (headings) {
+    for (const h of headings) {
+      const rawText = h.replace(/^##\s+/, '');
+      const cleanText = rawText.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*_`]/g, '').trim();
+      const id = cleanText
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+      if (cleanText.toLowerCase() !== 'frequently asked questions') {
+        items.push({ text: cleanText, id });
+      }
+    }
+  }
+  if (hasFaqs) {
+    items.push({ text: 'Frequently Asked Questions', id: 'frequently-asked-questions' });
+  }
+  return items;
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -101,7 +120,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound();
   }
 
-  const toc = getTOC(post.content);
+  const { faqs, cleanContent } = extractFAQsAndClean(post.content);
+  const toc = getTOC(cleanContent, faqs.length > 0);
 
   const relatedPosts: RelatedPost[] = getPostsByCategory(post.category)
     .filter((p) => p.slug !== post.slug)
@@ -163,6 +183,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     },
   };
 
+  const faqSchema =
+    faqs.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faqs.map((f) => ({
+            '@type': 'Question',
+            name: f.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: f.answer,
+            },
+          })),
+        }
+      : null;
+
   return (
     <>
       <script
@@ -173,6 +209,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsSchema) }}
       />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
       <AudimentBlogPostClient
         title={post.title}
         description={post.description}
@@ -183,9 +225,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         slug={post.slug}
         toc={toc}
         relatedPosts={relatedPosts}
+        faqs={faqs}
       >
         <MDXRemote
-          source={post.content.replace(/<script\b[\s\S]*?(?:<\/script>|\/>)/gi, '')}
+          source={cleanContent.replace(/<script\b[\s\S]*?(?:<\/script>|\/>)/gi, '')}
           options={{
             mdxOptions: {
               remarkPlugins: [remarkGfm],
@@ -214,13 +257,31 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 </h2>
               );
             },
+            pre: ({ children }: any) => {
+              let rawText = '';
+              const extract = (node: any): string => {
+                if (!node) return '';
+                if (typeof node === 'string') return node;
+                if (Array.isArray(node)) return node.map(extract).join('');
+                if (node.props?.children) return extract(node.props.children);
+                return '';
+              };
+              rawText = extract(children);
+
+              return <WorkflowIllustration rawText={rawText} />;
+            },
             table: (props: any) => (
               <div className="aud-table-container">
                 <table className="aud-prose-table" {...props} />
               </div>
             ),
             div: ({ className, children, ...props }: any) => {
-              if (className && (className.includes('shadow-') || className.includes('rounded-2xl') || className.includes('rounded-xl'))) {
+              if (
+                className &&
+                (className.includes('shadow-') ||
+                  className.includes('rounded-2xl') ||
+                  className.includes('rounded-xl'))
+              ) {
                 const sanitized = className
                   .replace(/\bshadow-(?:sm|md|lg|xl|2xl)\b/g, '')
                   .replace(/\brounded-(?:xl|2xl|3xl)\b/g, 'rounded-none')

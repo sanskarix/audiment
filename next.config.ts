@@ -153,6 +153,32 @@ const nextConfig: NextConfig = {
         destination: '/blog/franchise-marketing-compliance',
         permanent: true,
       },
+      // 404 URL fixes & legacy alias redirects
+      {
+        source: '/blog/pre-audit-readiness-how-to-prepare-for-an-audit',
+        destination: '/blog/iso-9001-auditing-audit-readiness',
+        permanent: true,
+      },
+      {
+        source: '/solutions/compliance',
+        destination: '/use-cases/multi-location-compliance',
+        permanent: true,
+      },
+      {
+        source: '/blog/what-is-a-compliance-audit',
+        destination: '/blog/how-to-perform-a-compliance-audit',
+        permanent: true,
+      },
+      {
+        source: '/compare/audiment-vs-safetyculture-iauditor',
+        destination: '/compare/audiment-vs-safetyculture',
+        permanent: true,
+      },
+      {
+        source: '/use-cases/field-audit-app',
+        destination: '/use-cases/audit-checklist-software',
+        permanent: true,
+      },
     ];
   },
 };

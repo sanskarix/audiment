@@ -59,14 +59,6 @@ const websiteSchema = {
   "description": "Audit management software for multi-location businesses.",
   "publisher": {
     "@id": "https://audiment.in/#organization"
-  },
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": {
-      "@type": "EntryPoint",
-      "urlTemplate": "https://audiment.in/blog?q={search_term_string}"
-    },
-    "query-input": "required name=search_term_string"
   }
 };
 

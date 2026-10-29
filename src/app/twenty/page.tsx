@@ -87,7 +87,7 @@ function LoginFormReference() {
             <Input
               type="email"
               placeholder="name@company.com"
-              defaultValue="auditor@audiment.com"
+              defaultValue="auditor@"
               className="h-10 bg-background/50 text-[14px]"
             />
           </div>

@@ -123,6 +123,36 @@ const nextConfig: NextConfig = {
         destination: '/blog/what-is-operational-auditing',
         permanent: true,
       },
+      {
+        source: '/franchise-compliance-software',
+        destination: '/blog/franchise-compliance-software',
+        permanent: true,
+      },
+      {
+        source: '/franchise-operations-software',
+        destination: '/blog/franchise-operations-software',
+        permanent: true,
+      },
+      {
+        source: '/franchise-audit-checklists',
+        destination: '/blog/franchise-audit-checklists',
+        permanent: true,
+      },
+      {
+        source: '/franchise-compliance',
+        destination: '/blog/franchise-compliance',
+        permanent: true,
+      },
+      {
+        source: '/franchise-standards',
+        destination: '/blog/franchise-standards',
+        permanent: true,
+      },
+      {
+        source: '/franchise-marketing-compliance',
+        destination: '/blog/franchise-marketing-compliance',
+        permanent: true,
+      },
     ];
   },
 };

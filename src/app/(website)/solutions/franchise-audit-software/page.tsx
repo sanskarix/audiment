@@ -186,28 +186,40 @@ export default function FranchiseAuditSoftware() {
             description: "Auto-generated tasks with 48-hour SLAs and photo verification when brand standards fail."
           },
           {
-            tag: "Platform",
-            title: "Issue Tracking",
-            href: "/platform/issue-tracking",
-            description: "Track open, overdue, and resolved non-compliances across every franchise unit."
+            tag: "Guide",
+            title: "Franchise Compliance Software",
+            href: "/blog/franchise-compliance-software",
+            description: "How multi-unit networks enforce approved suppliers, legal covenants, and cure periods."
           },
           {
-            tag: "Platform",
-            title: "Geo-Verified Audits",
-            href: "/platform/geo-verified-audits",
-            description: "Confirm field consultants and area coaches physically visit stores before submitting audits."
+            tag: "Guide",
+            title: "Franchise Operations Software",
+            href: "/blog/franchise-operations-software",
+            description: "The complete 5-layer tech stack for managing daily store execution and field consultants."
           },
           {
-            tag: "Platform",
-            title: "Proof-Based Audits",
-            href: "/platform/proof-based-audits",
-            description: "Mandate photographic evidence on critical brand presentation and cleanliness checks."
+            tag: "Blueprint",
+            title: "Franchise Audit Checklists",
+            href: "/blog/franchise-audit-checklists",
+            description: "Ready-to-use 4-part inspection blueprints and weighted scoring frameworks."
           },
           {
-            tag: "Core Use",
-            title: "Multi-Location Audit Software",
-            href: "/multi-location-audit-software",
-            description: "How multi-unit operations maintain consistency and accountability at scale."
+            tag: "Legal & Ops",
+            title: "Franchise Compliance",
+            href: "/blog/franchise-compliance",
+            description: "Default notice procedures, statutory cure periods, and joint employer boundaries."
+          },
+          {
+            tag: "Quality",
+            title: "Franchise Standards",
+            href: "/blog/franchise-standards",
+            description: "How to translate brand guidelines into binary, measurable field checkpoints."
+          },
+          {
+            tag: "Marketing",
+            title: "Franchise Marketing Compliance",
+            href: "/blog/franchise-marketing-compliance",
+            description: "Enforce POP campaign rollouts, ad fund audits, and local store marketing rules."
           },
           {
             tag: "Topic",

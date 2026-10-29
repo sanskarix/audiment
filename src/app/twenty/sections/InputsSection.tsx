@@ -96,7 +96,7 @@ export function InputsSection() {
             </label>
             <Input
               type="email"
-              placeholder="auditor@audiment.com"
+              placeholder="auditor@"
               defaultValue="senior.auditor@company.com"
             />
           </div>

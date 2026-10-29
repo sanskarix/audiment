@@ -97,6 +97,8 @@ export default function RetailAuditSoftware() {
         { tag: "Platform", title: "Issue Tracking", href: "/platform/issue-tracking", description: "Move from detected issues to verified resolution." },
         { tag: "Topic", title: "Operational Drift", href: "/operational-drift", description: "How retail standards drift across distributed stores." },
         { tag: "Topic", title: "Maintaining Standards Across Locations", href: "/maintaining-standards-across-locations", description: "Operational consistency framework for retail chains." },
+        { tag: "Guide", title: "How Multi-Location Businesses Maintain Control as They Scale", href: "/blog/how-multi-location-businesses-stay-in-control-as-they-scale", description: "Operational blueprint for maintaining consistency across 10 to 500+ stores." },
+        { tag: "Checklists", title: "Retail Store Audit Reports & Compliance Checklists", href: "/blog/retail-store-audit-reports-compliance-checklists", description: "Visual merchandising, inventory controls, and store opening inspection checklists." },
       ]}
     />
     </>

@@ -215,6 +215,12 @@ export default function RestaurantAuditSoftware() {
             title: "Operational Drift",
             href: "/operational-drift",
             description: "How multi-unit restaurant standards silently slip without consistent field verification."
+          },
+          {
+            tag: "Checklists",
+            title: "Restaurant & Industry Inspection Checklists",
+            href: "/blog/restaurant-hotel-industry-inspection-checklists",
+            description: "Standardized inspection checklists for food safety, line checks, shift handovers, and kitchen hygiene."
           }
         ]}
       />

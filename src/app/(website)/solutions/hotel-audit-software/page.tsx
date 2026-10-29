@@ -117,6 +117,7 @@ export default function HotelAuditSoftware() {
         { tag: "Platform", title: "Audit Dashboards", href: "/platform/operational-dashboards", description: "Property-level audit performance across your portfolio." },
         { tag: "Topic", title: "Hidden Operational Issues", href: "/hidden-operational-issues", description: "Why service and maintenance issues surface late." },
         { tag: "Topic", title: "Maintaining Standards Across Locations", href: "/maintaining-standards-across-locations", description: "Consistency systems for distributed hospitality teams." },
+        { tag: "Checklists", title: "Restaurant, Hotel & Industry Inspection Checklists", href: "/blog/restaurant-hotel-industry-inspection-checklists", description: "Comprehensive checklist guides for rooms, food safety, and facilities." },
       ]}
     />
     </>

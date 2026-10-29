@@ -111,6 +111,8 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
                 <li><Link href="/use-cases/multi-location-compliance">Multi-Location Compliance</Link></li>
                 <li><Link href="/use-cases/inspection-management-software">Inspection Management</Link></li>
                 <li><Link href="/use-cases/audit-checklist-software">Audit Checklist Software</Link></li>
+                <li><Link href="/maintaining-standards-across-locations">Maintaining Standards</Link></li>
+                <li><Link href="/staying-ahead-of-compliance">Staying Ahead of Compliance</Link></li>
               </ul>
             </div>
 
@@ -128,6 +130,7 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
                 <li><Link href="/about">About Audiment</Link></li>
                 <li><Link href="/docs">Documentation</Link></li>
                 <li><Link href="/blog">Operational Blog</Link></li>
+                <li><Link href="/blog/multi-location-compliance-guide">Compliance Guide</Link></li>
                 <li><Link href="/glossary">Operations Glossary</Link></li>
                 <li><Link href="/privacy-policy">Privacy Policy</Link></li>
                 <li><Link href="/terms-of-service">Terms of Service</Link></li>

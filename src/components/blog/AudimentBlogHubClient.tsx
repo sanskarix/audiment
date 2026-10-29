@@ -121,7 +121,7 @@ export function AudimentBlogHubClient({
   const cal = getCalAttributes('general');
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'All topics');
-  const [visibleCount, setVisibleCount] = useState(12);
+  const [visibleCount, setVisibleCount] = useState(24);
   const [subscribedEmail, setSubscribedEmail] = useState('');
   const [subscribedSuccess, setSubscribedSuccess] = useState(false);
   const tabsNavRef = React.useRef<HTMLElement>(null);
@@ -426,25 +426,25 @@ export function AudimentBlogHubClient({
           <section className="aud-blog-spotlight-section">
             <div className="aud-inner">
               <div className="aud-blog-spotlight-grid">
-                <div
+                <Link
+                  href="/blog/outlet-audit-software"
                   className="aud-blog-spotlight-card"
-                  onClick={() => setSelectedCategory('Audit Management')}
                 >
                   <div className="spotlight-icon">
                     <ClipboardIcon />
                   </div>
-                  <h4>Audit Management &amp; Execution</h4>
+                  <h4>Outlet &amp; Retail Audit Execution</h4>
                   <p>
                     Frameworks for scheduling, mobile field audits, scoring systems, and modern SaaS evaluations for distributed chains.
                   </p>
                   <span className="aud-blog-spotlight-link">
-                    Explore 30 Guides <ArrowRightIcon />
+                    Explore Guide <ArrowRightIcon />
                   </span>
-                </div>
+                </Link>
 
-                <div
+                <Link
+                  href="/blog/fssai-compliance-guide"
                   className="aud-blog-spotlight-card"
-                  onClick={() => setSelectedCategory('Compliance')}
                 >
                   <div className="spotlight-icon">
                     <ShieldIcon />
@@ -454,13 +454,13 @@ export function AudimentBlogHubClient({
                     Digital checklists, hygiene audits, temperature monitoring, and audit-readiness protocols for multi-outlet restaurants.
                   </p>
                   <span className="aud-blog-spotlight-link">
-                    Explore Compliance Guides <ArrowRightIcon />
+                    Explore Guide <ArrowRightIcon />
                   </span>
-                </div>
+                </Link>
 
-                <div
+                <Link
+                  href="/platform/proof-based-audits"
                   className="aud-blog-spotlight-card"
-                  onClick={() => setSelectedCategory('Proof-Based Audits')}
                 >
                   <div className="spotlight-icon">
                     <ZapIcon />
@@ -470,9 +470,92 @@ export function AudimentBlogHubClient({
                     How to eliminate pencil-whipping with photo proof, geo-stamps, and automated corrective action tracking across locations.
                   </p>
                   <span className="aud-blog-spotlight-link">
-                    Explore Proof Guides <ArrowRightIcon />
+                    Explore Platform <ArrowRightIcon />
                   </span>
-                </div>
+                </Link>
+              </div>
+
+              {/* Curated Field Guides & Checklists Strip */}
+              <div
+                style={{
+                  marginTop: '24px',
+                  padding: '16px 22px',
+                  background: '#f8fafc',
+                  borderRadius: '6px',
+                  border: '1px solid #e2e8f0',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  gap: '10px 18px',
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: '11.5px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                    color: '#64748b',
+                  }}
+                >
+                  Featured Guides:
+                </span>
+                <Link
+                  href="/blog/outlet-retail-audit-execution-compliance-analytics"
+                  style={{ fontSize: '13px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}
+                  className="hover:text-[var(--orange)]"
+                >
+                  Outlet Audit Execution &amp; Analytics →
+                </Link>
+                <Link
+                  href="/blog/quality-audit-software-selection-analytics"
+                  style={{ fontSize: '13px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}
+                  className="hover:text-[var(--orange)]"
+                >
+                  Quality Audit Software &amp; Selection →
+                </Link>
+                <Link
+                  href="/blog/how-multi-location-businesses-stay-in-control-as-they-scale"
+                  style={{ fontSize: '13px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}
+                  className="hover:text-[var(--orange)]"
+                >
+                  Multi-Location Control Framework →
+                </Link>
+                <Link
+                  href="/blog/restaurant-hotel-industry-inspection-checklists"
+                  style={{ fontSize: '13px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}
+                  className="hover:text-[var(--orange)]"
+                >
+                  Hospitality &amp; Restaurant Checklists →
+                </Link>
+                <Link
+                  href="/blog/retail-store-audit-reports-compliance-checklists"
+                  style={{ fontSize: '13px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}
+                  className="hover:text-[var(--orange)]"
+                >
+                  Retail Store Audit Reports →
+                </Link>
+                <Link
+                  href="/blog/workplace-operational-safety-inspection-checklists"
+                  style={{ fontSize: '13px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}
+                  className="hover:text-[var(--orange)]"
+                >
+                  Workplace Safety Checklists →
+                </Link>
+                <Link
+                  href="/blog/audit-tracking-software"
+                  style={{ fontSize: '13px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}
+                  className="hover:text-[var(--orange)]"
+                >
+                  Audit Tracking Software →
+                </Link>
+                <Link
+                  href="/blog/inspection-checklist-software-features"
+                  style={{ fontSize: '13px', color: '#0f172a', textDecoration: 'none', fontWeight: 500 }}
+                  className="hover:text-[var(--orange)]"
+                >
+                  Checklist Software Features →
+                </Link>
               </div>
             </div>
           </section>

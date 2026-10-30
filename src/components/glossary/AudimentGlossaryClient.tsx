@@ -199,7 +199,7 @@ export function AudimentGlossaryClient() {
       <div className="page-lines" />
       <Header activeNav="solutions" ctaId="aud-glossary-nav-cta" />
 
-      <main id="top">
+      <main id="main-content" tabIndex={-1}>
         {/* ── §1 Hero Section ── */}
         <section className="aud-hero" style={{ paddingBottom: '3rem' }}>
           <div className="aud-inner" style={{ textAlign: 'center', maxWidth: '840px', margin: '0 auto' }}>

@@ -309,7 +309,7 @@ export function AudimentSolutionsClient() {
       {/* Global Navigation Header */}
       <Header activeNav="solutions" ctaId="aud-solutions-nav-cta" />
 
-      <main id="top">
+      <main id="main-content" tabIndex={-1}>
         {/* ── §1 Hero Section (Asellus Editorial Style) ── */}
         <section className="aud-solutions-hero">
           <div className="aud-inner">

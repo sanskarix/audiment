@@ -165,7 +165,7 @@ export function AudimentCompareDetailClient({
       {/* ── Global Header ── */}
       <Header ctaId="aud-comp-nav-cta" />
 
-      <main id="top">
+      <main id="main-content" tabIndex={-1}>
         {/* ── §1 Hero Section (Exact Asellus .hero) ── */}
         <section className="hero">
           {variant !== 'clean' && (

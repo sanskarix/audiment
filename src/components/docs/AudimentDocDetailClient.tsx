@@ -153,7 +153,7 @@ export function AudimentDocDetailClient({
       {/* Global Header */}
       <Header activeNav="docs" ctaId="aud-article-nav-cta" />
 
-      <main id="top">
+      <main id="main-content" tabIndex={-1}>
         {/* ── §2 Article Header Section ── */}
         <section className="aud-article-header-section">
           <div className="aud-inner">

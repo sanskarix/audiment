@@ -135,7 +135,7 @@ export function AudimentSeoContentClient({
       <Header ctaId="aud-seo-nav-cta" />
 
 
-      <main id="top">
+      <main id="main-content" tabIndex={-1}>
         {/* ── §1 Hero Section (Spacious & Clean) ── */}
         <section className="aud-sol-detail-hero">
           <div className="aud-inner">

@@ -216,7 +216,7 @@ export function AudimentUseCasesClient() {
       {/* Global Navigation Header */}
       <Header activeNav="use-cases" ctaId="aud-usecases-nav-cta" />
 
-      <main id="top">
+      <main id="main-content" tabIndex={-1}>
         {/* ── §1 Hero Section (Identical to Audiment Solutions & About Hero) ── */}
         <section className="aud-solutions-hero">
           <div className="aud-inner">

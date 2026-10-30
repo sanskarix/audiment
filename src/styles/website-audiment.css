@@ -1052,13 +1052,14 @@
 .sector-step-num {
   font-size: 12.5px;
   font-weight: 700;
-  color: var(--orange);
+  color: #c03d00;
   letter-spacing: 0.04em;
   font-family: monospace, inherit;
   margin-top: 2px;
 }
 
-.sector-step-body h5 {
+.sector-step-body h5,
+.sector-step-body h3 {
   margin: 0 0 4px 0;
   font-size: 15.5px;
   font-weight: 500;
@@ -1087,7 +1088,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--orange);
+  color: #c03d00;
   margin-bottom: 12px;
 }
 
@@ -1766,7 +1767,8 @@ h2 em {
 
 /* ── FAQ Spacing Override ────────────────────────────────────── */
 
-#top .faq {
+#top .faq,
+#main-content .faq {
   margin-top: 0;
   border-top: none;
   padding: 120px 36px 130px;

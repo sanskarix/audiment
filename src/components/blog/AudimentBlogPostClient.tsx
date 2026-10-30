@@ -160,7 +160,7 @@ export function AudimentBlogPostClient({
       {/* Global Header */}
       <Header activeNav="blog" ctaId="aud-article-nav-cta" />
 
-      <main id="top">
+      <main id="main-content" tabIndex={-1}>
 
 
         {/* ── §2 Article Header Section ── */}

@@ -131,7 +131,7 @@ export function AudimentCookieClient() {
       <Header ctaId="aud-cookie-nav-cta" />
 
 
-      <main id="top">
+      <main id="main-content" tabIndex={-1}>
         {/* Hero Section */}
         <section className="aud-sol-detail-hero" style={{ paddingBottom: 48 }}>
           <div className="aud-inner">

@@ -547,7 +547,7 @@ export function AudimentCompareClient() {
       {/* ── Global Header ── */}
       <Header ctaId="aud-compare-nav-cta" />
 
-      <main id="top">
+      <main id="main-content" tabIndex={-1}>
         {/* ── §1 Hero Section (Exact Asellus .hero) ── */}
         <section className="hero">
           <h1>Compare <span className="muted">audit software</span></h1>

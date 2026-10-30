@@ -135,7 +135,7 @@ export function ConsentBanner() {
               <h2 className="text-xs sm:text-sm font-semibold text-foreground">
                 We value your privacy
               </h2>
-              <p className="text-[11px] sm:text-xs text-muted-foreground leading-normal">
+              <p className="text-[11px] sm:text-xs text-neutral-600 dark:text-neutral-400 leading-normal">
                 We use essential technologies to operate the site. With your consent, Google Analytics and advertising technologies may be used to understand website usage and measure marketing performance.
               </p>
             </div>
@@ -144,7 +144,7 @@ export function ConsentBanner() {
                 type="button"
                 variant="outline"
                 size="sm"
-                className="w-full sm:w-auto h-7 sm:h-8 px-2.5 text-xs"
+                className="w-full sm:w-auto h-7 sm:h-8 px-2.5 text-xs text-foreground"
                 onClick={openPreferences}
               >
                 Manage Preferences
@@ -153,7 +153,7 @@ export function ConsentBanner() {
                 type="button"
                 variant="secondary"
                 size="sm"
-                className="w-full sm:w-auto h-7 sm:h-8 px-2.5 text-xs"
+                className="w-full sm:w-auto h-7 sm:h-8 px-2.5 text-xs text-foreground"
                 onClick={rejectNonEssential}
               >
                 Reject Non-Essential
@@ -162,7 +162,7 @@ export function ConsentBanner() {
                 type="button"
                 variant="default"
                 size="sm"
-                className="w-full sm:w-auto h-7 sm:h-8 px-3 text-xs"
+                className="w-full sm:w-auto h-7 sm:h-8 px-3 text-xs bg-neutral-900 text-white hover:bg-black dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 font-medium"
                 onClick={acceptAll}
               >
                 Accept All
@@ -192,7 +192,7 @@ export function ConsentBanner() {
               <h2 id="consent-modal-title" className="text-lg font-semibold text-foreground">
                 Cookie & Privacy Preferences
               </h2>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-neutral-600 dark:text-neutral-400">
                 Customize your cookie settings for our public website. Essential functionality will remain active.
               </p>
             </div>
@@ -207,7 +207,7 @@ export function ConsentBanner() {
                       Required
                     </span>
                   </div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400">
                     Required for core website security, page navigation, and basic site functionality. Cannot be turned off.
                   </p>
                 </div>
@@ -224,7 +224,7 @@ export function ConsentBanner() {
               <div className="flex items-start justify-between gap-4 p-3.5 rounded-lg border border-border hover:bg-muted/20 transition-colors">
                 <div className="space-y-1">
                   <span className="text-sm font-medium text-foreground">Analytics Cookies</span>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400">
                     Allows us to measure visitor traffic and website usage patterns via Google Analytics to help improve site performance.
                   </p>
                 </div>
@@ -242,7 +242,7 @@ export function ConsentBanner() {
               <div className="flex items-start justify-between gap-4 p-3.5 rounded-lg border border-border hover:bg-muted/20 transition-colors">
                 <div className="space-y-1">
                   <span className="text-sm font-medium text-foreground">Marketing & Targeting</span>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400">
                     Used to deliver personalized marketing campaigns and measure advertising effectiveness across platforms.
                   </p>
                 </div>
@@ -270,6 +270,7 @@ export function ConsentBanner() {
                 type="button"
                 variant="default"
                 size="sm"
+                className="bg-neutral-900 text-white hover:bg-black dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 font-medium"
                 onClick={() => savePreferences(tempAnalytics, tempMarketing)}
               >
                 Save Preferences

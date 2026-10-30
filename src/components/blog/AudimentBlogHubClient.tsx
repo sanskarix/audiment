@@ -279,7 +279,7 @@ export function AudimentBlogHubClient({
       {/* Global Header */}
       <Header activeNav="blog" ctaId="aud-blog-nav-cta" />
 
-      <main id="top">
+      <main id="main-content" tabIndex={-1}>
         {/* ── §1 Hero Section ── */}
         <section className="aud-blog-hero">
           <div className="aud-inner">

@@ -80,10 +80,10 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
 
             {/* Column 1: Solutions */}
             <div className="footer-col">
-              <h3 className="footer-col-title">
+              <h5 className="footer-col-title">
                 <span className="col-num">01 /</span>
                 <span>Solutions</span>
-              </h3>
+              </h5>
               <ul className="footer-links-list">
                 <li><Link href="/solutions/restaurant-audit-software">Restaurant Audit</Link></li>
                 <li><Link href="/solutions/retail-audit-software">Retail Store Audit</Link></li>
@@ -98,10 +98,10 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
 
             {/* Column 2: Platform & Use Cases */}
             <div className="footer-col">
-              <h3 className="footer-col-title">
+              <h5 className="footer-col-title">
                 <span className="col-num">02 /</span>
                 <span>Platform</span>
-              </h3>
+              </h5>
               <ul className="footer-links-list">
                 <li><Link href="/platform/proof-based-audits">Proof-Based Audits</Link></li>
                 <li><Link href="/platform/corrective-actions">Corrective Actions</Link></li>
@@ -118,10 +118,10 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
 
             {/* Column 3: Compare & Company */}
             <div className="footer-col">
-              <h3 className="footer-col-title">
+              <h5 className="footer-col-title">
                 <span className="col-num">03 /</span>
                 <span>Compare &amp; Legal</span>
-              </h3>
+              </h5>
               <ul className="footer-links-list">
                 <li><Link href="/compare">All Comparisons</Link></li>
                 <li><Link href="/compare/audiment-vs-safetyculture">vs SafetyCulture</Link></li>
@@ -147,15 +147,22 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
           whileInView="visible"
           viewport={{ once: false, amount: 0.3 }}
           onClick={scrollToTop}
-          aria-hidden="true"
+          title="Scroll to top"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              scrollToTop();
+            }
+          }}
         >
           <div className="footer-brand-inner">
             <motion.span
               className="hollow-brand-text"
-              aria-hidden="true"
               variants={{
                 hidden: {
-                  webkitTextStrokeColor: 'rgba(255, 255, 255, 0.35)',
+                  webkitTextStrokeColor: 'rgba(255, 255, 255, 0.14)',
                   filter: 'drop-shadow(0 0 0px rgba(255, 84, 0, 0))',
                 },
                 visible: {

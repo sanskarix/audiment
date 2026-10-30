@@ -21,44 +21,32 @@ export const clientLogos: Logo[] = [
   {
     src: "/logos/aster.svg",
     alt: "Aster DM Healthcare",
-    width: 84,
-    height: 84,
-    style: { height: "84px", width: "auto" },
+    style: { height: "84px" },
   },
   {
     src: "/logos/ayatana.svg",
     alt: "Ayatana Resorts",
-    width: 94,
-    height: 94,
-    style: { height: "94px", width: "auto" },
+    style: { height: "94px" },
   },
   {
     src: "/logos/bw.svg",
     alt: "Best Western",
-    width: 92,
-    height: 92,
-    style: { height: "92px", width: "auto" },
+    style: { height: "92px" },
   },
   {
     src: "/logos/motherhood.svg",
     alt: "Motherhood Hospitals",
-    width: 100,
-    height: 100,
-    style: { height: "100px", width: "auto" },
+    style: { height: "100px" },
   },
   {
     src: "/logos/tom-and-chee.svg",
     alt: "Tom & Chee",
-    width: 110,
-    height: 110,
-    style: { height: "110px", width: "auto" },
+    style: { height: "110px" },
   },
   {
     src: "/logos/vrl.svg",
     alt: "VRL Logistics",
-    width: 94,
-    height: 94,
-    style: { height: "94px", width: "auto" },
+    style: { height: "94px" },
   },
 ];
 
@@ -119,11 +107,11 @@ export function LogoCloud({ className, logos = clientLogos, ...props }: LogoClou
                 "pointer-events-none select-none object-contain",
                 logo.className
               )}
-              height={logo.height ?? 32}
-              style={{ ...logo.style, width: "auto" }}
+              height={logo.height || "32"}
+              style={logo.style}
               loading="lazy"
               src={logo.src}
-              width={logo.width ?? (typeof logo.height === "number" ? logo.height : 100)}
+              width={logo.width || "auto"}
             />
           </div>
         ))}

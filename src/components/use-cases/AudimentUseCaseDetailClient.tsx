@@ -165,7 +165,7 @@ export function AudimentUseCaseDetailClient({
       <Header activeNav="use-cases" ctaId="aud-uc-nav-cta" />
 
 
-      <main id="main-content" tabIndex={-1}>
+      <main id="top">
         {/* ── §1 Hero Section ── */}
         <section className="hero">
           <h1>

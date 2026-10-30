@@ -214,7 +214,7 @@ export function AudimentSolutionDetailClient({
       {/* ── Global Header ── */}
       <Header activeNav="solutions" ctaId="aud-sol-nav-cta" />
 
-      <main id="main-content" tabIndex={-1}>
+      <main id="top">
         {/* ── §1 Hero Section ── */}
         <section className="aud-sol-detail-hero">
           <div className="aud-inner">

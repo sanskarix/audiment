@@ -1,5 +1,8 @@
 'use client';
 
+import Lenis from 'lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -58,7 +61,7 @@ const I = {
   trendingDown: ['M22 17L13.5 8.5 8.5 13.5 2 7', 'M16 17h6v-6'],
   utensils: ['m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8', 'M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15zm0 0 7 7', 'm2.1 21.8 6.4-6.3', 'm19 5-7 7'],
   shoppingBag: ['M16 10a4 4 0 0 1-8 0', 'M3.103 6.034h17.794', 'M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z'],
-  building2: ['M10 12h4', 'M10 8h4', 'M14 21v-3a2 2 0 0 0-4 0v3', 'M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2', 'M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16'],
+  building2: ['M10 12h4', 'M10 8h4', 'M14 21v-3a2 2 0 0 0-4 0v3', 'M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0-2-2h-2', 'M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16'],
   settings: ['M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915', 'M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0'],
   heart: 'M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5',
   wrench: 'M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z',
@@ -742,7 +745,7 @@ const AudimentProblemsSection: React.FC = () => {
                   <div key={step.num} className="sector-step-row">
                     <span className="sector-step-num">{step.num}</span>
                     <div className="sector-step-body">
-                      <h3>{step.title}</h3>
+                      <h5>{step.title}</h5>
                       <p>{step.desc}</p>
                     </div>
                   </div>
@@ -818,49 +821,33 @@ export default function AudimentLandingClient() {
   const [timelineHeight, setTimelineHeight] = useState(0);
 
   useEffect(() => {
-    let lenis: any = null;
+    let lenis: Lenis | null = null;
     let tickerCallback: ((time: number) => void) | null = null;
     let refreshTimer: ReturnType<typeof setTimeout> | undefined;
-    let gsapInstance: any = null;
-    let isDisposed = false;
 
     // Defer GSAP, Lenis smooth scrolling, micro-interactions, and observers to idle time
     // so the main thread is unblocked during critical hero paint and LCP
-    const initDeferredInteractions = async () => {
-      try {
-        const [{ default: Lenis }, { gsap }, { ScrollTrigger }] = await Promise.all([
-          import('lenis'),
-          import('gsap'),
-          import('gsap/ScrollTrigger'),
-        ]);
+    const initDeferredInteractions = () => {
+      gsap.registerPlugin(ScrollTrigger);
 
-        if (isDisposed) return;
-        gsapInstance = gsap;
-        gsap.registerPlugin(ScrollTrigger);
+      lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      tickerCallback = (time: number) => {
+        if (lenis) lenis.raf(time * 1000);
+      };
+      gsap.ticker.add(tickerCallback);
+      gsap.ticker.lagSmoothing(0);
 
-        lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
-        lenis.on('scroll', ScrollTrigger.update);
-        tickerCallback = (time: number) => {
-          if (lenis) lenis.raf(time * 1000);
-        };
-        gsap.ticker.add(tickerCallback);
-        gsap.ticker.lagSmoothing(0);
+      observeDotBorderButtons();
+      observeAnimations();
+      initCalEmbed();
 
-        observeDotBorderButtons();
-        observeAnimations();
-        initCalEmbed();
-
-        refreshTimer = setTimeout(() => {
-          if (!isDisposed) {
-            ScrollTrigger.refresh();
-            if (timelineRef.current) {
-              setTimelineHeight(timelineRef.current.getBoundingClientRect().height);
-            }
-          }
-        }, 300);
-      } catch (e) {
-        console.error('Failed to load smooth scroll / animation plugins:', e);
-      }
+      refreshTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+        if (timelineRef.current) {
+          setTimelineHeight(timelineRef.current.getBoundingClientRect().height);
+        }
+      }, 300);
     };
 
     if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
@@ -870,9 +857,8 @@ export default function AudimentLandingClient() {
     }
 
     return () => {
-      isDisposed = true;
       if (refreshTimer) clearTimeout(refreshTimer);
-      if (gsapInstance && tickerCallback) gsapInstance.ticker.remove(tickerCallback);
+      if (tickerCallback) gsap.ticker.remove(tickerCallback);
       if (lenis) lenis.destroy();
     };
   }, []);
@@ -893,7 +879,7 @@ export default function AudimentLandingClient() {
       {/* ── Global Header ── */}
       <Header />
 
-      <main id="main-content" tabIndex={-1}>
+      <main id="top">
         {/* ── §1 Hero Section (verbatim text + dashboard mockup) ── */}
         <section className="aud-hero">
           <div>

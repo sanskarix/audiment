@@ -17,7 +17,7 @@ export default function CompareMaintainX() {
       heroH1="Audiment vs MaintainX"
       heroSubtext="MaintainX is a market-leading CMMS platform designed for industrial maintenance, asset tracking, and reactive equipment work orders. Audiment is an operational audit and compliance platform purpose-built for multi-location food, retail, and hospitality brands to verify ground-truth execution, maintain brand standards, and enforce automated 48-hour CAPA SLAs."
       quickVerdict={{
-        verdictSummary: "MaintainX is world-class for maintenance technicians managing asset repairs, spare parts inventories, and equipment work orders. However, multi-location operators attempting to use MaintainX for store brand standards, food safety inspections, or franchise audits quickly encounter limitations: lack of audit scoring matrices, absence of GPS submission gating, gallery photo uploads without live camera enforcement, and steep per-user technician pricing ($49+/user/month). Audiment delivers purpose-built operational auditing with weighted scoring, live camera verification, GPS submission enforcement, automated 48-hour CAPA SLAs, and flat per-location pricing with unlimited frontline users.",
+        verdictSummary: "MaintainX is world-class for maintenance technicians managing asset repairs, spare parts inventories, and equipment work orders. However, multi-location operators attempting to use MaintainX for store brand standards, food safety inspections, or franchise audits quickly encounter limitations: lack of audit scoring matrices, absence of GPS submission gating, gallery photo uploads without live camera enforcement, and steep per-user technician pricing ($49+/user/month). Audiment delivers purpose-built operational auditing with weighted scoring, live camera verification, GPS submission enforcement, automated 48-hour CAPA SLAs, a 100% Free tier for 1 location, and custom flat paid pricing with unlimited frontline users.",
         audimentBestFor: "Operations directors, franchise leaders, and quality heads managing multi-unit restaurants, retail networks, and hospitality groups who need proof-based brand audits, food safety compliance (HACCP/FSSAI), and automated 48-hour CAPA SLAs without paying technician seat licenses.",
         competitorBestFor: "Dedicated facility maintenance managers, manufacturing plant engineers, and maintenance contractors who need work-order dispatching, equipment downtime logs, meter-reading triggers, and spare parts inventory tracking.",
       }}
@@ -69,7 +69,7 @@ export default function CompareMaintainX() {
         },
         {
           area: "Pricing Model & Frontline Team Scalability",
-          audiment: "Flat per-location pricing with unlimited users per branch. Store managers, assistant managers, shift supervisors, and regional coaches all have full platform access without increasing software fees.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Charges per user/month (~$49/user/month for Premium tiers). Rolling out MaintainX to store managers and shift leads across 50 locations creates massive software licensing costs for checklist functionality."
         },
         {
@@ -89,7 +89,7 @@ export default function CompareMaintainX() {
         },
         {
           title: "Unlimited frontline users without per-seat licensing",
-          text: "Operational consistency requires involving shift supervisors, store leads, and regional coaches. Audiment's flat per-location model lets you give every frontline team member a dedicated login without paying $49/month per person."
+          text: "Operational consistency requires involving shift supervisors, store leads, and regional coaches. Audiment provides a Free tier for 1 location and custom flat paid pricing with unlimited users and audits, letting you give every frontline team member a dedicated login without paying $49/month per person."
         },
         {
           title: "Automated consecutive-failure trend alerts",
@@ -121,7 +121,7 @@ export default function CompareMaintainX() {
         },
         {
           question: "How do Audiment and MaintainX compare on pricing?",
-          answer: "MaintainX charges approximately $49 per user per month on its most popular tier. For a 30-store chain with 3 users per store (90 users), MaintainX costs over $4,400 per month. Audiment uses a flat per-location pricing model with unlimited users per branch, making it substantially more cost-effective for multi-unit frontline teams."
+          answer: "MaintainX charges approximately $49 per user per month on its most popular tier. For a 30-store chain with 3 users per store (90 users), MaintainX costs over $4,400 per month. Audiment provides a 100% Free tier for single-location operators and a Paid tier with custom flat pricing that includes unlimited locations, audits, and frontline users without per-seat fees, making it substantially more cost-effective for multi-unit frontline teams."
         },
         {
           question: "Can Audiment and MaintainX be used together?",

@@ -139,7 +139,7 @@ const DotBtn: React.FC<{
   return (
     <div className={wrapClass}>
       {inner}
-      <a className={btnClass} href={href ?? '#'} id={id}>{label}</a>
+      <Link className={btnClass} href={href ?? '#'} id={id}>{label}</Link>
     </div>
   );
 };
@@ -410,6 +410,7 @@ const AudProblemCard: React.FC<{ card: typeof audProblemCards[0] }> = ({ card })
 
 const faqs = [
   { q: 'What is audit management software?', a: 'Software that replaces paper checklists with digital audits. You create templates, assign them to locations, and track results – with photo evidence, scoring, and automatic follow-up tasks.' },
+  { q: 'How does Audiment pricing work?', a: 'Audiment offers a completely Free tier for 1 physical location (supporting up to 3 auditor logins, 25 audits per month, and full proof verification). For multi-location teams, our Paid tier provides custom flat pricing where everything is unlimited—unlimited locations, unlimited users and auditors (zero per-seat fees), and unlimited audits and templates.' },
   { q: 'Do my auditors need to download an app?', a: 'No. Audiment runs in the browser – open the link, log in, start auditing. Works on any phone.' },
   { q: "What happens if the auditor doesn't have internet?", a: 'Audits keep running offline. Everything syncs automatically when the connection is back.' },
   { q: 'Can managers see surprise audits before the auditor arrives?', a: "No. Surprise audits stay hidden on the manager's dashboard until the auditor starts the inspection." },
@@ -892,8 +893,8 @@ export default function AudimentLandingClient() {
               run proof-based audits, track issues to resolution, and know what&apos;s actually happening on the ground.
             </p>
             <div className="actions">
-              <DotBtn id="aud-hero-primary" label="Book a call" variant="orange" calAttrs={cal} />
-              <DotBtn id="aud-hero-secondary" label="See it in action" calAttrs={cal} />
+              <DotBtn id="aud-hero-primary" label="Try for Free" variant="orange" href="/signup" />
+              <DotBtn id="aud-hero-secondary" label="Book a Call" calAttrs={cal} />
             </div>
 
             {/* Dashboard Mockup Image Preview */}

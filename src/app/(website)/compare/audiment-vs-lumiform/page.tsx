@@ -3,7 +3,7 @@ import { buildPageMeta } from '@/lib/seo'
 
 export const metadata = buildPageMeta({
   title: 'Audiment vs Lumiform | Full 2026 Inspection Software Comparison',
-  description: 'Evaluating Audiment vs Lumiform? Compare flat per-location vs €100/seat frontline pricing, live camera verification vs gallery uploads, weighted scoring math, automated 48-hour CAPA SLAs, and multi-location operational drift tracking.',
+  description: 'Evaluating Audiment vs Lumiform? Compare free tier & custom flat pricing vs €100/seat frontline pricing, live camera verification vs gallery uploads, weighted scoring math, automated 48-hour CAPA SLAs, and multi-location operational drift tracking.',
   path: '/compare/audiment-vs-lumiform',
 })
 
@@ -17,7 +17,7 @@ export default function CompareLumiform() {
       heroH1="Audiment vs Lumiform"
       heroSubtext="Lumiform is a modern European mobile inspection app used across general manufacturing, safety, and facility checks. Audiment is an operational accountability system purpose-built for multi-location food, retail, and hospitality brands that eliminates the frontline per-seat tax, enforces live camera proof, and automates 48-hour CAPA SLAs."
       quickVerdict={{
-        verdictSummary: "Lumiform offers a polished mobile inspection app and AI form generator suited for general workplace safety and roving quality teams. However, its per-user pricing model (typically ~€100/user/month on professional/enterprise tiers) acts as a severe financial penalty for multi-location brands needing to onboard shift managers, kitchen leads, and store supervisors. Audiment provides flat per-location pricing with unlimited users, mandatory live-camera verification (restricting gallery uploads), GPS submission enforcement, weighted critical-failure scoring, and automated 48-hour CAPA escalations.",
+        verdictSummary: "Lumiform offers a polished mobile inspection app and AI form generator suited for general workplace safety and roving quality teams. However, its per-user pricing model (typically ~€100/user/month on professional/enterprise tiers) acts as a severe financial penalty for multi-location brands needing to onboard shift managers, kitchen leads, and store supervisors. Audiment provides a 100% Free tier for 1 location and a Paid tier with custom flat pricing where everything is unlimited (locations, audits, and users without per-seat fees), combined with mandatory live-camera verification (restricting gallery uploads), GPS submission enforcement, weighted critical-failure scoring, and automated 48-hour CAPA escalations.",
         audimentBestFor: "Multi-location restaurant, QSR, retail, and franchise operators who want to empower their entire frontline team with unlimited logins, enforce anti-pencil-whipping controls (live camera + GPS), and track operational drift across 10 to 500+ locations at predictable costs.",
         competitorBestFor: "Small teams, European industrial manufacturing plants, or centralized safety teams with a handful of roving inspectors who need a versatile mobile form builder with AI template generation and do not have dense multi-location frontline staffing.",
       }}
@@ -29,7 +29,7 @@ export default function CompareLumiform() {
       operationalDifferences={[
         {
           area: "Pricing Model & The 'Frontline Seat Tax'",
-          audiment: "Flat per-location pricing with unlimited users per branch. Shift managers, assistant store leads, head chefs, and regional coaches all have dedicated accounts without driving up monthly software licensing bills.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Charges primarily per user/month (~€100/user/month on professional tiers). For a 25-location brand with 3 users per store (75 users), Lumiform costs upwards of €7,500/month (~$8,000/mo), forcing operations teams to ration logins or share generic credentials."
         },
         {
@@ -81,7 +81,7 @@ export default function CompareLumiform() {
       whereAudimentWins={[
         {
           title: "Eliminating the per-seat penalty on frontline teams",
-          text: "Software that charges per user forces operations leaders to make a bad compromise: either pay thousands of euros in seat licenses or restrict access to area managers only. Audiment's flat per-location pricing lets you onboard every shift lead, assistant manager, and auditor without increasing costs."
+          text: "Software that charges per user forces operations leaders to make a bad compromise: either pay thousands of euros in seat licenses or restrict access to area managers only. Audiment's 100% Free tier for 1 location and custom flat paid tier for multi-unit rollouts let you onboard every shift lead, assistant manager, and auditor without increasing costs."
         },
         {
           title: "Live camera verification stops pencil-whipping",
@@ -117,7 +117,7 @@ export default function CompareLumiform() {
         },
         {
           question: "How does Audiment pricing compare to Lumiform for a 30-location brand?",
-          answer: "Lumiform typically charges around €100 per user per month on professional tiers. For a 30-location brand with 3 active users per store (90 users), Lumiform costs approximately €9,000 per month (~$10,000/mo). Audiment uses flat per-location pricing with unlimited users per branch, reducing software costs by up to 70% while empowering your entire frontline team."
+          answer: "Lumiform typically charges around €100 per user per month on professional tiers. For a 30-location brand with 3 active users per store (90 users), Lumiform costs approximately €9,000 per month (~$10,000/mo). Audiment provides a 100% Free tier for 1 location and a Paid tier with custom flat pricing that includes unlimited locations, audits, and frontline users without per-seat fees, reducing software costs by up to 70% while empowering your entire frontline team."
         },
         {
           question: "Why does Audiment block photo gallery uploads while Lumiform allows them?",

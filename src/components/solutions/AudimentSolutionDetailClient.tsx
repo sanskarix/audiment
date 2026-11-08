@@ -123,7 +123,7 @@ const DotBtn: React.FC<{
   return (
     <div className={wrapClass}>
       {inner}
-      <a className={btnClass} href={href ?? '#'} id={id}>{label}</a>
+      <Link className={btnClass} href={href ?? '#'} id={id}>{label}</Link>
     </div>
   );
 };
@@ -237,7 +237,8 @@ export function AudimentSolutionDetailClient({
               </p>
 
               <div className="actions" style={{ justifyContent: 'flex-start', gap: 16 }}>
-                <DotBtn id="aud-sol-hero-cta" label="Book a Discovery Call" variant="orange" calAttrs={cal} />
+                <DotBtn id="aud-sol-hero-signup" label="Try for Free" variant="orange" href="/signup" />
+                <DotBtn id="aud-sol-hero-cta" label="Book a Discovery Call" calAttrs={cal} />
                 {sampleChecklist && sampleChecklist.length > 0 && (
                   <a className="button" href="#sample-checklist" style={{ textDecoration: 'none' }}>
                     View Sample Checklist
@@ -384,7 +385,8 @@ export function AudimentSolutionDetailClient({
                 Book a discovery call to see how Audiment runs proof-based audits across every location.
               </p>
               <div className="cta-btn-center">
-                <DotBtn id="aud-sol-bottom-cta" label="Book a Discovery Call" variant="orange" calAttrs={cal} />
+                <DotBtn id="aud-sol-bottom-signup" label="Try for Free" variant="orange" href="/signup" />
+                <DotBtn id="aud-sol-bottom-cta" label="Book a Discovery Call" calAttrs={cal} />
               </div>
             </div>
 

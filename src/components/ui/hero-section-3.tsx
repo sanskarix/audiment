@@ -80,7 +80,12 @@ export function HeroSection({ userRole }: { userRole?: string | null }) {
                                             }>Dashboard</Link>
                                         </Button>
                                     ) : (
-                                        <CalButton size="lg" className="rounded-full px-8 h-12 text-base">Book a call</CalButton>
+                                        <>
+                                            <Button asChild size="lg" className="rounded-full px-8 h-12 text-base bg-[#FF5400] text-white hover:bg-[#FF5400]/90">
+                                                <Link href="/signup">Try for Free</Link>
+                                            </Button>
+                                            <CalButton size="lg" variant="outline" className="rounded-full px-8 h-12 text-base">Book a call</CalButton>
+                                        </>
                                     )}
                                     <CalButton size="lg" variant="outline" className="rounded-full px-8 h-12 text-base">See it in action</CalButton>
                                 </div>

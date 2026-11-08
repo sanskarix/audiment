@@ -19,7 +19,7 @@ export default function HotelAuditSoftware() {
         "operatingSystem": "Web, iOS, Android",
         "url": "https://audiment.in/solutions/hotel-audit-software",
         "description": "Proof-based audit management software for hotels and hospitality groups. Housekeeping, F&B, maintenance, and safety audits with corrective action tracking across every property.",
-        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR", "description": "Contact for pricing" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR", "description": "Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything" },
         "provider": { "@type": "Organization", "name": "Audiment", "url": "https://audiment.in" }
       }) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
@@ -83,6 +83,11 @@ export default function HotelAuditSoftware() {
         { area: "Safety Equipment", question: "Are all hallway fire extinguishers present, fully charged, and tagged within the last 12 months?" }
       ]}
       faqs={[
+          {
+            question: "How does Audiment pricing work for multi-location operations?",
+            answer:
+              "Audiment offers a completely Free tier for 1 physical location (supporting up to 3 auditor logins, 25 audits per month, and full proof verification). For multi-location businesses, our Paid tier provides custom flat pricing where everything is unlimited—unlimited locations, unlimited users and auditor logins (zero per-seat fees), and unlimited monthly audits and templates."
+          },
         {
           question: "Can we use this for our F&B departments as well as Rooms?",
           answer: "Absolutely. Audiment allows you to build completely isolated, specialized checklists for Kitchens, Spas, and Housekeeping on a single platform."

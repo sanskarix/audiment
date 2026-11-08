@@ -64,7 +64,7 @@ export default function CompareProntoforms() {
         },
         {
           area: "Pricing Model & Frontline Team Scalability",
-          audiment: "Flat per-location pricing with unlimited users per branch. Shift managers, assistant store leads, head chefs, and regional coaches all have dedicated accounts without driving up monthly software licensing bills.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Charges enterprise per-user monthly licensing fees ($50 to $100+/user/month), making it cost-prohibitive to deploy across hundreds of frontline store managers and shift leads."
         },
         {
@@ -84,8 +84,8 @@ export default function CompareProntoforms() {
           text: "Audiment is designed for fast-paced store operations where managers need to complete checks in minutes on their own phones without navigating complex industrial engineering forms."
         },
         {
-          title: "Flat per-location pricing with unlimited users",
-          text: "Eliminates enterprise per-seat licensing penalties. Every shift supervisor, kitchen lead, and store manager has an individual login at no extra cost."
+          title: "Free tier & custom flat paid pricing with unlimited users",
+          text: "Audiment offers a 100% Free tier for 1 location and custom flat pricing for multi-unit rollouts, eliminating enterprise per-seat licensing penalties. Every shift supervisor, kitchen lead, and store manager has an individual login at no extra cost."
         },
         {
           title: "Built-in anti-pencil-whipping controls",
@@ -109,7 +109,7 @@ export default function CompareProntoforms() {
         },
         {
           question: "How do Audiment and ProntoForms compare on pricing for 30 locations?",
-          answer: "ProntoForms typically charges $50 to $100+ per user per month. For 30 locations with 3 users per store (90 users), costs can exceed $5,000/month. Audiment uses flat per-location pricing with unlimited users per branch, reducing software costs by up to 70%."
+          answer: "ProntoForms typically charges $50 to $100+ per user per month. For 30 locations with 3 users per store (90 users), costs can exceed $5,000/month. Audiment provides a 100% Free tier for 1 location and a Paid tier with custom flat pricing that includes unlimited locations, audits, and frontline users without per-seat fees, reducing software costs by up to 70%."
         },
         {
           question: "Can Audiment integrate with our existing restaurant/retail tech stack?",

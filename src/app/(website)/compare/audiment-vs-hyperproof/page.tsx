@@ -64,7 +64,7 @@ export default function CompareHyperproof() {
         },
         {
           area: "Pricing Model & Frontline Team Scalability",
-          audiment: "Flat per-location pricing with unlimited users per branch. Shift managers, assistant store leads, head chefs, and regional coaches all have dedicated accounts without driving up monthly software licensing bills.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Charges annual SaaS subscription tiers based on compliance frameworks and administrative user licenses."
         },
         {
@@ -117,7 +117,7 @@ export default function CompareHyperproof() {
         },
         {
           question: "How do Audiment and Hyperproof compare on pricing?",
-          answer: "Hyperproof charges annual enterprise compliance subscriptions. Audiment offers transparent, flat per-location pricing with unlimited users per branch."
+          answer: "Hyperproof charges annual enterprise compliance subscriptions. Audiment offers a 100% Free tier for 1 location (including up to 3 auditor logins and 25 audits/month) and a Paid tier with custom flat pricing for multi-unit rollouts that includes unlimited locations, frontline auditors, and inspections without per-seat taxes."
         },
         {
           question: "How does Audiment prevent audit cheating in stores?",

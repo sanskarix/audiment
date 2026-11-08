@@ -111,11 +111,11 @@ service cloud.firestore {
       allow read: if isAuth() && (
         isAdmin() ||
         isManager() ||
-        (isAuditor() && resource.data.assignedAuditorId == request.auth.uid)
+        (isAuditor() && (resource.data.assignedAuditorId == request.auth.uid || resource.data.auditorId == request.auth.uid))
       );
       allow create: if isAdmin() || isManager();
       allow update: if isAdmin() || isManager() ||
-        (isAuditor() && resource.data.assignedAuditorId == request.auth.uid);
+        (isAuditor() && (resource.data.assignedAuditorId == request.auth.uid || resource.data.auditorId == request.auth.uid));
       allow delete: if isAdmin();
     }
 

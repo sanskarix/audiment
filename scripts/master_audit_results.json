@@ -1,0 +1,185 @@
+{
+  "timestamp": "2026-11-07T12:07:28.276Z",
+  "organization": "apex-audit-org-1794052932125",
+  "testAccounts": {
+    "admin": "apex_admin@audiment.in",
+    "manager": "apex_manager@audiment.in",
+    "auditor": "apex_auditor@audiment.in"
+  },
+  "pagesTested": [
+    {
+      "pageKey": "Admin_Overview",
+      "urlPath": "/dashboard/admin",
+      "loadTime": 2731,
+      "failedResponsesCount": 0,
+      "screenshot": "01_admin_overview.png"
+    },
+    {
+      "pageKey": "Admin_Users",
+      "urlPath": "/dashboard/admin/users",
+      "loadTime": 2806,
+      "failedResponsesCount": 0,
+      "screenshot": "02_admin_users.png"
+    },
+    {
+      "pageKey": "Admin_Locations",
+      "urlPath": "/dashboard/admin/locations",
+      "loadTime": 3627,
+      "failedResponsesCount": 0,
+      "screenshot": "03_admin_locations.png"
+    },
+    {
+      "pageKey": "Admin_Templates",
+      "urlPath": "/dashboard/admin/templates",
+      "loadTime": 3306,
+      "failedResponsesCount": 0,
+      "screenshot": "04_admin_templates.png"
+    },
+    {
+      "pageKey": "Admin_Template_New",
+      "urlPath": "/dashboard/admin/templates/new",
+      "loadTime": 3998,
+      "failedResponsesCount": 0,
+      "screenshot": "05_admin_template_new.png"
+    },
+    {
+      "pageKey": "Admin_Audits",
+      "urlPath": "/dashboard/admin/audits",
+      "loadTime": 5398,
+      "failedResponsesCount": 0,
+      "screenshot": "06_admin_audits.png"
+    },
+    {
+      "pageKey": "Admin_Reports",
+      "urlPath": "/dashboard/admin/reports",
+      "loadTime": 4710,
+      "failedResponsesCount": 0,
+      "screenshot": "07_admin_reports.png"
+    },
+    {
+      "pageKey": "Admin_Report_Critical_Fail",
+      "urlPath": "/dashboard/admin/reports/audit-003",
+      "loadTime": 5992,
+      "failedResponsesCount": 0,
+      "screenshot": "08_admin_report_audit003.png"
+    },
+    {
+      "pageKey": "Admin_Report_Passing",
+      "urlPath": "/dashboard/admin/reports/audit-001",
+      "loadTime": 2615,
+      "failedResponsesCount": 0,
+      "screenshot": "09_admin_report_audit001.png"
+    },
+    {
+      "pageKey": "Admin_Corrective_Actions",
+      "urlPath": "/dashboard/admin/corrective-actions",
+      "loadTime": 3787,
+      "failedResponsesCount": 0,
+      "screenshot": "10_admin_corrective_actions.png"
+    },
+    {
+      "pageKey": "Admin_Flashmob",
+      "urlPath": "/dashboard/admin/flashmob",
+      "loadTime": 3970,
+      "failedResponsesCount": 0,
+      "screenshot": "11_admin_flashmob.png"
+    },
+    {
+      "pageKey": "Admin_Settings_Profile",
+      "urlPath": "/dashboard/admin/settings",
+      "loadTime": 6798,
+      "failedResponsesCount": 0,
+      "screenshot": "12_admin_settings_profile.png"
+    },
+    {
+      "pageKey": "Manager_Overview",
+      "urlPath": "/dashboard/manager",
+      "loadTime": 4149,
+      "failedResponsesCount": 0,
+      "screenshot": "13_manager_overview.png"
+    },
+    {
+      "pageKey": "Manager_Audits",
+      "urlPath": "/dashboard/manager/audits",
+      "loadTime": 4802,
+      "failedResponsesCount": 0,
+      "screenshot": "14_manager_audits.png"
+    },
+    {
+      "pageKey": "Manager_Calendar",
+      "urlPath": "/dashboard/manager/calendar",
+      "loadTime": 4610,
+      "failedResponsesCount": 0,
+      "screenshot": "15_manager_calendar.png"
+    },
+    {
+      "pageKey": "Manager_Auditors",
+      "urlPath": "/dashboard/manager/auditors",
+      "loadTime": 3961,
+      "failedResponsesCount": 0,
+      "screenshot": "16_manager_auditors.png"
+    },
+    {
+      "pageKey": "Manager_Corrective_Actions",
+      "urlPath": "/dashboard/manager/corrective-actions",
+      "loadTime": 4428,
+      "failedResponsesCount": 0,
+      "screenshot": "17_manager_corrective_actions.png"
+    },
+    {
+      "pageKey": "Manager_Reports",
+      "urlPath": "/dashboard/manager/reports",
+      "loadTime": 3985,
+      "failedResponsesCount": 0,
+      "screenshot": "18_manager_reports.png"
+    },
+    {
+      "pageKey": "Auditor_Dashboard",
+      "urlPath": "/dashboard/auditor",
+      "loadTime": 3151,
+      "failedResponsesCount": 0,
+      "screenshot": "19_auditor_dashboard.png"
+    },
+    {
+      "pageKey": "Auditor_History",
+      "urlPath": "/dashboard/auditor/history",
+      "loadTime": 3623,
+      "failedResponsesCount": 0,
+      "screenshot": "20_auditor_history.png"
+    },
+    {
+      "pageKey": "Auditor_Flashmob",
+      "urlPath": "/dashboard/auditor/flashmob",
+      "loadTime": 5558,
+      "failedResponsesCount": 0,
+      "screenshot": "21_auditor_flashmob.png"
+    }
+  ],
+  "networkFailures": [],
+  "consoleErrors": [],
+  "uiFlaws": [],
+  "timings": {
+    "Admin_Overview": 2731,
+    "Admin_Users": 2806,
+    "Admin_Locations": 3627,
+    "Admin_Templates": 3306,
+    "Admin_Template_New": 3998,
+    "Admin_Audits": 5398,
+    "Admin_Reports": 4710,
+    "Admin_Report_Critical_Fail": 5992,
+    "Admin_Report_Passing": 2615,
+    "Admin_Corrective_Actions": 3787,
+    "Admin_Flashmob": 3970,
+    "Admin_Settings_Profile": 6798,
+    "Manager_Overview": 4149,
+    "Manager_Audits": 4802,
+    "Manager_Calendar": 4610,
+    "Manager_Auditors": 3961,
+    "Manager_Corrective_Actions": 4428,
+    "Manager_Reports": 3985,
+    "Auditor_Dashboard": 3151,
+    "Auditor_History": 3623,
+    "Auditor_Flashmob": 5558
+  },
+  "pageDetails": {}
+}

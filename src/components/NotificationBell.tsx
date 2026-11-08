@@ -118,7 +118,9 @@ export default function NotificationBell({ variant, userRole }: { variant?: 'def
             if (auditSnap.exists()) {
               const auditData = auditSnap.data();
               const now = new Date();
-              const sched = auditData.scheduledDate?.toDate() || new Date(0);
+              const sched = typeof auditData.scheduledDate?.toDate === 'function'
+                ? auditData.scheduledDate.toDate()
+                : (auditData.scheduledDate ? new Date(auditData.scheduledDate) : new Date(0));
               if (now < sched) {
                 alert(`Audit is locked until ${format(sched, 'MMM d, h:mm a')}`);
                 return;

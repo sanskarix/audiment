@@ -12,6 +12,7 @@ import { format } from 'date-fns';
 
 type ExportOptions = {
   printWidth?: number;
+  isFreePlan?: boolean;
 };
 
 const waitForPaint = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
@@ -159,6 +160,22 @@ export async function exportElementToPDF(
       pdf.addPage();
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
       heightLeft -= pdfHeight;
+    }
+
+    // Free plan watermark footer on every page
+    if (options.isFreePlan) {
+      const pageCount = pdf.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        pdf.setPage(i);
+        pdf.setFontSize(8);
+        pdf.setTextColor(140, 140, 140);
+        pdf.text(
+          'Audited via Audiment Free Plan • audiment.in • Verified Ground-Truth Operations',
+          pdfWidth / 2,
+          pdfHeight - 6,
+          { align: 'center' }
+        );
+      }
     }
 
     pdf.save(filename);

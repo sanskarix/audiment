@@ -64,7 +64,7 @@ export default function CompareOnspring() {
         },
         {
           area: "Pricing Model & Frontline Team Scalability",
-          audiment: "Flat per-location pricing with unlimited users per branch. Shift managers, assistant store leads, head chefs, and regional coaches all have dedicated accounts without driving up monthly software licensing bills.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Enterprise pricing based on named user tiers and application modules, making it cost-prohibitive to deploy to hundreds of store managers."
         },
         {
@@ -89,7 +89,7 @@ export default function CompareOnspring() {
         },
         {
           title: "Fraction of the cost for physical store networks",
-          text: "Audiment offers flat per-location pricing with unlimited frontline users, delivering immediate operational ROI without expensive GRC platform licensing."
+          text: "Audiment offers a 100% Free tier for 1 location and custom flat paid pricing with unlimited frontline users and audits, delivering immediate operational ROI without expensive GRC platform licensing."
         }
       ]}
       whoShouldChooseCompetitor={[
@@ -117,7 +117,7 @@ export default function CompareOnspring() {
         },
         {
           question: "How do Audiment and Onspring compare on pricing?",
-          answer: "Onspring requires enterprise annual contracts based on user tiers. Audiment offers transparent, flat per-location pricing with unlimited users per branch."
+          answer: "Onspring requires enterprise annual contracts based on user tiers. Audiment offers a 100% Free tier for 1 location (including up to 3 auditor logins and 25 audits/month) and a Paid tier with custom flat pricing for multi-unit rollouts that includes unlimited locations, frontline auditors, and inspections without per-seat taxes."
         },
         {
           question: "How does Audiment prevent audit cheating in stores?",

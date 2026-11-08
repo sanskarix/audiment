@@ -23,205 +23,202 @@ const RATE_LIMIT_RULES = {
 }
 
 function getRateLimitRule(pathname: string) {
-  if (pathname.startsWith('/api/auth') ||
-    pathname === '/login' ||
-    pathname === '/api/login') {
-    return RATE_LIMIT_RULES.auth
-  }
-  if (pathname.startsWith('/api/')) {
-    return RATE_LIMIT_RULES.api
-  }
-  return RATE_LIMIT_RULES.dashboard
-}
-
-function shouldApplyRateLimit(pathname: string) {
-  return pathname === '/login' ||
-    pathname.startsWith('/api/') ||
-    pathname.startsWith('/dashboard') ||
-    pathname.startsWith('/admin') ||
-    pathname.startsWith('/manager') ||
-    pathname.startsWith('/auditor')
-}
-
-function checkRateLimit(ip: string, pathname: string): {
-  allowed: boolean
-  remaining: number
-  resetAt: number
-} {
-  const rule = getRateLimitRule(pathname)
-  const key = `${ip}:${pathname.split('/')[1]}`
-  const now = Date.now()
-
-  const entry = rateLimitStore.get(key)
-
-  // If no entry or window has expired, reset
-  if (!entry || now > entry.resetAt) {
-    rateLimitStore.set(key, {
-      count: 1,
-      resetAt: now + rule.windowMs
-    })
-    return {
-      allowed: true,
-      remaining: rule.max - 1,
-      resetAt: now + rule.windowMs
+    if (pathname.startsWith('/api/auth')) {
+      return RATE_LIMIT_RULES.auth
     }
+    if (pathname.startsWith('/api/')) {
+      return RATE_LIMIT_RULES.api
+    }
+    return RATE_LIMIT_RULES.dashboard
   }
 
-  // Increment count
-  entry.count++
-  rateLimitStore.set(key, entry)
+  function shouldApplyRateLimit(pathname: string) {
+  return pathname.startsWith('/api/') ||
+      pathname.startsWith('/dashboard') ||
+      pathname.startsWith('/admin') ||
+      pathname.startsWith('/manager') ||
+      pathname.startsWith('/auditor')
+  }
 
-  const remaining = Math.max(0, rule.max - entry.count)
-  const allowed = entry.count <= rule.max
-
-  return { allowed, remaining, resetAt: entry.resetAt }
-}
-
-// Clean up expired entries every 5 minutes 
-// to prevent memory leak
-if (typeof setInterval !== 'undefined') {
-  setInterval(() => {
+  function checkRateLimit(ip: string, pathname: string): {
+    allowed: boolean
+    remaining: number
+    resetAt: number
+  } {
+    const rule = getRateLimitRule(pathname)
+    const key = `${ip}:${pathname.split('/')[1]}`
     const now = Date.now()
-    for (const [key, entry] of rateLimitStore.entries()) {
-      if (now > entry.resetAt) {
-        rateLimitStore.delete(key)
+
+    const entry = rateLimitStore.get(key)
+
+    // If no entry or window has expired, reset
+    if (!entry || now > entry.resetAt) {
+      rateLimitStore.set(key, {
+        count: 1,
+        resetAt: now + rule.windowMs
+      })
+      return {
+        allowed: true,
+        remaining: rule.max - 1,
+        resetAt: now + rule.windowMs
       }
     }
-  }, 5 * 60 * 1000)
-}
-// ─────────────────────────────────────────────
 
-export function proxy(request: NextRequest) {
-  const host = request.headers.get('host')?.toLowerCase()
+    // Increment count
+    entry.count++
+    rateLimitStore.set(key, entry)
 
-  if (host === 'www.audiment.in') {
-    const redirectUrl = request.nextUrl.clone()
-    redirectUrl.host = 'audiment.in'
-    return NextResponse.redirect(redirectUrl, 308)
+    const remaining = Math.max(0, rule.max - entry.count)
+    const allowed = entry.count <= rule.max
+
+    return { allowed, remaining, resetAt: entry.resetAt }
   }
 
-  // ─── RATE LIMITING ──────────────────────────
-  if (shouldApplyRateLimit(request.nextUrl.pathname)) {
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-      ?? request.headers.get('x-real-ip')
-      ?? 'unknown'
-
-    const { allowed, remaining, resetAt } = checkRateLimit(
-      ip,
-      request.nextUrl.pathname
-    )
-
-    if (!allowed) {
-      return new NextResponse(
-        JSON.stringify({
-          error: 'Too many requests. Please try again later.',
-          retryAfter: Math.ceil((resetAt - Date.now()) / 1000)
-        }),
-        {
-          status: 429,
-          headers: {
-            'Content-Type': 'application/json',
-            'X-RateLimit-Remaining': remaining.toString(),
-            'X-RateLimit-Reset': new Date(resetAt).toISOString(),
-            'Retry-After': Math.ceil((resetAt - Date.now()) / 1000).toString(),
-          },
+  // Clean up expired entries every 5 minutes 
+  // to prevent memory leak
+  if (typeof setInterval !== 'undefined') {
+    setInterval(() => {
+      const now = Date.now()
+      for (const [key, entry] of rateLimitStore.entries()) {
+        if (now > entry.resetAt) {
+          rateLimitStore.delete(key)
         }
-      )
-    }
+      }
+    }, 5 * 60 * 1000)
   }
   // ─────────────────────────────────────────────
 
-  // ─── PUBLIC ROUTES (no auth required) ─────────────────────────────────
-  // These routes are explicitly public. Ensure they are never added to
-  // the matcher or the isProtectedRoute check below.
-  // const PUBLIC_ROUTES = [
-  //   '/',
-  //   '/login',
-  //   '/blog',
-  //   '/privacy-policy',
-  //   '/cookie-policy',
-  //   '/terms-of-service',
-  //   '/solutions/:path*',
-  // ];
-  // ─────────────────────────────────────────────────────────────────────
+  export function proxy(request: NextRequest) {
+    const host = request.headers.get('host')?.toLowerCase()
 
-  const isProtectedRoute = request.nextUrl.pathname.startsWith('/dashboard') ||
-    request.nextUrl.pathname.startsWith('/admin') ||
-    request.nextUrl.pathname.startsWith('/manager') ||
-    request.nextUrl.pathname.startsWith('/auditor');
+    if (host === 'www.audiment.in') {
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.host = 'audiment.in'
+      return NextResponse.redirect(redirectUrl, 308)
+    }
 
-  if (isProtectedRoute) {
-    const sessionCookie = request.cookies.get('audiment_session')?.value;
-    let isValidSession = false;
+    // ─── RATE LIMITING ──────────────────────────
+    if (process.env.NODE_ENV !== 'development' && shouldApplyRateLimit(request.nextUrl.pathname)) {
+      const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+        ?? request.headers.get('x-real-ip')
+        ?? 'unknown'
 
-    if (sessionCookie) {
+      const { allowed, remaining, resetAt } = checkRateLimit(
+        ip,
+        request.nextUrl.pathname
+      )
+
+      if (!allowed) {
+        return new NextResponse(
+          JSON.stringify({
+            error: 'Too many requests. Please try again later.',
+            retryAfter: Math.ceil((resetAt - Date.now()) / 1000)
+          }),
+          {
+            status: 429,
+            headers: {
+              'Content-Type': 'application/json',
+              'X-RateLimit-Remaining': remaining.toString(),
+              'X-RateLimit-Reset': new Date(resetAt).toISOString(),
+              'Retry-After': Math.ceil((resetAt - Date.now()) / 1000).toString(),
+            },
+          }
+        )
+      }
+    }
+    // ─────────────────────────────────────────────
+
+    // ─── PUBLIC ROUTES (no auth required) ─────────────────────────────────
+    // These routes are explicitly public. Ensure they are never added to
+    // the matcher or the isProtectedRoute check below.
+    // const PUBLIC_ROUTES = [
+    //   '/',
+    //   '/login',
+    //   '/blog',
+    //   '/privacy-policy',
+    //   '/cookie-policy',
+    //   '/terms-of-service',
+    //   '/solutions/:path*',
+    // ];
+    // ─────────────────────────────────────────────────────────────────────
+
+    const isProtectedRoute = request.nextUrl.pathname.startsWith('/dashboard') ||
+      request.nextUrl.pathname.startsWith('/admin') ||
+      request.nextUrl.pathname.startsWith('/manager') ||
+      request.nextUrl.pathname.startsWith('/auditor');
+
+    if (isProtectedRoute) {
+      const sessionCookie = request.cookies.get('audiment_session')?.value;
+      let isValidSession = false;
+
+      if (sessionCookie) {
+        try {
+          // The cookie is URI encoded JSON from our auth flow
+          const data = JSON.parse(decodeURIComponent(sessionCookie));
+          if (data && data.uid && data.role) {
+            isValidSession = true;
+          }
+        } catch (e) {
+          // Invalid cookie structure
+          console.error('Failed to parse session cookie in middleware:', e);
+        }
+      }
+
+      if (!isValidSession) {
+        const loginUrl = new URL('/login', request.url);
+        loginUrl.searchParams.set('error', 'You need to login to access the page');
+        return NextResponse.redirect(loginUrl);
+      }
+
+      // ─── ROLE-BASED ROUTE ENFORCEMENT ─────────────────────────────────────
+      // Once the session is confirmed valid, read the role from the cookie
+      // and ensure the user is accessing their own dashboard only.
       try {
-        // The cookie is URI encoded JSON from our auth flow
-        const data = JSON.parse(decodeURIComponent(sessionCookie));
-        if (data && data.uid && data.role) {
-          isValidSession = true;
+        const data = JSON.parse(decodeURIComponent(request.cookies.get('audiment_session')!.value));
+        const role: string = (data.role || '').toLowerCase();
+
+        const dashboardPath = request.nextUrl.pathname;
+
+        const roleToDashboard: Record<string, string> = {
+          admin: '/dashboard/admin',
+          manager: '/dashboard/manager',
+          auditor: '/dashboard/auditor',
+        };
+
+        const correctBase = roleToDashboard[role];
+
+        // Only enforce on /dashboard/* sub-routes (leave /admin, /manager, /auditor top-levels alone)
+        if (correctBase && dashboardPath.startsWith('/dashboard/')) {
+          const isAdmin = dashboardPath.startsWith('/dashboard/admin');
+          const isManager = dashboardPath.startsWith('/dashboard/manager');
+          const isAuditor = dashboardPath.startsWith('/dashboard/auditor');
+
+          const wrongDashboard =
+            (isAdmin && role !== 'admin') ||
+            (isManager && role !== 'manager') ||
+            (isAuditor && role !== 'auditor');
+
+          if (wrongDashboard) {
+            return NextResponse.redirect(new URL(correctBase, request.url));
+          }
         }
-      } catch (e) {
-        // Invalid cookie structure
-        console.error('Failed to parse session cookie in middleware:', e);
+      } catch {
+        // Cookie parse error already handled above – safe to continue
       }
+      // ──────────────────────────────────────────────────────────────────────
     }
 
-    if (!isValidSession) {
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('error', 'You need to login to access the page');
-      return NextResponse.redirect(loginUrl);
-    }
-
-    // ─── ROLE-BASED ROUTE ENFORCEMENT ─────────────────────────────────────
-    // Once the session is confirmed valid, read the role from the cookie
-    // and ensure the user is accessing their own dashboard only.
-    try {
-      const data = JSON.parse(decodeURIComponent(request.cookies.get('audiment_session')!.value));
-      const role: string = (data.role || '').toLowerCase();
-
-      const dashboardPath = request.nextUrl.pathname;
-
-      const roleToDashboard: Record<string, string> = {
-        admin: '/dashboard/admin',
-        manager: '/dashboard/manager',
-        auditor: '/dashboard/auditor',
-      };
-
-      const correctBase = roleToDashboard[role];
-
-      // Only enforce on /dashboard/* sub-routes (leave /admin, /manager, /auditor top-levels alone)
-      if (correctBase && dashboardPath.startsWith('/dashboard/')) {
-        const isAdmin = dashboardPath.startsWith('/dashboard/admin');
-        const isManager = dashboardPath.startsWith('/dashboard/manager');
-        const isAuditor = dashboardPath.startsWith('/dashboard/auditor');
-
-        const wrongDashboard =
-          (isAdmin && role !== 'admin') ||
-          (isManager && role !== 'manager') ||
-          (isAuditor && role !== 'auditor');
-
-        if (wrongDashboard) {
-          return NextResponse.redirect(new URL(correctBase, request.url));
-        }
-      }
-    } catch {
-      // Cookie parse error already handled above – safe to continue
-    }
-    // ──────────────────────────────────────────────────────────────────────
+    return NextResponse.next();
   }
 
-  return NextResponse.next();
-}
-
-export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.[^/]+$).*)',
-    '/dashboard/:path*',
-    '/admin/:path*',
-    '/manager/:path*',
-    '/auditor/:path*',
-    '/api/:path*',
-    '/login',
-  ],
-};
+  export const config = {
+    matcher: [
+      '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.[^/]+$).*)',
+      '/dashboard/:path*',
+      '/admin/:path*',
+      '/manager/:path*',
+      '/auditor/:path*',
+      '/api/:path*',
+      '/login',
+    ],
+  };

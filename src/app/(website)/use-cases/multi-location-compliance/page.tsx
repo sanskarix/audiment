@@ -49,6 +49,11 @@ export default function MultiLocationCompliance() {
         }
       ]}
       faqs={[
+          {
+            question: "What is Audiment's pricing structure?",
+            answer:
+              "Audiment offers a completely Free tier for 1 physical location (supporting up to 3 auditor logins, 25 audits per month, and full proof verification). For multi-location teams, our Paid tier provides custom flat pricing where everything is unlimited—unlimited locations, unlimited users with zero per-seat fees, and unlimited monthly audits and templates."
+          },
         {
           question: "How does Audiment verify that audits were actually completed on-site?",
           answer: "Photos must be taken live on-site – gallery uploads are disabled. GPS location is checked against the registered branch address. If the auditor isn't at the location, the system flags it."

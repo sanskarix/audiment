@@ -49,6 +49,11 @@ export default function AuditChecklistSoftware() {
         }
       ]}
       faqs={[
+          {
+            question: "What is Audiment's pricing structure?",
+            answer:
+              "Audiment offers a completely Free tier for 1 physical location (supporting up to 3 auditor logins, 25 audits per month, and full proof verification). For multi-location teams, our Paid tier provides custom flat pricing where everything is unlimited—unlimited locations, unlimited users with zero per-seat fees, and unlimited monthly audits and templates."
+          },
         {
           question: "How do we import our existing Excel sheets or PDFs?",
           answer: "Our onboarding team routinely digitizes legacy spreadsheets and paper checklists into smart Audiment templates, usually within 48 hours of kickoff."

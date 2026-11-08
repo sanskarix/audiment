@@ -684,7 +684,7 @@ export function AudimentBlogHubClient({
         </section>
       </main>
 
-      <Footer service="general" hideCta />
+      <Footer service="general" />
     </>
   );
 }

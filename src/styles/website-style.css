@@ -623,8 +623,7 @@ header:hover .brand b {
 
 .hero p,
 .center-head p,
-.intro p,
-p {
+.intro p {
   color: var(--muted);
   font-size: 16px;
   line-height: 1.65;
@@ -671,8 +670,7 @@ p {
   color: #4a4a4a;
 }
 
-.intro h2,
-h2 {
+.intro h2 {
   margin: 0;
   color: var(--ink);
   font-size: 34px;
@@ -2087,6 +2085,20 @@ footer.site-footer {
   transform: translateX(3px);
 }
 
+.prefooter-cta-button--secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+.prefooter-cta-button--secondary:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--ink);
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
 .footer-contact-link-wrap {
   margin-top: 14px;
 }
@@ -2659,8 +2671,7 @@ footer.site-footer {
     display: block;
   }
 
-  .intro h2,
-  h2 {
+  .intro h2 {
     font-size: 24px;
   }
 

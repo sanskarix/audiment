@@ -46,7 +46,7 @@ const DotBtn: React.FC<{
   return (
     <div className={wrapClass}>
       {inner}
-      <a className={btnClass} href={href ?? '#'} id={id}>{label}</a>
+      <Link className={btnClass} href={href ?? '#'} id={id}>{label}</Link>
     </div>
   );
 };
@@ -209,7 +209,8 @@ export function AudimentCompareDetailClient({
             {heroSubtext || `Evaluating ${competitor}? Here's a practical comparison focused on operational outcomes, rollout realities, and how each platform handles accountability.`}
           </p>
           <div className="actions">
-            <DotBtn id="aud-comp-hero-cta" label="Book a Comparison Call" variant="orange" calAttrs={cal} />
+            <DotBtn id="aud-comp-hero-signup" label="Try for Free" variant="orange" href="/signup" />
+            <DotBtn id="aud-comp-hero-cta" label="Book a Comparison Call" calAttrs={cal} />
             {quickVerdict && (
               <a className="button" href="#verdict" style={{ textDecoration: 'none' }}>
                 Quick verdict
@@ -856,7 +857,8 @@ export function AudimentCompareDetailClient({
             Walk through a live demo with our team. We&apos;ll map your existing audit process and show you exactly where the operational differences show up.
           </p>
           <div className="actions">
-            <DotBtn id="aud-comp-bottom-cta" label="Book a Comparison Call" variant="orange" calAttrs={cal} />
+            <DotBtn id="aud-comp-bottom-signup" label="Try for Free" variant="orange" href="/signup" />
+            <DotBtn id="aud-comp-bottom-cta" label="Book a Comparison Call" calAttrs={cal} />
           </div>
         </section>
       </main>

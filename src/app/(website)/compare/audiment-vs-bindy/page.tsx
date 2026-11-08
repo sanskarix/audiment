@@ -125,7 +125,7 @@ export default function CompareBindy() {
         },
         {
           question: "How does pricing compare between Audiment and Bindy?",
-          answer: "Both Audiment and Bindy avoid per-user fees, which is ideal for multi-location teams. Audiment offers clear, transparent per-location pricing with unlimited users per branch, including all modules (surprise audits, CAPA workflows, live camera verification, flashmob dispatch, and trend analytics) without tiered add-on fees."
+          answer: "Both Audiment and Bindy avoid per-user fees, which is ideal for multi-location teams. Audiment offers a 100% Free tier for 1 location and a Paid tier with custom flat pricing including unlimited locations, audits, and users per branch, covering all modules (surprise audits, CAPA workflows, live camera verification, flashmob dispatch, and trend analytics) without tiered add-on fees."
         },
         {
           question: "Can we transfer our retail checklists from Bindy to Audiment?",

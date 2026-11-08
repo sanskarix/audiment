@@ -99,13 +99,18 @@ export function Navbar({ userRole }: { userRole?: string | null }) {
                                                 <span>Login</span>
                                             </Link>
                                         </Button>
+                                        <Button asChild size="sm" className="bg-[#FF5400] text-white hover:bg-[#FF5400]/90">
+                                            <Link href="/signup">Try for Free</Link>
+                                        </Button>
                                         <CalButton
                                             size="sm"
+                                            variant="outline"
                                             className={cn(isScrolled && 'lg:hidden')}>
                                             <span>Book a call</span>
                                         </CalButton>
                                         <CalButton
                                             size="sm"
+                                            variant="outline"
                                             className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
                                             <span>Book a call</span>
                                         </CalButton>

@@ -64,7 +64,7 @@ export default function CompareMeazureUp() {
         },
         {
           area: "Frontline Access & Pricing Predictability",
-          audiment: "Transparent flat per-location pricing with unlimited users per branch. Shift supervisors, kitchen managers, regional auditors, and franchise owners all get dedicated role-based logins without increasing software costs.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Quote-based enterprise pricing often scaled by modules (DailyCheck vs AuditApp), location bands, or user seats, making company-wide frontline rollout financially unpredictable."
         },
         {
@@ -121,7 +121,7 @@ export default function CompareMeazureUp() {
         },
         {
           question: "How do Audiment and MeazureUp compare on pricing?",
-          answer: "MeazureUp uses quote-based enterprise pricing with separate module costs and user limitations. Audiment uses transparent, flat per-location pricing with unlimited users per branch. Every shift lead, store manager, and area director can have an individual login with custom JWT role scoping at no additional cost."
+          answer: "MeazureUp uses quote-based enterprise pricing with separate module costs and user limitations. Audiment provides a 100% Free tier for 1 location and a Paid tier with custom flat pricing for multi-unit brands with unlimited locations, audits, and users. Every shift lead, store manager, and area director can have an individual login with custom JWT role scoping at no additional cost."
         },
         {
           question: "Can we migrate our existing MeazureUp checklists to Audiment?",

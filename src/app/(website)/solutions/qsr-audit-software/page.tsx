@@ -30,7 +30,7 @@ export default function QSRAuditSoftware() {
             url: 'https://audiment.in/solutions/qsr-audit-software',
             description:
               'Shift-by-shift digital audit software for fast-food and QSR chains managing 30–50 outlets. Standardized checklists, automated corrective actions, and real-time operational dashboards.',
-            offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Contact for pricing' },
+            offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything' },
             provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' },
           }),
         }}
@@ -153,6 +153,11 @@ export default function QSRAuditSoftware() {
           }
         ]}
         faqs={[
+          {
+            question: "How does Audiment pricing work for multi-location operations?",
+            answer:
+              "Audiment offers a completely Free tier for 1 physical location (supporting up to 3 auditor logins, 25 audits per month, and full proof verification). For multi-location businesses, our Paid tier provides custom flat pricing where everything is unlimited—unlimited locations, unlimited users and auditor logins (zero per-seat fees), and unlimited monthly audits and templates."
+          },
           {
             question: "Why do paper checklists and spreadsheets fail when a QSR chain reaches 30–50 outlets?",
             answer:

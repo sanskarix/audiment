@@ -64,7 +64,7 @@ export default function CompareSapAuditManagement() {
         },
         {
           area: "Pricing Model & Frontline Team Scalability",
-          audiment: "Flat per-location pricing with unlimited users per branch. Shift managers, assistant store leads, head chefs, and regional coaches all have dedicated accounts without driving up monthly software licensing bills.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Enterprise SAP licensing with named user licenses, implementation consulting fees, and ongoing SAP ERP maintenance contracts running into hundreds of thousands of dollars."
         },
         {
@@ -117,7 +117,7 @@ export default function CompareSapAuditManagement() {
         },
         {
           question: "How do Audiment and SAP compare on pricing?",
-          answer: "SAP Audit Management requires significant enterprise software licensing and consulting fees. Audiment offers transparent, flat per-location pricing with unlimited users per branch."
+          answer: "SAP Audit Management requires significant enterprise software licensing and consulting fees. Audiment offers a 100% Free tier for 1 location (including up to 3 auditor logins and 25 audits/month) and a Paid tier with custom flat pricing for multi-unit rollouts that includes unlimited locations, frontline auditors, and inspections without per-seat taxes."
         },
         {
           question: "How does Audiment prevent audit cheating in stores?",

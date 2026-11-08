@@ -64,7 +64,7 @@ export default function CompareFormCom() {
         },
         {
           area: "Pricing Transparency & Total Cost of Ownership",
-          audiment: "Transparent flat per-location pricing with unlimited users per branch, allowing you to add unlimited shift managers, regional coaches, and auditors without incurring seat licensing penalties or multi-year minimum commitments.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Enterprise custom quotes with high annual platform fees, implementation consulting packages, and seat or submission volume charges."
         },
         {
@@ -113,7 +113,7 @@ export default function CompareFormCom() {
         },
         {
           question: "How do Audiment and Form.com compare on pricing?",
-          answer: "Form.com requires enterprise annual contracts with custom quotes and consulting fees. Audiment offers transparent flat per-location pricing with unlimited frontline users and zero consulting overhead."
+          answer: "Form.com requires enterprise annual contracts with custom quotes and consulting fees. Audiment offers a 100% Free tier for 1 location and a Paid tier with custom flat pricing that includes unlimited frontline users, audits, and locations with zero per-seat taxes or consulting overhead."
         },
         {
           question: "How does Audiment prevent fraudulent audits compared to Form.com?",

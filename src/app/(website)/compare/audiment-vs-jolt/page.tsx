@@ -74,7 +74,7 @@ export default function CompareJolt() {
         },
         {
           area: "Pricing Predictability & Licensing Structure",
-          audiment: "Transparent flat per-location pricing with unlimited users per branch. Every shift lead, assistant manager, head chef, and regional coach has full access without per-user licensing fees.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Often bundles subscription tiers with mandatory hardware purchases, replacement warranties, and consumable label roll contracts, increasing total cost of ownership."
         }
       ]}

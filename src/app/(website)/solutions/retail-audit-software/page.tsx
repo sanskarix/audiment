@@ -63,6 +63,11 @@ export default function RetailAuditSoftware() {
         { area: "Cleanliness", question: "Are fitting rooms cleared of discarded clothing and mirrors wiped down completely every hour?" }
       ]}
       faqs={[
+          {
+            question: "How does Audiment pricing work for multi-location operations?",
+            answer:
+              "Audiment offers a completely Free tier for 1 physical location (supporting up to 3 auditor logins, 25 audits per month, and full proof verification). For multi-location businesses, our Paid tier provides custom flat pricing where everything is unlimited—unlimited locations, unlimited users and auditor logins (zero per-seat fees), and unlimited monthly audits and templates."
+          },
         {
           question: "Can retail district managers use this on their iPads?",
           answer: "Yes. Audiment works in any browser – iPads, Android tablets, or phones. No app download needed."

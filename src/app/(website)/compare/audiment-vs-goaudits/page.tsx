@@ -18,7 +18,7 @@ export default function CompareGoAudits() {
       heroSubtext="GoAudits is a digital checklist and PDF reporting tool designed to replace paper clipboards. If you manage 10 to 500+ locations and need verified ground execution, automated 48-hour CAPA SLAs, weighted critical-failure math, and multi-branch operational drift analytics, here is an objective side-by-side breakdown."
       quickVerdict={{
         verdictSummary: "GoAudits functions well as an entry-level digital checklist tool for generating formatted PDF audit reports for clients or regional supervisors. Audiment is an operational accountability system designed specifically for multi-location brands, combining mandatory live-camera verification, GPS-enforced submission gating, automated 48-hour CAPA SLAs, weighted critical-failure scoring, and consecutive low-score trend alerts to eliminate pencil-whipping and operational drift across distributed networks.",
-        audimentBestFor: "Multi-unit restaurant, retail, QSR, and hospitality operations that have outgrown basic checklist apps and need verified proof that audits occurred on-site, with automated follow-through on every failed standard, consecutive-failure trend alerts, and flat per-location pricing with unlimited users.",
+        audimentBestFor: "Multi-unit restaurant, retail, QSR, and hospitality operations that have outgrown basic checklist apps and need verified proof that audits occurred on-site, with automated follow-through on every failed standard, consecutive-failure trend alerts, a 100% Free tier for 1 location, and custom flat paid pricing with unlimited users.",
         competitorBestFor: "Independent quality consultants, single-facility managers, or small teams whose primary requirement is replacing paper clipboards with a simple mobile form that generates clean client PDF reports without complex multi-location rollups or automated CAPA escalations.",
       }}
       migrationReality={{
@@ -64,7 +64,7 @@ export default function CompareGoAudits() {
         },
         {
           area: "Pricing Model & Frontline Team Scalability",
-          audiment: "Flat per-location pricing with unlimited users per branch. Every shift lead, assistant manager, head chef, and maintenance tech can have a dedicated account without increasing the monthly subscription.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Uses user-based seat licensing or hybrid tier pricing, where onboarding more store managers, supervisors, and regional auditors continually drives up monthly software costs."
         },
         {
@@ -89,7 +89,7 @@ export default function CompareGoAudits() {
         },
         {
           title: "Predictable unit economics as you grow",
-          text: "GoAudits' user-based pricing penalizes companies as they scale their frontline team. Audiment's flat per-location pricing allows you to give individual accounts to every store manager, shift supervisor, and area director at zero extra cost."
+          text: "GoAudits' user-based pricing penalizes companies as they scale their frontline team. Audiment's Free tier for single units and custom flat paid tier for multi-unit networks allow you to give individual accounts to every store manager, shift supervisor, and area director at zero extra seat cost."
         },
         {
           title: "Automated consecutive-failure trend alerts",
@@ -129,7 +129,7 @@ export default function CompareGoAudits() {
         },
         {
           question: "How do Audiment and GoAudits compare on pricing for 25+ locations?",
-          answer: "GoAudits typically charges per user, meaning costs scale as you give logins to shift managers, head chefs, and regional coaches. Audiment charges a flat rate per location with unlimited users, making it substantially more cost-effective and collaborative as your store count expands."
+          answer: "GoAudits typically charges per user, meaning costs scale as you give logins to shift managers, head chefs, and regional coaches. Audiment provides a 100% Free tier for 1 location (with up to 3 auditor logins and 25 audits/month) and a Paid tier with custom flat pricing that includes unlimited locations, audits, and frontline users without per-seat fees, making it substantially more cost-effective and collaborative as your store count expands."
         },
         {
           question: "What is Audiment's weighted scoring engine?",

@@ -259,8 +259,8 @@ export default function AdminAuditsPage() {
 
   const getStatusBadge = (audit: any) => {
     const now = new Date();
-    const scheduledDate = audit.scheduledDate?.toDate();
-    const deadline = audit.deadline?.toDate();
+    const scheduledDate = typeof audit.scheduledDate?.toDate === 'function' ? audit.scheduledDate.toDate() : (audit.scheduledDate ? new Date(audit.scheduledDate) : null);
+    const deadline = typeof audit.deadline?.toDate === 'function' ? audit.deadline.toDate() : (audit.deadline ? new Date(audit.deadline) : null);
     const isDeadlineHit = audit.status === 'missed' || (audit.status !== 'completed' && deadline && deadline < now);
 
     if (audit.status === 'completed') {

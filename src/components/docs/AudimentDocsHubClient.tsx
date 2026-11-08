@@ -548,7 +548,7 @@ export function AudimentDocsHubClient({
         </section>
       </main>
 
-      <Footer service="general" hideCta />
+      <Footer service="general" />
     </>
   );
 }

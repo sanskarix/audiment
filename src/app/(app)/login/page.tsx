@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { loginUser, UserRole } from '@/lib/auth';
 import { Button } from '@/components/app-ui/button';
 import { Input } from '@/components/app-ui/input';
@@ -165,7 +166,10 @@ export default function LoginPage() {
         </Card>
 
         <p className="text-center text-[12px] text-muted-text">
-          Don&apos;t have an account? <a href="mailto:hello@audiment.in" className="text-primary hover:underline font-normal">Contact your administrator</a>
+          Don&apos;t have an account?{' '}
+          <Link href="/signup" className="text-primary hover:underline font-normal">
+            Claim a free workspace
+          </Link>
         </p>
       </div>
     </main>

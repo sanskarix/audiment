@@ -64,7 +64,7 @@ export default function CompareMyfieldaudits() {
         },
         {
           area: "Pricing Model & Frontline Team Scalability",
-          audiment: "Flat per-location pricing with unlimited users per branch. Shift managers, assistant store leads, head chefs, and regional coaches all have dedicated accounts without driving up monthly software licensing bills.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Uses quote-based licensing often tied to user seats or venue tiers, making frontline deployment across multiple shifts costly."
         },
         {
@@ -88,8 +88,8 @@ export default function CompareMyfieldaudits() {
           text: "In Audiment, a critical food safety or brand risk cannot be masked by high cleanliness scores. It instantly triggers a Critical Failure grade and auto-spawns a 48-hour CAPA task with 6-hour cron reminders."
         },
         {
-          title: "Flat per-location pricing with unlimited users",
-          text: "Every shift supervisor, kitchen lead, and store manager has an individual login at no extra cost, removing frontline licensing barriers."
+          title: "Free tier & custom flat paid pricing with unlimited users",
+          text: "Audiment offers a 100% Free tier for 1 location and custom flat pricing for multi-unit rollouts. Every shift supervisor, kitchen lead, and store manager has an individual login at no extra cost, removing frontline licensing barriers."
         }
       ]}
       whoShouldChooseCompetitor={[
@@ -109,7 +109,7 @@ export default function CompareMyfieldaudits() {
         },
         {
           question: "How do Audiment and MyFieldAudits compare on pricing?",
-          answer: "MyFieldAudits uses quote-based licensing tied to user seats or venue tiers. Audiment charges a flat rate per location with unlimited users per branch, eliminating per-seat frontline penalties."
+          answer: "MyFieldAudits uses quote-based licensing tied to user seats or venue tiers. Audiment provides a 100% Free tier for single-location operators (up to 3 auditors and 25 audits/month) and a Paid tier with custom flat pricing offering unlimited locations and frontline users without per-seat licensing penalties."
         },
         {
           question: "How does Audiment prevent audit cheating compared to MyFieldAudits?",

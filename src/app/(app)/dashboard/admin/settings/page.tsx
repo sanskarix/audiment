@@ -39,8 +39,10 @@ import {
   ShieldAlert,
   Globe,
   Mail,
-  Lock
+  Lock,
+  Sparkles
 } from 'lucide-react';
+import UpgradeModal from '@/components/UpgradeModal';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import Cropper from 'react-easy-crop';
@@ -59,11 +61,12 @@ const TIMEZONES = [
   { value: 'Australia/Sydney', label: 'Sydney (AEST)' },
 ];
 
-type Tab = 'profile' | 'organization' | 'notifications' | 'danger';
+type Tab = 'profile' | 'organization' | 'plan' | 'notifications' | 'danger';
 
 const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
   { id: 'profile', label: 'Profile', icon: User },
   { id: 'organization', label: 'Organization', icon: Building2 },
+  { id: 'plan', label: 'Plan & Billing', icon: Sparkles },
   { id: 'notifications', label: 'Notifications', icon: Bell },
   { id: 'danger', label: 'Danger Zone', icon: ShieldAlert },
 ];
@@ -116,7 +119,8 @@ function SettingsContent() {
   const [orgForm, setOrgForm] = useState({ name: '', timezone: 'UTC', defaultStartTime: '10:00', defaultEndTime: '22:00' });
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
-  const { isSynced, uid, orgId } = useAuthSync();
+  const { isSynced, uid, orgId, plan } = useAuthSync();
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
 
   // No longer needed
 
@@ -673,6 +677,94 @@ function SettingsContent() {
               </Card>
             )}
 
+            {/* ── PLAN & BILLING ── */}
+            {activeTab === 'plan' && (
+              <div className="space-y-5">
+                <Card className="standard-card">
+                  <CardHeader className="pb-4 border-b border-border/40">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="text-[15px] font-semibold text-heading">Subscription & Plan</CardTitle>
+                        <CardDescription className="text-xs text-muted-text mt-0.5">
+                          Your current workspace entitlement and resource allowances.
+                        </CardDescription>
+                      </div>
+                      <span className="px-2.5 py-1 text-xs rounded-full bg-muted/60 text-muted-foreground font-medium border border-border/80 capitalize">
+                        {(orgDoc?.plan || plan || 'free')} Plan
+                      </span>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-5 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="p-3.5 rounded-lg border border-border/50 bg-muted/10 space-y-1">
+                        <div className="text-[11px] text-muted-text font-normal uppercase tracking-wider">Outlets</div>
+                        <div className="text-lg font-medium text-heading">1 Location</div>
+                        <div className="text-[11px] text-muted-text">Flagship Branch</div>
+                      </div>
+
+                      <div className="p-3.5 rounded-lg border border-border/50 bg-muted/10 space-y-1">
+                        <div className="text-[11px] text-muted-text font-normal uppercase tracking-wider">Team Seats</div>
+                        <div className="text-lg font-medium text-heading">3 Members</div>
+                        <div className="text-[11px] text-muted-text">Admin, Manager, Auditor</div>
+                      </div>
+
+                      <div className="p-3.5 rounded-lg border border-border/50 bg-muted/10 space-y-1">
+                        <div className="text-[11px] text-muted-text font-normal uppercase tracking-wider">Monthly Audits</div>
+                        <div className="text-lg font-medium text-heading">30 / month</div>
+                        <div className="text-[11px] text-muted-text">150 photos (30-day proof)</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Upgrade Callout */}
+                {(orgDoc?.plan || plan || 'free').toLowerCase() === 'free' && (
+                  <Card className="standard-card border-primary/20 bg-primary/[0.02]">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between gap-4">
+                        <div>
+                          <CardTitle className="text-[15px] font-medium text-heading">Audiment Pro</CardTitle>
+                          <CardDescription className="text-xs text-muted-text mt-0.5">
+                            Scale compliance operations across multiple locations with automated schedules and video presence audits.
+                          </CardDescription>
+                        </div>
+                        <Button
+                          onClick={() => setUpgradeModalOpen(true)}
+                          className="h-9 px-4 text-xs font-normal shrink-0"
+                        >
+                          Upgrade now
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs text-muted-text">
+                        <div className="flex items-center gap-2">
+                          <Check className="w-3.5 h-3.5 text-primary shrink-0" />
+                          <span>Multi-outlet management & cross-store benchmarks</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Check className="w-3.5 h-3.5 text-primary shrink-0" />
+                          <span>Flashmob covert 20-second video presence audits</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Check className="w-3.5 h-3.5 text-primary shrink-0" />
+                          <span>Automated recurring audit schedules</span>
+                        </div>
+                        <div className="flex items-center gap-2.5">
+                          <Check className="w-3.5 h-3.5 text-primary shrink-0" />
+                          <span>Unlimited team members & manager delegation</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Check className="w-3.5 h-3.5 text-primary shrink-0" />
+                          <span>Permanent compliance storage & white-labeled PDFs</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            )}
+
             {/* ── NOTIFICATIONS ── */}
             {activeTab === 'notifications' && (
               <Card className="standard-card">
@@ -784,6 +876,13 @@ function SettingsContent() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <UpgradeModal
+        open={upgradeModalOpen}
+        onOpenChange={setUpgradeModalOpen}
+        title="Upgrade to Audiment Pro"
+        description="Scale operations across all locations with enterprise accountability and automated inspection schedules."
+      />
     </DashboardShell>
   );
 }

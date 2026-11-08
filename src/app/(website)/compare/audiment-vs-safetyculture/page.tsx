@@ -59,7 +59,7 @@ export default function CompareSafetyCulture() {
         },
         {
           area: "Pricing Model & The Frontline Seat Tax",
-          audiment: "Flat per-location pricing with unlimited users per branch. Shift supervisors, store managers, regional auditors, and maintenance techs can all access the platform with custom role-based permissions without driving up software subscription costs.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Charges primarily via user-based seat licensing (per user/month). As organizations expand to include shift leaders, assistant managers, and multi-unit staff, annual seat licensing costs scale steeply, often forcing companies to ration logins or share generic credentials."
         },
         {
@@ -121,7 +121,7 @@ export default function CompareSafetyCulture() {
         },
         {
           question: "How does pricing compare between Audiment and SafetyCulture for 30 locations?",
-          answer: "SafetyCulture typically charges on a per-user, per-month seat licensing model. For 30 locations with 3 users per store (90 users), SafetyCulture can cost $2,000 to $3,500+ every month. Audiment charges a flat, predictable rate per location with unlimited users, reducing software overhead by 60% or more while empowering entire frontline teams."
+          answer: "SafetyCulture typically charges on a per-user, per-month seat licensing model. For 30 locations with 3 users per store (90 users), SafetyCulture can cost $2,000 to $3,500+ every month. Audiment provides a 100% Free tier for single-unit operators and a Paid tier with custom flat pricing that includes unlimited locations, audits, and frontline users without per-seat fees, reducing software overhead by 60% or more while empowering entire teams."
         },
         {
           question: "Why does Audiment restrict photo gallery uploads while SafetyCulture allows them?",

@@ -64,7 +64,7 @@ export default function CompareGreenlightGuru() {
         },
         {
           area: "Pricing Model & Frontline Team Scalability",
-          audiment: "Flat per-location pricing with unlimited users per branch. Shift managers, assistant store leads, head chefs, and regional coaches all have dedicated accounts without driving up monthly software licensing bills.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Specialized MedTech pricing typically starting at $15,000 to $50,000+ per year based on medical device engineering seats and compliance modules."
         },
         {
@@ -89,7 +89,7 @@ export default function CompareGreenlightGuru() {
         },
         {
           title: "Fraction of the cost for physical store networks",
-          text: "Audiment offers flat per-location pricing with unlimited frontline users, delivering immediate operational ROI without expensive MedTech eQMS software commitments."
+          text: "Audiment offers a 100% Free tier for 1 location and custom flat paid pricing with unlimited frontline users and audits, delivering immediate operational ROI without expensive MedTech eQMS software commitments."
         }
       ]}
       whoShouldChooseCompetitor={[
@@ -113,7 +113,7 @@ export default function CompareGreenlightGuru() {
         },
         {
           question: "How do Audiment and Greenlight Guru compare on pricing?",
-          answer: "Greenlight Guru charges specialized MedTech eQMS subscriptions typically starting at $15,000+ per year. Audiment offers transparent, flat per-location pricing with unlimited users per branch."
+          answer: "Greenlight Guru charges specialized MedTech eQMS subscriptions typically starting at $15,000+ per year. Audiment offers a 100% Free tier for 1 location (including up to 3 auditor logins and 25 audits/month) and a Paid tier with custom flat pricing for multi-unit rollouts that includes unlimited locations, frontline auditors, and inspections without per-seat taxes."
         },
         {
           question: "How does Audiment prevent audit cheating in stores?",

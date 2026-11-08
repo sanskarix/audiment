@@ -1,0 +1,24 @@
+{
+  "orgId": "apex-audit-org-1794052932125",
+  "orgName": "Apex Hospitality Group (Audit Test)",
+  "loc1Id": "aQIwDpRFRhaBrB0wEHza",
+  "adminUser": {
+    "uid": "pIExAsAczEQ9CmL9kLkatKXnmNx2",
+    "email": "apex_admin@audiment.in",
+    "role": "admin",
+    "displayName": "Alexander Vance (Admin)"
+  },
+  "managerUser": {
+    "uid": "B27bFVXUUbSO5QoPfnXHQklsHTB2",
+    "email": "apex_manager@audiment.in",
+    "role": "manager",
+    "displayName": "Marcus Sterling (Manager)"
+  },
+  "auditorUser": {
+    "uid": "LBW81AkXK7buIyf006CI2wURW1v1",
+    "email": "apex_auditor@audiment.in",
+    "role": "auditor",
+    "displayName": "Sarah Chen (Auditor)"
+  },
+  "password": "Password123!"
+}

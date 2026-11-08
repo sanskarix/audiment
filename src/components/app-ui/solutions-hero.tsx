@@ -69,10 +69,15 @@ export function SolutionsHero({
                             {description}
                         </p>
 
-                        <div className="flex flex-col sm:flex-row items-center gap-6">
-                            <CalButton size="lg" className="rounded-full px-8 h-14 text-base bg-neutral-900 text-white hover:bg-neutral-800">
-                                    {ctaText}
+                        <div className="flex flex-col sm:flex-row items-center gap-4">
+                            <Button asChild size="lg" className="rounded-full px-8 h-14 text-base bg-[#FF5400] text-white hover:bg-[#FF5400]/90">
+                                <Link href="/signup">
+                                    Try for Free
                                     <ArrowRight className="ml-2 w-5 h-5" />
+                                </Link>
+                            </Button>
+                            <CalButton size="lg" variant="outline" className="rounded-full px-8 h-14 text-base border-neutral-200 text-neutral-600 hover:bg-neutral-50">
+                                {ctaText}
                             </CalButton>
                             <Button asChild size="lg" variant="outline" className="rounded-full px-8 h-14 text-base border-neutral-200 text-neutral-600 hover:bg-neutral-50">
                                 <Link href="/#how-it-works">See How It Works</Link>

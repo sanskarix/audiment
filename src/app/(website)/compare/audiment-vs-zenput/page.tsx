@@ -74,7 +74,7 @@ export default function CompareZenput() {
         },
         {
           area: "Pricing Predictability & Total Cost of Ownership",
-          audiment: "Transparent flat per-location pricing with unlimited users per branch, allowing you to add unlimited shift managers, regional coaches, and auditors without incurring seat licensing penalties or multi-year minimum commitments.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Enterprise pricing contracts with high annual platform fees, mandatory implementation consulting packages, and bundled module costs with high minimum contract commitments."
         }
       ]}
@@ -129,7 +129,7 @@ export default function CompareZenput() {
         },
         {
           question: "How do Audiment and Zenput compare on pricing?",
-          answer: "Zenput typically requires enterprise annual contracts with high minimum commitment levels ($10,000+ per year). Audiment offers transparent per-location pricing with unlimited users per branch, making it predictable, flexible, and accessible for both mid-market and large chains."
+          answer: "Zenput typically requires enterprise annual contracts with high minimum commitment levels ($10,000+ per year). Audiment provides a 100% Free tier for 1 location and a Paid tier with custom flat pricing for multi-unit rollouts that includes unlimited locations, audits, and frontline users without per-seat fees, making it predictable, flexible, and accessible for both mid-market and large chains."
         },
         {
           question: "How does Audiment prevent audit cheating compared to Zenput?",

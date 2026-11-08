@@ -33,7 +33,7 @@ export default function FranchiseAuditSoftware() {
             url: 'https://audiment.in/solutions/franchise-audit-software',
             description:
               'Audit and compliance management software for franchise networks. Standardize brand operating blueprints, conduct geo-verified field inspections, and track corrective action remediation across franchisee units.',
-            offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Contact for pricing' },
+            offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything' },
             provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' }
           })
         }}
@@ -138,6 +138,11 @@ export default function FranchiseAuditSoftware() {
           }
         ]}
         faqs={[
+          {
+            question: "How does Audiment pricing work for multi-location operations?",
+            answer:
+              "Audiment offers a completely Free tier for 1 physical location (supporting up to 3 auditor logins, 25 audits per month, and full proof verification). For multi-location businesses, our Paid tier provides custom flat pricing where everything is unlimited—unlimited locations, unlimited users and auditor logins (zero per-seat fees), and unlimited monthly audits and templates."
+          },
           {
             question: "How does Audiment help head office identify underperforming franchise units?",
             answer:

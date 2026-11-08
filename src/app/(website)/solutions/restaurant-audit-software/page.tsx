@@ -30,7 +30,7 @@ export default function RestaurantAuditSoftware() {
             url: 'https://audiment.in/solutions/restaurant-audit-software',
             description:
               'Audit management software for multi-outlet restaurant chains and cloud kitchens. Standardize shift checklists, capture photo evidence, monitor location performance, and resolve operational failures.',
-            offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Contact for pricing' },
+            offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything' },
             provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' },
           }),
         }}
@@ -139,6 +139,11 @@ export default function RestaurantAuditSoftware() {
           }
         ]}
         faqs={[
+          {
+            question: "How does Audiment pricing work for multi-location operations?",
+            answer:
+              "Audiment offers a completely Free tier for 1 physical location (supporting up to 3 auditor logins, 25 audits per month, and full proof verification). For multi-location businesses, our Paid tier provides custom flat pricing where everything is unlimited—unlimited locations, unlimited users and auditor logins (zero per-seat fees), and unlimited monthly audits and templates."
+          },
           {
             question: "How does head office identify failing restaurant outlets and recurring issues?",
             answer:

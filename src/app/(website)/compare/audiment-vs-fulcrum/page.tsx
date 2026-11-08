@@ -64,7 +64,7 @@ export default function CompareFulcrum() {
         },
         {
           area: "Pricing Model & Frontline Team Scalability",
-          audiment: "Flat per-location pricing with unlimited users per branch. Shift managers, assistant store leads, head chefs, and regional coaches all have dedicated accounts without driving up monthly software licensing bills.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Charges per user per month ($35 to $60+/user/month), making it expensive to deploy across hundreds of store managers and shift supervisors."
         },
         {
@@ -109,7 +109,7 @@ export default function CompareFulcrum() {
         },
         {
           question: "How do Audiment and Fulcrum compare on pricing?",
-          answer: "Fulcrum charges per user per month. Audiment charges a flat rate per location with unlimited users per branch, eliminating per-seat frontline penalties."
+          answer: "Fulcrum charges per user per month. Audiment provides a 100% Free tier for single-location operators (up to 3 auditors and 25 audits/month) and a Paid tier with custom flat pricing offering unlimited locations and frontline users without per-seat licensing penalties."
         },
         {
           question: "How does Audiment handle corrective actions differently than Fulcrum?",

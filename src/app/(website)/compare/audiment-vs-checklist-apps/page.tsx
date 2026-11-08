@@ -73,6 +73,11 @@ export default function CompareChecklistApps() {
           competitor: "Requires building blank questionnaires from scratch, manually configuring question types, and maintaining version control across changing operating procedures."
         },
         {
+          area: "Pricing Model & Frontline Team Scalability",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
+          competitor: "Generic checklist apps often charge per-user seat fees or offer unscalable free consumer tiers without multi-location role hierarchies or automated CAPA tracking."
+        },
+        {
           area: "Audit Trail & Regulatory Inspection Readiness",
           audiment: "Maintains tamper-evident digital records with GPS coordinates, live camera proof, and time-stamped resolution logs, providing indisputable documentation for health inspectors and brand auditors.",
           competitor: "Spreadsheets and editable forms can be retroactively altered, backdated, or deleted by anyone with edit access, rendering them untrustworthy during formal regulatory inspections."

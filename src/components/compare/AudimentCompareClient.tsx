@@ -169,7 +169,7 @@ const DotBtn: React.FC<{
   return (
     <div className={wrapClass}>
       {inner}
-      <a className={btnClass} href={href ?? '#'} id={id}>{label}</a>
+      <Link className={btnClass} href={href ?? '#'} id={id}>{label}</Link>
     </div>
   );
 };
@@ -195,7 +195,7 @@ const comparisonsData: ComparisonItem[] = [
     title: 'Audiment vs SafetyCulture (iAuditor)',
     categoryKey: 'frontline',
     categoryLabel: 'Frontline Inspection',
-    description: 'How Audiment compares on live photo verification, 48-hour automated CAPA SLAs, and flat per-location pricing.',
+    description: 'How Audiment compares on live photo verification, 48-hour automated CAPA SLAs, and free tier + custom flat pricing.',
     href: '/compare/audiment-vs-safetyculture',
     iconKey: 'scale',
   },
@@ -231,7 +231,7 @@ const comparisonsData: ComparisonItem[] = [
     title: 'Audiment vs MeazureUp',
     categoryKey: 'frontline',
     categoryLabel: 'Restaurant Audits',
-    description: 'Multi-unit restaurant audits, live-camera anti-pencil-whipping, 48-hour auto-CAPA SLAs, and transparent per-location pricing.',
+    description: 'Multi-unit restaurant audits, live-camera anti-pencil-whipping, 48-hour auto-CAPA SLAs, and free tier + custom flat pricing.',
     href: '/compare/audiment-vs-meazureup',
     iconKey: 'utensils',
   },
@@ -249,7 +249,7 @@ const comparisonsData: ComparisonItem[] = [
     title: 'Audiment vs Lumiform',
     categoryKey: 'frontline',
     categoryLabel: 'Mobile Checklists',
-    description: 'Per-location vs €100/seat frontline pricing, photo gallery blocking, and multi-location operational drift tracking.',
+    description: 'Free tier & custom flat vs €100/seat frontline pricing, photo gallery blocking, and multi-location operational drift tracking.',
     href: '/compare/audiment-vs-lumiform',
     iconKey: 'shieldCheck',
   },
@@ -469,7 +469,7 @@ const comparisonsData: ComparisonItem[] = [
     title: 'Audiment vs ComplianceQuest',
     categoryKey: 'qms',
     categoryLabel: 'Salesforce-Native QMS',
-    description: 'Salesforce-based manufacturing QMS/EHS suites vs agile, lightweight mobile store audits with flat per-location pricing.',
+    description: 'Salesforce-based manufacturing QMS/EHS suites vs agile, lightweight mobile store audits with free tier and custom flat pricing.',
     href: '/compare/audiment-vs-compliancequest',
     iconKey: 'shieldCheck',
   },
@@ -555,7 +555,8 @@ export function AudimentCompareClient() {
             Every audit platform claims to digitize inspections. But operational outcomes hinge on physical evidence integrity, presence verification, automated CAPA SLAs, and flat pricing. Explore detailed comparisons below.
           </p>
           <div className="actions">
-            <DotBtn id="aud-compare-hero-cta" label="Book a Discovery Call" variant="orange" calAttrs={cal} />
+            <DotBtn id="aud-compare-hero-signup" label="Try for Free" variant="orange" href="/signup" />
+            <DotBtn id="aud-compare-hero-cta" label="Book a Discovery Call" calAttrs={cal} />
           </div>
         </section>
 
@@ -925,7 +926,8 @@ export function AudimentCompareClient() {
             Book a discovery call and we&apos;ll walk you through how Audiment fits your specific operations.
           </p>
           <div className="actions">
-            <DotBtn id="aud-compare-bottom-cta" label="Book a Discovery Call" variant="orange" calAttrs={cal} />
+            <DotBtn id="aud-compare-bottom-signup" label="Try for Free" variant="orange" href="/signup" />
+            <DotBtn id="aud-compare-bottom-cta" label="Book a Discovery Call" calAttrs={cal} />
           </div>
         </section>
       </main>

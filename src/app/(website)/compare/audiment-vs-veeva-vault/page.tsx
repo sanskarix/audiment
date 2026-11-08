@@ -64,7 +64,7 @@ export default function CompareVeevaVault() {
         },
         {
           area: "Pricing Model & Frontline Team Scalability",
-          audiment: "Flat per-location pricing with unlimited users per branch. Shift managers, assistant store leads, head chefs, and regional coaches all have dedicated accounts without driving up monthly software licensing bills.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Multi-million dollar enterprise software contracts with heavy software validation costs, consulting fees, and validated user licenses."
         },
         {
@@ -113,7 +113,7 @@ export default function CompareVeevaVault() {
         },
         {
           question: "How do Audiment and Veeva Vault Quality compare on pricing?",
-          answer: "Veeva Vault Quality requires massive enterprise life sciences contracts often running into hundreds of thousands of dollars. Audiment offers transparent, flat per-location pricing with unlimited users per branch."
+          answer: "Veeva Vault Quality requires massive enterprise life sciences contracts often running into hundreds of thousands of dollars. Audiment offers a 100% Free tier for 1 location (including up to 3 auditor logins and 25 audits/month) and a Paid tier with custom flat pricing for multi-unit rollouts that includes unlimited locations, frontline auditors, and inspections without per-seat taxes."
         },
         {
           question: "How does Audiment prevent audit cheating in stores?",

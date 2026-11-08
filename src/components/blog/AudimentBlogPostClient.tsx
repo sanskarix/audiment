@@ -56,7 +56,7 @@ const DotBtn: React.FC<{
   return (
     <div className={wrapClass}>
       {inner}
-      <a className={btnClass} href={href ?? '#'} id={id}>{label}</a>
+      <Link className={btnClass} href={href ?? '#'} id={id}>{label}</Link>
     </div>
   );
 };
@@ -257,7 +257,8 @@ export function AudimentBlogPostClient({
                     See how multi-location teams use proof-based audits and corrective actions to stay on top of quality and compliance.
                   </p>
                   <div className="cta-btn-center">
-                    <DotBtn id="aud-article-bottom-cta" label="Book a Discovery Call" variant="orange" calAttrs={cal} />
+                    <DotBtn id="aud-article-bottom-signup" label="Try for Free" variant="orange" href="/signup" />
+                    <DotBtn id="aud-article-bottom-cta" label="Book a Discovery Call" calAttrs={cal} />
                   </div>
                 </div>
               </div>

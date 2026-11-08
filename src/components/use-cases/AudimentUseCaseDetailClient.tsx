@@ -81,7 +81,7 @@ const DotBtn: React.FC<{
   return (
     <div className={wrapClass}>
       {inner}
-      <a className={btnClass} href={href ?? '#'} id={id}>{label}</a>
+      <Link className={btnClass} href={href ?? '#'} id={id}>{label}</Link>
     </div>
   );
 };
@@ -183,7 +183,8 @@ export function AudimentUseCaseDetailClient({
           </h1>
           <p>{heroSubheadline}</p>
           <div className="actions">
-            <DotBtn id="aud-uc-hero-cta" label="Book a Discovery Call" variant="orange" calAttrs={cal} />
+            <DotBtn id="aud-uc-hero-signup" label="Try for Free" variant="orange" href="/signup" />
+            <DotBtn id="aud-uc-hero-cta" label="Book a Discovery Call" calAttrs={cal} />
             <a className="button" href="#capabilities" style={{ textDecoration: 'none' }}>
               Explore capabilities
             </a>
@@ -375,7 +376,8 @@ export function AudimentUseCaseDetailClient({
             Walk through a live demo with our team. We&apos;ll map your current workflow and show you exactly where Audiment fits.
           </p>
           <div className="actions">
-            <DotBtn id="aud-uc-bottom-cta" label="Book a Discovery Call" variant="orange" calAttrs={cal} />
+            <DotBtn id="aud-uc-bottom-signup" label="Try for Free" variant="orange" href="/signup" />
+            <DotBtn id="aud-uc-bottom-cta" label="Book a Discovery Call" calAttrs={cal} />
           </div>
         </section>
       </main>

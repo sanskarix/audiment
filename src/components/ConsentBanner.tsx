@@ -128,23 +128,23 @@ export function ConsentBanner() {
         <div
           role="region"
           aria-label="Cookie consent banner"
-          className="fixed bottom-0 inset-x-0 z-50 p-2.5 sm:px-6 sm:py-3 bg-background/95 border-t border-border shadow-lg backdrop-blur-md transition-all animate-in slide-in-from-bottom duration-300"
+          className="fixed bottom-0 inset-x-0 z-50 p-3 sm:px-6 sm:py-3.5 bg-background/95 border-t border-border shadow-lg backdrop-blur-md transition-all animate-in slide-in-from-bottom duration-300"
         >
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-2.5 md:gap-4">
-            <div className="space-y-0.5 max-w-3xl">
-              <h2 className="text-xs sm:text-sm font-semibold text-foreground">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-6">
+            <div className="space-y-1 max-w-2xl">
+              <h2 className="!text-sm sm:!text-base !font-semibold !leading-tight !tracking-normal !text-foreground !m-0">
                 We value your privacy
               </h2>
-              <p className="text-[11px] sm:text-xs text-muted-foreground leading-normal">
-                We use essential technologies to operate the site. With your consent, Google Analytics and advertising technologies may be used to understand website usage and measure marketing performance.
+              <p className="!text-xs sm:!text-sm !text-muted-foreground !leading-relaxed !m-0">
+                We use cookies to improve your experience and analyze site traffic.
               </p>
             </div>
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 shrink-0 w-full md:w-auto">
+            <div className="flex flex-wrap items-center gap-2 shrink-0 w-full md:w-auto">
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                className="w-full sm:w-auto h-7 sm:h-8 px-2.5 text-xs"
+                className="w-full sm:w-auto h-8 px-3 text-xs sm:text-sm"
                 onClick={openPreferences}
               >
                 Manage Preferences
@@ -153,7 +153,7 @@ export function ConsentBanner() {
                 type="button"
                 variant="secondary"
                 size="sm"
-                className="w-full sm:w-auto h-7 sm:h-8 px-2.5 text-xs"
+                className="w-full sm:w-auto h-8 px-3 text-xs sm:text-sm"
                 onClick={rejectNonEssential}
               >
                 Reject Non-Essential
@@ -162,7 +162,7 @@ export function ConsentBanner() {
                 type="button"
                 variant="default"
                 size="sm"
-                className="w-full sm:w-auto h-7 sm:h-8 px-3 text-xs"
+                className="w-full sm:w-auto h-8 px-3.5 text-xs sm:text-sm font-medium"
                 onClick={acceptAll}
               >
                 Accept All
@@ -189,10 +189,10 @@ export function ConsentBanner() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="space-y-1">
-              <h2 id="consent-modal-title" className="text-lg font-semibold text-foreground">
+              <h2 id="consent-modal-title" className="!text-lg !font-semibold !leading-snug !tracking-normal !text-foreground !m-0">
                 Cookie & Privacy Preferences
               </h2>
-              <p className="text-xs text-muted-foreground">
+              <p className="!text-xs sm:!text-sm !text-muted-foreground !leading-normal !m-0">
                 Customize your cookie settings for our public website. Essential functionality will remain active.
               </p>
             </div>
@@ -207,7 +207,7 @@ export function ConsentBanner() {
                       Required
                     </span>
                   </div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="!text-xs !text-muted-foreground !leading-relaxed !m-0">
                     Required for core website security, page navigation, and basic site functionality. Cannot be turned off.
                   </p>
                 </div>
@@ -224,7 +224,7 @@ export function ConsentBanner() {
               <div className="flex items-start justify-between gap-4 p-3.5 rounded-lg border border-border hover:bg-muted/20 transition-colors">
                 <div className="space-y-1">
                   <span className="text-sm font-medium text-foreground">Analytics Cookies</span>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="!text-xs !text-muted-foreground !leading-relaxed !m-0">
                     Allows us to measure visitor traffic and website usage patterns via Google Analytics to help improve site performance.
                   </p>
                 </div>
@@ -242,7 +242,7 @@ export function ConsentBanner() {
               <div className="flex items-start justify-between gap-4 p-3.5 rounded-lg border border-border hover:bg-muted/20 transition-colors">
                 <div className="space-y-1">
                   <span className="text-sm font-medium text-foreground">Marketing & Targeting</span>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="!text-xs !text-muted-foreground !leading-relaxed !m-0">
                     Used to deliver personalized marketing campaigns and measure advertising effectiveness across platforms.
                   </p>
                 </div>

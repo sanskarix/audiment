@@ -46,6 +46,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/app-ui/button';
 import NotificationBell from './NotificationBell';
 import { useAuthSync } from './AuthProvider';
+import PlanBadge from './PlanBadge';
 
 interface DashboardShellProps {
   role: 'admin' | 'manager' | 'auditor';
@@ -133,7 +134,7 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
       <div className="hidden md:flex h-screen w-full overflow-hidden">
         <SidebarProvider>
           <Sidebar collapsible="none" className="border-r border-border/80 shrink-0">
-            <SidebarHeader className="h-24 flex flex-row items-center justify-center">
+            <SidebarHeader className="h-20 flex flex-row items-center justify-center">
               <span className="font-semibold tracking-tighter text-heading leading-none" style={{ fontSize: '22px' }}>
                 Audiment
               </span>
@@ -161,7 +162,10 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
               </div>
             </SidebarContent>
 
-            <SidebarFooter className="border-t border-border/80 p-3 bg-muted/5">
+            <SidebarFooter className="border-t border-border/80 p-3 bg-muted/5 space-y-1.5">
+              <div className="w-full flex items-center justify-center">
+                <PlanBadge />
+              </div>
               <SidebarMenu>
                 <SidebarMenuItem>
                   <DropdownMenu>
@@ -245,7 +249,8 @@ export default function DashboardShell({ role, children }: DashboardShellProps) 
         {/* Mobile top bar */}
         <header className="shrink-0 h-14 px-4 border-b border-border/80 flex items-center justify-between bg-background z-20">
           <span className="font-semibold tracking-tighter text-heading" style={{ fontSize: '20px' }}>Audiment</span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
+            <PlanBadge />
             {/* Removed mobile top bar notification bell */}
             {/* Avatar / profile */}
             <DropdownMenu>

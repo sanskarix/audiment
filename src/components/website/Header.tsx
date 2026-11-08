@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getCalAttributes, CalServiceType } from '@/lib/cal';
+import { CalServiceType } from '@/lib/cal';
 
 export interface HeaderProps {
-  activeNav?: 'features' | 'solutions' | 'use-cases' | 'about' | 'blog' | 'docs';
+  activeNav?: 'features' | 'solutions' | 'use-cases' | 'about' | 'blog' | 'docs' | 'pricing';
   ctaId?: string;
   service?: CalServiceType;
 }
@@ -14,10 +14,8 @@ export interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   activeNav,
   ctaId = 'aud-nav-cta',
-  service = 'general',
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const calAttrs = getCalAttributes(service);
 
   const closeMenu = () => setMobileMenuOpen(false);
 
@@ -72,31 +70,34 @@ export const Header: React.FC<HeaderProps> = ({
             Docs
           </Link>
           <Link
+            href="/pricing"
+            className={activeNav === 'pricing' ? 'active' : ''}
+            onClick={closeMenu}
+          >
+            Pricing
+          </Link>
+          <Link
             href="/login"
             className="mobile-only-login"
             onClick={closeMenu}
           >
-            Sign in
+            Login
           </Link>
           <div className="mobile-only-cta">
-            <a
+            <Link
               className="button button--orange"
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                closeMenu();
-              }}
+              href="/signup"
+              onClick={closeMenu}
               id={`${ctaId}-mobile`}
-              {...calAttrs}
             >
-              Book a call
-            </a>
+              Try for Free
+            </Link>
           </div>
         </nav>
 
         <div className="header-actions">
           <Link href="/login" className="aud-desktop-login">
-            Sign in
+            Login
           </Link>
           <div className="btn-wrapper btn-wrapper--orange">
             <span className="dot top left" />
@@ -107,15 +108,13 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="line horizontal bottom" />
             <span className="line vertical left" />
             <span className="line vertical right" />
-            <a
+            <Link
               className="button button--orange"
-              href="#"
-              onClick={(e) => e.preventDefault()}
+              href="/signup"
               id={ctaId}
-              {...calAttrs}
             >
-              Book a call
-            </a>
+              Try for Free
+            </Link>
           </div>
           <button
             type="button"

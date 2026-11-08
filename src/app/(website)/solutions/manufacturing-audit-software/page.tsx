@@ -63,6 +63,11 @@ export default function ManufacturingAuditSoftware() {
         { area: "Documentation", question: "Are the latest Material Safety Data Sheets (MSDS) updated and accessible at the primary chemical station?" }
       ]}
       faqs={[
+          {
+            question: "How does Audiment pricing work for multi-location operations?",
+            answer:
+              "Audiment offers a completely Free tier for 1 physical location (supporting up to 3 auditor logins, 25 audits per month, and full proof verification). For multi-location businesses, our Paid tier provides custom flat pricing where everything is unlimited—unlimited locations, unlimited users and auditor logins (zero per-seat fees), and unlimited monthly audits and templates."
+          },
         {
           question: "Can Audiment handle complex ISO 9001 audit structures?",
           answer: "Yes. Audiment's conditional logic lets you build multi-tiered audit trees that align with ISO quality standards and regulatory requirements."

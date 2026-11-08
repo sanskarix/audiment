@@ -1,0 +1,16 @@
+{
+  "auditorInteractiveAudit": true,
+  "adminInteractiveTemplate": true,
+  "adminInteractiveUser": true,
+  "adminInteractiveLocation": true,
+  "securityRouteGuards": true,
+  "consoleErrorsCount": 1,
+  "pageErrorsCount": 0,
+  "criticalConsoleErrors": [
+    {
+      "context": "MainFlow",
+      "text": "Fetch error: FirebaseError: Missing or insufficient permissions."
+    }
+  ],
+  "pageErrors": []
+}

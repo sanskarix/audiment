@@ -62,7 +62,7 @@ export default function UseCaseTemplate({
       '@type': 'Offer',
       price: '0',
       priceCurrency: 'INR',
-      description: 'Contact for pricing',
+      description: 'Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything',
     },
     publisher: { '@id': 'https://audiment.in/#organization' },
     provider: { '@id': 'https://audiment.in/#organization' },

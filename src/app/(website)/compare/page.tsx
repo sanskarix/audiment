@@ -203,7 +203,7 @@ const hubFaqSchema = {
       "name": "How does Audiment pricing compare to competitor platforms?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Most competitors charge per user or seat, which penalizes companies as they roll out access to shift managers and frontline staff. Audiment charges a flat, predictable per-location fee with unlimited users per branch, encouraging full team adoption without escalating software bills."
+        "text": "Most competitors charge per user or seat, which penalizes companies as they roll out access to shift managers and frontline staff. Audiment provides a 100% Free Forever Tier for 1 location (with up to 3 auditor logins and 25 monthly audits) and a Paid Tier with custom flat pricing where everything is unlimited—locations, frontline users, and monthly audits—with zero per-seat taxes."
       }
     },
     {

@@ -18,7 +18,7 @@ export default function CompareCheckbuster() {
       heroSubtext="Checkbuster is a European mobile inspection tool used across facility safety and ISO compliance. Audiment is an operational accountability system purpose-built for multi-location food, retail, and franchise networks, combining live camera verification, GPS submission gating, and automated 48-hour CAPA SLAs."
       quickVerdict={{
         verdictSummary: "Checkbuster functions well as a digital inspection app for general safety and ISO 9001/45001 facility checks. Audiment is an operational accountability platform engineered for multi-unit retail, restaurant, and franchise networks where preventing 'pencil-whipping' through mandatory live camera capture, GPS submission gating, weighted critical-failure scoring, and automated 48-hour CAPA escalation directly protects brand consistency, food hygiene, and branch performance.",
-        audimentBestFor: "Operations heads, franchise managers, and quality directors managing 10 to 500+ restaurants, retail outlets, or franchise stores who need verified on-site photo proof (gallery uploads restricted), GPS-verified submissions, automated 48-hour CAPA SLAs, and flat per-location pricing with unlimited frontline users.",
+        audimentBestFor: "Operations heads, franchise managers, and quality directors managing 10 to 500+ restaurants, retail outlets, or franchise stores who need verified on-site photo proof (gallery uploads restricted), GPS-verified submissions, automated 48-hour CAPA SLAs, a 100% Free tier for 1 location, and custom flat paid pricing with unlimited frontline users.",
         competitorBestFor: "Small safety consulting teams or European manufacturing and facility maintenance managers whose primary need is digitizing paper forms for ISO quality checks and who do not require live-camera gating or retail-specific multi-branch trend tracking.",
       }}
       migrationReality={{
@@ -64,7 +64,7 @@ export default function CompareCheckbuster() {
         },
         {
           area: "Pricing Model & Frontline Team Scalability",
-          audiment: "Flat per-location pricing with unlimited users per branch. Shift managers, assistant store leads, head chefs, and regional coaches all have dedicated accounts without driving up monthly software licensing bills.",
+          audiment: "Offers a completely Free tier for 1 physical location (including up to 3 auditor logins, 25 audits/month, and full proof verification) and a Paid tier with custom flat pricing where everything is unlimited—unlimited locations, unlimited auditors and users with zero per-seat fees, and unlimited monthly audits and templates.",
           competitor: "Charges primarily per user/month, making it cost-prohibitive to give individual accounts to shift leaders, assistant managers, and store staff across 20+ locations."
         },
         {
@@ -89,7 +89,7 @@ export default function CompareCheckbuster() {
         },
         {
           title: "Zero per-seat frontline penalties",
-          text: "Audiment charges flat per-location pricing with unlimited users per branch, allowing you to empower your entire frontline team with individual logins without escalating software costs."
+          text: "Audiment provides a 100% Free tier for 1 location and custom flat paid pricing with unlimited users and audits per branch, allowing you to empower your entire frontline team with individual logins without escalating software costs."
         }
       ]}
       whoShouldChooseCompetitor={[

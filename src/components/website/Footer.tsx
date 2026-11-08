@@ -30,13 +30,13 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
               </p>
             </div>
 
-            <div className="prefooter-cta-right">
-              <a
+            <div className="prefooter-cta-right" style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+              <Link
                 className="prefooter-cta-button"
-                href="javascript:void(0);"
-                {...calAttrs}
+                href="/signup"
+                id="prefooter-signup-cta"
               >
-                <span>Book a Demo</span>
+                <span>Try for Free</span>
                 <svg
                   width="14"
                   height="14"
@@ -51,6 +51,13 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
                   <path d="M5 12h14" />
                   <path d="m12 5 7 7-7 7" />
                 </svg>
+              </Link>
+              <a
+                className="prefooter-cta-button prefooter-cta-button--secondary"
+                href="javascript:void(0);"
+                {...calAttrs}
+              >
+                <span>Book a Demo</span>
               </a>
             </div>
           </div>
@@ -128,6 +135,7 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
                 <li><Link href="/compare/audiment-vs-goaudits">vs GoAudits</Link></li>
                 <li><Link href="/compare/audiment-vs-zenput">vs Zenput</Link></li>
                 <li><Link href="/about">About Audiment</Link></li>
+                <li><Link href="/pricing">Pricing</Link></li>
                 <li><Link href="/docs">Documentation</Link></li>
                 <li><Link href="/blog">Operational Blog</Link></li>
                 <li><Link href="/blog/multi-location-compliance-guide">Compliance Guide</Link></li>

@@ -171,7 +171,7 @@ const DotBtn: React.FC<{
   return (
     <div className={wrapClass}>
       {inner}
-      <a className={btnClass} href={href ?? '#'} id={id}>{label}</a>
+      <Link className={btnClass} href={href ?? '#'} id={id}>{label}</Link>
     </div>
   );
 };
@@ -324,7 +324,8 @@ export function AudimentSolutionsClient() {
                 </p>
 
                 <div className="actions" style={{ justifyContent: 'center', marginTop: 36, marginBottom: 0 }}>
-                  <DotBtn id="aud-solutions-hero-cta" label="Book a call" variant="orange" calAttrs={cal} />
+                  <DotBtn id="aud-solutions-hero-signup" label="Try for Free" variant="orange" href="/signup" />
+                  <DotBtn id="aud-solutions-hero-cta" label="Book a call" calAttrs={cal} />
                   <a className="button" href="#solutions-list" style={{ textDecoration: 'none' }}>
                     Explore 7 solutions
                   </a>
@@ -450,7 +451,8 @@ export function AudimentSolutionsClient() {
             Tell us what you audit today. We&apos;ll walk you through how Audiment maps to your operating model.
           </p>
           <div className="actions">
-            <DotBtn id="aud-solutions-bottom-cta" label="Book a Discovery Call" variant="orange" calAttrs={cal} />
+            <DotBtn id="aud-solutions-bottom-signup" label="Try for Free" variant="orange" href="/signup" />
+            <DotBtn id="aud-solutions-bottom-cta" label="Book a Discovery Call" calAttrs={cal} />
           </div>
         </section>
       </main>

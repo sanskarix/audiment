@@ -7,6 +7,7 @@ export interface CallerInfo {
   uid: string;
   role: CallerRole;
   organizationId: string;
+  plan?: string;
 }
 
 /**
@@ -43,8 +44,9 @@ export async function getCallerInfo(request: Request): Promise<CallerInfo | null
       const decoded = await adminAuth.verifyIdToken(idToken);
       const role = ((decoded.role as string) || '').toLowerCase() as CallerRole;
       const organizationId = (decoded.organizationId as string) || (decoded.orgId as string) || '';
+      const plan = ((decoded.plan as string) || 'free').toLowerCase();
       if (role && organizationId) {
-        return { uid: decoded.uid, role, organizationId };
+        return { uid: decoded.uid, role, organizationId, plan };
       }
     } catch (err: any) {
       console.warn('[auth-server] Bearer token verification failed, checking cookies:', err.message);
@@ -92,7 +94,7 @@ export async function getCallerInfo(request: Request): Promise<CallerInfo | null
         return null;
       }
 
-      return { uid, role, organizationId };
+      return { uid, role, organizationId, plan: ((session.plan as string) || 'free').toLowerCase() };
     } catch (err: any) {
       return null;
     }

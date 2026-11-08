@@ -49,6 +49,11 @@ export default function CorrectiveActionTracking() {
         }
       ]}
       faqs={[
+          {
+            question: "What is Audiment's pricing structure?",
+            answer:
+              "Audiment offers a completely Free tier for 1 physical location (supporting up to 3 auditor logins, 25 audits per month, and full proof verification). For multi-location teams, our Paid tier provides custom flat pricing where everything is unlimited—unlimited locations, unlimited users with zero per-seat fees, and unlimited monthly audits and templates."
+          },
         {
           question: "Can I assign a corrective action to someone outside the branch?",
           answer: "Yes. Depending on the logic you set, a failed refrigeration check can automatically create a task assigned directly to your external maintenance team rather than the branch manager."

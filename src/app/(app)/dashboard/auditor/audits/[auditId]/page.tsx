@@ -129,7 +129,9 @@ export default function AuditExecutionPage() {
 
         // BUG 6: Auditor schedule lock
         const now = new Date();
-        const sched = auditData.scheduledDate?.toDate() || new Date(0);
+        const sched = typeof auditData.scheduledDate?.toDate === 'function'
+          ? auditData.scheduledDate.toDate()
+          : (auditData.scheduledDate ? new Date(auditData.scheduledDate) : new Date(0));
         if (now < sched) {
           alert(`Locked until ${sched.toLocaleDateString()}`);
           router.push('/dashboard/auditor');

@@ -9,6 +9,7 @@ interface AuthState {
   uid: string | null;
   role: string | null;
   orgId: string | null;
+  plan: string | null;
 }
 
 const AuthContext = createContext<AuthState>({
@@ -16,6 +17,7 @@ const AuthContext = createContext<AuthState>({
   uid: null,
   role: null,
   orgId: null,
+  plan: null,
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -24,6 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     uid: null,
     role: null,
     orgId: null,
+    plan: null,
   });
 
   useEffect(() => {
@@ -31,18 +34,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          // This ensures the ID token is refreshed and contains the latest custom claims (role, orgId)
+          // This ensures the ID token is refreshed and contains the latest custom claims (role, orgId, plan)
           // before we signal to components that they can start Firestore listeners.
           await user.getIdToken(true);
           const idTokenResult = await user.getIdTokenResult();
           const role = (idTokenResult.claims.role as string || '').toLowerCase() || null;
           const orgId = (idTokenResult.claims.organizationId as string) || (idTokenResult.claims.orgId as string) || null;
+          const plan = (idTokenResult.claims.plan as string || 'free').toLowerCase();
 
           setAuthState({
             isSynced: true,
             uid: user.uid,
             role,
             orgId,
+            plan,
           });
         } catch (e: any) {
           if (e.name === 'AbortError') return;
@@ -58,6 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           uid: null,
           role: null,
           orgId: null,
+          plan: null,
         });
       }
     });

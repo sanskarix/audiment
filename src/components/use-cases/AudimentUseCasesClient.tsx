@@ -127,7 +127,7 @@ const DotBtn: React.FC<{
   return (
     <div className={wrapClass}>
       {inner}
-      <a className={btnClass} href={href ?? '#'} id={id}>{label}</a>
+      <Link className={btnClass} href={href ?? '#'} id={id}>{label}</Link>
     </div>
   );
 };
@@ -293,9 +293,14 @@ export function AudimentUseCasesClient() {
                   </p>
                   <div className="aud-solutions-cta-btn-wrap">
                     <DotBtn
+                      id="aud-usecases-bottom-signup"
+                      label="Try for Free"
+                      variant="orange"
+                      href="/signup"
+                    />
+                    <DotBtn
                       id="aud-usecases-cta-bottom"
                       label="Book a Discovery Call"
-                      variant="orange"
                       calAttrs={cal}
                     />
                   </div>

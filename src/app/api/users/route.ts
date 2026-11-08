@@ -32,6 +32,25 @@ export async function POST(req: Request) {
       return forbidden();
     }
 
+    // ─── Enforce 3-user seat cap for Free plans ─────────────────────────────
+    if ((caller.plan || 'free').toLowerCase() === 'free') {
+      const usersSnap = await adminDb
+        .collection('users')
+        .where('organizationId', '==', organizationId)
+        .where('isActive', '==', true)
+        .get();
+
+      if (usersSnap.size >= 3) {
+        return NextResponse.json(
+          {
+            error: 'Free workspace is capped at 3 team members (Owner, Manager, Auditor). Upgrade to Audiment Pro for unlimited team seats.',
+            code: 'LIMIT_USERS',
+          },
+          { status: 403 }
+        );
+      }
+    }
+
     const userRecord = await adminAuth.createUser({
       email,
       password,
@@ -40,10 +59,11 @@ export async function POST(req: Request) {
 
     const uid = userRecord.uid;
 
-    // ─── Set custom claims immediately so the ID token carries role + org ───
+    // ─── Set custom claims immediately so the ID token carries role + org + plan ───
     await adminAuth.setCustomUserClaims(uid, {
       role: role.toLowerCase(),
       organizationId: organizationId,
+      plan: caller.plan || 'free',
     });
 
     const userData: any = {

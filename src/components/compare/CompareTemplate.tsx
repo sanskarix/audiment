@@ -72,6 +72,11 @@ export default function CompareTemplate({
       answer: `Yes. Both serve multi-location audit management. The differences are in how each platform handles accountability workflows, evidence collection, and rollout complexity – which is what matters most during day-to-day operations.`,
     },
     {
+      question: 'How does Audiment pricing compare?',
+      answer:
+        'Audiment offers a free tier for 1 physical location (supporting up to 3 auditor logins, 25 audits/month, and full proof-verification features). For multi-location operations, our paid tier provides custom flat pricing where everything is unlimited—unlimited locations, unlimited users with zero per-seat fees, and unlimited monthly audits and templates.',
+    },
+    {
       question: 'How does the migration process work?',
       answer:
         'Our onboarding team digitizes your existing checklists and imports your location hierarchy. Most teams are running their first audits on Audiment within 1-2 weeks, often in parallel with their existing system.',
@@ -152,7 +157,7 @@ export default function CompareTemplate({
       '@type': 'Offer',
       price: '0',
       priceCurrency: 'INR',
-      description: 'Transparent per-location pricing with unlimited users per branch',
+      description: 'Free tier for 1 location; Paid tier is custom flat pricing with unlimited everything',
     },
     isSimilarTo: {
       '@type': 'SoftwareApplication',

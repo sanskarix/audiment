@@ -40,6 +40,7 @@ export async function POST(request: Request) {
     const role = ((decoded.role as string) || '').toLowerCase();
     const organizationId = (decoded.organizationId as string) || '';
     const email = decoded.email || '';
+    const plan = ((decoded.plan as string) || 'free').toLowerCase();
 
     if (!role || !organizationId) {
       return NextResponse.json(
@@ -50,7 +51,7 @@ export async function POST(request: Request) {
 
     // Build the session payload – same shape as before so the rest of the app
     // (middleware, server components) can parse it unchanged.
-    const sessionPayload = JSON.stringify({ uid, role, email, organizationId });
+    const sessionPayload = JSON.stringify({ uid, role, email, organizationId, plan });
 
     // Set the cookie server-side with HttpOnly – JavaScript in the browser
     // cannot read or modify this cookie.

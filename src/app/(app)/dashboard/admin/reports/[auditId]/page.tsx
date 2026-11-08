@@ -54,7 +54,7 @@ function getGradeConfig(grade: string) {
 }
 
 export default function AuditReportDetailPage() {
-  const { isSynced } = useAuthSync();
+  const { isSynced, plan } = useAuthSync();
   const { auditId } = useParams();
   const [audit, setAudit] = useState<any>(null);
   const [responses, setResponses] = useState<any[]>([]);
@@ -106,18 +106,22 @@ export default function AuditReportDetailPage() {
         // Always recalculate score from actual answered responses only
         const scoringInput: ScoreInputQuestion[] = enriched
           .filter((r: any) => {
-            if (r.questionType === 'yes_no') return r.answer === 'yes' || r.answer === 'no';
+            const ans = String(r.answer || '').toLowerCase();
+            if (r.questionType === 'yes_no') return ans === 'yes' || ans === 'no';
             return r.score !== null && r.score !== undefined;
           })
-          .map((r: any) => ({
-            questionId: r.questionId,
-            questionText: r.questionText,
-            questionType: r.questionType as QuestionType,
-            severity: (r.severity || 'medium') as Severity,
-            answer: r.questionType === 'yes_no'
-              ? (r.answer === 'yes' ? 'Yes' : 'No')
-              : (r.score ?? null),
-          }));
+          .map((r: any) => {
+            const ans = String(r.answer || '').toLowerCase();
+            return {
+              questionId: r.questionId,
+              questionText: r.questionText,
+              questionType: r.questionType as QuestionType,
+              severity: (r.severity || 'medium') as Severity,
+              answer: r.questionType === 'yes_no'
+                ? (ans === 'yes' ? 'Yes' : 'No')
+                : (r.score ?? null),
+            };
+          });
 
         if (scoringInput.length > 0) {
           const reScore = calculateAuditScore(scoringInput);
@@ -162,7 +166,9 @@ export default function AuditReportDetailPage() {
     setIsExporting(true);
     try {
       const filename = buildAuditPDFFilename(audit.locationName, audit.templateTitle);
-      await exportElementToPDF(reportRef.current, filename);
+      await exportElementToPDF(reportRef.current, filename, {
+        isFreePlan: !plan || plan.toLowerCase() === 'free',
+      });
     } catch (error: any) {
       alert('Failed to generate PDF: ' + (error?.message || error));
     } finally {
@@ -199,15 +205,20 @@ export default function AuditReportDetailPage() {
   const isCritFail = (r: any) => {
     const t = audit.scoringTrace?.find((x: any) => x.questionId === r.questionId);
     if (t) return t.isCriticalFailure;
+    const a = String(r.answer || '').toLowerCase();
     return r.severity === 'critical' && (
-      (r.questionType === 'yes_no' && r.answer === 'no') ||
+      (r.questionType === 'yes_no' && a === 'no') ||
       (r.questionType !== 'yes_no' && r.score < 6)
     );
   };
-  const isPassed = (r: any) =>
-    r.answer === 'yes' || (r.questionType !== 'yes_no' && (r.score ?? 0) >= 7);
-  const isFailed = (r: any) =>
-    r.answer === 'no' || (r.questionType !== 'yes_no' && r.score !== null && r.score !== undefined && (r.score ?? 0) < 7);
+  const isPassed = (r: any) => {
+    const a = String(r.answer || '').toLowerCase();
+    return a === 'yes' || (r.questionType !== 'yes_no' && (r.score ?? 0) >= 7);
+  };
+  const isFailed = (r: any) => {
+    const a = String(r.answer || '').toLowerCase();
+    return a === 'no' || (r.questionType !== 'yes_no' && r.score !== null && r.score !== undefined && (r.score ?? 0) < 7);
+  };
 
   const orderedFindings = [
     ...sortedResponses.filter(isCritFail),
@@ -395,8 +406,9 @@ export default function AuditReportDetailPage() {
             <div className="divide-y divide-border/40">
               {filteredFindings.map((resp) => {
                 const isCrit = isCritFail(resp);
-                const isYes = resp.answer === 'yes';
-                const isNo = resp.answer === 'no';
+                const a = String(resp.answer || '').toLowerCase();
+                const isYes = a === 'yes';
+                const isNo = a === 'no';
                 const isRating = resp.questionType !== 'yes_no';
                 const passed = isPassed(resp);
                 const unanswered = !isYes && !isNo && !isRating;

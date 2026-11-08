@@ -204,9 +204,21 @@ export default function AuditorDashboardPage() {
           ) : (
             <div className="flex flex-col gap-3">
               {filteredAudits.map((a) => {
-                const isFuture = a.scheduledDate?.toDate() > new Date();
-                const deadline = a.deadline?.toDate();
-                const isOverdue = deadline && deadline < new Date();
+                const parseDate = (d: any): Date | null => {
+                  if (!d) return null;
+                  if (typeof d.toDate === 'function') {
+                    const res = d.toDate();
+                    return isNaN(res.getTime()) ? null : res;
+                  }
+                  if (d instanceof Date) return isNaN(d.getTime()) ? null : d;
+                  const res = new Date(d);
+                  return isNaN(res.getTime()) ? null : res;
+                };
+
+                const scheduledDate = parseDate(a.scheduledDate);
+                const deadline = parseDate(a.deadline);
+                const isFuture = scheduledDate ? scheduledDate > new Date() : false;
+                const isOverdue = deadline ? deadline < new Date() : false;
 
                 return (
                   <Card key={a.id} className="standard-card border-border/40 hover:border-primary/20 hover:shadow-md transition-all duration-300 group overflow-hidden">
@@ -224,13 +236,13 @@ export default function AuditorDashboardPage() {
 
                       {/* Middle: Conditional Dates */}
                       <div className="flex items-center gap-8 md:gap-12 shrink-0 border-t md:border-t-0 pt-3 md:pt-0">
-                        {isFuture ? (
+                        {isFuture && scheduledDate ? (
                           <div className="flex flex-col gap-0.5 md:items-end">
                             <span className="text-[12px] font-medium text-heading tabular-nums">
-                              {format(a.scheduledDate?.toDate(), 'MMM d, yyyy')}
+                              {format(scheduledDate, 'MMM d, yyyy')}
                             </span>
                           </div>
-                        ) : (
+                        ) : deadline ? (
                           <div className="flex flex-col gap-0.5 md:items-end">
                             <span className={cn("text-[10px] font-medium tracking-tight", isOverdue ? "text-destructive" : "text-muted-text/50")}>
                               Deadline
@@ -242,7 +254,7 @@ export default function AuditorDashboardPage() {
                               {format(deadline, 'MMM d, yyyy')}
                             </span>
                           </div>
-                        )}
+                        ) : null}
                       </div>
 
                       {/* Right: Actions */}

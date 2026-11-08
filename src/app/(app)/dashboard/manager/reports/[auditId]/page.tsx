@@ -37,7 +37,7 @@ import { exportElementToPDF, buildAuditPDFFilename } from '@/lib/pdf-export';
 import { useAuthSync } from '@/components/AuthProvider';
 
 export default function ManagerReportDetailPage() {
-  const { isSynced } = useAuthSync();
+  const { isSynced, plan } = useAuthSync();
   const { auditId } = useParams();
   const [audit, setAudit] = useState<any>(null);
   const [responses, setResponses] = useState<any[]>([]);
@@ -61,15 +61,18 @@ export default function ManagerReportDetailPage() {
           const responsesData = responsesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
           if (auditData.scoringVersion !== SCORING_VERSION) {
-            const input: ScoreInputQuestion[] = responsesData.map((r: any) => ({
-              questionId: r.questionId,
-              questionText: r.questionText,
-              questionType: r.questionType as QuestionType,
-              severity: (r.severity || 'medium') as Severity,
-              answer: r.questionType === 'yes_no'
-                ? (r.answer === 'yes' ? 'Yes' : r.answer === 'no' ? 'No' : null)
-                : (r.score ?? null)
-            }));
+            const input: ScoreInputQuestion[] = responsesData.map((r: any) => {
+              const a = String(r.answer || '').toLowerCase();
+              return {
+                questionId: r.questionId,
+                questionText: r.questionText,
+                questionType: r.questionType as QuestionType,
+                severity: (r.severity || 'medium') as Severity,
+                answer: r.questionType === 'yes_no'
+                  ? (a === 'yes' ? 'Yes' : a === 'no' ? 'No' : null)
+                  : (r.score ?? null)
+              };
+            });
             const reScore = calculateAuditScore(input);
             auditData.finalScore = reScore.finalScore;
             auditData.scorePercentage = reScore.finalScore;
@@ -97,7 +100,9 @@ export default function ManagerReportDetailPage() {
     setIsExporting(true);
     try {
       const filename = buildAuditPDFFilename(audit.locationName, audit.templateTitle);
-      await exportElementToPDF(reportRef.current, filename);
+      await exportElementToPDF(reportRef.current, filename, {
+        isFreePlan: !plan || plan.toLowerCase() === 'free',
+      });
     } catch (error: any) {
       console.error('PDF export failed:', error);
       alert('Failed to generate PDF: ' + (error?.message || error));
@@ -131,8 +136,8 @@ export default function ManagerReportDetailPage() {
   const trackColor = score >= 90 ? 'bg-success' : score >= 70 ? 'bg-primary' : 'bg-destructive';
 
   const sortedResponses = [...responses].sort((a, b) => (a.order || 0) - (b.order || 0));
-  const passedCount = sortedResponses.filter(r => r.answer === 'yes' || (r.questionType === 'rating' && (r.score ?? 0) >= 7)).length;
-  const failedCount = sortedResponses.filter(r => r.answer === 'no' || (r.questionType === 'rating' && (r.score ?? 0) < 7)).length;
+  const passedCount = sortedResponses.filter(r => String(r.answer || '').toLowerCase() === 'yes' || (r.questionType === 'rating' && (r.score ?? 0) >= 7)).length;
+  const failedCount = sortedResponses.filter(r => String(r.answer || '').toLowerCase() === 'no' || (r.questionType === 'rating' && (r.score ?? 0) < 7)).length;
 
   return (
     <DashboardShell role="manager">
@@ -266,11 +271,11 @@ export default function ManagerReportDetailPage() {
                 const isCriticalFail = traceItem
                   ? traceItem.isCriticalFailure
                   : (resp.severity === 'critical' && (
-                    (resp.questionType === 'yes_no' && resp.answer === 'no') ||
+                    (resp.questionType === 'yes_no' && String(resp.answer || '').toLowerCase() === 'no') ||
                     (resp.questionType === 'rating' && resp.score < 6)
                   ));
-                const isYes = resp.answer === 'yes';
-                const isNo = resp.answer === 'no';
+                const isYes = String(resp.answer || '').toLowerCase() === 'yes';
+                const isNo = String(resp.answer || '').toLowerCase() === 'no';
                 const pts = resp.questionType === 'yes_no' ? (isYes ? 10 : 0) : (resp.score ?? 0);
 
                 return (

@@ -1,12 +1,44 @@
 import { Resend } from 'resend';
 
-const resendApiKey = process.env.RESEND_API_KEY;
+let _resendInstance: Resend | null = null;
 
-if (!resendApiKey) {
-  console.warn('[Resend] Warning: RESEND_API_KEY is not defined in environment variables.');
+/**
+ * Returns the Resend singleton client, or null if RESEND_API_KEY is not defined.
+ * Lazily initialized to prevent Next.js build-time crashes during module evaluation.
+ */
+export function getResendClient(): Resend | null {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+  if (!_resendInstance) {
+    _resendInstance = new Resend(apiKey);
+  }
+  return _resendInstance;
 }
 
-export const resend = new Resend(resendApiKey);
+/**
+ * Resend proxy that delegates to getResendClient() at runtime,
+ * safely avoiding module-evaluation instantiation errors during build time.
+ */
+export const resend = new Proxy({} as Resend, {
+  get(_target, prop) {
+    const client = getResendClient();
+    if (!client) {
+      console.warn('[Resend] Warning: RESEND_API_KEY is not defined in environment variables.');
+      if (prop === 'emails') {
+        return {
+          send: async () => ({
+            data: null,
+            error: new Error('RESEND_API_KEY is not configured in environment variables.')
+          })
+        };
+      }
+      return undefined;
+    }
+    return (client as any)[prop];
+  }
+});
 
 export const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Audiment <onboarding@resend.dev>';
 export const FOUNDER_ALERT_EMAIL = process.env.FOUNDER_ALERT_EMAIL || 'hello@audiment.in';
@@ -23,6 +55,17 @@ export async function sendVerificationOtpEmail({
   fullName: string;
   otpCode: string;
 }) {
+  const client = getResendClient();
+  if (!client) {
+    console.warn('[Resend] Skipping email delivery: RESEND_API_KEY is not configured in environment variables.');
+    return {
+      data: null,
+      error: {
+        message: 'Email delivery service is temporarily unconfigured (missing RESEND_API_KEY).',
+      }
+    };
+  }
+
   const firstName = fullName.split(' ')[0] || 'there';
 
   const html = `
@@ -92,7 +135,7 @@ export async function sendVerificationOtpEmail({
 </html>
   `.trim();
 
-  return await resend.emails.send({
+  return await client.emails.send({
     from: RESEND_FROM_EMAIL,
     to: [to],
     subject: `${otpCode} is your Audiment verification code`,
@@ -122,6 +165,12 @@ export async function sendFounderSignupAlertEmail({
   freeAccountCount: number;
   maxCap: number;
 }) {
+  const client = getResendClient();
+  if (!client) {
+    console.warn('[Resend] Skipping founder alert: RESEND_API_KEY is not configured in environment variables.');
+    return null;
+  }
+
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -150,7 +199,7 @@ export async function sendFounderSignupAlertEmail({
   `.trim();
 
   try {
-    return await resend.emails.send({
+    return await client.emails.send({
       from: RESEND_FROM_EMAIL,
       to: [FOUNDER_ALERT_EMAIL],
       subject: `🚨 New Free Workspace: ${companyName} (${fullName}) [${freeAccountCount}/${maxCap}]`,

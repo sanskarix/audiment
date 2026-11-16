@@ -69,7 +69,7 @@ export default function CompareChecklistApps() {
         },
         {
           area: "Standardized Operational Frameworks",
-          audiment: "Pre-loaded with verified industry templates (such as FSSAI food hygiene, HACCP standards, QSR brand compliance, and retail merchandising checklists) ready for instant multi-store deployment.",
+          audiment: "Pre-loaded with verified industry templates (such as HACCP food safety, FDA FSMA, and FSSAI standards, QSR brand compliance, and retail merchandising checklists) ready for instant multi-store deployment.",
           competitor: "Requires building blank questionnaires from scratch, manually configuring question types, and maintaining version control across changing operating procedures."
         },
         {

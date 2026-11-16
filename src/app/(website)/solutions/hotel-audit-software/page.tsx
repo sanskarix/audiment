@@ -19,7 +19,7 @@ export default function HotelAuditSoftware() {
         "operatingSystem": "Web, iOS, Android",
         "url": "https://audiment.in/solutions/hotel-audit-software",
         "description": "Proof-based audit management software for hotels and hospitality groups. Housekeeping, F&B, maintenance, and safety audits with corrective action tracking across every property.",
-        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR", "description": "Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything" },
         "provider": { "@type": "Organization", "name": "Audiment", "url": "https://audiment.in" }
       }) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({

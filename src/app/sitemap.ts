@@ -90,7 +90,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: 'https://audiment.in/improving-accountability', changeFrequency: 'monthly', priority: 0.8 },
     // Commercial / landing pages
     { url: 'https://audiment.in/multi-location-audit-software', changeFrequency: 'monthly', priority: 0.9 },
-    { url: 'https://audiment.in/fssai-audit-software', changeFrequency: 'monthly', priority: 0.9 },
+    { url: 'https://audiment.in/haccp-audit-software', changeFrequency: 'monthly', priority: 0.9 },
+    { url: 'https://audiment.in/fda-audit-software', changeFrequency: 'monthly', priority: 0.9 },
+    { url: 'https://audiment.in/fssai-audit-software', changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://audiment.in/healthcare-audit-software', changeFrequency: 'monthly', priority: 0.8 },
     // Legal (indexed but low priority)
     { url: 'https://audiment.in/privacy-policy', changeFrequency: 'yearly', priority: 0.2 },

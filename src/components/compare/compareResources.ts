@@ -100,7 +100,7 @@ export const COMPARE_RESOURCE_MAP: CompareResourceMap = {
         title: 'Food Safety Compliance Software for Restaurants: What Chains Need',
         href: '/blog/food-safety-compliance-software-restaurants',
         category: 'Food Safety',
-        description: 'FSSAI Schedule 4 hygiene requirements, temperature probe tracking, and manager accountability.',
+        description: 'HACCP & food safety hygiene requirements, temperature probe tracking, and manager accountability.',
       },
     ],
     relatedComparisons: [
@@ -122,7 +122,7 @@ export const COMPARE_RESOURCE_MAP: CompareResourceMap = {
         title: 'Best Food Safety Audit Software in 2026: Multi-Outlet Review',
         href: '/blog/best-food-safety-audit-software',
         category: 'Food Safety',
-        description: 'In-depth review of food safety platforms with FSSAI, HACCP, and temperature monitoring.',
+        description: 'In-depth review of food safety platforms with HACCP, FDA, and temperature monitoring.',
       },
       {
         title: 'Restaurant Operations Checklist for Multi-Location Chains',

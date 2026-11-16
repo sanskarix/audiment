@@ -72,7 +72,7 @@ const pricingStructuredData = {
           name: 'Audiment Free Plan',
           category: 'Free Tier',
           price: '0',
-          priceCurrency: 'INR',
+          priceCurrency: 'USD',
           priceValidUntil: '2028-12-31',
           availability: 'https://schema.org/InStock',
           url: 'https://audiment.in/pricing',
@@ -93,12 +93,12 @@ const pricingStructuredData = {
           '@id': 'https://audiment.in/pricing/#offer-pro',
           name: 'Audiment Pro Plan',
           category: 'Paid Tier / Enterprise',
-          priceCurrency: 'INR',
+          priceCurrency: 'USD',
           price: 'Contact for Quote',
           availability: 'https://schema.org/InStock',
           url: 'https://audiment.in/pricing',
           description:
-            'Unlimited paid tier for multi-location businesses. Flat per-location monthly pricing with volume tiers. Includes unlimited locations, unlimited auditors (zero per-seat charges), unlimited monthly audits, automated 48-hour SLA CAPAs, multi-branch rollups, trend detection, surprise audits, FSSAI blueprints, branded PDF reports, and RBAC.',
+            'Unlimited paid tier for multi-location businesses. Flat per-location monthly pricing with volume tiers. Includes unlimited locations, unlimited auditors (zero per-seat charges), unlimited monthly audits, automated 48-hour SLA CAPAs, multi-branch rollups, trend detection, surprise audits, regulatory compliance blueprints (HACCP, FDA, FSSAI), branded PDF reports, and RBAC.',
           priceSpecification: {
             '@type': 'UnitPriceSpecification',
             priceType: 'https://schema.org/Subscription',

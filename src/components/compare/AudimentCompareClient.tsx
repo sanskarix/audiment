@@ -213,7 +213,7 @@ const comparisonsData: ComparisonItem[] = [
     title: 'Audiment vs Zenput (Crunchtime)',
     categoryKey: 'frontline',
     categoryLabel: 'Restaurant Ops',
-    description: 'Deployment speed, FSSAI compliance support, and execution verification for APAC and US operations.',
+    description: 'Deployment speed, regulatory food safety support (HACCP, FDA, FSSAI), and execution verification for multi-unit brands.',
     href: '/compare/audiment-vs-zenput',
     iconKey: 'zap',
   },
@@ -798,7 +798,7 @@ export function AudimentCompareClient() {
                   sector: 'Food Service',
                   title: 'Multi-Unit Restaurants & QSRs',
                   href: '/blog/best-restaurant-audit-software-multi-unit',
-                  desc: 'FSSAI hygiene templates, temperature probe tracking, and live-camera anti-cheating.',
+                  desc: 'HACCP & food safety templates, temperature probe tracking, and live-camera anti-cheating.',
                 },
                 {
                   sector: 'Retail Chains',

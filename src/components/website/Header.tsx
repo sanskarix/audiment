@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { CalServiceType } from '@/lib/cal';
@@ -16,11 +16,42 @@ export const Header: React.FC<HeaderProps> = ({
   ctaId = 'aud-nav-cta',
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   const closeMenu = () => setMobileMenuOpen(false);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+
+    const handleResize = () => {
+      if (window.innerWidth > 860) setMobileMenuOpen(false);
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [mobileMenuOpen]);
+
   return (
-    <header className={mobileMenuOpen ? 'open' : ''}>
+    <header ref={headerRef} className={mobileMenuOpen ? 'open' : ''}>
       <div className="header-inner">
         <Link className="brand" href="/" onClick={closeMenu}>
           <Image src="/logos/audiment.svg" alt="Audiment" className="brand-logo-img" width={120} height={28} priority />
@@ -42,11 +73,11 @@ export const Header: React.FC<HeaderProps> = ({
             Solutions
           </Link>
           <Link
-            href="/use-cases"
-            className={activeNav === 'use-cases' ? 'active' : ''}
+            href="/pricing"
+            className={activeNav === 'pricing' ? 'active' : ''}
             onClick={closeMenu}
           >
-            Use cases
+            Pricing
           </Link>
           <Link
             href="/about"
@@ -54,27 +85,6 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={closeMenu}
           >
             About
-          </Link>
-          <Link
-            href="/blog"
-            className={activeNav === 'blog' ? 'active' : ''}
-            onClick={closeMenu}
-          >
-            Blog
-          </Link>
-          <Link
-            href="/docs"
-            className={activeNav === 'docs' ? 'active' : ''}
-            onClick={closeMenu}
-          >
-            Docs
-          </Link>
-          <Link
-            href="/pricing"
-            className={activeNav === 'pricing' ? 'active' : ''}
-            onClick={closeMenu}
-          >
-            Pricing
           </Link>
           <Link
             href="/login"
@@ -120,9 +130,21 @@ export const Header: React.FC<HeaderProps> = ({
             type="button"
             className="menu"
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
             onClick={() => setMobileMenuOpen((prev) => !prev)}
           >
-            {mobileMenuOpen ? '✕' : '☰'}
+            {mobileMenuOpen ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+              </svg>
+            )}
           </button>
         </div>
       </div>

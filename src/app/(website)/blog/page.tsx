@@ -6,12 +6,12 @@ import { AudimentBlogHubClient } from '@/components/blog/AudimentBlogHubClient';
 export const metadata = {
   title: 'Audiment blog | Audit insights for operations leaders',
   description:
-    'Operator-focused field guides on multi-location audit management, operational consistency, FSSAI compliance, corrective actions, and proof-based audits.',
+    'Operator-focused field guides on multi-location audit management, operational consistency, food safety compliance (HACCP, FDA, FSSAI), corrective actions, and proof-based audits.',
   alternates: { canonical: 'https://audiment.in/blog' },
   openGraph: {
     title: 'Audiment blog | Audit insights for operations leaders',
     description:
-      'Operator-focused field guides on multi-location audit management, operational consistency, FSSAI compliance, corrective actions, and proof-based audits.',
+      'Operator-focused field guides on multi-location audit management, operational consistency, food safety compliance (HACCP, FDA, FSSAI), corrective actions, and proof-based audits.',
     url: 'https://audiment.in/blog',
     type: 'website',
     images: [{ url: 'https://audiment.in/opengraph-image', width: 1200, height: 630 }],
@@ -20,7 +20,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Audiment blog | Audit insights for operations leaders',
     description:
-      'Operator-focused field guides on multi-location audit management, operational consistency, FSSAI compliance, corrective actions, and proof-based audits.',
+      'Operator-focused field guides on multi-location audit management, operational consistency, food safety compliance (HACCP, FDA, FSSAI), corrective actions, and proof-based audits.',
   },
   keywords: ['audit software', 'restaurant compliance', 'field audits', 'multi-location operations'],
 };

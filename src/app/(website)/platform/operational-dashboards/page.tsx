@@ -16,7 +16,7 @@ const softwareSchema = {
   operatingSystem: 'Web, iOS, Android',
   url: 'https://audiment.in/platform/operational-dashboards',
   description: 'Real-time audit dashboards for multi-location operations. Track audit scores, overdue corrective actions, and recurring failures across every branch and region from a single view.',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Contact for pricing' },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Contact for pricing' },
   provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' },
 }
 

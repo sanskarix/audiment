@@ -51,9 +51,9 @@ const features = [
   {
     icon: FileCheck2,
     category: "Compliance",
-    title: "FSSAI-ready compliance templates",
+    title: "Regulatory compliance templates",
     heading: "Pass your next inspection on the first attempt.",
-    description: "Pre-built FSSAI hygiene and safety audit templates load with one click. Purpose-built for food businesses under Indian compliance standards.",
+    description: "Pre-built food safety and operational templates load with one click—compliant with HACCP, FDA FSMA, and regional standards like FSSAI.",
     imageUrl: "/images/compliance.jpeg",
   },
   {

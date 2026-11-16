@@ -69,7 +69,7 @@ export default function CompareGoAudits() {
         },
         {
           area: "Industry Compliance Templates & Regional Frameworks",
-          audiment: "Pre-built templates for industry standards (like FSSAI Schedule 4, HACCP food hygiene, and visual merchandising) can be loaded and deployed immediately across all locations, saving weeks of manual compliance mapping.",
+          audiment: "Pre-built templates for industry standards (like HACCP food safety, FDA FSMA, and FSSAI Schedule 4, and visual merchandising) can be loaded and deployed immediately across all locations, saving weeks of manual compliance mapping.",
           competitor: "Templates often need to be built or heavily customized from scratch, meaning operations teams spend substantial time doing compliance mapping before rolling out."
         },
         {

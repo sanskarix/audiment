@@ -73,6 +73,24 @@ const terms: GlossaryTerm[] = [
     ]
   },
   {
+    slug: 'haccp-audit',
+    term: 'HACCP Audit',
+    acronym: 'HACCP',
+    category: 'Food Safety',
+    shortDefinition: 'Systematic preventive inspection process addressing biological, chemical, and physical hazards in food production and service environments.',
+    fullExplanation: 'Hazard Analysis and Critical Control Point (HACCP) inspections establish critical limits across food preparation, holding, cooling, and sanitation. Digital HACCP audits enforce live photo evidence of probe readings and auto-escalate temperature breaches into timed corrective action workflows.',
+    keyTakeaways: [
+      'Global gold standard for food safety across the US, EU, UK, and worldwide.',
+      'Mandates photo-verified monitoring of Critical Control Points (CCPs).',
+      'Integrates seamlessly with local regulatory mandates like FDA FSMA and FSSAI.'
+    ],
+    relatedLinks: [
+      { title: 'HACCP Audit Software Solution', href: '/haccp-audit-software' },
+      { title: 'FDA Food Safety Audit Software', href: '/fda-audit-software' },
+      { title: 'Food Safety Audit Software', href: '/solutions/food-safety-audit-software' }
+    ]
+  },
+  {
     slug: 'fssai-compliance-audit',
     term: 'FSSAI Compliance Audit',
     acronym: 'FSSAI',
@@ -80,7 +98,7 @@ const terms: GlossaryTerm[] = [
     shortDefinition: 'Standardized food safety and hygiene inspection adhering to the Food Safety and Standards Authority of India mandates.',
     fullExplanation: 'FSSAI compliance requires commercial food operations, Quick Service Restaurants (QSRs), and hotels to maintain strict hygiene records, temperature logs, pest control documentation, and staff health certificates. Digital FSSAI audits store tamper-proof historical logs for regulatory inspections.',
     keyTakeaways: [
-      'Mandatory pre-built checklists for Indian food service operators.',
+      'Pre-built statutory checklists for regional food service and QSR operators.',
       'Stores photo evidence of temperature logs and sanitation stations.',
       'Prevents license revocation through continuous compliance tracking.'
     ],
@@ -136,7 +154,7 @@ const terms: GlossaryTerm[] = [
       'Provides systematic evidence for health inspector reviews.'
     ],
     relatedLinks: [
-      { title: 'Food Safety & FSSAI Solutions', href: '/solutions/food-safety-audit-software' },
+      { title: 'Food Safety & Compliance Solutions', href: '/solutions/food-safety-audit-software' },
       { title: 'Staying Ahead of Compliance', href: '/staying-ahead-of-compliance' }
     ]
   }
@@ -221,7 +239,7 @@ export function AudimentGlossaryClient() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', marginBottom: '2.5rem' }}>
               <input
                 type="text"
-                placeholder="Search operational terms (e.g. FSSAI, Operational Drift, CAPA)..."
+                placeholder="Search operational terms (e.g. HACCP, CAPA, Operational Drift)..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 style={{

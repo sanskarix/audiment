@@ -183,8 +183,8 @@ const solutionsData = [
     num: '01',
     category: 'RESTAURANTS & KITCHENS',
     title: 'Restaurant Audit Software',
-    description: 'Run hygiene, safety, and brand standard audits across every location with FSSAI-ready templates. Area managers see which kitchens are passing and which need attention.',
-    tags: ['FSSAI-ready templates', 'Kitchen hygiene', 'Area manager view'],
+    description: 'Run hygiene, safety, and brand standard audits across every location with pre-built templates (HACCP, FDA, FSSAI). Area managers see which kitchens are passing and which need attention.',
+    tags: ['Food safety templates', 'Kitchen hygiene', 'Area manager view'],
     href: '/solutions/restaurant-audit-software',
     iconKey: 'utensils',
     isWide: false,
@@ -201,10 +201,10 @@ const solutionsData = [
   },
   {
     num: '03',
-    category: 'COMPLIANCE & FSSAI',
+    category: 'FOOD SAFETY & COMPLIANCE',
     title: 'Food Safety Audit Software',
-    description: 'FSSAI-mapped audit templates with mandatory photo evidence and automatic non-conformance alerts. Build an inspection-ready compliance record before the inspector arrives.',
-    tags: ['FSSAI-mapped', 'Mandatory photos', 'Non-conformance alerts'],
+    description: 'HACCP, FDA, and regional audit templates with mandatory photo evidence and automatic non-conformance alerts. Build an inspection-ready compliance record before the inspector arrives.',
+    tags: ['HACCP & FDA ready', 'Mandatory photos', 'Non-conformance alerts'],
     href: '/solutions/food-safety-audit-software',
     iconKey: 'shieldCheck',
     isWide: false,
@@ -254,7 +254,7 @@ const solutionsData = [
 const highlights = [
   { label: 'Scale Ready', val: '10–500+ Locations' },
   { label: 'Offline Execution', val: 'Works 100% Offline' },
-  { label: 'FSSAI Mapped', val: 'Pre-built Blueprints' },
+  { label: 'Compliance Blueprints', val: 'HACCP, FDA, FSSAI' },
   { label: 'Verification', val: 'GPS & Photo Evidence' },
 ];
 

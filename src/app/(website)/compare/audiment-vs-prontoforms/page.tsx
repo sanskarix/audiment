@@ -29,7 +29,7 @@ export default function CompareProntoforms() {
       operationalDifferences={[
         {
           area: "Target Workflow: Retail/Food Operations vs Industrial Field Service",
-          audiment: "Optimized specifically for physical store audits, brand standards, food safety (FSSAI/HACCP), cleanliness, and frontline staff accountability across retail and restaurant chains.",
+          audiment: "Optimized specifically for physical store audits, brand standards, food safety (HACCP/FDA/FSSAI), cleanliness, and frontline staff accountability across retail and restaurant chains.",
           competitor: "Built for technical field engineers servicing industrial machinery, oil rigs, utility networks, and enterprise telecommunications equipment."
         },
         {

@@ -6,7 +6,7 @@ import AudimentLandingClient from "@/components/home/AudimentLandingClient";
 export const metadata: Metadata = {
   title: { absolute: 'Multi-Location Audit & Inspection Software | Audiment' },
   description: 'Run audits across every location with proof, tracking, and corrective actions. Audiment is audit management software built for multi-location businesses.',
-  keywords: ['audit and inspection software', 'multi-location audit software', 'proof-based audits', 'quality consistency', 'operational consistency', 'corrective action tracking', 'FSSAI audit software', 'field audit app India'],
+  keywords: ['audit and inspection software', 'multi-location audit software', 'proof-based audits', 'quality consistency', 'operational consistency', 'corrective action tracking', 'food safety audit software', 'field audit app'],
   alternates: { canonical: 'https://audiment.in' },
   openGraph: {
     title: 'Multi-Location Audit & Inspection Software | Audiment',
@@ -95,10 +95,10 @@ function StructuredData() {
           },
           {
             "@type": "Question",
-            "name": "Does Audiment support FSSAI compliance?",
+            "name": "Does Audiment support food safety regulations (FDA, HACCP, FSSAI)?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes. Load a pre-built FSSAI template and start auditing immediately. All records – photos, GPS data, timestamps, corrective actions – are stored for regulatory review."
+              "text": "Yes. Load pre-built compliance templates for international frameworks like HACCP and FDA FSMA, or regional standards like FSSAI. All records – photos, GPS data, timestamps, corrective actions – are stored for regulatory review."
             }
           },
           {

@@ -78,7 +78,6 @@ header {
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--line);
-  overflow: hidden;
 }
 
 header::before {
@@ -2568,9 +2567,14 @@ footer.site-footer {
     margin-left: 4px;
   }
 
+  header.open {
+    overflow: visible !important;
+    z-index: 1000 !important;
+  }
+
   header.open nav {
     position: absolute;
-    top: 59px;
+    top: 100%;
     right: -1px;
     left: -1px;
     display: flex !important;
@@ -2581,13 +2585,25 @@ footer.site-footer {
     border-bottom: 1px solid var(--line);
     border-left: 1px solid var(--line);
     border-right: 1px solid var(--line);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-    z-index: 100;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+    max-height: calc(100vh - 76px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   header.open nav a {
     font-size: 15px;
-    padding: 6px 0;
+    padding: 8px 0;
+    color: var(--ink);
+    font-weight: 500;
+    display: block;
+    width: 100%;
+  }
+
+  header.open nav a:hover,
+  header.open nav a.active {
+    color: var(--orange);
   }
 }
 
@@ -2628,8 +2644,9 @@ footer.site-footer {
   }
 
   header.open nav {
-    top: 53px;
+    top: 100%;
     padding: 16px 20px 20px;
+    max-height: calc(100vh - 60px);
   }
 
   .hero {

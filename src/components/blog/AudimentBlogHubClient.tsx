@@ -258,7 +258,7 @@ export function AudimentBlogHubClient({
   const allCategories = ['All topics', ...semanticCategories];
 
   const trendingTags = [
-    { label: 'FSSAI Compliance', query: 'FSSAI' },
+    { label: 'Food Safety & HACCP', query: 'Food Safety' },
     { label: 'SafetyCulture vs Audiment', query: 'SafetyCulture' },
     { label: 'CAPA Tracking', query: 'CAPA' },
     { label: 'Restaurant Checklists', query: 'Restaurant' },
@@ -443,15 +443,15 @@ export function AudimentBlogHubClient({
                 </Link>
 
                 <Link
-                  href="/blog/fssai-compliance-guide"
+                  href="/blog/best-food-safety-audit-software"
                   className="aud-blog-spotlight-card"
                 >
                   <div className="spotlight-icon">
                     <ShieldIcon />
                   </div>
-                  <h4>Food Safety &amp; FSSAI Compliance</h4>
+                  <h4>Food Safety &amp; Compliance</h4>
                   <p>
-                    Digital checklists, hygiene audits, temperature monitoring, and audit-readiness protocols for multi-outlet restaurants.
+                    Digital checklists, HACCP hygiene audits, temperature monitoring, and audit-readiness protocols for multi-outlet restaurants.
                   </p>
                   <span className="aud-blog-spotlight-link">
                     Explore Guide <ArrowRightIcon />

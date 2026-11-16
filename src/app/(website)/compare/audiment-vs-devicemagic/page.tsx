@@ -29,7 +29,7 @@ export default function CompareDevicemagic() {
       operationalDifferences={[
         {
           area: "Core Platform Purpose: Audits vs Field Forms",
-          audiment: "Built specifically for multi-location operational brand standards, food hygiene (HACCP/FSSAI), visual merchandising, and compliance audits across distributed stores.",
+          audiment: "Built specifically for multi-location operational brand standards, food hygiene (HACCP/FDA/FSSAI), visual merchandising, and compliance audits across distributed stores.",
           competitor: "Designed for general field data collection, dispatch tickets, and mobile work forms across construction, utilities, and field service teams."
         },
         {

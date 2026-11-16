@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   keywords: [
     'audit documentation',
     'multi-location audit software docs',
-    'FSSAI audit template',
+    'HACCP food safety audit templates',
     'CAPA tracking guide',
     'field inspection handbook',
     'Audiment user manual',

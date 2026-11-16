@@ -33,7 +33,7 @@ export default function FranchiseAuditSoftware() {
             url: 'https://audiment.in/solutions/franchise-audit-software',
             description:
               'Audit and compliance management software for franchise networks. Standardize brand operating blueprints, conduct geo-verified field inspections, and track corrective action remediation across franchisee units.',
-            offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything' },
+            offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything' },
             provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' }
           })
         }}

@@ -18,7 +18,7 @@ export default function CompareOnspring() {
       heroSubtext="Onspring is a no-code cloud platform for corporate GRC, internal audit planning, and vendor risk management. Audiment is an operational audit platform purpose-built for physical store walk-throughs, food safety, and brand standards across multi-location retail and hospitality networks."
       quickVerdict={{
         verdictSummary: "Onspring is a flexible no-code relational cloud platform designed for corporate compliance teams, risk managers, and internal auditors managing vendor risk, policy lifecycles, and internal audit schedules on desktop computers. Audiment is an operational accountability system engineered for store managers and regional supervisors conducting physical audits on the ground across 10 to 500+ restaurants, retail outlets, or franchise stores, enforcing live camera proof, GPS presence verification, and automated 48-hour CAPA SLAs.",
-        audimentBestFor: "Operations directors, COOs, franchise leaders, and store quality managers who need to inspect physical store locations, verify food safety (FSSAI/HACCP), enforce brand standards, and track 48-hour store CAPA tickets on employee smartphones.",
+        audimentBestFor: "Operations directors, COOs, franchise leaders, and store quality managers who need to inspect physical store locations, verify food safety (HACCP/FDA/FSSAI), enforce brand standards, and track 48-hour store CAPA tickets on employee smartphones.",
         competitorBestFor: "Corporate compliance officers and internal audit teams needing a highly customizable no-code relational database to manage third-party vendor assessments, corporate policy workflows, and audit project plans.",
       }}
       migrationReality={{

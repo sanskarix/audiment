@@ -156,7 +156,7 @@ export default function CompareTemplate({
     offers: {
       '@type': 'Offer',
       price: '0',
-      priceCurrency: 'INR',
+      priceCurrency: 'USD',
       description: 'Free tier for 1 location; Paid tier is custom flat pricing with unlimited everything',
     },
     isSimilarTo: {

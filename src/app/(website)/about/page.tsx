@@ -6,7 +6,7 @@ export const metadata = buildPageMeta({
   title: 'About Audiment | Audit Management Software for Multi-Location Businesses',
   description: 'Audiment is audit management software built for multi-location businesses. Learn about our mission, who we serve, and how proof-based audits help distributed teams maintain standards.',
   path: '/about',
-  keywords: ['about Audiment', 'audit management company', 'multi-location audit software', 'Asellus LLP', 'proof-based audit software India'],
+  keywords: ['about Audiment', 'audit management company', 'multi-location audit software', 'Asellus', 'proof-based audit software', 'operational consistency software'],
 });
 
 const aboutPageSchema = {

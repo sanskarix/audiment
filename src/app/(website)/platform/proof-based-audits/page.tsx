@@ -25,7 +25,7 @@ const softwareSchema = {
   url: 'https://audiment.in/platform/proof-based-audits',
   description:
     'Proof-based audit software requiring live photo evidence on critical checklist items. Eliminates trust-based self-reporting and verifies actual physical execution across multi-location operations.',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Contact for pricing' },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Contact for pricing' },
   provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' }
 }
 

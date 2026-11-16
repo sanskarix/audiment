@@ -16,7 +16,7 @@ const softwareSchema = {
   operatingSystem: 'Web, iOS, Android',
   url: 'https://audiment.in/fssai-audit-software',
   description: 'FSSAI audit software for multi-location food businesses in India. Proof-based food safety checks, corrective action tracking, and compliance dashboards that keep every outlet inspection-ready.',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Contact for pricing' },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Contact for pricing' },
   provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' },
 }
 
@@ -76,10 +76,10 @@ export default function Page() {
           },
         ]}
         relatedLinks={[
-          { tag: 'Topic', title: 'Staying Ahead of Compliance', href: '/staying-ahead-of-compliance', description: 'Proactive compliance model for multi-location teams.' },
+          { tag: 'Standards', title: 'HACCP Audit Software', href: '/haccp-audit-software', description: 'Global HACCP Critical Control Point compliance.' },
+          { tag: 'Standards', title: 'FDA Food Safety Audit Software', href: '/fda-audit-software', description: 'FSMA preventive controls and GMP compliance.' },
+          { tag: 'Solutions', title: 'Food Safety Audit Software', href: '/solutions/food-safety-audit-software', description: 'Multi-location food safety audit workflows.' },
           { tag: 'Platform', title: 'Corrective Actions', href: '/platform/corrective-actions', description: 'Ensure failed checks are closed on time.' },
-          { tag: 'Solutions', title: 'Restaurant Audit Software', href: '/solutions/restaurant-audit-software', description: 'Operational workflows for restaurant chains.' },
-          { tag: 'Blog', title: 'FSSAI Compliance Guide', href: '/blog/fssai-compliance-guide', description: 'How food businesses stay compliant across locations.' },
         ]}
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />

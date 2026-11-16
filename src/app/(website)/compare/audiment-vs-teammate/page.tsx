@@ -18,7 +18,7 @@ export default function CompareTeammate() {
       heroSubtext="TeamMate+ is an established corporate internal audit management system for financial institutions, government agencies, and global enterprises. Audiment is an operational audit platform purpose-built for physical store walk-throughs, food safety, and brand standards across multi-location retail and hospitality networks."
       quickVerdict={{
         verdictSummary: "TeamMate+ (by Wolters Kluwer) is the corporate standard for internal audit departments managing formal audit charters, working papers, risk assessments, and Board Audit Committee reporting in banking and Fortune 500 enterprises. Audiment is an operational accountability system engineered for store managers and regional supervisors conducting physical audits on the ground across 10 to 500+ restaurants, retail outlets, or franchise stores, enforcing live camera proof, GPS presence verification, and automated 48-hour CAPA SLAs.",
-        audimentBestFor: "Operations directors, COOs, franchise leaders, and store quality managers who need to inspect physical store locations, verify food safety (FSSAI/HACCP), enforce brand standards, and track 48-hour store CAPA tickets on employee smartphones.",
+        audimentBestFor: "Operations directors, COOs, franchise leaders, and store quality managers who need to inspect physical store locations, verify food safety (HACCP/FDA/FSSAI), enforce brand standards, and track 48-hour store CAPA tickets on employee smartphones.",
         competitorBestFor: "Chief Audit Executives (CAEs), corporate internal auditors, and financial risk managers in banking, government, and multinational corporations managing formal corporate internal audit working papers.",
       }}
       migrationReality={{

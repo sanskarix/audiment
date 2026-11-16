@@ -26,7 +26,7 @@ const softwareSchema = {
   url: 'https://audiment.in/platform/issue-tracking',
   description:
     'Operational issue tracking software for multi-location businesses. Surfaces audit findings by severity, routes critical checklist failures into 48-hour corrective action tasks with photo proof, and identifies recurring low-score trends across branch networks.',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Contact for pricing' },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Contact for pricing' },
   provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' }
 }
 

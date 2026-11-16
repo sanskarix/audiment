@@ -18,7 +18,11 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { fullName, companyName, email, phone, industry } = body;
+    const { fullName, companyName, email, phone, industry, country, countries } = body;
+    const selectedCountries = Array.isArray(countries) && countries.length > 0
+      ? countries
+      : country ? [country] : ['IN'];
+    const primaryCountry = typeof country === 'string' && country ? country : selectedCountries[0] || 'IN';
 
     // ── 1. Validate required inputs ──────────────────────────────────────────
     if (!fullName || typeof fullName !== 'string' || fullName.trim().length < 2) {
@@ -102,6 +106,8 @@ export async function POST(req: Request) {
       email: normalizedEmail,
       phone: typeof phone === 'string' ? phone.trim() : '',
       industry: typeof industry === 'string' ? industry.trim() : '',
+      country: primaryCountry,
+      countries: selectedCountries,
       otpCode,
       expiresAt,
       attempts: 0,

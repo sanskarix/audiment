@@ -29,7 +29,7 @@ export default function CompareFulcrum() {
       operationalDifferences={[
         {
           area: "Core Platform Focus: Store Operations vs Geospatial GIS Mapping",
-          audiment: "Built specifically for multi-location retail and restaurant brand standards, food hygiene (HACCP/FSSAI), cleanliness, customer experience, and operational drift tracking.",
+          audiment: "Built specifically for multi-location retail and restaurant brand standards, food hygiene (HACCP/FDA/FSSAI), cleanliness, customer experience, and operational drift tracking.",
           competitor: "Built for outdoor geospatial asset mapping, environmental surveys, utility pole inspections, and pipeline spatial data collection with Esri/GIS integration."
         },
         {

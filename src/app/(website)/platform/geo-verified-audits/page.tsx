@@ -25,7 +25,7 @@ const softwareSchema = {
   url: 'https://audiment.in/platform/geo-verified-audits',
   description:
     'Geo-verified audit software for multi-location businesses. Captures device GPS coordinates and server-authoritative timestamps on final audit submission, ensuring verifiable field activity across all locations.',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Contact for pricing' },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Contact for pricing' },
   provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' }
 }
 

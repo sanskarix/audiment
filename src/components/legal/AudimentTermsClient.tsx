@@ -289,11 +289,12 @@ export function AudimentTermsClient() {
                 <h2>Purchases and Payment</h2>
                 <p>We accept the following forms of payment:</p>
                 <ul>
-                  <li>Bank Transfer (NEFT/IMPS)</li>
-                  <li>UPI</li>
+                  <li>Major Credit and Debit Cards (Visa, MasterCard, American Express)</li>
+                  <li>Wire Transfer and Bank Transfer (ACH / SEPA / SWIFT / NEFT)</li>
+                  <li>Enterprise Purchase Orders and Approved Invoicing</li>
                 </ul>
                 <p>
-                  All payments must be made in Indian Rupees (INR). You agree to provide accurate and complete purchase and
+                  Payments are billed in US Dollars (USD) or the agreed contractual currency specified on your invoice or order form. You agree to provide accurate and complete purchase and
                   account information. We reserve the right to refuse any order placed through the Services.
                 </p>
               </section>

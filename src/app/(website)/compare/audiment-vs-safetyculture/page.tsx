@@ -69,7 +69,7 @@ export default function CompareSafetyCulture() {
         },
         {
           area: "Regulatory & Regional Compliance Readiness",
-          audiment: "Pre-loaded with regional and vertical compliance frameworks (including FSSAI Schedule 4, HACCP food hygiene protocols, and QSR operating benchmarks), enabling immediate rollout without weeks of template authoring.",
+          audiment: "Pre-loaded with regional and vertical compliance frameworks (including HACCP food safety, FDA FSMA, and FSSAI Schedule 4 protocols, and QSR operating benchmarks), enabling immediate rollout without weeks of template authoring.",
           competitor: "Extensive global public template library, but regional food safety standards and specialized commercial QSR audit logic typically need custom manual authoring and localization."
         },
         {

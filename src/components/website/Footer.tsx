@@ -97,7 +97,7 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
                 <li><Link href="/solutions/franchise-audit-software">Franchise Consistency</Link></li>
                 <li><Link href="/solutions/hotel-audit-software">Hotel &amp; Hospitality</Link></li>
                 <li><Link href="/solutions/qsr-audit-software">QSR &amp; Food Chains</Link></li>
-                <li><Link href="/solutions/food-safety-audit-software">Food Safety &amp; FSSAI</Link></li>
+                <li><Link href="/solutions/food-safety-audit-software">Food Safety &amp; Compliance</Link></li>
                 <li><Link href="/solutions/manufacturing-audit-software">Manufacturing Audit</Link></li>
                 <li><Link href="/solutions">View All Solutions</Link></li>
               </ul>

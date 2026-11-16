@@ -16,7 +16,7 @@ const softwareSchema = {
   operatingSystem: 'Web, iOS, Android',
   url: 'https://audiment.in/healthcare-audit-software',
   description: 'Audit and inspection software for multi-location healthcare businesses. Standardize quality checks across facilities with proof-based audits, corrective action tracking, and compliance dashboards.',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Contact for pricing' },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Contact for pricing' },
   provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' },
 }
 

@@ -68,9 +68,9 @@ export default function CompareMeazureUp() {
           competitor: "Quote-based enterprise pricing often scaled by modules (DailyCheck vs AuditApp), location bands, or user seats, making company-wide frontline rollout financially unpredictable."
         },
         {
-          area: "Regional Compliance Readiness (FSSAI, HACCP, APAC)",
-          audiment: "Pre-configured with international and regional compliance standards, including FSSAI Schedule 4, QSR hygiene protocols, and HACCP principles, enabling immediate deployment across global and APAC operations.",
-          competitor: "Heavily configured for US and Canadian regulatory environments. Adapting to Indian or Southeast Asian regional compliance mandates requires custom manual checklist authoring."
+          area: "Global & Regional Compliance Readiness (HACCP, FDA, FSSAI)",
+          audiment: "Pre-configured with international and regional compliance standards, including HACCP, FDA FSMA, and regional frameworks like FSSAI, enabling immediate deployment across global and multi-country branch operations.",
+          competitor: "Primarily configured for North American enterprise chains. Adapting to diverse international or regional regulatory mandates requires manual checklist authoring from scratch."
         },
         {
           area: "Device Deployment & Frontline Turnover Resilience",

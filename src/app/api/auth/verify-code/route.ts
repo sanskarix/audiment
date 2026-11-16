@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { adminAuth, adminDb } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { sendFounderSignupAlertEmail } from '@/lib/resend';
+import { getInitialTemplatesForOrg } from '@/lib/compliance-templates';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -146,12 +147,19 @@ export async function POST(req: Request) {
     // ── 4. Atomic batch writes for tenant provisioning ───────────────────────
     const batch = adminDb.batch();
 
+    const userCountry = pendingData.country || 'IN';
+    const userCountries = Array.isArray(pendingData.countries) && pendingData.countries.length > 0
+      ? pendingData.countries
+      : [userCountry];
+
     // A. Organization document
     batch.set(orgRef, {
       id: orgId,
       name: pendingData.companyName,
       industry: pendingData.industry || '',
       phone: pendingData.phone || '',
+      country: userCountry,
+      countries: userCountries,
       plan: 'free',
       planVersion: '2026.1',
       ownerUid: uid,
@@ -176,6 +184,8 @@ export async function POST(req: Request) {
       name: pendingData.fullName,
       phone: pendingData.phone || '',
       industry: pendingData.industry || '',
+      country: userCountry,
+      countries: userCountries,
       role: 'ADMIN',
       organizationId: orgId,
       isActive: true,
@@ -204,7 +214,45 @@ export async function POST(req: Request) {
       createdAt: FieldValue.serverTimestamp(),
     });
 
-    // E. Update global account counter
+    // E. Provision ready-to-run industry template and country compliance standards
+    try {
+      const initialTemplates = getInitialTemplatesForOrg(pendingData.industry, userCountries);
+      initialTemplates.forEach((template) => {
+        const tRef = adminDb.collection('auditTemplates').doc();
+        batch.set(tRef, {
+          organizationId: orgId,
+          title: template.title,
+          category: template.category,
+          description: template.description,
+          country: template.country,
+          countryName: template.countryName,
+          authority: template.authority,
+          isCountryDefault: Boolean(template.isCountryDefault),
+          isIndustryDefault: Boolean(template.isIndustryDefault),
+          industry: template.industry || '',
+          industryName: template.industryName || '',
+          isActive: true,
+          createdBy: uid,
+          createdAt: FieldValue.serverTimestamp(),
+        });
+
+        template.questions.forEach((q) => {
+          const qRef = adminDb.collection(`auditTemplates/${tRef.id}/questions`).doc();
+          batch.set(qRef, {
+            questionText: q.questionText,
+            questionType: q.questionType,
+            maxScore: q.questionType === 'yes_no' ? 1 : 10,
+            severity: q.severity,
+            requiresPhoto: q.requiresPhoto,
+            order: q.order,
+          });
+        });
+      });
+    } catch (tmplErr) {
+      console.error('[verify-code] Error queuing default templates:', tmplErr);
+    }
+
+    // F. Update global account counter
     batch.set(
       globalConfigRef,
       {
@@ -214,7 +262,7 @@ export async function POST(req: Request) {
       { merge: true }
     );
 
-    // F. Clean up pending verification record
+    // G. Clean up pending verification record
     batch.delete(pendingRef);
 
     // Commit all provisioning operations

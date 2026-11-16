@@ -29,8 +29,8 @@ const faqs = [
     a: "Yes. Build your own templates from scratch – questions, severity levels, photo requirements, and how often they repeat.",
   },
   {
-    q: "Does Audiment support FSSAI compliance?",
-    a: "Yes. You can load a pre-built FSSAI template and start auditing immediately. All records, including photos, GPS data, timestamps, and corrective actions, are stored for regulatory review.",
+    q: "Does Audiment support food safety regulations (FDA, HACCP, FSSAI)?",
+    a: "Yes. You can load pre-built templates for international frameworks like HACCP and FDA FSMA, or regional standards like FSSAI, and start auditing immediately. All records, including photos, GPS data, timestamps, and corrective actions, are stored for regulatory review.",
   },
   {
     q: "How is Audiment different from iAuditor?",

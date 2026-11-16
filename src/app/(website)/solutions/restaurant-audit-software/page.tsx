@@ -30,7 +30,7 @@ export default function RestaurantAuditSoftware() {
             url: 'https://audiment.in/solutions/restaurant-audit-software',
             description:
               'Audit management software for multi-outlet restaurant chains and cloud kitchens. Standardize shift checklists, capture photo evidence, monitor location performance, and resolve operational failures.',
-            offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything' },
+            offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything' },
             provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' },
           }),
         }}

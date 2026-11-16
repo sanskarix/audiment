@@ -89,7 +89,7 @@ export function HeroSection({ userRole }: { userRole?: string | null }) {
                                     )}
                                     <CalButton size="lg" variant="outline" className="rounded-full px-8 h-12 text-base">See it in action</CalButton>
                                 </div>
-                                <span className="sr-only">Built for restaurant chains, retail brands, hotel groups, franchise operations, and multi-location businesses across India and globally.</span>
+                                <span className="sr-only">Built for restaurant chains, retail brands, hotel groups, franchise operations, and multi-location businesses worldwide.</span>
 
                                 <motion.div
                                     aria-hidden

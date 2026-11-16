@@ -1,0 +1,30 @@
+[
+  {
+    "id": "Hctw36wLBqBcA1MZKqDI",
+    "fullName": "Darsana K",
+    "companyName": "JSM Corporation",
+    "outlets": 3,
+    "email": "darsana.k@jsmcorp.in",
+    "phone": "8451043346",
+    "message": "I want to Digitize all the outlet checklists, QA Checklists etc",
+    "source": "website",
+    "createdAt": {
+      "_seconds": 1785824299,
+      "_nanoseconds": 914000000
+    }
+  },
+  {
+    "id": "rH5UbzpAJU7A7VXWpOe0",
+    "fullName": "Tafadzwa",
+    "companyName": "BDO UAE",
+    "outlets": 10,
+    "email": "tafadzwa.mutumha@bdo.ae",
+    "phone": "+971 4 518 6666",
+    "message": "Does your IT/Audit management solutions support automated Internal Control over Financial Reporting (ICORF) controls implementation and reviews. Specifically, I would appreciate information on the automated controls available across key financial processes and ERP integration.",
+    "source": "website",
+    "createdAt": {
+      "_seconds": 1784698955,
+      "_nanoseconds": 265000000
+    }
+  }
+]

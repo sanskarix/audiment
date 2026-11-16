@@ -18,7 +18,7 @@ export default function CompareHyperproof() {
       heroSubtext="Hyperproof is a security compliance and IT risk platform for SOC 2, ISO 27001, and cloud evidence collection. Audiment is an operational audit platform purpose-built for physical store walk-throughs, food hygiene, and brand standards across multi-location retail and hospitality networks."
       quickVerdict={{
         verdictSummary: "Hyperproof is a security assurance platform for InfoSec, IT compliance, and technology companies automating evidence collection from cloud providers (AWS, Okta, GitHub) for SOC 2, ISO 27001, and NIST audits. Audiment is an operational accountability system engineered for store managers and regional supervisors conducting physical audits on the ground across 10 to 500+ restaurants, retail outlets, or franchise stores, enforcing live camera proof, GPS presence verification, and automated 48-hour CAPA SLAs.",
-        audimentBestFor: "Operations directors, COOs, franchise leaders, and store quality managers who need to inspect physical store locations, verify food safety (FSSAI/HACCP), enforce brand standards, and track 48-hour store CAPA tickets on employee smartphones.",
+        audimentBestFor: "Operations directors, COOs, franchise leaders, and store quality managers who need to inspect physical store locations, verify food safety (HACCP/FDA/FSSAI), enforce brand standards, and track 48-hour store CAPA tickets on employee smartphones.",
         competitorBestFor: "Chief Information Security Officers (CISOs), InfoSec compliance teams, and SaaS companies preparing for SOC 2, ISO 27001, FedRAMP, or HIPAA security audits.",
       }}
       migrationReality={{

@@ -46,6 +46,7 @@ import UpgradeModal from '@/components/UpgradeModal';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import Cropper from 'react-easy-crop';
+import { TOP_10_COUNTRIES, ALL_COUNTRIES, getCountryInfo } from '@/lib/compliance-templates';
 
 const TIMEZONES = [
   { value: 'UTC', label: 'UTC (Coordinated Universal Time)' },
@@ -116,7 +117,21 @@ function SettingsContent() {
 
   const [profileForm, setProfileForm] = useState({ name: '', email: '' });
   const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-  const [orgForm, setOrgForm] = useState({ name: '', timezone: 'UTC', defaultStartTime: '10:00', defaultEndTime: '22:00' });
+  const [orgForm, setOrgForm] = useState<{
+    name: string;
+    timezone: string;
+    country: string;
+    countries: string[];
+    defaultStartTime: string;
+    defaultEndTime: string;
+  }>({
+    name: '',
+    timezone: 'UTC',
+    country: 'IN',
+    countries: ['IN'],
+    defaultStartTime: '10:00',
+    defaultEndTime: '22:00',
+  });
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
   const { isSynced, uid, orgId, plan } = useAuthSync();
@@ -138,9 +153,13 @@ function SettingsContent() {
         if (oSnap.exists()) {
           const d = oSnap.data();
           setOrgDoc(d);
+          const primaryCountry = d.country || (Array.isArray(d.countries) && d.countries[0]) || 'IN';
+          const allCountries = Array.isArray(d.countries) && d.countries.length > 0 ? d.countries : [primaryCountry];
           setOrgForm({ 
             name: d.name || '', 
             timezone: d.timezone || 'UTC',
+            country: primaryCountry,
+            countries: allCountries,
             defaultStartTime: d.defaultStartTime || '10:00',
             defaultEndTime: d.defaultEndTime || '22:00'
           });
@@ -332,6 +351,8 @@ function SettingsContent() {
       await setDoc(doc(db, 'organizations', orgId), { 
         name: orgForm.name, 
         timezone: orgForm.timezone,
+        country: orgForm.country,
+        countries: orgForm.countries,
         defaultStartTime: orgForm.defaultStartTime,
         defaultEndTime: orgForm.defaultEndTime
       }, { merge: true });
@@ -651,6 +672,35 @@ function SettingsContent() {
                           {TIMEZONES.map(tz => <SelectItem key={tz.value} value={tz.value}>{tz.label}</SelectItem>)}
                         </SelectContent>
                       </Select>
+                    </div>
+                    <div className="grid gap-1.5">
+                      <Label className="text-[11px] font-semibold text-muted-text uppercase tracking-wider">Primary Country Jurisdiction</Label>
+                      <Select
+                        value={orgForm.country}
+                        onValueChange={(val) => {
+                          setOrgForm((p) => {
+                            const newCountries = p.countries.includes(val) ? p.countries : [val, ...p.countries];
+                            return { ...p, country: val, countries: newCountries };
+                          });
+                        }}
+                      >
+                        <SelectTrigger className="h-10">
+                          <div className="flex items-center gap-2">
+                            <span>{getCountryInfo(orgForm.country).flag}</span>
+                            <SelectValue placeholder="Select primary country" />
+                          </div>
+                        </SelectTrigger>
+                        <SelectContent className="max-h-[300px]">
+                          {ALL_COUNTRIES.map((c) => (
+                            <SelectItem key={c.code} value={c.code}>
+                              {c.flag} {c.name} {c.isTop10 ? '(Top Standard)' : ''}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-[11px] text-muted-text">
+                        Sets your default national compliance checklists (FSSAI, FDA, FSA, etc.) across the template builder.
+                      </p>
                     </div>
                   </div>
 

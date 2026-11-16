@@ -30,7 +30,7 @@ export default function QSRAuditSoftware() {
             url: 'https://audiment.in/solutions/qsr-audit-software',
             description:
               'Shift-by-shift digital audit software for fast-food and QSR chains managing 30–50 outlets. Standardized checklists, automated corrective actions, and real-time operational dashboards.',
-            offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything' },
+            offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything' },
             provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' },
           }),
         }}

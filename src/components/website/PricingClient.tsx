@@ -167,7 +167,7 @@ const comparisonCategories: TableCategory[] = [
   {
     category: 'Compliance, Export & Support',
     rows: [
-      { label: 'Pre-built FSSAI hygiene checklists', free: { sym: '—', label: 'Not included', dim: true }, paid: { sym: '✓', label: 'Included' } },
+      { label: 'Pre-built food safety & hygiene checklists (HACCP, FDA, FSSAI)', free: { sym: '—', label: 'Not included', dim: true }, paid: { sym: '✓', label: 'Included' } },
       { label: 'One-click branded PDF compliance reports', free: { sym: '—', label: 'Not included', dim: true }, paid: { sym: '✓', label: 'Included' } },
       { label: 'REST API & data export', free: { sym: '—', label: 'Not included', dim: true }, paid: { sym: '✓', label: 'Included' } },
       { label: 'Onboarding & technical support', free: { sym: '—', label: 'Self-serve', dim: true }, paid: { sym: '✓', label: 'Dedicated onboarding & priority support' } },
@@ -287,7 +287,7 @@ export default function PricingClient() {
                   </p>
 
                   <div className="aud-pricing-price-wrap">
-                    <div className="aud-pricing-amount">₹0</div>
+                    <div className="aud-pricing-amount">Free</div>
                     <div className="aud-pricing-cadence">Free forever for 1 location</div>
                   </div>
 

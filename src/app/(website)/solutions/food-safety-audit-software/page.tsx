@@ -33,7 +33,7 @@ export default function FoodSafetyAuditSoftware() {
             url: 'https://audiment.in/solutions/food-safety-audit-software',
             description:
               'Audit and operational compliance software for commercial kitchens and multi-outlet food businesses. Standardize food safety inspections, capture live photo evidence, and automate corrective actions.',
-            offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything' },
+            offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Free tier available for 1 location; Paid tier is custom flat pricing with unlimited everything' },
             provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' }
           })
         }}
@@ -151,7 +151,7 @@ export default function FoodSafetyAuditSoftware() {
           {
             question: "Does Audiment certify a facility or guarantee regulatory compliance?",
             answer:
-              "No. Audiment provides the digital audit infrastructure, standardized checklists, timestamped records, and corrective action workflows to operationalize your internal quality standards and regulatory guidelines (such as FSSAI, HACCP, or municipal health codes). Audiment does not act as a regulatory certifying body, issue legal certifications, or guarantee that an outlet will pass official government inspections."
+              "No. Audiment provides the digital audit infrastructure, standardized checklists, timestamped records, and corrective action workflows to operationalize your internal quality standards and regulatory guidelines (such as HACCP, FDA FSMA, FSSAI, or municipal health codes). Audiment does not act as a regulatory certifying body, issue legal certifications, or guarantee that an outlet will pass official government inspections."
           },
           {
             question: "Are the temperature values in checklists legal requirements or configurable guidelines?",

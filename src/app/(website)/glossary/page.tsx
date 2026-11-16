@@ -5,12 +5,13 @@ import { AudimentGlossaryClient } from '@/components/glossary/AudimentGlossaryCl
 
 export const metadata = buildPageMeta({
   title: 'Multi-Location Operations & Audit Glossary',
-  description: 'Authoritative B2B glossary defining operational drift, proof-based audits, CAPA tracking, FSSAI compliance, QSR checklists, and geo-verified field audits.',
+  description: 'Authoritative B2B glossary defining operational drift, proof-based audits, CAPA tracking, HACCP food safety, QSR checklists, and geo-verified field audits.',
   path: '/glossary',
   keywords: [
     'audit glossary',
     'operational drift definition',
     'proof-based audit',
+    'HACCP food safety audit',
     'FSSAI compliance audit',
     'CAPA tracking',
     'QSR operational checklist',

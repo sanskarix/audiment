@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { adminAuth, adminDb } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { sendFounderSignupAlertEmail } from '@/lib/resend';
+import { getInitialTemplatesForOrg } from '@/lib/compliance-templates';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -21,7 +22,11 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { email, phone, fullName, companyName, industry, password } = body;
+    const { email, phone, fullName, companyName, industry, password, country, countries } = body;
+    const selectedCountries = Array.isArray(countries) && countries.length > 0
+      ? countries
+      : country ? [country] : ['IN'];
+    const primaryCountry = typeof country === 'string' && country ? country : selectedCountries[0] || 'IN';
 
     // ── 1. Validation ─────────────────────────────────────────────────────────
     if (!email || typeof email !== 'string' || !email.includes('@') || !email.includes('.')) {
@@ -118,6 +123,8 @@ export async function POST(req: Request) {
       name: normalizedCompany,
       industry: selectedIndustry,
       phone: normalizedPhone,
+      country: primaryCountry,
+      countries: selectedCountries,
       plan: 'free',
       planVersion: '2026.1',
       ownerUid: uid,
@@ -142,6 +149,8 @@ export async function POST(req: Request) {
       name: normalizedName,
       phone: normalizedPhone,
       industry: selectedIndustry,
+      country: primaryCountry,
+      countries: selectedCountries,
       role: 'ADMIN',
       organizationId: orgId,
       isActive: true,
@@ -170,7 +179,45 @@ export async function POST(req: Request) {
       createdAt: FieldValue.serverTimestamp(),
     });
 
-    // E. Update global account counter
+    // E. Provision ready-to-run industry template and country compliance standards
+    try {
+      const initialTemplates = getInitialTemplatesForOrg(selectedIndustry, selectedCountries);
+      initialTemplates.forEach((template) => {
+        const tRef = adminDb.collection('auditTemplates').doc();
+        batch.set(tRef, {
+          organizationId: orgId,
+          title: template.title,
+          category: template.category,
+          description: template.description,
+          country: template.country,
+          countryName: template.countryName,
+          authority: template.authority,
+          isCountryDefault: Boolean(template.isCountryDefault),
+          isIndustryDefault: Boolean(template.isIndustryDefault),
+          industry: template.industry || '',
+          industryName: template.industryName || '',
+          isActive: true,
+          createdBy: uid,
+          createdAt: FieldValue.serverTimestamp(),
+        });
+
+        template.questions.forEach((q) => {
+          const qRef = adminDb.collection(`auditTemplates/${tRef.id}/questions`).doc();
+          batch.set(qRef, {
+            questionText: q.questionText,
+            questionType: q.questionType,
+            maxScore: q.questionType === 'yes_no' ? 1 : 10,
+            severity: q.severity,
+            requiresPhoto: q.requiresPhoto,
+            order: q.order,
+          });
+        });
+      });
+    } catch (tmplErr) {
+      console.error('[register] Error queuing default templates:', tmplErr);
+    }
+
+    // F. Update global account counter
     batch.set(
       globalConfigRef,
       {

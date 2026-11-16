@@ -25,7 +25,7 @@ const softwareSchema = {
   url: 'https://audiment.in/platform/corrective-actions',
   description:
     'Automated corrective action software for multi-location operations. Automatically routes failed checklist items into owned tasks with 48-hour SLAs, deadline reminder notifications, and mandatory photo verification.',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', description: 'Contact for pricing' },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Contact for pricing' },
   provider: { '@type': 'Organization', name: 'Audiment', url: 'https://audiment.in' }
 }
 

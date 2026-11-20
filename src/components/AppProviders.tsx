@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/app-ui/tooltip";
+import { AttributionTracker } from "@/components/AttributionTracker";
 
 const AuthProvider = dynamic(
   () => import("@/components/AuthProvider").then((mod) => mod.AuthProvider),
@@ -17,6 +18,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       enableSystem={false}
       disableTransitionOnChange
     >
+      <AttributionTracker />
       <AuthProvider>
         <a
           href="#main-content"

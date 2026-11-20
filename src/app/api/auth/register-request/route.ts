@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { fullName, companyName, email, phone, industry, country, countries } = body;
+    const { fullName, companyName, email, phone, industry, country, countries, attribution } = body;
     const selectedCountries = Array.isArray(countries) && countries.length > 0
       ? countries
       : country ? [country] : ['IN'];
@@ -108,6 +108,7 @@ export async function POST(req: Request) {
       industry: typeof industry === 'string' ? industry.trim() : '',
       country: primaryCountry,
       countries: selectedCountries,
+      attribution: attribution && typeof attribution === 'object' ? attribution : null,
       otpCode,
       expiresAt,
       attempts: 0,

@@ -46,6 +46,11 @@ interface Props {
   breadcrumbLabel?: string;
   canonicalPath?: string;
   crossLinks?: { title: string; href: string; description: string; tag?: string }[];
+  heroCtaLabel?: string;
+  heroTrustNote?: string;
+  bottomCtaTitle?: string;
+  bottomCtaSub?: string;
+  bottomCtaLabel?: string;
 }
 
 export default function SolutionPageTemplate({
@@ -64,6 +69,11 @@ export default function SolutionPageTemplate({
   breadcrumbLabel,
   canonicalPath,
   crossLinks,
+  heroCtaLabel,
+  heroTrustNote,
+  bottomCtaTitle,
+  bottomCtaSub,
+  bottomCtaLabel,
 }: Props) {
   // Schema for FAQ
   const faqSchema = {
@@ -167,6 +177,11 @@ export default function SolutionPageTemplate({
         breadcrumbLabel={breadcrumbLabel}
         canonicalPath={canonicalPath}
         crossLinks={crossLinks}
+        heroCtaLabel={heroCtaLabel}
+        heroTrustNote={heroTrustNote}
+        bottomCtaTitle={bottomCtaTitle}
+        bottomCtaSub={bottomCtaSub}
+        bottomCtaLabel={bottomCtaLabel}
       />
     </>
   );

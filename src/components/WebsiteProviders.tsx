@@ -6,6 +6,7 @@ import { PublicGtm } from "@/components/PublicGtm";
 import { ConsentProvider } from "@/components/ConsentProvider";
 import { ConsentBanner } from "@/components/ConsentBanner";
 import { PublicPageviewTracker } from "@/components/PublicPageviewTracker";
+import { AttributionTracker } from "@/components/AttributionTracker";
 
 export function WebsiteProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -18,6 +19,7 @@ export function WebsiteProviders({ children }: { children: React.ReactNode }) {
       <ConsentProvider>
         <PublicGtm />
         <PublicPageviewTracker />
+        <AttributionTracker />
         <ConsentBanner />
         <a
           href="#main-content"

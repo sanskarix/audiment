@@ -4,6 +4,7 @@ import { adminAuth, adminDb } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { sendFounderSignupAlertEmail } from '@/lib/resend';
 import { getInitialTemplatesForOrg } from '@/lib/compliance-templates';
+import { logSignupToGoogleSheet } from '@/lib/googleSheetLogger';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { email, code, password, checkOnly } = body;
+    const { email, code, password, checkOnly, attribution } = body;
 
     if (!email) {
       return NextResponse.json(
@@ -151,6 +152,7 @@ export async function POST(req: Request) {
     const userCountries = Array.isArray(pendingData.countries) && pendingData.countries.length > 0
       ? pendingData.countries
       : [userCountry];
+    const effectiveAttribution = attribution || pendingData.attribution || null;
 
     // A. Organization document
     batch.set(orgRef, {
@@ -164,6 +166,7 @@ export async function POST(req: Request) {
       planVersion: '2026.1',
       ownerUid: uid,
       createdAt: FieldValue.serverTimestamp(),
+      ...(effectiveAttribution && { attribution: effectiveAttribution }),
       limits: {
         maxOutlets: 1,
         maxUsers: 3,
@@ -190,6 +193,7 @@ export async function POST(req: Request) {
       organizationId: orgId,
       isActive: true,
       createdAt: FieldValue.serverTimestamp(),
+      ...(effectiveAttribution && { attribution: effectiveAttribution }),
     });
 
     // C. Initial Flagship Location
@@ -305,6 +309,20 @@ export async function POST(req: Request) {
       maxCap: MAX_FREE_ACCOUNTS,
     }).catch((alertErr) => {
       console.error('[verify-code] Founder alert background send failed:', alertErr);
+    });
+
+    // ── 7. Log to Google Sheet (Non-blocking background dispatch) ───────────
+    logSignupToGoogleSheet({
+      fullName: pendingData.fullName,
+      companyName: pendingData.companyName,
+      email: normalizedEmail,
+      phone: pendingData.phone || '',
+      industry: pendingData.industry || '',
+      uid,
+      orgId,
+      attribution: effectiveAttribution,
+    }).catch((sheetErr) => {
+      console.error('[verify-code] Google Sheet logger background send failed:', sheetErr);
     });
 
     return NextResponse.json({

@@ -146,6 +146,11 @@ export interface SolutionDetailClientProps {
   breadcrumbLabel?: string;
   canonicalPath?: string;
   crossLinks?: { title: string; href: string; description: string; tag?: string }[];
+  heroCtaLabel?: string;
+  bottomCtaTitle?: string;
+  bottomCtaSub?: string;
+  bottomCtaLabel?: string;
+  heroTrustNote?: string;
 }
 
 export function AudimentSolutionDetailClient({
@@ -163,6 +168,11 @@ export function AudimentSolutionDetailClient({
   operationalBottlenecks,
   breadcrumbLabel,
   crossLinks,
+  heroCtaLabel,
+  bottomCtaTitle,
+  bottomCtaSub,
+  bottomCtaLabel,
+  heroTrustNote,
 }: SolutionDetailClientProps) {
   const cal = getCalAttributes('general');
 
@@ -236,15 +246,20 @@ export function AudimentSolutionDetailClient({
                 {heroSubheadline}
               </p>
 
-              <div className="actions" style={{ justifyContent: 'flex-start', gap: 16 }}>
+              <div className="actions" style={{ justifyContent: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
                 <DotBtn id="aud-sol-hero-signup" label="Try for Free" variant="orange" href="/signup" />
-                <DotBtn id="aud-sol-hero-cta" label="Book a Discovery Call" calAttrs={cal} />
+                <DotBtn id="aud-sol-hero-cta" label={heroCtaLabel || "Book a Discovery Call"} calAttrs={cal} />
                 {sampleChecklist && sampleChecklist.length > 0 && (
                   <a className="button" href="#sample-checklist" style={{ textDecoration: 'none' }}>
                     View Sample Checklist
                   </a>
                 )}
               </div>
+              {heroTrustNote && (
+                <p style={{ marginTop: 14, fontSize: 13, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                  {heroTrustNote}
+                </p>
+              )}
             </div>
           </div>
         </section>
@@ -380,13 +395,13 @@ export function AudimentSolutionDetailClient({
           <div className="aud-inner">
             {/* CTA Box */}
             <div className="aud-article-cta-box" style={{ marginBottom: 80, padding: '72px 48px' }}>
-              <h3>Ready to standardize audits across your {industry.toLowerCase()} operations?</h3>
+              <h3>{bottomCtaTitle || `Ready to standardize audits across your ${industry.toLowerCase()} operations?`}</h3>
               <p style={{ marginTop: 12, marginBottom: 32 }}>
-                Book a discovery call to see how Audiment runs proof-based audits across every location.
+                {bottomCtaSub || 'Book a discovery call to see how Audiment runs proof-based audits across every location.'}
               </p>
               <div className="cta-btn-center">
                 <DotBtn id="aud-sol-bottom-signup" label="Try for Free" variant="orange" href="/signup" />
-                <DotBtn id="aud-sol-bottom-cta" label="Book a Discovery Call" calAttrs={cal} />
+                <DotBtn id="aud-sol-bottom-cta" label={bottomCtaLabel || "Book a Discovery Call"} calAttrs={cal} />
               </div>
             </div>
 

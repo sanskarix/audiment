@@ -10,6 +10,7 @@ import ShimmerText from '@/components/app-ui/shimmer-text';
 import { ArrowLeft, ChevronDown, Eye, EyeOff, Clock, Check, Globe, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TOP_10_COUNTRIES, ALL_COUNTRIES, getCountryInfo, INDUSTRY_OPTIONS } from '@/lib/compliance-templates';
+import { getStoredAttribution } from '@/lib/attributionTracker';
 
 const DIAL_TO_COUNTRY: Record<string, string> = {
   '+91': 'IN',
@@ -165,6 +166,7 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
+      const attribution = getStoredAttribution();
       const res = await fetch('/api/auth/register-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -176,6 +178,7 @@ export default function SignupPage() {
           industry: selectedIndustry,
           country: selectedCountries[0] || 'IN',
           countries: selectedCountries,
+          attribution,
         }),
       });
 
@@ -251,6 +254,7 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
+      const attribution = getStoredAttribution();
       const res = await fetch('/api/auth/verify-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -258,6 +262,7 @@ export default function SignupPage() {
           email: email.trim().toLowerCase(),
           code: code.trim(),
           password,
+          attribution,
         }),
       });
 

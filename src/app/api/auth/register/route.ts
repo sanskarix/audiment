@@ -4,6 +4,7 @@ import { adminAuth, adminDb } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { sendFounderSignupAlertEmail } from '@/lib/resend';
 import { getInitialTemplatesForOrg } from '@/lib/compliance-templates';
+import { logSignupToGoogleSheet } from '@/lib/googleSheetLogger';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { email, phone, fullName, companyName, industry, password, country, countries } = body;
+    const { email, phone, fullName, companyName, industry, password, country, countries, attribution } = body;
     const selectedCountries = Array.isArray(countries) && countries.length > 0
       ? countries
       : country ? [country] : ['IN'];
@@ -267,6 +268,20 @@ export async function POST(req: Request) {
       maxCap: MAX_FREE_ACCOUNTS,
     }).catch((alertErr) => {
       console.error('[register] Founder alert background send failed:', alertErr);
+    });
+
+    // ── 8. Log to Google Sheet ───────────────────────────────────────────────
+    logSignupToGoogleSheet({
+      fullName: normalizedName,
+      companyName: normalizedCompany,
+      email: normalizedEmail,
+      phone: normalizedPhone,
+      industry: selectedIndustry,
+      uid,
+      orgId,
+      attribution: attribution || null,
+    }).catch((sheetErr) => {
+      console.error('[register] Google Sheet logger background send failed:', sheetErr);
     });
 
     return NextResponse.json({

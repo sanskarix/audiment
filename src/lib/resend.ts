@@ -134,7 +134,7 @@ export async function sendVerificationOtpEmail({
                 <h1
                   style="font-size: 18px; font-weight: 400; letter-spacing: -0.035em; color: #181818; margin: 0 0 14px 0; line-height: 1.25;"
                 >
-                  Hi \${firstName},
+                  Hi ${firstName},
                 </h1>
                 <p style="font-size: 14.5px; line-height: 23px; color: #45474d; margin: 0 0 28px 0;">
                   Thanks for choosing Audiment. Use the verification code below to activate your workspace:
@@ -147,7 +147,7 @@ export async function sendVerificationOtpEmail({
                   <div
                     style="font-family: 'Geist Mono', 'SF Mono', Menlo, Monaco, Consolas, monospace; font-size: 34px; font-weight: 600; letter-spacing: 10px; color: #181818; margin: 0; padding-left: 10px;"
                   >
-                    \${otpCode}
+                    ${otpCode}
                   </div>
                 </div>
 

@@ -1,3 +1,4 @@
+import
 const puppeteer = require('puppeteer-core');
 const path = require('path');
 const fs = require('fs');
@@ -24,19 +25,19 @@ async function hideNextDev(page) {
         opacity: 0 !important;
       }
     `
-  }).catch(() => {});
+  }).catch(() => { });
 }
 
 async function waitPageLoaded(page, minDelay = 2000) {
   await page.waitForFunction(() => {
     const text = document.body ? document.body.innerText : '';
     return !text.includes('Compiling') && !text.includes('Rendering ...');
-  }, { timeout: 35000 }).catch(() => {});
+  }, { timeout: 35000 }).catch(() => { });
 
   await page.waitForFunction(() => {
     const skeletons = document.querySelectorAll('.animate-pulse');
     return skeletons.length === 0;
-  }, { timeout: 20000 }).catch(() => {});
+  }, { timeout: 20000 }).catch(() => { });
 
   await hideNextDev(page);
   await delay(minDelay);

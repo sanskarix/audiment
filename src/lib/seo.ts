@@ -29,6 +29,7 @@ export function buildPageMeta({
   const image = ogImage || DEFAULT_OG_IMAGE
 
   return {
+    metadataBase: new URL(SITE_URL),
     title,
     description,
     ...(keywords && { keywords }),

@@ -29,6 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const metaTitle = displayTitle;
 
   return {
+    metadataBase: new URL('https://audiment.in'),
     title: { absolute: metaTitle },
     description: post.description,
     alternates: {

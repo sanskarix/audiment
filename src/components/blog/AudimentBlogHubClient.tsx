@@ -1,15 +1,12 @@
 'use client';
 
-import Lenis from 'lenis';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Footer } from '@/components/website/Footer';
 import { Header } from '@/components/website/Header';
-import { observeDotBorderButtons } from '@/lib/dotBorder';
-import { observeAnimations, initScrollReveals } from '@/lib/animations';
-import { initCalEmbed, getCalAttributes } from '@/lib/cal';
+import { initScrollReveals } from '@/lib/animations';
+import { initSmoothScroll, SmoothScrollHandle } from '@/lib/smoothScroll';
+import { getCalAttributes } from '@/lib/cal';
 
 // ─── Inline SVG Icons ────────────────────────────────────────────────────────
 
@@ -125,7 +122,7 @@ export function AudimentBlogHubClient({
   const [subscribedEmail, setSubscribedEmail] = useState('');
   const [subscribedSuccess, setSubscribedSuccess] = useState(false);
   const tabsNavRef = React.useRef<HTMLElement>(null);
-  const lenisRef = React.useRef<Lenis | null>(null);
+  const lenisRef = React.useRef<SmoothScrollHandle | null>(null);
 
   const handleScrollRight = () => {
     if (tabsNavRef.current) {
@@ -134,70 +131,18 @@ export function AudimentBlogHubClient({
   };
 
   useEffect(() => {
-    let lenis: Lenis | null = null;
-    let ticker: ((time: number) => void) | null = null;
-    let t1: ReturnType<typeof setTimeout> | undefined;
-    let resizeObserver: ResizeObserver | null = null;
-
-    const onLoad = () => {
-      lenis?.resize();
-      ScrollTrigger.refresh();
-    };
-
-    const initHeavy = () => {
-      gsap.registerPlugin(ScrollTrigger);
-
-      lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
-      lenisRef.current = lenis;
-      lenis.on('scroll', ScrollTrigger.update);
-      ticker = (time: number) => {
-        if (lenis) lenis.raf(time * 1000);
-      };
-      gsap.ticker.add(ticker);
-      gsap.ticker.lagSmoothing(0);
-
-      observeDotBorderButtons();
-      observeAnimations();
-      initCalEmbed();
-
-      if (typeof ResizeObserver !== 'undefined' && typeof document !== 'undefined' && document.body) {
-        resizeObserver = new ResizeObserver(() => {
-          lenis?.resize();
-          ScrollTrigger.refresh();
-        });
-        resizeObserver.observe(document.body);
-      }
-
-      t1 = setTimeout(() => {
-        lenis?.resize();
-        ScrollTrigger.refresh();
-      }, 300);
-      window.addEventListener('load', onLoad);
-    };
-
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(initHeavy, { timeout: 1200 });
-    } else {
-      setTimeout(initHeavy, 300);
-    }
-
-    return () => {
-      if (t1) clearTimeout(t1);
-      if (resizeObserver) resizeObserver.disconnect();
-      window.removeEventListener('load', onLoad);
-      if (ticker) gsap.ticker.remove(ticker);
-      if (lenis) {
-        lenis.destroy();
-        lenisRef.current = null;
-      }
-    };
+    return initSmoothScroll({
+      idleTimeout: 1200,
+      onReady: (handle) => {
+        lenisRef.current = handle;
+      },
+    });
   }, []);
 
   // Recalculate scroll dimensions whenever visible posts or categories change
   useEffect(() => {
     const refreshDimensions = () => {
       lenisRef.current?.resize();
-      ScrollTrigger.refresh();
       initScrollReveals();
     };
 
@@ -634,7 +579,6 @@ export function AudimentBlogHubClient({
                         setVisibleCount((prev) => prev + 12);
                         requestAnimationFrame(() => {
                           lenisRef.current?.resize();
-                          ScrollTrigger.refresh();
                         });
                       }}
                     >

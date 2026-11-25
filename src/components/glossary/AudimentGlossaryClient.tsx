@@ -1,15 +1,11 @@
 'use client';
 
-import Lenis from 'lenis';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/website/Header';
 import { Footer } from '@/components/website/Footer';
-import { observeDotBorderButtons } from '@/lib/dotBorder';
-import { observeAnimations } from '@/lib/animations';
-import { initCalEmbed, getCalAttributes } from '@/lib/cal';
+import { initSmoothScroll } from '@/lib/smoothScroll';
+import { getCalAttributes } from '@/lib/cal';
 
 export interface GlossaryTerm {
   slug: string;
@@ -166,39 +162,7 @@ export function AudimentGlossaryClient() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   useEffect(() => {
-    let lenis: Lenis | null = null;
-    let ticker: ((time: number) => void) | null = null;
-    let t1: ReturnType<typeof setTimeout> | undefined;
-
-    const initHeavy = () => {
-      gsap.registerPlugin(ScrollTrigger);
-
-      lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
-      lenis.on('scroll', ScrollTrigger.update);
-      ticker = (time: number) => {
-        if (lenis) lenis.raf(time * 1000);
-      };
-      gsap.ticker.add(ticker);
-      gsap.ticker.lagSmoothing(0);
-
-      observeDotBorderButtons();
-      observeAnimations();
-      initCalEmbed();
-
-      t1 = setTimeout(() => ScrollTrigger.refresh(), 300);
-    };
-
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(initHeavy, { timeout: 1200 });
-    } else {
-      setTimeout(initHeavy, 300);
-    }
-
-    return () => {
-      if (t1) clearTimeout(t1);
-      if (ticker) gsap.ticker.remove(ticker);
-      if (lenis) lenis.destroy();
-    };
+    return initSmoothScroll({ idleTimeout: 1200 });
   }, []);
 
   const categories = ['All', ...Array.from(new Set(terms.map((t) => t.category)))];

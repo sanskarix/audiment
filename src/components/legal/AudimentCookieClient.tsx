@@ -1,15 +1,11 @@
 'use client';
 
-import Lenis from 'lenis';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Footer } from '@/components/website/Footer';
 import { Header } from '@/components/website/Header';
-import { observeDotBorderButtons } from '@/lib/dotBorder';
-import { observeAnimations } from '@/lib/animations';
-import { initCalEmbed, getCalAttributes } from '@/lib/cal';
+import { initSmoothScroll } from '@/lib/smoothScroll';
+import { getCalAttributes } from '@/lib/cal';
 
 // ─── Asellus Dot-Border Button ───────────────────────────────────────────────
 
@@ -70,56 +66,29 @@ export function AudimentCookieClient() {
   const [activeId, setActiveId] = useState<string>('overview');
 
   useEffect(() => {
-    let lenis: Lenis | null = null;
-    let ticker: ((time: number) => void) | null = null;
-    let t1: ReturnType<typeof setTimeout> | undefined;
-
-    const onLoad = () => ScrollTrigger.refresh();
-
+    let rafId: number | null = null;
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 140;
-      for (let i = tocItems.length - 1; i >= 0; i--) {
-        const item = tocItems[i];
-        const el = document.getElementById(item.id);
-        if (el && el.offsetTop <= scrollPosition) {
-          setActiveId(item.id);
-          break;
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        const scrollPosition = window.scrollY + 140;
+        for (let i = tocItems.length - 1; i >= 0; i--) {
+          const item = tocItems[i];
+          const el = document.getElementById(item.id);
+          if (el && el.offsetTop <= scrollPosition) {
+            setActiveId(item.id);
+            break;
+          }
         }
-      }
+      });
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-
-    const initHeavy = () => {
-      gsap.registerPlugin(ScrollTrigger);
-
-      lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
-      lenis.on('scroll', ScrollTrigger.update);
-      ticker = (time: number) => {
-        if (lenis) lenis.raf(time * 1000);
-      };
-      gsap.ticker.add(ticker);
-      gsap.ticker.lagSmoothing(0);
-
-      observeDotBorderButtons();
-      observeAnimations();
-      initCalEmbed();
-
-      t1 = setTimeout(() => ScrollTrigger.refresh(), 300);
-      window.addEventListener('load', onLoad);
-    };
-
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(initHeavy, { timeout: 1200 });
-    } else {
-      setTimeout(initHeavy, 300);
-    }
+    const cleanupScroll = initSmoothScroll({ idleTimeout: 1200 });
 
     return () => {
-      if (t1) clearTimeout(t1);
-      window.removeEventListener('load', onLoad);
       window.removeEventListener('scroll', handleScroll);
-      if (ticker) gsap.ticker.remove(ticker);
-      if (lenis) lenis.destroy();
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+      cleanupScroll();
     };
   }, []);
 

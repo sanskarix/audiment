@@ -1,5 +1,4 @@
 import React from "react";
-import Script from "next/script";
 import { Metadata } from "next";
 import AudimentLandingClient from "@/components/home/AudimentLandingClient";
 
@@ -30,10 +29,17 @@ function StructuredData() {
         "@type": "SoftwareApplication",
         "@id": "https://audiment.in/#software",
         "name": "Audiment",
+        "url": "https://audiment.in",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Web, Mobile",
         "description": "Audiment is audit management software for multi-location businesses. Run proof-based audits across locations with photo evidence, corrective action tracking, and accountability.",
         "keywords": "multi-location audit software, inspection software, proof-based audits, quality consistency, operational consistency, corrective action tracking",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "description": "Free tier for 1 physical location (up to 3 auditor logins and 25 audits/month), with flat unlimited multi-location pricing."
+        },
         "publisher": {
           "@id": "https://audiment.in/#organization"
         }
@@ -51,6 +57,14 @@ function StructuredData() {
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "Software that replaces paper checklists with digital audits. You create templates, assign them to locations, and track results with photo evidence, scoring, and automatic follow-up tasks."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does Audiment pricing work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Audiment offers a completely Free tier for 1 physical location (supporting up to 3 auditor logins, 25 audits per month, and full proof verification). For multi-location teams, our Paid tier provides custom flat pricing where everything is unlimited—unlimited locations, unlimited users and auditors (zero per-seat fees), and unlimited audits and templates."
             }
           },
           {
@@ -95,10 +109,10 @@ function StructuredData() {
           },
           {
             "@type": "Question",
-            "name": "Does Audiment support food safety regulations (FDA, HACCP, FSSAI)?",
+            "name": "Does Audiment support FSSAI compliance?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes. Load pre-built compliance templates for international frameworks like HACCP and FDA FSMA, or regional standards like FSSAI. All records – photos, GPS data, timestamps, corrective actions – are stored for regulatory review."
+              "text": "Yes. You can load a pre-built FSSAI template and start auditing immediately. All records, including photos, GPS data, timestamps, and corrective actions, are stored for regulatory review."
             }
           },
           {
@@ -106,7 +120,7 @@ function StructuredData() {
             "name": "How is Audiment different from iAuditor?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "iAuditor is a general-purpose inspection tool. Audiment is built for multi-location businesses where accountability matters. Photo evidence is mandatory, auditor presence is GPS-verified, corrective actions auto-generate with deadlines, and declining trends are flagged automatically."
+              "text": "iAuditor is a general-purpose inspection tool. Audiment is built specifically for multi-location businesses where accountability is critical. We ensure photo evidence is mandatory, auditor presence is GPS-verified, and corrective actions are automatically generated with deadlines."
             }
           },
           {

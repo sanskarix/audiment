@@ -35,7 +35,7 @@ const transformTemplate1 = (_: any, t: string) => `translate(-50%, -50%) ${t}`;
 const Transition: React.FC<{ value: any; children: React.ReactNode }> = ({ value, children }) => {
   const config = React.useContext(MotionConfigContext);
   const transition = value ?? config.transition;
-  const contextValue = React.useMemo(() => ({ ...config, transition }), [JSON.stringify(transition)]);
+  const contextValue = React.useMemo(() => ({ ...config, transition }), [config, transition]);
 
   return (
     <MotionConfigContext.Provider value={contextValue}>

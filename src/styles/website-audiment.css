@@ -1571,6 +1571,15 @@ h2 em {
   min-width: 0;
 }
 
+@keyframes aud-testimonials-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
 .aud-testimonials-col ul {
   display: flex;
   flex-direction: column;
@@ -1578,6 +1587,8 @@ h2 em {
   list-style: none;
   margin: 0;
   padding: 0 0 20px 0;
+  will-change: transform;
+  animation: aud-testimonials-marquee var(--marquee-duration, 22s) linear infinite;
 }
 
 .aud-testimonial-card-v2 {
@@ -1591,12 +1602,14 @@ h2 em {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
   cursor: default;
   user-select: none;
+  contain: layout style;
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .aud-testimonial-card-v2:hover {
   border-color: #bbbbbb;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  transform: translateY(-3px);
 }
 
 .aud-testimonial-card-v2 blockquote {
@@ -1871,6 +1884,12 @@ h2 em {
   .aud-feature-card-visual {
     min-height: 280px;
     height: 280px;
+    padding: 16px;
+  }
+
+  .aud-feature-card-img-wrap {
+    min-height: 0;
+    height: 100%;
   }
 
   .aud-problems-head-section {
@@ -1971,6 +1990,16 @@ h2 em {
     padding-right: 0;
     border-bottom: 1px solid var(--line);
     padding-bottom: 8px;
+  }
+
+  .aud-comparison-table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .aud-comparison-head,
+  .aud-comparison-row {
+    min-width: 540px;
   }
 
   .aud-chain {

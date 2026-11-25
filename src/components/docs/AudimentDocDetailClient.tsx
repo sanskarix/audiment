@@ -1,15 +1,11 @@
 'use client';
 
-import Lenis from 'lenis';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Footer } from '@/components/website/Footer';
 import { Header } from '@/components/website/Header';
-import { observeDotBorderButtons } from '@/lib/dotBorder';
-import { observeAnimations } from '@/lib/animations';
-import { initCalEmbed, getCalAttributes } from '@/lib/cal';
+import { initSmoothScroll } from '@/lib/smoothScroll';
+import { getCalAttributes } from '@/lib/cal';
 import { DocTOCItem } from '@/lib/docs';
 
 // ─── Inline SVG Icons ────────────────────────────────────────────────────────
@@ -97,52 +93,30 @@ export function AudimentDocDetailClient({
   const [activeSection, setActiveSection] = useState<string>(toc[0]?.id || '');
 
   useEffect(() => {
-    let lenis: Lenis | null = null;
-    let ticker: ((time: number) => void) | null = null;
-
-    // TOC active-section tracking is lightweight — init immediately
+    // TOC active-section tracking (rAF-throttled)
+    let rafId: number | null = null;
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 160;
-      for (let i = toc.length - 1; i >= 0; i--) {
-        const item = toc[i];
-        const el = document.getElementById(item.id);
-        if (el && el.offsetTop <= scrollPosition) {
-          setActiveSection(item.id);
-          break;
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        const scrollPosition = window.scrollY + 160;
+        for (let i = toc.length - 1; i >= 0; i--) {
+          const item = toc[i];
+          const el = document.getElementById(item.id);
+          if (el && el.offsetTop <= scrollPosition) {
+            setActiveSection(item.id);
+            break;
+          }
         }
-      }
+      });
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Defer heavy Lenis/GSAP/ScrollTrigger init to idle time
-    // so the main thread is unblocked during FCP→TTI
-    const initHeavy = () => {
-      gsap.registerPlugin(ScrollTrigger);
-
-      lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
-      lenis.on('scroll', ScrollTrigger.update);
-      ticker = (time: number) => {
-        if (lenis) lenis.raf(time * 1000);
-      };
-      gsap.ticker.add(ticker);
-      gsap.ticker.lagSmoothing(0);
-
-      observeDotBorderButtons();
-      initCalEmbed();
-
-      setTimeout(() => ScrollTrigger.refresh(), 300);
-    };
-
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(initHeavy, { timeout: 1500 });
-    } else {
-      setTimeout(initHeavy, 400);
-    }
+    const cleanupScroll = initSmoothScroll({ idleTimeout: 1500 });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (ticker) gsap.ticker.remove(ticker);
-      if (lenis) lenis.destroy();
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+      cleanupScroll();
     };
   }, [toc]);
 

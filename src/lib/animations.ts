@@ -3,35 +3,75 @@
  * Provides lightweight, 60fps IntersectionObserver-based animations across all pages.
  */
 
-export function initScrollReveals() {
-  const elements = document.querySelectorAll<HTMLElement>(
-    '.reveal-on-scroll, section:not(.hero):not(.aud-article-body-section):not(.aud-article-header-section):not(.aud-legal-body-section):not(.aud-legal-section), .faq, .accordions details, .scenarios-grid article, .testimonials-grid article'
-  );
+const REVEAL_SELECTOR =
+  '.reveal-on-scroll, section:not(.hero):not(.aud-article-body-section):not(.aud-article-header-section):not(.aud-legal-body-section):not(.aud-legal-section), .faq, .accordions details, .scenarios-grid article, .testimonials-grid article';
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
+let sharedObserver: IntersectionObserver | null = null;
+
+function getRevealObserver(): IntersectionObserver | null {
+  if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') {
+    return null;
+  }
+
+  if (!sharedObserver) {
+    sharedObserver = new IntersectionObserver(
+      (entries, observer) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            // Stop observing once revealed to avoid redundant intersection checks on scroll
+            observer.unobserve(entry.target);
+          }
         }
-      });
-    },
-    {
-      threshold: 0.01,
-      rootMargin: '0px 0px -20px 0px',
-    }
-  );
+      },
+      {
+        threshold: 0.01,
+        rootMargin: '0px 0px -20px 0px',
+      }
+    );
+  }
+
+  return sharedObserver;
+}
+
+export function initScrollReveals() {
+  if (typeof document === 'undefined') return;
+
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const elements = document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR);
+  const observer = prefersReducedMotion ? null : getRevealObserver();
 
   elements.forEach((el) => {
+    if (el.dataset.revealObserved === '1' || el.classList.contains('is-visible')) {
+      return;
+    }
+    el.dataset.revealObserved = '1';
+
     if (!el.classList.contains('reveal-on-scroll')) {
       el.classList.add('reveal-on-scroll');
     }
+
+    if (prefersReducedMotion || !observer) {
+      el.classList.add('is-visible');
+      return;
+    }
+
     // Subtle stagger calculation if in a grid
     const parent = el.parentElement;
-    if (parent && (parent.classList.contains('scenarios-grid') || parent.classList.contains('testimonials-grid') || parent.classList.contains('accordions'))) {
-      const childIndex = Array.from(parent.children).indexOf(el);
+    if (
+      parent &&
+      (parent.classList.contains('scenarios-grid') ||
+        parent.classList.contains('testimonials-grid') ||
+        parent.classList.contains('accordions'))
+    ) {
+      const childIndex = Array.prototype.indexOf.call(parent.children, el);
       el.style.transitionDelay = `${(childIndex % 4) * 0.08}s`;
     }
+
     observer.observe(el);
   });
 }
@@ -51,17 +91,20 @@ export function observeAnimations() {
   if (typeof window === 'undefined') return;
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      initScrollReveals();
-      handleHashScroll();
-    });
+    document.addEventListener(
+      'DOMContentLoaded',
+      () => {
+        initScrollReveals();
+        handleHashScroll();
+      },
+      { once: true }
+    );
   } else {
     initScrollReveals();
     handleHashScroll();
   }
 
   // Run once more after a short delay to catch late-mounted client components,
-  // instead of a MutationObserver which causes forced reflow on every DOM change.
+  // skipping already-observed elements.
   setTimeout(() => initScrollReveals(), 1500);
 }
-

@@ -4,7 +4,7 @@ import { adminAuth, adminDb } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { sendFounderSignupAlertEmail } from '@/lib/resend';
 import { getInitialTemplatesForOrg } from '@/lib/compliance-templates';
-import { logSignupToGoogleSheet } from '@/lib/googleSheetLogger';
+import { logSignupToGoogleSheet, buildSignupPayload } from '@/lib/googleSheetLogger';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -118,6 +118,21 @@ export async function POST(req: Request) {
     // ── 5. Atomic Batch Writes for Multi-Tenant Provisioning ──────────────────
     const batch = adminDb.batch();
 
+    const effectiveAttribution = attribution && typeof attribution === 'object' ? attribution : null;
+    const { firestoreMetadata } = await buildSignupPayload({
+      fullName: normalizedName,
+      companyName: normalizedCompany,
+      email: normalizedEmail,
+      phone: normalizedPhone,
+      industry: selectedIndustry,
+      country: primaryCountry,
+      countries: selectedCountries,
+      uid,
+      orgId,
+      role: 'ADMIN',
+      attribution: effectiveAttribution,
+    });
+
     // A. Organization document
     batch.set(orgRef, {
       id: orgId,
@@ -130,6 +145,7 @@ export async function POST(req: Request) {
       planVersion: '2026.1',
       ownerUid: uid,
       createdAt: FieldValue.serverTimestamp(),
+      ...(effectiveAttribution && { attribution: effectiveAttribution }),
       limits: {
         maxOutlets: 1,
         maxUsers: 3,
@@ -155,6 +171,11 @@ export async function POST(req: Request) {
       role: 'ADMIN',
       organizationId: orgId,
       isActive: true,
+      // Comprehensive attribution, device & location metadata (no passwords)
+      attribution: effectiveAttribution || {},
+      metadata: firestoreMetadata,
+      device: firestoreMetadata.device,
+      utmSource: firestoreMetadata.utmSource,
       createdAt: FieldValue.serverTimestamp(),
     });
 
@@ -271,18 +292,23 @@ export async function POST(req: Request) {
     });
 
     // ── 8. Log to Google Sheet ───────────────────────────────────────────────
-    logSignupToGoogleSheet({
-      fullName: normalizedName,
-      companyName: normalizedCompany,
-      email: normalizedEmail,
-      phone: normalizedPhone,
-      industry: selectedIndustry,
-      uid,
-      orgId,
-      attribution: attribution || null,
-    }).catch((sheetErr) => {
+    try {
+      await logSignupToGoogleSheet({
+        fullName: normalizedName,
+        companyName: normalizedCompany,
+        email: normalizedEmail,
+        phone: normalizedPhone,
+        industry: selectedIndustry,
+        country: primaryCountry,
+        countries: selectedCountries,
+        uid,
+        orgId,
+        role: 'ADMIN',
+        attribution: effectiveAttribution,
+      });
+    } catch (sheetErr) {
       console.error('[register] Google Sheet logger background send failed:', sheetErr);
-    });
+    }
 
     return NextResponse.json({
       success: true,

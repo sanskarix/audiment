@@ -1,15 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { signInWithCustomToken } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import ShimmerText from '@/components/app-ui/shimmer-text';
-import { ArrowLeft, ChevronDown, Eye, EyeOff, Clock, Check, Globe } from 'lucide-react';
+import { ArrowLeft, ChevronDown, Eye, EyeOff, Clock, Check, Globe, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { INDUSTRY_OPTIONS } from '@/lib/compliance-templates';
+import { TOP_10_COUNTRIES, ALL_COUNTRIES, getCountryInfo, INDUSTRY_OPTIONS } from '@/lib/compliance-templates';
 import { getStoredAttribution } from '@/lib/attributionTracker';
 
 const DIAL_TO_COUNTRY: Record<string, string> = {
@@ -23,31 +23,7 @@ const DIAL_TO_COUNTRY: Record<string, string> = {
   '+49': 'DE',
 };
 
-const COUNTRY_TO_DIAL: Record<string, string> = {
-  IN: '+91',
-  US: '+1',
-  CA: '+1',
-  AE: '+971',
-  GB: '+44',
-  SG: '+65',
-  SA: '+966',
-  AU: '+61',
-  DE: '+49',
-};
 
-const TIMEZONE_TO_COUNTRY: Record<string, string> = {
-  'Asia/Calcutta': 'IN',
-  'Asia/Kolkata': 'IN',
-  'Asia/Dubai': 'AE',
-  'Europe/London': 'GB',
-  'Asia/Singapore': 'SG',
-  'Asia/Riyadh': 'SA',
-  'Australia/Sydney': 'AU',
-  'Australia/Melbourne': 'AU',
-  'Australia/Brisbane': 'AU',
-  'Australia/Perth': 'AU',
-  'Europe/Berlin': 'DE',
-};
 
 const COUNTRY_CODES = [
   { code: '+1', flag: '🇺🇸' },
@@ -69,45 +45,23 @@ export default function SignupPage() {
   // Form values
   const [email, setEmail] = useState('');
   const [countryCode, setCountryCode] = useState('+1');
-  const [userCountry, setUserCountry] = useState('US');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [fullName, setFullName] = useState('');
   const [companyName, setCompanyName] = useState('');
+  const [selectedCountries, setSelectedCountries] = useState<string[]>(['US']);
   const [industry, setIndustry] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  // Auto-detect visitor's country and pre-select dialing code
-  useEffect(() => {
-    // 1. Immediate client-side fallback via browser timezone
-    try {
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const detectedIso = TIMEZONE_TO_COUNTRY[tz];
-      if (detectedIso && COUNTRY_TO_DIAL[detectedIso]) {
-        setCountryCode(COUNTRY_TO_DIAL[detectedIso]);
-        setUserCountry(detectedIso);
+  function toggleCountry(code: string) {
+    setSelectedCountries((prev) => {
+      if (prev.includes(code)) {
+        if (prev.length === 1) return prev; // Keep at least one country
+        return prev.filter((c) => c !== code);
       }
-    } catch {
-      // Fallback defaults to +1
-    }
-
-    // 2. Network-based GeoIP detection (Vercel / Cloudflare edge headers via /api/geo)
-    fetch('/api/geo')
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.country) {
-          const iso = data.country.toUpperCase();
-          const dial = COUNTRY_TO_DIAL[iso];
-          if (dial) {
-            setCountryCode(dial);
-            setUserCountry(iso);
-          }
-        }
-      })
-      .catch(() => {
-        // Silently keep timezone/default fallback
-      });
-  }, []);
+      return [...prev, code];
+    });
+  }
 
   // OTP Verification & Final Setup
   const [code, setCode] = useState('');
@@ -175,6 +129,11 @@ export default function SignupPage() {
       return;
     }
 
+    const defaultCountry = DIAL_TO_COUNTRY[countryCode] || 'US';
+    if (selectedCountries.length === 0 || (selectedCountries.length === 1 && selectedCountries[0] === 'US' && countryCode !== '+1')) {
+      setSelectedCountries([defaultCountry]);
+    }
+
     setStep(3);
   }
 
@@ -191,6 +150,10 @@ export default function SignupPage() {
       setError("Please enter your company's name.");
       return;
     }
+    if (selectedCountries.length === 0) {
+      setError('Please select at least one operating country.');
+      return;
+    }
     if (!industry) {
       setError('Please select an industry.');
       return;
@@ -200,12 +163,9 @@ export default function SignupPage() {
     const selectedIndustry =
       INDUSTRY_OPTIONS.find((opt) => opt.value === industry)?.label || industry;
 
-    const finalCountry = userCountry || DIAL_TO_COUNTRY[countryCode] || 'US';
-
     setLoading(true);
 
     try {
-      const attribution = getStoredAttribution();
       const res = await fetch('/api/auth/register-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -215,9 +175,9 @@ export default function SignupPage() {
           fullName: fullName.trim(),
           companyName: companyName.trim(),
           industry: selectedIndustry,
-          country: finalCountry,
-          countries: [finalCountry],
-          attribution,
+          country: selectedCountries[0] || 'IN',
+          countries: selectedCountries,
+          attribution: getStoredAttribution(),
         }),
       });
 
@@ -293,7 +253,6 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const attribution = getStoredAttribution();
       const res = await fetch('/api/auth/verify-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -301,7 +260,7 @@ export default function SignupPage() {
           email: email.trim().toLowerCase(),
           code: code.trim(),
           password,
-          attribution,
+          attribution: getStoredAttribution(),
         }),
       });
 
@@ -338,7 +297,6 @@ export default function SignupPage() {
       const fullPhone = `${countryCode} ${phoneNumber.trim()}`;
       const selectedIndustry =
         INDUSTRY_OPTIONS.find((opt) => opt.value === industry)?.label || industry;
-      const finalCountry = userCountry || DIAL_TO_COUNTRY[countryCode] || 'US';
 
       const res = await fetch('/api/auth/register-request', {
         method: 'POST',
@@ -349,8 +307,9 @@ export default function SignupPage() {
           fullName: fullName.trim(),
           companyName: companyName.trim(),
           industry: selectedIndustry,
-          country: finalCountry,
-          countries: [finalCountry],
+          country: selectedCountries[0] || 'IN',
+          countries: selectedCountries,
+          attribution: getStoredAttribution(),
         }),
       });
 
@@ -435,20 +394,24 @@ export default function SignupPage() {
         {step !== 'waitlist' && (
           <div className="flex items-center justify-center gap-1.5 mb-2.5 sm:mb-3">
             <span
-              className={`h-1.5 rounded-full transition-all duration-300 ${stepIndex >= 1 ? 'w-6 bg-[#FF5400]' : 'w-2 bg-[#e0e0e0]'
-                }`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                stepIndex >= 1 ? 'w-6 bg-[#FF5400]' : 'w-2 bg-[#e0e0e0]'
+              }`}
             />
             <span
-              className={`h-1.5 rounded-full transition-all duration-300 ${stepIndex >= 2 ? 'w-6 bg-[#FF5400]' : 'w-2 bg-[#e0e0e0]'
-                }`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                stepIndex >= 2 ? 'w-6 bg-[#FF5400]' : 'w-2 bg-[#e0e0e0]'
+              }`}
             />
             <span
-              className={`h-1.5 rounded-full transition-all duration-300 ${stepIndex >= 3 ? 'w-6 bg-[#FF5400]' : 'w-2 bg-[#e0e0e0]'
-                }`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                stepIndex >= 3 ? 'w-6 bg-[#FF5400]' : 'w-2 bg-[#e0e0e0]'
+              }`}
             />
             <span
-              className={`h-1.5 rounded-full transition-all duration-300 ${stepIndex >= 4 ? 'w-6 bg-[#FF5400]' : 'w-2 bg-[#e0e0e0]'
-                }`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                stepIndex >= 4 ? 'w-6 bg-[#FF5400]' : 'w-2 bg-[#e0e0e0]'
+              }`}
             />
           </div>
         )}
@@ -528,12 +491,7 @@ export default function SignupPage() {
                   <div className="relative shrink-0">
                     <select
                       value={countryCode}
-                      onChange={(e) => {
-                        const newCode = e.target.value;
-                        setCountryCode(newCode);
-                        const matchedIso = DIAL_TO_COUNTRY[newCode];
-                        if (matchedIso) setUserCountry(matchedIso);
-                      }}
+                      onChange={(e) => setCountryCode(e.target.value)}
                       className="h-11 rounded-xl border border-[#e0e0e0] bg-white pl-3 pr-7 text-xs text-[#181818] appearance-none focus:outline-none focus:border-[#FF5400] focus:ring-2 focus:ring-[#FF5400]/15 transition-all cursor-pointer"
                     >
                       {COUNTRY_CODES.map((c) => (
@@ -641,9 +599,117 @@ export default function SignupPage() {
                 )}
               </AnimatePresence>
 
-              {/* Industry Dropdown: Reveals from bottom once Company's Name has >= 2 characters */}
+              {/* Operating Country / Location Selector: Reveals once Company's Name has >= 2 characters */}
               <AnimatePresence>
                 {fullName.trim().length >= 2 && companyName.trim().length >= 2 && (
+                  <motion.div
+                    key="country-location-reveal"
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ duration: 0.25, ease: 'easeOut' }}
+                    className="space-y-1.5"
+                  >
+                    <div className="flex items-center justify-between">
+                      <label className="block text-[13px] font-medium text-[#181818]">
+                        Operating Country / Jurisdictions
+                      </label>
+                      <span className="text-[11px] text-[#737373]">
+                        {selectedCountries.length} selected
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-[#737373] leading-tight">
+                      Select your operational locations to pre-load regulatory compliance checklists.
+                    </p>
+
+                    {/* Quick Select Pills for Top 10 Countries */}
+                    <div className="flex flex-wrap gap-1.5 pt-0.5">
+                      {TOP_10_COUNTRIES.map((c) => {
+                        const isSelected = selectedCountries.includes(c.code);
+                        return (
+                          <button
+                            key={c.code}
+                            type="button"
+                            onClick={() => toggleCountry(c.code)}
+                            className={`h-7 px-2.5 rounded-lg text-[12px] flex items-center gap-1.5 transition-all border cursor-pointer ${
+                              isSelected
+                                ? 'bg-[#FF5400]/10 border-[#FF5400] text-[#FF5400] font-medium shadow-xs'
+                                : 'bg-white border-[#e0e0e0] text-[#4a4a4a] hover:border-[#cccccc]'
+                            }`}
+                          >
+                            <span>{c.flag}</span>
+                            <span>{c.name}</span>
+                            {isSelected && <Check className="w-3 h-3 text-[#FF5400]" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Other Country Dropdown */}
+                    <div className="relative pt-1">
+                      <select
+                        value=""
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val && !selectedCountries.includes(val)) {
+                            setSelectedCountries((prev) => [...prev, val]);
+                          }
+                        }}
+                        disabled={loading}
+                        className="w-full h-9 px-3 pr-8 rounded-xl border border-[#e0e0e0] bg-white text-[12px] text-[#737373] appearance-none focus:outline-none focus:border-[#FF5400] focus:ring-2 focus:ring-[#FF5400]/15 transition-all cursor-pointer"
+                      >
+                        <option value="">+ Add other country / jurisdiction...</option>
+                        {ALL_COUNTRIES.filter((c) => !TOP_10_COUNTRIES.some((t) => t.code === c.code)).map((c) => (
+                          <option key={c.code} value={c.code}>
+                            {c.flag} {c.name}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="w-3.5 h-3.5 text-[#737373] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    </div>
+
+                    {/* Selected tags if any non-top 10 countries were added */}
+                    {selectedCountries.some((code) => !TOP_10_COUNTRIES.some((t) => t.code === code)) && (
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {selectedCountries
+                          .filter((code) => !TOP_10_COUNTRIES.some((t) => t.code === code))
+                          .map((code) => {
+                            const info = getCountryInfo(code);
+                            return (
+                              <span
+                                key={code}
+                                className="h-6 px-2 rounded-md bg-[#FF5400]/10 border border-[#FF5400] text-[#FF5400] text-[11px] font-medium flex items-center gap-1"
+                              >
+                                <span>{info.flag}</span>
+                                <span>{info.name}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleCountry(code)}
+                                  className="hover:opacity-75 cursor-pointer ml-0.5"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </span>
+                            );
+                          })}
+                      </div>
+                    )}
+
+                    {/* Pre-configured templates summary chip */}
+                    <div className="p-2 rounded-lg bg-orange-50/70 border border-orange-100 text-[11px] text-[#737373] leading-snug">
+                      <span className="font-medium text-[#181818]">Compliance Blueprint: </span>
+                      {selectedCountries.map((code) => {
+                        const info = getCountryInfo(code);
+                        return info.authority ? `${info.flag} ${info.authority}` : `${info.flag} ${info.name} Universal Standards`;
+                      }).join(' • ')}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Industry Dropdown: Reveals from bottom once Country is selected */}
+              <AnimatePresence>
+                {fullName.trim().length >= 2 && companyName.trim().length >= 2 && selectedCountries.length > 0 && (
                   <motion.div
                     key="industry-reveal"
                     initial={{ opacity: 0, y: 14 }}
@@ -686,7 +752,7 @@ export default function SignupPage() {
 
               {/* Continue Button: Reveals from bottom once Industry is selected */}
               <AnimatePresence>
-                {fullName.trim().length >= 2 && companyName.trim().length >= 2 && Boolean(industry) && (
+                {fullName.trim().length >= 2 && companyName.trim().length >= 2 && selectedCountries.length > 0 && Boolean(industry) && (
                   <motion.div
                     key="continue-btn-reveal"
                     initial={{ opacity: 0, y: 14 }}
@@ -741,10 +807,11 @@ export default function SignupPage() {
                       required
                       autoFocus
                       disabled={loading}
-                      className={`w-full h-12 text-center text-2xl tracking-[0.4em] font-mono rounded-xl border bg-white font-semibold transition-all placeholder:text-[#bbbbbb] ${error
-                        ? 'border-red-500 text-red-600 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/15'
-                        : 'border-[#e0e0e0] text-[#181818] focus:outline-none focus:border-[#FF5400] focus:ring-2 focus:ring-[#FF5400]/15'
-                        }`}
+                      className={`w-full h-12 text-center text-2xl tracking-[0.4em] font-mono rounded-xl border bg-white font-semibold transition-all placeholder:text-[#bbbbbb] ${
+                        error
+                          ? 'border-red-500 text-red-600 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/15'
+                          : 'border-[#e0e0e0] text-[#181818] focus:outline-none focus:border-[#FF5400] focus:ring-2 focus:ring-[#FF5400]/15'
+                      }`}
                     />
                     {error && (
                       <p className="text-center text-xs text-red-600 font-medium pt-1">
@@ -812,10 +879,11 @@ export default function SignupPage() {
                         minLength={6}
                         autoFocus
                         disabled={loading}
-                        className={`w-full h-11 px-3.5 pr-10 rounded-xl border bg-white text-[14px] placeholder:text-[#999999] transition-all ${error
-                          ? 'border-red-500 text-red-600 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/15'
-                          : 'border-[#e0e0e0] text-[#181818] focus:outline-none focus:border-[#FF5400] focus:ring-2 focus:ring-[#FF5400]/15'
-                          }`}
+                        className={`w-full h-11 px-3.5 pr-10 rounded-xl border bg-white text-[14px] placeholder:text-[#999999] transition-all ${
+                          error
+                            ? 'border-red-500 text-red-600 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/15'
+                            : 'border-[#e0e0e0] text-[#181818] focus:outline-none focus:border-[#FF5400] focus:ring-2 focus:ring-[#FF5400]/15'
+                        }`}
                       />
                       <button
                         type="button"

@@ -18,10 +18,63 @@ export interface StoredAttribution {
   utmContent: string;
   adClickId: string;
   deviceType: "Mobile" | "Tablet" | "Desktop";
+  device: string;
+  os: string;
+  browser: string;
   screenResolution: string;
   browserLanguage: string;
+  timezone: string;
   pagesBeforeSignup: number;
   firstSeenAt: number;
+}
+
+function detectClientEnvironment(): {
+  deviceType: "Mobile" | "Tablet" | "Desktop";
+  os: string;
+  browser: string;
+  deviceSummary: string;
+} {
+  if (typeof window === "undefined") {
+    return {
+      deviceType: "Desktop",
+      os: "Other",
+      browser: "Other",
+      deviceSummary: "Desktop",
+    };
+  }
+
+  const ua = navigator.userAgent || "";
+  let deviceType: "Mobile" | "Tablet" | "Desktop" = "Desktop";
+  let os = "Other";
+  let browser = "Other";
+
+  // Device Type
+  const isMobile = /iPhone|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+  const isTablet = /iPad|tablet/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (isTablet) {
+    deviceType = "Tablet";
+  } else if (isMobile) {
+    deviceType = "Mobile";
+  } else {
+    deviceType = "Desktop";
+  }
+
+  // Operating System
+  if (/Mac OS X|Macintosh/i.test(ua)) os = "macOS";
+  else if (/Windows NT/i.test(ua)) os = "Windows";
+  else if (/iPhone|iPad|iPod/i.test(ua)) os = "iOS";
+  else if (/Android/i.test(ua)) os = "Android";
+  else if (/Linux/i.test(ua)) os = "Linux";
+
+  // Browser
+  if (/Edg\//i.test(ua)) browser = "Edge";
+  else if (/Chrome\//i.test(ua) && !/Edg\//i.test(ua)) browser = "Chrome";
+  else if (/Safari\//i.test(ua) && !/Chrome\//i.test(ua)) browser = "Safari";
+  else if (/Firefox\//i.test(ua)) browser = "Firefox";
+
+  const deviceSummary = `${deviceType} (${os} / ${browser})`;
+
+  return { deviceType, os, browser, deviceSummary };
 }
 
 export function initAttributionTracker(): void {
@@ -32,14 +85,15 @@ export function initAttributionTracker(): void {
     const url = new URL(window.location.href);
     const params = url.searchParams;
 
-    // Detect device type
-    const ua = navigator.userAgent;
-    const isMobile = /iPhone|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-    const isTablet = /iPad|tablet/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-    const deviceType: "Mobile" | "Tablet" | "Desktop" = isTablet ? "Tablet" : isMobile ? "Mobile" : "Desktop";
+    const env = detectClientEnvironment();
 
     // Ad Click IDs (Google, Facebook, Microsoft, TikTok)
-    const adClickId = params.get("gclid") || params.get("fbclid") || params.get("msclkid") || params.get("ttclid") || "";
+    const adClickId =
+      params.get("gclid") ||
+      params.get("fbclid") ||
+      params.get("msclkid") ||
+      params.get("ttclid") ||
+      "";
 
     const existingRaw = sessionStorage.getItem(STORAGE_KEY) || localStorage.getItem(STORAGE_KEY);
 
@@ -77,8 +131,10 @@ export function initAttributionTracker(): void {
         utmSource = "direct";
       }
 
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+
       const initial: StoredAttribution = {
-        landingPage: window.location.pathname,
+        landingPage: window.location.pathname + window.location.search,
         signupPage: window.location.pathname,
         referrer: ref,
         utmSource,
@@ -87,9 +143,13 @@ export function initAttributionTracker(): void {
         utmTerm: params.get("utm_term") || "",
         utmContent: params.get("utm_content") || "",
         adClickId,
-        deviceType,
+        deviceType: env.deviceType,
+        device: env.deviceSummary,
+        os: env.os,
+        browser: env.browser,
         screenResolution: `${window.screen.width}x${window.screen.height}`,
         browserLanguage: navigator.language || "en",
+        timezone,
         pagesBeforeSignup: 1,
         firstSeenAt: now,
       };
@@ -102,12 +162,14 @@ export function initAttributionTracker(): void {
         const parsed: StoredAttribution = JSON.parse(existingRaw);
         parsed.pagesBeforeSignup = (parsed.pagesBeforeSignup || 1) + 1;
         parsed.signupPage = window.location.pathname;
-        
-        // If user arrived with new campaign parameters, keep first-touch but overwrite if previously direct
+
+        // If user arrived with new campaign parameters, overwrite if previously direct
         if (parsed.utmSource === "direct" && params.get("utm_source")) {
           parsed.utmSource = params.get("utm_source")!;
           parsed.utmMedium = params.get("utm_medium") || "referral";
           parsed.utmCampaign = params.get("utm_campaign") || "";
+          parsed.utmTerm = params.get("utm_term") || "";
+          parsed.utmContent = params.get("utm_content") || "";
         }
 
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
@@ -124,24 +186,31 @@ export function getStoredAttribution(): Partial<StoredAttribution> {
 
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY) || localStorage.getItem(STORAGE_KEY);
+    const env = detectClientEnvironment();
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+
     if (!raw) {
       // Fallback: construct instant attribution if user hit signup directly
-      const ua = navigator.userAgent;
-      const isMobile = /iPhone|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-      const isTablet = /iPad|tablet/i.test(ua);
-      const deviceType = isMobile ? "Mobile" : isTablet ? "Tablet" : "Desktop";
       const params = new URLSearchParams(window.location.search);
+      const ref = document.referrer || "Direct";
+      const utmSource = params.get("utm_source") || "direct";
 
       return {
-        landingPage: window.location.pathname,
+        landingPage: window.location.pathname + window.location.search,
         signupPage: window.location.pathname,
-        referrer: document.referrer || "Direct",
-        utmSource: params.get("utm_source") || "direct",
+        referrer: ref,
+        utmSource,
         utmMedium: params.get("utm_medium") || "direct",
         utmCampaign: params.get("utm_campaign") || "",
-        deviceType,
+        utmTerm: params.get("utm_term") || "",
+        utmContent: params.get("utm_content") || "",
+        deviceType: env.deviceType,
+        device: env.deviceSummary,
+        os: env.os,
+        browser: env.browser,
         screenResolution: `${window.screen.width}x${window.screen.height}`,
         browserLanguage: navigator.language || "en",
+        timezone,
         pagesBeforeSignup: 1,
         firstSeenAt: Date.now(),
       };

@@ -4,7 +4,7 @@ import { adminAuth, adminDb } from '@/lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { sendFounderSignupAlertEmail } from '@/lib/resend';
 import { getInitialTemplatesForOrg } from '@/lib/compliance-templates';
-import { logSignupToGoogleSheet } from '@/lib/googleSheetLogger';
+import { logSignupToGoogleSheet, buildSignupPayload } from '@/lib/googleSheetLogger';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -152,7 +152,21 @@ export async function POST(req: Request) {
     const userCountries = Array.isArray(pendingData.countries) && pendingData.countries.length > 0
       ? pendingData.countries
       : [userCountry];
-    const effectiveAttribution = attribution || pendingData.attribution || null;
+    const effectiveAttribution = (attribution && typeof attribution === 'object' ? attribution : null) || pendingData.attribution || null;
+
+    const { firestoreMetadata } = await buildSignupPayload({
+      fullName: pendingData.fullName,
+      companyName: pendingData.companyName,
+      email: normalizedEmail,
+      phone: pendingData.phone || '',
+      industry: pendingData.industry || '',
+      country: userCountry,
+      countries: userCountries,
+      uid,
+      orgId,
+      role: 'ADMIN',
+      attribution: effectiveAttribution,
+    });
 
     // A. Organization document
     batch.set(orgRef, {
@@ -192,8 +206,12 @@ export async function POST(req: Request) {
       role: 'ADMIN',
       organizationId: orgId,
       isActive: true,
+      // Comprehensive attribution, device & location metadata (no passwords)
+      attribution: effectiveAttribution || {},
+      metadata: firestoreMetadata,
+      device: firestoreMetadata.device,
+      utmSource: firestoreMetadata.utmSource,
       createdAt: FieldValue.serverTimestamp(),
-      ...(effectiveAttribution && { attribution: effectiveAttribution }),
     });
 
     // C. Initial Flagship Location
@@ -311,19 +329,24 @@ export async function POST(req: Request) {
       console.error('[verify-code] Founder alert background send failed:', alertErr);
     });
 
-    // ── 7. Log to Google Sheet (Non-blocking background dispatch) ───────────
-    logSignupToGoogleSheet({
-      fullName: pendingData.fullName,
-      companyName: pendingData.companyName,
-      email: normalizedEmail,
-      phone: pendingData.phone || '',
-      industry: pendingData.industry || '',
-      uid,
-      orgId,
-      attribution: effectiveAttribution,
-    }).catch((sheetErr) => {
+    // ── 7. Log to Google Sheet ───────────────────────────────────────────────
+    try {
+      await logSignupToGoogleSheet({
+        fullName: pendingData.fullName,
+        companyName: pendingData.companyName,
+        email: normalizedEmail,
+        phone: pendingData.phone || '',
+        industry: pendingData.industry || '',
+        country: userCountry,
+        countries: userCountries,
+        uid,
+        orgId,
+        role: 'ADMIN',
+        attribution: effectiveAttribution,
+      });
+    } catch (sheetErr) {
       console.error('[verify-code] Google Sheet logger background send failed:', sheetErr);
-    });
+    }
 
     return NextResponse.json({
       success: true,

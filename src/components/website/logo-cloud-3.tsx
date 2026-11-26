@@ -21,32 +21,44 @@ export const clientLogos: Logo[] = [
   {
     src: "/logos/aster.svg",
     alt: "Aster DM Healthcare",
-    style: { height: "84px" },
+    width: 84,
+    height: 84,
+    style: { height: "84px", width: "84px" },
   },
   {
     src: "/logos/ayatana.svg",
     alt: "Ayatana Resorts",
-    style: { height: "94px" },
+    width: 94,
+    height: 94,
+    style: { height: "94px", width: "94px" },
   },
   {
     src: "/logos/bw.svg",
     alt: "Best Western",
-    style: { height: "92px" },
+    width: 92,
+    height: 92,
+    style: { height: "92px", width: "92px" },
   },
   {
     src: "/logos/motherhood.svg",
     alt: "Motherhood Hospitals",
-    style: { height: "100px" },
+    width: 100,
+    height: 100,
+    style: { height: "100px", width: "100px" },
   },
   {
     src: "/logos/tom-and-chee.svg",
     alt: "Tom & Chee",
-    style: { height: "110px" },
+    width: 110,
+    height: 110,
+    style: { height: "110px", width: "110px" },
   },
   {
     src: "/logos/vrl.svg",
     alt: "VRL Logistics",
-    style: { height: "94px" },
+    width: 94,
+    height: 94,
+    style: { height: "94px", width: "94px" },
   },
 ];
 
@@ -107,11 +119,11 @@ export function LogoCloud({ className, logos = clientLogos, ...props }: LogoClou
                 "pointer-events-none select-none object-contain",
                 logo.className
               )}
-              height={logo.height || "32"}
+              height={logo.height || 32}
+              width={logo.width || 120}
               style={logo.style}
               loading="lazy"
               src={logo.src}
-              width={logo.width || "auto"}
             />
           </div>
         ))}
@@ -124,10 +136,10 @@ export default function DemoOne({ logos = clientLogos }: { logos?: Logo[] }) {
   return (
     <section className="logo-cloud-section">
       <div className="logo-cloud-inner">
-        <h3 className="logo-cloud-heading">
+        <h2 className="logo-cloud-heading">
           Trusted by growing businesses{" "}
           <span>and category leaders</span>
-        </h3>
+        </h2>
 
         <LogoCloud logos={logos} />
       </div>

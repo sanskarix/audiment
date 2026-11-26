@@ -2240,10 +2240,10 @@ footer.site-footer {
 }
 
 .col-num {
-  color: var(--orange);
+  color: #ff681a;
   font-size: 10px;
   font-weight: 700;
-  opacity: 0.8;
+  opacity: 1;
   letter-spacing: 0.06em;
 }
 
@@ -2258,7 +2258,7 @@ footer.site-footer {
 }
 
 .footer-links-list li a {
-  color: rgba(255, 255, 255, 0.42);
+  color: #a0a0a5;
   font-size: 13px;
   text-decoration: none;
   position: relative;

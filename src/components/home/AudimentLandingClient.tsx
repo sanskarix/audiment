@@ -554,7 +554,7 @@ export default function AudimentLandingClient() {
       {/* ── Global Header ── */}
       <Header />
 
-      <main id="top">
+      <main id="main-content">
         {/* ── §1 Hero Section ── */}
         <section className="aud-hero">
           <div>

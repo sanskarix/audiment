@@ -87,10 +87,10 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
 
             {/* Column 1: Solutions */}
             <div className="footer-col">
-              <h5 className="footer-col-title">
+              <h3 className="footer-col-title">
                 <span className="col-num">01 /</span>
                 <span>Solutions</span>
-              </h5>
+              </h3>
               <ul className="footer-links-list">
                 <li><Link href="/solutions/restaurant-audit-software">Restaurant Audit</Link></li>
                 <li><Link href="/solutions/retail-audit-software">Retail Store Audit</Link></li>
@@ -105,10 +105,10 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
 
             {/* Column 2: Platform & Use Cases */}
             <div className="footer-col">
-              <h5 className="footer-col-title">
+              <h3 className="footer-col-title">
                 <span className="col-num">02 /</span>
                 <span>Platform</span>
-              </h5>
+              </h3>
               <ul className="footer-links-list">
                 <li><Link href="/platform/proof-based-audits">Proof-Based Audits</Link></li>
                 <li><Link href="/platform/corrective-actions">Corrective Actions</Link></li>
@@ -125,10 +125,10 @@ export const Footer: React.FC<FooterProps> = ({ service = 'demo', hideCta = fals
 
             {/* Column 3: Compare & Company */}
             <div className="footer-col">
-              <h5 className="footer-col-title">
+              <h3 className="footer-col-title">
                 <span className="col-num">03 /</span>
                 <span>Compare &amp; Legal</span>
-              </h5>
+              </h3>
               <ul className="footer-links-list">
                 <li><Link href="/compare">All Comparisons</Link></li>
                 <li><Link href="/compare/audiment-vs-safetyculture">vs SafetyCulture</Link></li>

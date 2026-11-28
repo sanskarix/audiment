@@ -4,22 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { useConsent } from "@/components/ConsentProvider";
 import { Button } from "@/components/ui/button";
-
-function isPublicRoute(pathname: string | null): boolean {
-  if (!pathname) return false;
-
-  if (
-    pathname.startsWith("/dashboard") ||
-    pathname === "/login" ||
-    pathname.startsWith("/login/") ||
-    pathname === "/test-recording" ||
-    pathname.startsWith("/test-recording/")
-  ) {
-    return false;
-  }
-
-  return true;
-}
+import { isPublicAnalyticsRoute } from "@/lib/dataLayer";
 
 export function ConsentBanner() {
   const pathname = usePathname();
@@ -115,7 +100,7 @@ export function ConsentBanner() {
     }
   };
 
-  if (!mounted || !isPublicRoute(pathname)) {
+  if (!mounted || !isPublicAnalyticsRoute(pathname)) {
     return null;
   }
 

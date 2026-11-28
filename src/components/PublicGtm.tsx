@@ -3,35 +3,16 @@
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 import { useConsent } from "@/components/ConsentProvider";
+import { isPublicAnalyticsRoute } from "@/lib/dataLayer";
 
 const GTM_ID = "GTM-TGWKM9RM";
-
-/**
- * Helper to determine if the route is a public website route.
- * Returns false for /dashboard/*, /login, and /test-recording.
- */
-function isPublicRoute(pathname: string | null): boolean {
-  if (!pathname) return false;
-
-  if (
-    pathname.startsWith("/dashboard") ||
-    pathname === "/login" ||
-    pathname.startsWith("/login/") ||
-    pathname === "/test-recording" ||
-    pathname.startsWith("/test-recording/")
-  ) {
-    return false;
-  }
-
-  return true;
-}
 
 export function PublicGtm() {
   const pathname = usePathname();
   const { consent, hasDecision } = useConsent();
 
   // 1. Route Restriction: Must be a public website route
-  if (!isPublicRoute(pathname)) {
+  if (!isPublicAnalyticsRoute(pathname)) {
     return null;
   }
 

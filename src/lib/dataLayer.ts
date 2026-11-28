@@ -5,15 +5,41 @@
  * Pushes structured analytics events to window.dataLayer without overwriting.
  */
 
+export const GA_MEASUREMENT_ID = "G-NQQHZHFNKZ";
+export const PENDING_ONBOARDING_ANALYTICS_KEY = "audiment_pending_onboarding_complete";
+
 declare global {
   interface Window {
     dataLayer?: any[];
+    gtag?: (...args: any[]) => void;
+    __audimentConsentDefaultSet?: boolean;
+    __audimentGaConfigured?: boolean;
   }
 }
 
 export interface AnalyticsEventPayload {
   event: string;
   [key: string]: any;
+}
+
+/**
+ * Determines whether a pathname belongs to the public marketing & signup surface
+ * (excluding authenticated dashboard, login, and internal test routes).
+ */
+export function isPublicAnalyticsRoute(pathname: string | null): boolean {
+  if (!pathname) return false;
+
+  if (
+    pathname.startsWith("/dashboard") ||
+    pathname === "/login" ||
+    pathname.startsWith("/login/") ||
+    pathname === "/test-recording" ||
+    pathname.startsWith("/test-recording/")
+  ) {
+    return false;
+  }
+
+  return true;
 }
 
 /**
@@ -27,6 +53,58 @@ export function pushAnalyticsEvent(payload: AnalyticsEventPayload): void {
   if (process.env.NODE_ENV === "development") {
     console.debug("[Analytics DataLayer Event]", payload);
   }
+}
+
+/**
+ * Ensures window.gtag stub exists so queued GA4 calls replay once gtag.js loads.
+ */
+function ensureGtag(): ((...args: any[]) => void) | null {
+  if (typeof window === "undefined") return null;
+  window.dataLayer = window.dataLayer || [];
+  if (!window.gtag) {
+    window.gtag = function () {
+      // eslint-disable-next-line prefer-rest-params
+      window.dataLayer?.push(arguments);
+    };
+  }
+  return window.gtag;
+}
+
+/**
+ * Sends a standard GA4 event directly to the configured GA4 property.
+ */
+export function trackGaEvent(eventName: string, params?: Record<string, any>): void {
+  const gtag = ensureGtag();
+  if (!gtag) return;
+  gtag("event", eventName, params || {});
+
+  if (process.env.NODE_ENV === "development") {
+    console.debug("[GA4 Event]", eventName, params || {});
+  }
+}
+
+/**
+ * Associates subsequent GA4 events with an opaque Firebase UID (never PII)
+ * and optional non-PII user properties (role, plan).
+ */
+export function setGaUserId(
+  uid: string,
+  properties?: { role?: string | null; plan?: string | null }
+): void {
+  if (!uid) return;
+  const gtag = ensureGtag();
+  if (!gtag) return;
+  gtag("set", { user_id: uid });
+  if (properties && (properties.role || properties.plan)) {
+    gtag("set", "user_properties", {
+      ...(properties.role ? { user_role: properties.role } : {}),
+      ...(properties.plan ? { user_plan: properties.plan } : {}),
+    });
+  }
+  gtag("config", GA_MEASUREMENT_ID, {
+    user_id: uid,
+    send_page_view: false,
+  });
 }
 
 export interface BlogArticleMetadata {
@@ -146,6 +224,22 @@ export interface PageTaxonomyContext {
 export function getPageTaxonomyContext(pathname: string): PageTaxonomyContext {
   if (pathname === "/") {
     return { page_type: "homepage" };
+  }
+
+  if (pathname === "/signup" || pathname.startsWith("/signup/")) {
+    return { page_type: "signup" };
+  }
+
+  if (pathname === "/pricing") {
+    return { page_type: "pricing" };
+  }
+
+  if (pathname === "/contact") {
+    return { page_type: "contact" };
+  }
+
+  if (pathname === "/docs" || pathname.startsWith("/docs/")) {
+    return { page_type: "docs" };
   }
 
   if (pathname === "/about") {

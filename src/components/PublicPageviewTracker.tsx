@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useConsent } from "@/components/ConsentProvider";
 import {
   pushAnalyticsEvent,
+  isPublicAnalyticsRoute,
   getSanitizedUrl,
   getSafeReferrer,
   getPageTaxonomyContext,
@@ -12,22 +13,6 @@ import {
   subscribeBlogMetadata,
   type BlogArticleMetadata,
 } from "@/lib/dataLayer";
-
-function isPublicRoute(pathname: string | null): boolean {
-  if (!pathname) return false;
-
-  if (
-    pathname.startsWith("/dashboard") ||
-    pathname === "/login" ||
-    pathname.startsWith("/login/") ||
-    pathname === "/test-recording" ||
-    pathname.startsWith("/test-recording/")
-  ) {
-    return false;
-  }
-
-  return true;
-}
 
 function PageviewTrackerInner() {
   const pathname = usePathname();
@@ -63,7 +48,7 @@ function PageviewTrackerInner() {
 
   useEffect(() => {
     // 1. Exclude non-public routes (/dashboard/*, /login, /test-recording)
-    if (!isPublicRoute(pathname)) {
+    if (!isPublicAnalyticsRoute(pathname)) {
       return;
     }
 

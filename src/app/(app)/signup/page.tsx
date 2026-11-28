@@ -11,6 +11,12 @@ import { ArrowLeft, ChevronDown, Eye, EyeOff, Clock, Check, Globe } from 'lucide
 import { motion, AnimatePresence } from 'framer-motion';
 import { INDUSTRY_OPTIONS } from '@/lib/compliance-templates';
 import { getStoredAttribution } from '@/lib/attributionTracker';
+import {
+  PENDING_ONBOARDING_ANALYTICS_KEY,
+  pushAnalyticsEvent,
+  setGaUserId,
+  trackGaEvent,
+} from '@/lib/dataLayer';
 
 const DIAL_TO_COUNTRY: Record<string, string> = {
   '+91': 'IN',
@@ -118,6 +124,13 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  function getSelectedLocationAndIndustry() {
+    const selectedIndustry =
+      INDUSTRY_OPTIONS.find((opt) => opt.value === industry)?.label || industry;
+    const finalCountry = userCountry || DIAL_TO_COUNTRY[countryCode] || 'US';
+    return { selectedIndustry, finalCountry };
+  }
+
   // Countdown timer for OTP resend
   function startCountdown() {
     setCountdown(45);
@@ -156,8 +169,12 @@ export default function SignupPage() {
         setError('An account with this email already exists. Please sign in.');
         return;
       }
+      trackGaEvent('signup_start', { method: 'email_otp' });
+      trackGaEvent('signup_step', { step_number: 1, step_name: 'email_submitted' });
       setStep(2);
     } catch {
+      trackGaEvent('signup_start', { method: 'email_otp' });
+      trackGaEvent('signup_step', { step_number: 1, step_name: 'email_submitted' });
       setStep(2);
     } finally {
       setLoading(false);
@@ -175,6 +192,7 @@ export default function SignupPage() {
       return;
     }
 
+    trackGaEvent('signup_step', { step_number: 2, step_name: 'phone_submitted' });
     setStep(3);
   }
 
@@ -197,10 +215,7 @@ export default function SignupPage() {
     }
 
     const fullPhone = `${countryCode} ${phoneNumber.trim()}`;
-    const selectedIndustry =
-      INDUSTRY_OPTIONS.find((opt) => opt.value === industry)?.label || industry;
-
-    const finalCountry = userCountry || DIAL_TO_COUNTRY[countryCode] || 'US';
+    const { selectedIndustry, finalCountry } = getSelectedLocationAndIndustry();
 
     setLoading(true);
 
@@ -228,10 +243,17 @@ export default function SignupPage() {
       }
 
       if (data.waitlisted) {
+        trackGaEvent('signup_waitlisted', { stage: 'register_request', country: finalCountry });
         setStep('waitlist');
         return;
       }
 
+      trackGaEvent('signup_step', {
+        step_number: 3,
+        step_name: 'otp_sent',
+        industry: selectedIndustry,
+        country: finalCountry,
+      });
       setStep('verify');
       setVerifyPhase('code');
       startCountdown();
@@ -266,11 +288,13 @@ export default function SignupPage() {
       }
 
       if (data.waitlisted) {
+        trackGaEvent('signup_waitlisted', { stage: 'verify_code' });
         setStep('waitlist');
         return;
       }
 
       // Code successfully verified! On the SAME window, proceed to password setup
+      trackGaEvent('signup_step', { step_number: 4, step_name: 'otp_verified' });
       setError('');
       setVerifyPhase('password');
     } catch (err: any) {
@@ -294,6 +318,7 @@ export default function SignupPage() {
 
     try {
       const attribution = getStoredAttribution();
+      const { selectedIndustry, finalCountry } = getSelectedLocationAndIndustry();
       const res = await fetch('/api/auth/verify-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -312,9 +337,42 @@ export default function SignupPage() {
       }
 
       if (data.waitlisted) {
+        trackGaEvent('signup_waitlisted', { stage: 'complete_signup', country: finalCountry });
         setStep('waitlist');
         return;
       }
+
+      if (data.uid) {
+        setGaUserId(data.uid, { role: 'admin', plan: 'free' });
+      }
+      try {
+        sessionStorage.setItem(
+          PENDING_ONBOARDING_ANALYTICS_KEY,
+          JSON.stringify({
+            industry: selectedIndustry,
+            country: finalCountry,
+          })
+        );
+      } catch {
+        // Ignore storage errors in private browsing
+      }
+      trackGaEvent('signup_step', {
+        step_number: 5,
+        step_name: 'account_created',
+        industry: selectedIndustry,
+        country: finalCountry,
+      });
+      trackGaEvent('sign_up', {
+        method: 'email_otp',
+        industry: selectedIndustry,
+        country: finalCountry,
+      });
+      pushAnalyticsEvent({
+        event: 'sign_up',
+        method: 'email_otp',
+        industry: selectedIndustry,
+        country: finalCountry,
+      });
 
       if (data.customToken && auth) {
         await signInWithCustomToken(auth, data.customToken);
@@ -336,9 +394,7 @@ export default function SignupPage() {
 
     try {
       const fullPhone = `${countryCode} ${phoneNumber.trim()}`;
-      const selectedIndustry =
-        INDUSTRY_OPTIONS.find((opt) => opt.value === industry)?.label || industry;
-      const finalCountry = userCountry || DIAL_TO_COUNTRY[countryCode] || 'US';
+      const { selectedIndustry, finalCountry } = getSelectedLocationAndIndustry();
 
       const res = await fetch('/api/auth/register-request', {
         method: 'POST',

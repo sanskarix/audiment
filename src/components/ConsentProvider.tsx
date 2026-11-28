@@ -30,17 +30,10 @@ export interface ConsentContextValue {
 const COOKIE_NAME = "audiment_consent";
 const CURRENT_VERSION = 1;
 
-declare global {
-  interface Window {
-    dataLayer?: any[];
-    gtag?: (...args: any[]) => void;
-  }
-}
-
 /**
  * Parses the audiment_consent cookie if present.
  */
-function getStoredConsent(): ConsentData | null {
+export function getStoredConsent(): ConsentData | null {
   if (typeof document === "undefined") return null;
   try {
     const cookies = document.cookie.split("; ");
@@ -91,14 +84,18 @@ function setStoredConsent(analytics: boolean, marketing: boolean): ConsentData {
 /**
  * Initializes window.dataLayer and pushes Google Consent Mode defaults.
  */
-function setGoogleConsentDefaults() {
+export function setGoogleConsentDefaults() {
   if (typeof window === "undefined") return;
   window.dataLayer = window.dataLayer || [];
   if (!window.gtag) {
     window.gtag = function () {
+      // eslint-disable-next-line prefer-rest-params
       window.dataLayer?.push(arguments);
     };
   }
+
+  if (window.__audimentConsentDefaultSet) return;
+  window.__audimentConsentDefaultSet = true;
 
   window.gtag("consent", "default", {
     analytics_storage: "denied",
@@ -112,7 +109,7 @@ function setGoogleConsentDefaults() {
 /**
  * Updates Google Consent Mode v2 via gtag('consent', 'update', ...).
  */
-function updateGoogleConsentMode(analytics: boolean, marketing: boolean) {
+export function updateGoogleConsentMode(analytics: boolean, marketing: boolean) {
   if (typeof window === "undefined") return;
   window.dataLayer = window.dataLayer || [];
   if (!window.gtag) {

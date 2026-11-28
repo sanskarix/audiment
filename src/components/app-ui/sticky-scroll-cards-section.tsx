@@ -14,7 +14,7 @@ const features = [
     title: "Photo and video evidence on every audit",
     heading: "Evidence that shows real conditions.",
     description: "Mark any audit question as evidence-required. Auditors capture live photos or video on-site before they can move on. You see exactly what your branches look like – not what someone says they look like.",
-    imageUrl: "/images/photoevidence.jpeg",
+    imageUrl: "/images/photoevidence.webp",
   },
   {
     icon: AlertTriangle,
@@ -22,7 +22,7 @@ const features = [
     title: "Automated corrective action tracking",
     heading: "Failed items become assigned tasks – instantly.",
     description: "Critical failures automatically generate assigned resolution tasks with 48-hour SLAs, mandatory notes, and photo proof of resolution.",
-    imageUrl: "/images/action.jpeg",
+    imageUrl: "/images/action.webp",
   },
   {
     icon: TrendingDown,
@@ -30,7 +30,7 @@ const features = [
     title: "Instant low-score and trend alerts",
     heading: "Catch declining branches before they become a problem.",
     description: "Automatic alerts when a branch scores below threshold. Trend detection flags locations that score poorly on three consecutive audits.",
-    imageUrl: "/images/lowscore.jpeg",
+    imageUrl: "/images/lowscore.webp",
   },
   {
     icon: Video,
@@ -38,7 +38,7 @@ const features = [
     title: "Verified auditor presence",
     heading: "Verified presence at every audit.",
     description: "Auditors record a short geo-tagged video and selfie from the location. This confirms they were on-site when the audit was completed.",
-    imageUrl: "/images/flash.jpeg",
+    imageUrl: "/images/flash.webp",
   },
   {
     icon: LayoutTemplate,
@@ -46,7 +46,7 @@ const features = [
     title: "Standardized audit blueprints",
     heading: "Build once. Deploy to every location.",
     description: "Build reusable audit templates with custom questions, scoring weights, and severity levels. Share blueprints across your entire organization.",
-    imageUrl: "/images/templates.jpeg",
+    imageUrl: "/images/templates.webp",
   },
   {
     icon: FileCheck2,
@@ -54,7 +54,7 @@ const features = [
     title: "FSSAI-ready compliance templates",
     heading: "Pass your next inspection on the first attempt.",
     description: "Pre-built FSSAI hygiene and safety audit templates load with one click. Purpose-built for food businesses under Indian compliance standards.",
-    imageUrl: "/images/compliance.jpeg",
+    imageUrl: "/images/compliance.webp",
   },
   {
     icon: Eye,
@@ -62,7 +62,7 @@ const features = [
     title: "One-click PDF audit reports",
     heading: "Complete audit documentation, ready to share.",
     description: "Export complete audit reports as detailed PDFs including all questions, responses, photo evidence, scores, and corrective action status. Ready for inspectors or internal review.",
-    imageUrl: "/images/reports.jpeg",
+    imageUrl: "/images/reports.webp",
   },
   {
     icon: MapPin,
@@ -70,7 +70,7 @@ const features = [
     title: "Permanent audit trail",
     heading: "A complete, searchable record.",
     description: "Every audit, photo, score, and corrective action is permanently stored and searchable. Pull up any location's compliance history in seconds.",
-    imageUrl: "/images/audittrail.jpeg",
+    imageUrl: "/images/audittrail.webp",
   },
 ];
 

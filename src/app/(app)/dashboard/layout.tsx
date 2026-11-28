@@ -1,4 +1,6 @@
 import { Metadata } from 'next';
+import { GoogleAnalyticsTag } from '@/components/GoogleAnalyticsTag';
+import { DashboardAnalyticsTracker } from '@/components/DashboardAnalyticsTracker';
 
 export const metadata: Metadata = {
   robots: {
@@ -12,5 +14,11 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      <GoogleAnalyticsTag consentDefaultStrategy="afterInteractive" />
+      <DashboardAnalyticsTracker />
+      {children}
+    </>
+  );
 }
